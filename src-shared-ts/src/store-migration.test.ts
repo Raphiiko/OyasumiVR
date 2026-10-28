@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { test } from 'vitest';
+import { it, test } from 'vitest';
 import type { MigrationDefinition, Versioned } from './migration-runner.ts';
 import { applyStoreMigration, decideStoreMigration } from './store-migration.ts';
 
@@ -119,38 +119,37 @@ test('skips a broken newest checkpoint for an older compatible checkpoint', asyn
   assert.equal(decision.selectedId, 'older');
 });
 
-test('tries the next candidate after a migration throws', async () => {
-  const throwing = spec(
-    migration(2, {
-      1: () => {
-        throw new Error('broken migration');
-      },
-    })
-  );
+it.each([
+  {
+    failureSource: 'a migration',
+    makeSpec: () =>
+      spec(
+        migration(2, {
+          1: () => {
+            throw new Error('broken migration');
+          },
+        })
+      ),
+    live: { CONFIG: { version: 1 } },
+    safe: { CONFIG: { version: 2, value: 'safe' } },
+  },
+  {
+    failureSource: 'normalization',
+    makeSpec: () => {
+      const definition = migration(1);
+      definition.normalizeCurrentVersion = (data) => {
+        if ((data as Record<string, unknown>)['bad']) throw new Error('broken normalization');
+        return data;
+      };
+      return spec(definition);
+    },
+    live: { CONFIG: { version: 1, bad: true } },
+    safe: { CONFIG: { version: 1, value: 'safe' } },
+  },
+])('tries the next candidate after $failureSource throws', async ({ makeSpec, live, safe }) => {
   const decision = await decideStoreMigration(
-    [
-      candidate('live', 'live', { CONFIG: { version: 1 } }),
-      candidate('checkpoint', 'checkpoint', { CONFIG: { version: 2, value: 'safe' } }),
-    ],
-    throwing
-  );
-  assert.equal(decision.action, 'install');
-  if (decision.action !== 'install') return;
-  assert.equal(decision.selectedId, 'checkpoint');
-});
-
-test('tries the next candidate after normalization throws', async () => {
-  const definition = migration(1);
-  definition.normalizeCurrentVersion = (data) => {
-    if ((data as Record<string, unknown>)['bad']) throw new Error('broken normalization');
-    return data;
-  };
-  const decision = await decideStoreMigration(
-    [
-      candidate('live', 'live', { CONFIG: { version: 1, bad: true } }),
-      candidate('checkpoint', 'checkpoint', { CONFIG: { version: 1, value: 'safe' } }),
-    ],
-    spec(definition)
+    [candidate('live', 'live', live), candidate('checkpoint', 'checkpoint', safe)],
+    makeSpec()
   );
   assert.equal(decision.action, 'install');
   if (decision.action !== 'install') return;
