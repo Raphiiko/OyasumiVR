@@ -474,7 +474,7 @@ mod tests {
         let dir = tempdir().unwrap();
         let attached_created = SystemTime::UNIX_EPOCH;
         let (attached, created) =
-            create_log(dir.path(), "output_log_old.txt", b"log", attached_created);
+            create_log(dir.path(), "output_log_z.txt", b"log", attached_created);
 
         assert_eq!(
             pick_log_path(
@@ -514,8 +514,7 @@ mod tests {
         );
 
         let newer_time = attached_created + Duration::from_secs(1);
-        let (newer, newer_created) =
-            create_log(dir.path(), "output_log_new.txt", b"log", newer_time);
+        let (newer, newer_created) = create_log(dir.path(), "output_log_a.txt", b"log", newer_time);
         assert_eq!(
             pick_log_path(
                 dir.path(),
@@ -550,13 +549,13 @@ mod tests {
         let running_created = SystemTime::UNIX_EPOCH;
         let (running, _) = create_log(
             dir.path(),
-            "output_log_running.txt",
+            "output_log_z_running.txt",
             b"log",
             running_created,
         );
         let (closed, closed_created) = create_log(
             dir.path(),
-            "output_log_closed.txt",
+            "output_log_a_closed.txt",
             b"log",
             running_created + Duration::from_secs(1),
         );
@@ -588,13 +587,13 @@ mod tests {
         let running_created = SystemTime::UNIX_EPOCH;
         let (running, _) = create_log(
             dir.path(),
-            "output_log_running.txt",
+            "output_log_z_running.txt",
             b"log",
             running_created,
         );
         let (closed, closed_created) = create_log(
             dir.path(),
-            "output_log_closed.txt",
+            "output_log_a_closed.txt",
             b"log",
             running_created + Duration::from_secs(1),
         );

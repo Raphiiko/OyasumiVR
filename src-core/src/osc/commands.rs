@@ -212,10 +212,11 @@ mod tests {
     async fn resolves_ipv4_hosts_and_rejects_invalid_addresses() {
         for host in ["127.0.0.1", "localhost"] {
             assert!(osc_valid_addr(format!("{host}:9000")).await);
-            assert!(resolve_osc_address(&format!("{host}:9000"))
-                .await
-                .unwrap()
-                .is_ipv4());
+            let address = resolve_osc_address(&format!("{host}:9000")).await.unwrap();
+            assert_eq!(
+                address.ip(),
+                std::net::IpAddr::V4(std::net::Ipv4Addr::LOCALHOST)
+            );
         }
         #[cfg(windows)]
         assert!(osc_valid_addr(format!("{}:9000", std::env::var("COMPUTERNAME").unwrap())).await);

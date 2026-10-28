@@ -422,7 +422,8 @@ mod tests {
     fn checkpoint_metadata_is_stable() {
         let (base, _) = setup();
         let mut schema_versions = BTreeMap::new();
-        schema_versions.insert("AUTOMATION_CONFIGS".to_string(), 8);
+        schema_versions.insert("Z_STORE".to_string(), 8);
+        schema_versions.insert("A_STORE".to_string(), 2);
         let contents = r#"{"AUTOMATION_CONFIGS":{"version":8}}"#;
         let metadata = create_checkpoint(
             base.path(),
@@ -438,21 +439,50 @@ mod tests {
         assert_eq!(metadata.app_version, "26.8.0-beta.6");
         assert_eq!(metadata.reason, "pre-migration");
         assert_eq!(metadata.schema_versions, schema_versions);
-        assert_eq!(metadata.content_checksum, checksum(contents.as_bytes()));
-        assert_eq!(metadata.content_size_bytes, contents.len() as u64);
+        assert_eq!(
+            metadata.content_checksum,
+            "612547ae6afca607839b5fb6d9b7d07c"
+        );
+        assert_eq!(metadata.content_size_bytes, 36);
+        assert_eq!(metadata.sequence, 1);
+        assert_eq!(
+            metadata.content_file,
+            "612547ae6afca607839b5fb6d9b7d07c.dat"
+        );
         assert!(metadata.content_file_exists);
-        assert!(chrono::DateTime::parse_from_rfc3339(&metadata.created_at).is_ok());
-        let stored: CheckpointMetadata = serde_json::from_str(
-            &fs::read_to_string(
-                checkpoint_dir(base.path(), "settings").join(format!("{}.json", metadata.id)),
-            )
-            .unwrap(),
+        let created_at = chrono::DateTime::parse_from_rfc3339(&metadata.created_at).unwrap();
+        assert_eq!(created_at.timestamp_millis(), metadata.created_at_millis);
+        let raw = fs::read_to_string(
+            checkpoint_dir(base.path(), "settings").join(format!("{}.json", metadata.id)),
         )
         .unwrap();
+        let stored: CheckpointMetadata = serde_json::from_str(&raw).unwrap();
         assert_eq!(stored.id, metadata.id);
         assert_eq!(stored.content_checksum, metadata.content_checksum);
         assert_eq!(stored.schema_versions, metadata.schema_versions);
         assert!(stored.content_file_exists);
+        let mut previous_key = 0;
+        for key in [
+            "formatVersion",
+            "id",
+            "storeName",
+            "appVersion",
+            "reason",
+            "createdAt",
+            "createdAtMillis",
+            "sequence",
+            "schemaVersions",
+            "contentChecksum",
+            "contentSizeBytes",
+            "contentFile",
+            "contentFileExists",
+        ] {
+            let key = format!("\"{key}\"");
+            let position = raw.find(&key).unwrap_or_else(|| panic!("missing {key}"));
+            assert!(position > previous_key, "unstable key order at {key}");
+            previous_key = position;
+        }
+        assert!(raw.find("\"A_STORE\": 2").unwrap() < raw.find("\"Z_STORE\": 8").unwrap());
     }
 
     #[test]
@@ -601,6 +631,7 @@ mod tests {
         let (base, live_dir) = setup();
         save_snapshot(base.path(), "settings", r#"{"a":1}"#).unwrap();
         assert_eq!(dir_entries(base.path()), vec!["settings.dat".to_string()]);
+        fs::write(live_path(live_dir.path()), r#"{"old":true}"#).unwrap();
         replace_store(&live_path(live_dir.path()), r#"{"b":2}"#).unwrap();
         assert_eq!(
             dir_entries(live_dir.path()),
@@ -621,15 +652,6 @@ mod tests {
             fs::read_to_string(snapshot_path(base.path(), "settings")).unwrap(),
             r#"{"v":2}"#
         );
-    }
-
-    #[test]
-    fn replace_store_replaces_existing_file() {
-        let (_, live_dir) = setup();
-        let live = live_path(live_dir.path());
-        fs::write(&live, r#"{"old":true}"#).unwrap();
-        replace_store(&live, r#"{"new":true}"#).unwrap();
-        assert_eq!(fs::read_to_string(&live).unwrap(), r#"{"new":true}"#);
     }
 
     #[test]

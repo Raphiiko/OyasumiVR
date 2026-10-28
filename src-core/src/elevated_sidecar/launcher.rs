@@ -573,5 +573,9 @@ mod tests {
     #[test]
     fn an_elevated_process_is_supported() {
         assert!(!oyasumivr_shared::windows::is_elevated() || super::supported());
+        assert!(
+            !oyasumivr_shared::windows::is_elevated()
+                || super::state() != super::LauncherState::NotSupported
+        );
     }
 }

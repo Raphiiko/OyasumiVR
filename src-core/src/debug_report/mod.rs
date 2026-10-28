@@ -678,6 +678,12 @@ mod tests {
             ReportFile::text("logs/OyasumiVR.log", "line"),
         ];
         let mut archive = zip::ZipArchive::new(Cursor::new(build_zip(&files).unwrap())).unwrap();
+        let mut report = String::new();
+        archive
+            .by_name("report.json")
+            .unwrap()
+            .read_to_string(&mut report)
+            .unwrap();
         let mut log = String::new();
         archive
             .by_name("logs/OyasumiVR.log")
@@ -685,6 +691,7 @@ mod tests {
             .read_to_string(&mut log)
             .unwrap();
         assert_eq!(archive.len(), 2);
+        assert_eq!(report, "{}");
         assert_eq!(log, "line");
     }
 }
