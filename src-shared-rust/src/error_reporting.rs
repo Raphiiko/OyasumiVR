@@ -579,9 +579,11 @@ mod tests {
             "oyasumivr-error-budget-blocked-{}",
             std::process::id()
         ));
-        fs::write(&parent, []).unwrap();
+        fs::create_dir_all(&parent).unwrap();
+        let path = parent.join("budget.json");
+        fs::create_dir_all(path.with_extension("tmp")).unwrap();
         let budget = EventBudget::new(
-            parent.join("budget.json"),
+            path.clone(),
             EventBudgetConfig {
                 first_event_cap: 1,
                 recurrence_cap: 0,
@@ -593,7 +595,8 @@ mod tests {
         let state = budget.state.lock().unwrap();
         assert_eq!(state.first_events, 0);
         assert!(state.issues.is_empty());
-        let _ = fs::remove_file(parent);
+        assert!(!path.exists());
+        let _ = fs::remove_dir_all(parent);
     }
 
     #[test]
@@ -616,12 +619,14 @@ mod tests {
             let mut state = budget.state.lock().unwrap();
             state.day = current_day().saturating_sub(1);
             state.first_events = 1;
+            state.recurrence_events = 1;
             state.issues.insert("old".into(), 1);
         }
         assert!(budget.allow("new"));
         let state = budget.state.lock().unwrap();
         assert_eq!(state.day, current_day());
         assert_eq!(state.first_events, 1);
+        assert_eq!(state.recurrence_events, 0);
         assert_eq!(state.issues.get("new"), Some(&1));
         assert!(!state.issues.contains_key("old"));
         drop(state);
@@ -710,5 +715,6 @@ mod tests {
         });
         assert!(transport.flush(Duration::from_secs(1)));
         worker.join().unwrap();
+        assert!(transport.flush(Duration::ZERO));
     }
 }

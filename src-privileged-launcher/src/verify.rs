@@ -111,11 +111,12 @@ mod tests {
         let first = signature_id(&path).unwrap();
         let second = signature_id(&path).unwrap();
         assert_eq!(first, second);
+        assert_eq!(first, "RURVwFT5RoqL7_-abc");
         assert!(first
             .chars()
             .all(|c| c.is_ascii_alphanumeric() || c == '-' || c == '_'));
         assert!(!first.is_empty());
-        assert!(first.len() < 200, "a directory name has to fit: {first}");
+        assert_eq!(first.len(), 18);
     }
 
     #[test]
@@ -150,17 +151,6 @@ mod tests {
         let head = "RURVwFT5RoqL7xHjslmUCuY52A61ZUXDIy7TUTsgRijuPNcW";
         std::fs::write(&a, format!("untrusted comment: x\n{head}aaaa==\n")).unwrap();
         std::fs::write(&b, format!("untrusted comment: x\n{head}bbbb==\n")).unwrap();
-        assert_ne!(signature_id(&a).unwrap(), signature_id(&b).unwrap());
-    }
-
-    #[test]
-    fn signature_id_differs_for_different_signatures() {
-        let dir = std::env::temp_dir().join("oyasumi-sigid-test2");
-        std::fs::create_dir_all(&dir).unwrap();
-        let a = dir.join("a.minisig");
-        let b = dir.join("b.minisig");
-        std::fs::write(&a, "untrusted comment: x\nAAAAbbbb==\n").unwrap();
-        std::fs::write(&b, "untrusted comment: x\nCCCCdddd==\n").unwrap();
         assert_ne!(signature_id(&a).unwrap(), signature_id(&b).unwrap());
     }
 
@@ -209,22 +199,13 @@ mod tests {
     }
 
     #[test]
-    fn accepts_a_correctly_signed_binary() {
-        let (key, exe, sig) = fixture(
-            "oyasumi-verify-ok",
-            b"pretend this is a sidecar",
-            "oyasumivr-elevated-sidecar",
-        );
-        verify_with(&key, &exe, &sig).expect("a good signature must verify");
-    }
-
-    #[test]
     fn rejects_a_tampered_binary() {
         let (key, exe, sig) = fixture(
             "oyasumi-verify-tamper",
             b"pretend this is a sidecar",
             "oyasumivr-elevated-sidecar",
         );
+        verify_with(&key, &exe, &sig).expect("the intact pair must verify");
         std::fs::write(&exe, b"malware").unwrap();
         assert!(verify_with(&key, &exe, &sig).is_err());
     }

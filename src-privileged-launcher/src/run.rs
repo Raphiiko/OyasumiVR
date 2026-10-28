@@ -268,10 +268,13 @@ mod tests {
 
     #[test]
     fn collection_survives_a_missing_root() {
-        collect_old_staged(
-            &std::env::temp_dir().join("oyasumi-run-does-not-exist"),
-            Path::new("x"),
-        );
+        let root = std::env::temp_dir().join(format!("oyasumi-run-missing-{}", std::process::id()));
+        let _ = std::fs::remove_dir_all(&root);
+        assert!(!root.exists());
+
+        collect_old_staged(&root, &root.join("keep"));
+
+        assert!(!root.exists());
     }
 
     #[test]

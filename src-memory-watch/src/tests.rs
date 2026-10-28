@@ -131,8 +131,13 @@ fn history_stays_bounded_after_thousands_of_samples() {
         history.bytes,
         history.samples.iter().map(String::len).sum::<usize>()
     );
+    let before_oversized = (history.samples.len(), history.bytes);
     history.record(&[], Some(&"x".repeat(HISTORY_BYTES + 1)));
-    assert!(history.bytes <= HISTORY_BYTES);
+    assert_eq!(
+        before_oversized,
+        (history.samples.len(), history.bytes),
+        "an oversized sample must be ignored without discarding history"
+    );
 }
 
 #[test]

@@ -410,9 +410,16 @@ mod tests {
     #[test]
     fn snapshot_accepts_an_incomplete_installation() {
         for missing in [LAUNCHER_EXE, LAUNCHER_MARKER] {
-            let dir = scratch(&format!("oyasumi-elevated-cleanup-missing-{missing}"));
+            let dir = scratch(&format!(
+                "oyasumi-elevated-cleanup-missing-{missing}-{}",
+                std::process::id()
+            ));
             write_launcher_state(&dir);
             std::fs::remove_file(dir.join(missing)).unwrap();
+            assert_eq!(
+                std::fs::read(dir.join(missing)).unwrap_err().kind(),
+                std::io::ErrorKind::NotFound
+            );
 
             let snapshot = InstallationSnapshot::read(&dir).unwrap();
 

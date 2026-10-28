@@ -32,8 +32,23 @@ pub fn install_tls_provider() {
 mod tests {
     #[test]
     fn reqwest_builds_a_client_once_the_tls_provider_is_installed() {
-        super::install_tls_provider();
-        reqwest::blocking::Client::builder().build().unwrap();
+        const CHILD_RUN: &str = "OYASUMIVR_TLS_PROVIDER_TEST_CHILD";
+
+        if std::env::var_os(CHILD_RUN).is_some() {
+            super::install_tls_provider();
+            reqwest::blocking::Client::builder().build().unwrap();
+            return;
+        }
+
+        let status = std::process::Command::new(std::env::current_exe().unwrap())
+            .arg("reqwest_builds_a_client_once_the_tls_provider_is_installed")
+            .env(CHILD_RUN, "1")
+            .status()
+            .unwrap();
+        assert!(
+            status.success(),
+            "the isolated client build failed: {status}"
+        );
     }
 
     /// The launcher verifies with the key committed here, the build signs with the key in
