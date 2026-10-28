@@ -150,6 +150,7 @@ describe('ShutdownAutomationsService sequence completion', () => {
     });
 
     await expect(service.runSequence('MANUAL')).rejects.toThrow('device failure');
+    expect(invoke).not.toHaveBeenCalled();
     await expect(firstValueFrom(service.stage.pipe(take(1)))).resolves.toBe('IDLE');
   });
 

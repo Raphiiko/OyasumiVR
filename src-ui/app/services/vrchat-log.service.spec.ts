@@ -26,8 +26,10 @@ it.each(['OnPlayerJoined', 'OnPlayerLeft', 'OnLocationChange'])(
     const service = new VRChatLogService();
     const parsed = firstValueFrom(service.logEvents);
     service['handleLogEvent']({ time, event, data: 'Me (usr_me)', initialLoad: true });
-    expect((await parsed).timestamp.toISOString()).toBe('2026-08-23T20:42:35.000Z');
-    expect((await parsed).initialLoad).toBe(true);
+    const parsedEvent = await parsed;
+    expect(parsedEvent.timestamp.getTime()).toBe(time);
+    expect(parsedEvent.timestamp.toISOString()).toBe('2026-08-23T20:42:35.000Z');
+    expect(parsedEvent.initialLoad).toBe(true);
   }
 );
 
@@ -36,6 +38,7 @@ it.each([-1, 0, 20 * 60_000 - 1, 20 * 60_000, 21 * 60_000])(
   async (elapsed) => {
     vi.useFakeTimers();
     vi.setSystemTime(time + elapsed);
+    const eligible = elapsed >= 0 && elapsed < 20 * 60_000;
     // parse the current user's native join event
     const logs = new VRChatLogService();
     const parsed = firstValueFrom(logs.logEvents);
@@ -73,9 +76,8 @@ it.each([-1, 0, 20 * 60_000 - 1, 20 * 60_000, 21 * 60_000])(
       reason: { type: 'AUTOMATION', automation: 'SLEEP_MODE_ENABLE_FOR_SLEEP_DETECTOR' },
     });
     await vi.runAllTimersAsync();
-    expect(unlock.mock.calls).toEqual(
-      elapsed >= 0 && elapsed < 20 * 60_000 ? [[SteamAchievements.QUICK_EEPER, true]] : []
-    );
+    expect(steam.getAchievement).toHaveBeenCalledTimes(eligible ? 1 : 0);
+    expect(unlock.mock.calls).toEqual(eligible ? [[SteamAchievements.QUICK_EEPER, true]] : []);
     changes.complete();
   }
 );

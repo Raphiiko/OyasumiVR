@@ -46,6 +46,7 @@ it('keeps unlocking an achievement after Steam fails to read it', async () => {
 
   expect(log.warn).toHaveBeenCalledOnce();
   expect(log.warn.mock.calls[0][0]).toContain('FAILED_TO_GET_STATUS');
+  expect(steam.getAchievement).toHaveBeenCalledTimes(2);
   expect(unlock).toHaveBeenCalledOnce();
   expect(unlock).toHaveBeenCalledWith(SteamAchievements.QUICK_EEPER, true);
 });
@@ -71,6 +72,7 @@ it('retries a one-time achievement on the next trigger after a failed unlock', a
   clientStatus.next('CONNECTED');
   await vi.advanceTimersByTimeAsync(1000);
 
+  expect(steam.getAchievement).toHaveBeenCalledTimes(2);
   expect(unlock).toHaveBeenCalledExactlyOnceWith(SteamAchievements.HASS_CON, true);
   vi.useRealTimers();
 });

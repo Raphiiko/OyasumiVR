@@ -12,6 +12,7 @@ vi.mock('../utils/app-utils', () => ({ getVersion: async () => 'test' }));
 
 const me = { id: 'me', displayName: 'Me' } as CurrentUser;
 const friend = { id: 'friend', displayName: 'Friend' } as LimitedUserFriend;
+const otherFriend = { id: 'other', displayName: 'Other' } as LimitedUserFriend;
 
 async function setup() {
   const configs = new BehaviorSubject(structuredClone(AUTOMATION_CONFIGS_DEFAULT));
@@ -186,6 +187,7 @@ describe('friend refresh demand', () => {
     h.setMode('FRIEND');
     if (trigger === 'logout') h.user.next(null);
     else h.setMode('DISABLED');
+    await Promise.resolve();
     resolve([friend]);
     await vi.advanceTimersByTimeAsync(0);
     h.services.forEach((service) => expect(service['friends']).toEqual([]));
@@ -205,8 +207,10 @@ describe('friend refresh demand', () => {
     h.user.next({ ...me });
     await vi.advanceTimersByTimeAsync(0);
     h.services.forEach((service) => expect(service['friends']).toEqual([friend]));
+    h.calls.forEach((call) => call.mockResolvedValue([otherFriend]));
     h.user.next({ ...me });
     await vi.advanceTimersByTimeAsync(0);
     h.calls.forEach((call) => expect(call).toHaveBeenCalledTimes(3));
+    h.services.forEach((service) => expect(service['friends']).toEqual([otherFriend]));
   });
 });

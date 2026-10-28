@@ -172,7 +172,7 @@ describe('OpenVR input session reset', () => {
       status.next('INITIALIZED');
       emit(OVRInputEventAction.MuteMicrophone);
       await pressMute.promise;
-      expect(setMute).toHaveBeenCalledWith(false);
+      expect(setMute.mock.calls).toEqual([[false]]);
     }
   );
 });

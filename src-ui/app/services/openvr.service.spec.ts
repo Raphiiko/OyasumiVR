@@ -279,7 +279,7 @@ describe('Start with SteamVR synchronization', () => {
     emit<OpenVRStatus>('OVR_STATUS_UPDATE', 'INITIALIZED');
     await Promise.resolve();
     emit<OpenVRStatus>('OVR_STATUS_UPDATE', 'INACTIVE');
-    resolveRead(false);
+    resolveRead(true);
     await (service as unknown as { autoLaunchQueue: Promise<void> }).autoLaunchQueue;
     expect(appSettings.settingsSync.startWithSteamVR).toBe(false);
   });

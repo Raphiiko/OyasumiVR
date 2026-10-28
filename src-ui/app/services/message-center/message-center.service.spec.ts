@@ -18,15 +18,20 @@ function createService(messages: MessageItem[]) {
 
 describe('MessageCenterService.addMessage', () => {
   it('appends a message with a new id', () => {
-    const { service, subject } = createService([message('a')]);
-    service.addMessage(message('b'));
-    expect(subject.value.map((m) => m.id)).toEqual(['a', 'b']);
+    const first = message('a', 'first');
+    const second = message('b', 'second');
+    const { service, subject } = createService([first]);
+    service.addMessage(second);
+    expect(subject.value).toEqual([first, second]);
   });
 
   it('replaces a message with the same id in its current position', () => {
-    const { service, subject } = createService([message('a'), message('b'), message('c')]);
-    service.addMessage(message('a', 'changed'));
-    expect(subject.value.map((m) => m.id)).toEqual(['a', 'b', 'c']);
-    expect(subject.value[0].message).toBe('changed');
+    const first = message('a', 'old');
+    const second = message('b');
+    const third = message('c');
+    const replacement = message('a', 'changed');
+    const { service, subject } = createService([first, second, third]);
+    service.addMessage(replacement);
+    expect(subject.value).toEqual([replacement, second, third]);
   });
 });
