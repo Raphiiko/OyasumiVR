@@ -125,6 +125,8 @@ export function buildFeatureSnapshot(ctx: FeatureSnapshotContext): Record<string
         status.changeStatusMessageOnSleepModeDisable,
         status.changeStatusOnSleepPreparation,
         status.changeStatusMessageOnSleepPreparation,
+        status.changeStatusOnShutdownSequence,
+        status.changeStatusMessageOnShutdownSequence,
       ].some(Boolean),
     vrchat_auto_accept_invites: a.AUTO_ACCEPT_INVITE_REQUESTS.enabled,
     vrchat_group: [

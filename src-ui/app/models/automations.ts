@@ -318,6 +318,10 @@ export interface ChangeStatusGeneralEventsAutomationConfig extends AutomationCon
   statusOnSleepPreparation: UserStatus;
   changeStatusMessageOnSleepPreparation: boolean;
   statusMessageOnSleepPreparation: string;
+  changeStatusOnShutdownSequence: boolean;
+  statusOnShutdownSequence: UserStatus;
+  changeStatusMessageOnShutdownSequence: boolean;
+  statusMessageOnShutdownSequence: string;
 }
 
 // WINDOWS POWER POLICY AUTOMATIONS
@@ -837,6 +841,10 @@ export const AUTOMATION_CONFIGS_DEFAULT: AutomationConfigs = {
     statusOnSleepPreparation: UserStatus.JoinMe,
     changeStatusMessageOnSleepPreparation: false,
     statusMessageOnSleepPreparation: '',
+    changeStatusOnShutdownSequence: false,
+    statusOnShutdownSequence: UserStatus.Active,
+    changeStatusMessageOnShutdownSequence: false,
+    statusMessageOnShutdownSequence: '',
   },
   AUTO_ACCEPT_INVITE_REQUESTS: {
     enabled: false,

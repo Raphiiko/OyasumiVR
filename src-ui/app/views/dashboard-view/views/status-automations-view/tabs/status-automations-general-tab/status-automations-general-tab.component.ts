@@ -73,6 +73,7 @@ export class StatusAutomationsGeneralTabComponent implements OnInit {
   onSleepEnableStatusOption?: SelectBoxItem;
   onSleepDisableStatusOption?: SelectBoxItem;
   onSleepPreparationStatusOption?: SelectBoxItem;
+  onShutdownSequenceStatusOption?: SelectBoxItem;
 
   constructor(
     private sanitizer: DomSanitizer,
@@ -101,6 +102,9 @@ export class StatusAutomationsGeneralTabComponent implements OnInit {
         this.onSleepPreparationStatusOption = this.statusOptions.find(
           (s) => s.id === this.config.statusOnSleepPreparation
         );
+        this.onShutdownSequenceStatusOption = this.statusOptions.find(
+          (s) => s.id === this.config.statusOnShutdownSequence
+        );
         this.cdr.markForCheck();
       });
   }
@@ -113,7 +117,8 @@ export class StatusAutomationsGeneralTabComponent implements OnInit {
   }
 
   async setStatusOption(
-    automation: 'ON_SLEEP_ENABLE' | 'ON_SLEEP_DISABLE' | 'ON_SLEEP_PREPARATION',
+    automation:
+      'ON_SLEEP_ENABLE' | 'ON_SLEEP_DISABLE' | 'ON_SLEEP_PREPARATION' | 'ON_SHUTDOWN_SEQUENCE',
     option: SelectBoxItem | undefined
   ) {
     if (!option) return;
@@ -133,11 +138,17 @@ export class StatusAutomationsGeneralTabComponent implements OnInit {
           statusOnSleepPreparation: option.id! as UserStatus,
         });
         break;
+      case 'ON_SHUTDOWN_SEQUENCE':
+        await this.updateConfig({
+          statusOnShutdownSequence: option.id! as UserStatus,
+        });
+        break;
     }
   }
 
   async updateStatusMessage(
-    automation: 'ON_SLEEP_ENABLE' | 'ON_SLEEP_DISABLE' | 'ON_SLEEP_PREPARATION',
+    automation:
+      'ON_SLEEP_ENABLE' | 'ON_SLEEP_DISABLE' | 'ON_SLEEP_PREPARATION' | 'ON_SHUTDOWN_SEQUENCE',
     value: string
   ) {
     value = value.trim().slice(0, 32);
@@ -146,7 +157,9 @@ export class StatusAutomationsGeneralTabComponent implements OnInit {
         ? 'statusMessageOnSleepModeEnable'
         : automation === 'ON_SLEEP_DISABLE'
           ? 'statusMessageOnSleepModeDisable'
-          : 'statusMessageOnSleepPreparation';
+          : automation === 'ON_SLEEP_PREPARATION'
+            ? 'statusMessageOnSleepPreparation'
+            : 'statusMessageOnShutdownSequence';
     await this.updateConfig({
       [key]: value,
     });

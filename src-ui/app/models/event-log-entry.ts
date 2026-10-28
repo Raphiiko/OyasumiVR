@@ -256,7 +256,7 @@ export interface EventLogStatusChangedOnPlayerCountChange extends EventLogBase {
 
 export interface EventLogStatusChangedOnGeneralEvent extends EventLogBase {
   type: 'statusChangedOnGeneralEvent';
-  reason: 'SLEEP_MODE_ENABLED' | 'SLEEP_MODE_DISABLED' | 'SLEEP_PREPARATION';
+  reason: 'SLEEP_MODE_ENABLED' | 'SLEEP_MODE_DISABLED' | 'SLEEP_PREPARATION' | 'SHUTDOWN_SEQUENCE';
   newStatus?: UserStatus;
   oldStatus: UserStatus;
   newStatusMessage?: string;

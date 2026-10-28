@@ -208,6 +208,75 @@
         #onSleepPreparationStatusMessageInput
       />
     </app-setting-row>
+    <app-setting-row
+      label="status-automations.general.onShutdownSequence.title"
+      description="status-automations.general.onShutdownSequence.description.status"
+      [value]="{
+        changeStatusOnShutdownSequence: config.changeStatusOnShutdownSequence,
+        statusOnShutdownSequence: config.statusOnShutdownSequence,
+      }"
+      [defaultValue]="{
+        changeStatusOnShutdownSequence: defaults.changeStatusOnShutdownSequence,
+        statusOnShutdownSequence: defaults.statusOnShutdownSequence,
+      }"
+      (resetToDefault)="updateConfig($event)"
+    >
+      <label class="switch-toggle">
+        <input
+          type="checkbox"
+          [checked]="config.changeStatusOnShutdownSequence"
+          (change)="
+            updateConfig({
+              changeStatusOnShutdownSequence: !config.changeStatusOnShutdownSequence,
+            })
+          "
+        />
+        <span class="switch-toggle-slider"></span>
+      </label>
+      <app-select-box
+        class="status-dropdown"
+        [type]="'SMALL'"
+        [items]="statusOptions"
+        [selected]="onShutdownSequenceStatusOption"
+        (selectedChange)="setStatusOption('ON_SHUTDOWN_SEQUENCE', $event)"
+        [disabled]="!config.changeStatusOnShutdownSequence"
+      ></app-select-box>
+    </app-setting-row>
+    <app-setting-row
+      description="status-automations.general.onShutdownSequence.description.statusMessage"
+      [value]="{
+        changeStatusMessageOnShutdownSequence: config.changeStatusMessageOnShutdownSequence,
+        statusMessageOnShutdownSequence: config.statusMessageOnShutdownSequence,
+      }"
+      [defaultValue]="{
+        changeStatusMessageOnShutdownSequence: defaults.changeStatusMessageOnShutdownSequence,
+        statusMessageOnShutdownSequence: defaults.statusMessageOnShutdownSequence,
+      }"
+      (resetToDefault)="updateConfig($event)"
+    >
+      <label class="switch-toggle">
+        <input
+          type="checkbox"
+          [checked]="config.changeStatusMessageOnShutdownSequence"
+          (change)="
+            updateConfig({
+              changeStatusMessageOnShutdownSequence: !config.changeStatusMessageOnShutdownSequence,
+            })
+          "
+        />
+        <span class="switch-toggle-slider"></span>
+      </label>
+      <input
+        type="text"
+        [disabled]="!config.changeStatusMessageOnShutdownSequence"
+        maxlength="32"
+        [value]="config.statusMessageOnShutdownSequence"
+        (input)="
+          updateStatusMessage('ON_SHUTDOWN_SEQUENCE', onShutdownSequenceStatusMessageInput.value)
+        "
+        #onShutdownSequenceStatusMessageInput
+      />
+    </app-setting-row>
   </div>
 </div>
 <app-alert severity="warning" style="margin-top: 1em" contentClass="with-action">

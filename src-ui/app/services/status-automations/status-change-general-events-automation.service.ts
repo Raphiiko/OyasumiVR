@@ -3,13 +3,14 @@ import { AutomationConfigService } from '../automation-config.service';
 import { VRChatService } from '../vrchat-api/vrchat.service';
 import { SleepService } from '../sleep.service';
 import { SleepPreparationService } from '../sleep-preparation.service';
+import { ShutdownAutomationsService } from '../shutdown-automations.service';
 import { NotificationService } from '../notification.service';
 import {
   AUTOMATION_CONFIGS_DEFAULT,
   ChangeStatusGeneralEventsAutomationConfig,
 } from '../../models/automations';
 
-import { debounceTime, distinctUntilChanged, filter, map, skip } from 'rxjs';
+import { debounceTime, distinctUntilChanged, filter, map, pairwise, skip } from 'rxjs';
 import { UserStatus } from '../../models/vrchat';
 import { TranslocoService } from '@jsverse/transloco';
 import type { CurrentUser } from 'vrchat';
@@ -31,6 +32,7 @@ export class StatusChangeGeneralEventsAutomationService {
     private vrchat: VRChatService,
     private sleep: SleepService,
     private sleepPreparation: SleepPreparationService,
+    private shutdownAutomations: ShutdownAutomationsService,
     private notifications: NotificationService,
     private translate: TranslocoService,
     private eventLog: EventLogService
@@ -45,6 +47,7 @@ export class StatusChangeGeneralEventsAutomationService {
     });
     this.handleSleepMode();
     this.handleSleepPreparation();
+    this.handleShutdownSequence();
   }
 
   private handleSleepMode() {
@@ -102,6 +105,31 @@ export class StatusChangeGeneralEventsAutomationService {
       )
       .subscribe(({ status, statusMessage }) =>
         this.applyStatus(status, statusMessage, 'SLEEP_PREPARATION')
+      );
+  }
+
+  private handleShutdownSequence() {
+    this.shutdownAutomations.stage
+      .pipe(
+        // fire once when the sequence leaves IDLE
+        pairwise(),
+        filter(([prev, next]) => prev === 'IDLE' && next !== 'IDLE'),
+        filter(() => this.config.enabled),
+        filter(() => Boolean(this.vrcUser && this.vrcUser.status !== UserStatus.Offline)),
+        map(() => {
+          const status: UserStatus | null = this.config.changeStatusOnShutdownSequence
+            ? this.config.statusOnShutdownSequence
+            : null;
+          const statusMessage: string | null = this.config.changeStatusMessageOnShutdownSequence
+            ? this.config.statusMessageOnShutdownSequence
+            : null;
+          return { status, statusMessage };
+        }),
+        filter((data) => Boolean(data.status || data.statusMessage)),
+        debounceTime(500)
+      )
+      .subscribe(({ status, statusMessage }) =>
+        this.applyStatus(status, statusMessage, 'SHUTDOWN_SEQUENCE')
       );
   }
 
