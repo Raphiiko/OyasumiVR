@@ -15,7 +15,7 @@ import { TelemetryService } from '../telemetry/telemetry.service';
 import { VRChatLogService } from '../vrchat-log.service';
 import { VRChatService } from './vrchat.service';
 
-function makeService() {
+async function makeService() {
   const logEvents = new Subject<VRChatLogEvent>();
   const logService = { logEvents, initialLoadComplete: new BehaviorSubject(true) };
   const injector = Injector.create({
@@ -27,14 +27,15 @@ function makeService() {
     ],
   });
   const service = runInInjectionContext(injector, () => new VRChatService());
+  await service.init();
   const login = (id: string) =>
     service['auth']['userSubject'].next({ id } as unknown as CurrentUser);
   return { service, logEvents, login };
 }
 
 describe('VRChatService world context', () => {
-  it('keeps log events emitted before init', async () => {
-    const { service, logEvents } = makeService();
+  it('receives log events after init, without a session', async () => {
+    const { service, logEvents } = await makeService();
 
     logEvents.next({
       type: 'OnLocationChange',
@@ -47,7 +48,7 @@ describe('VRChatService world context', () => {
   });
 
   it('marks the world loaded when login follows the own join', async () => {
-    const { service, logEvents, login } = makeService();
+    const { service, logEvents, login } = await makeService();
     logEvents.next({
       type: 'OnLocationChange',
       instanceId: 'wrld_a:1',
@@ -71,7 +72,7 @@ describe('VRChatService world context', () => {
   });
 
   it('marks the world loaded when login lands right after the own join', async () => {
-    const { service, logEvents, login } = makeService();
+    const { service, logEvents, login } = await makeService();
     logEvents.next({
       type: 'OnPlayerJoined',
       displayName: 'Me',

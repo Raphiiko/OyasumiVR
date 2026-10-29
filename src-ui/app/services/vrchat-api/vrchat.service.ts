@@ -116,17 +116,21 @@ export class VRChatService {
     this.notifications = this.socket.notifications;
     this.isFetchingFriends = this.api.isFetchingFriends;
     this.websocketStatus = this.socket.status;
-    // the log service emits without replay, so subscribe before any init reads the log
-    this.subscribeToLogEvents();
-    this.auth.user.subscribe((user) => this.handleUserChange(user?.id ?? null));
   }
 
+  /** Local setup without network access. Must finish before the log watcher starts, as log events are not replayed. */
   public async init(): Promise<void> {
+    this.subscribeToLogEvents();
+    this.auth.user.subscribe((user) => this.handleUserChange(user?.id ?? null));
+    await this.watchVRChatProcess();
+  }
+
+  /** Restores the VRChat session. Call after init(). */
+  public async initSession(): Promise<void> {
     await this.loadSettings();
     await this.api.init(this.auth.user, this.auth.patchCurrentUser.bind(this.auth));
     await this.auth.init();
     this.socket.init();
-    await this.watchVRChatProcess();
   }
 
   /** Sends only the changed spans: punctuation as code points, spans with letters or digits as lengths. */
