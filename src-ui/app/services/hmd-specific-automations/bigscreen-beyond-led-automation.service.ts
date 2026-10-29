@@ -11,8 +11,7 @@ import {
   startWith,
   switchMap,
 } from 'rxjs';
-import { listen } from '@tauri-apps/api/event';
-import { invoke } from '@tauri-apps/api/core';
+import { commands, events } from '../../bindings';
 import { AutomationConfigService } from '../automation-config.service';
 import {
   AUTOMATION_CONFIGS_DEFAULT,
@@ -53,14 +52,14 @@ export class BigscreenBeyondLedAutomationService {
       .pipe(map((c) => c.BIGSCREEN_BEYOND_RGB_CONTROL))
       .subscribe((config) => (this.config = config));
     // Listen for the connection state of the Bigscreen Beyond
-    listen<boolean>('BIGSCREEN_BEYOND_CONNECTED', (event) => {
+    events.bigscreenBeyondConnectedEvent.listen((event) => {
       this.connected.next(event.payload);
     });
     interval(10000)
       .pipe(
         startWith(0),
         switchMap(() =>
-          invoke<boolean>('bigscreen_beyond_is_connected').then((connected) => {
+          commands.bigscreenBeyondIsConnected().then((connected) => {
             this.connected.next(connected);
           })
         )
@@ -139,21 +138,13 @@ export class BigscreenBeyondLedAutomationService {
           ];
           // Set the intermediary color
           if (this.connected.value) {
-            invoke('bigscreen_beyond_set_led_color', {
-              r: color[0],
-              g: color[1],
-              b: color[2],
-            });
+            commands.bigscreenBeyondSetLedColor(color[0], color[1], color[2]);
             this.lastSetColor = [...color];
           }
         }
         // Set the final target color
         if (this.connected.value) {
-          invoke('bigscreen_beyond_set_led_color', {
-            r: targetColor[0],
-            g: targetColor[1],
-            b: targetColor[2],
-          });
+          commands.bigscreenBeyondSetLedColor(targetColor[0], targetColor[1], targetColor[2]);
           this.lastSetColor = [...targetColor];
           this._lastSetColorExt.next(this.lastSetColor);
         }
@@ -161,17 +152,15 @@ export class BigscreenBeyondLedAutomationService {
       await this.transitionTask.start();
       return true;
     }
-    const applied = await invoke('bigscreen_beyond_set_led_color', {
-      r: targetColor[0],
-      g: targetColor[1],
-      b: targetColor[2],
-    }).then(
-      () => true,
-      (e) => {
-        warn(`[BigscreenBeyondLedAutomation] Could not set the LED colour: ${e}`);
-        return false;
-      }
-    );
+    const applied = await commands
+      .bigscreenBeyondSetLedColor(targetColor[0], targetColor[1], targetColor[2])
+      .then(
+        () => true,
+        (e) => {
+          warn(`[BigscreenBeyondLedAutomation] Could not set the LED colour: ${e}`);
+          return false;
+        }
+      );
     this.lastSetColor = [...targetColor];
     this._lastSetColorExt.next(this.lastSetColor);
     return applied;

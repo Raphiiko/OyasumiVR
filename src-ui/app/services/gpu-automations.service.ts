@@ -23,10 +23,9 @@ import {
 
 import { GPUDevice, GPUPowerLimit } from '../models/gpu-device';
 import { NVML_ERROR_STATUSES, NvmlService } from './nvml.service';
-import { NvmlDevice } from '../models/nvml-device';
+import { commands, NvmlDevice } from '../bindings';
 import { SleepService } from './sleep.service';
 import { error, info, warn } from '@tauri-apps/plugin-log';
-import { invoke } from '@tauri-apps/api/core';
 import { ExecutableReferenceStatus } from '../models/settings';
 import { ElevatedSidecarService } from './elevated-sidecar.service';
 import { EventLogService } from './event-log.service';
@@ -419,10 +418,7 @@ export class GpuAutomationsService {
       return;
     }
     try {
-      await invoke<boolean>('msi_afterburner_set_profile', {
-        executablePath: path,
-        profile: index,
-      });
+      await commands.msiAfterburnerSetProfile(path, index);
       this.eventLog.logEvent({
         type: 'msiAfterburnerProfileSet',
         profile: index,
@@ -467,10 +463,8 @@ export class GpuAutomationsService {
       return;
     }
     try {
-      await invoke<boolean>('msi_afterburner_set_profile', {
-        executablePath: path,
-        profile: 0, // Profile 0 for testing without actually setting a profile
-      });
+      // profile 0 tests the executable without setting a profile
+      await commands.msiAfterburnerSetProfile(path, 0);
     } catch (e) {
       if (generation !== this.msiValidationGeneration) return;
       if (typeof e === 'string') {

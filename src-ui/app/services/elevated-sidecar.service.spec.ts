@@ -109,7 +109,7 @@ describe('ElevatedSidecarService', () => {
       handlers.set(event, handler);
     });
     await h.service.init();
-    const prompt = handlers.get('ELEVATION_PROMPT_SHOWN')!;
+    const prompt = handlers.get('elevation-prompt-shown-event')!;
 
     // a prompt during the startup enable stays without a notice
     invoke.mockImplementation(async (command: string) => {
@@ -139,7 +139,7 @@ describe('ElevatedSidecarService', () => {
       handlers.set(event, handler);
     });
     await h.service.init();
-    const prompt = handlers.get('ELEVATION_PROMPT_SHOWN')!;
+    const prompt = handlers.get('elevation-prompt-shown-event')!;
     invoke.mockImplementation(async (command: string) => {
       if (command === 'elevated_features_enable') await prompt();
       return command === 'elevated_sidecar_started' ? false : { result: 'promptDeclined' };

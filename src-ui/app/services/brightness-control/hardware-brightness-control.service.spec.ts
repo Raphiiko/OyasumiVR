@@ -118,7 +118,7 @@ describe('HardwareBrightnessControlService with a Steam Frame', () => {
     await settle();
     const [[, args]] = h.fades();
     const { operation, ...request } = (args as { request: { operation: string } }).request;
-    expect(request).toEqual({ control: 'brightness', target: 80, durationMs: 10000 });
+    expect(request).toEqual({ control: 'brightness', target: 80, durationMs: 10000, simple: null });
     expect(h.writes()).toEqual([]);
     expect(await firstValueFrom(h.service.activeTransition)).toBe(task);
 
@@ -585,7 +585,7 @@ describe('HardwareBrightnessControlService with the generic SteamVR analog gain 
     const [, onBeyondConnected] = vi
       .mocked(listen)
       .mock.calls.slice(beyondConnected)
-      .find(([event]) => event === 'BIGSCREEN_BEYOND_CONNECTED')!;
+      .find(([event]) => event === 'bigscreen-beyond-connected-event')!;
     await h.service.init();
     await firstFetch();
     await h.service.setBrightness(60);

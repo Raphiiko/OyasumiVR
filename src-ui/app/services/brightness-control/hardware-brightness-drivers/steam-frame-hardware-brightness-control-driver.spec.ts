@@ -3,8 +3,8 @@ import { BehaviorSubject, firstValueFrom, Subject } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { APP_SETTINGS_DEFAULT } from '../../../models/settings';
 import type { OVRDevice } from '../../../models/ovr-device';
+import type { Brightness } from '../../../bindings';
 import type {
-  SteamFrameBrightness,
   SteamFrameConnectionState,
   SteamFrameFadeEnded,
   SteamFramePairing,
@@ -17,7 +17,7 @@ vi.mock('@tauri-apps/plugin-log', () => ({ warn: vi.fn() }));
 
 const SERIAL = 'FPTEST000001';
 
-function brightness(percentage: number, overrides: Partial<SteamFrameBrightness> = {}) {
+function brightness(percentage: number, overrides: Partial<Brightness> = {}) {
   return { runtime: true, supported: true, min: 9, max: 125, percentage, ...overrides };
 }
 
@@ -39,7 +39,7 @@ function setup() {
   );
   const updates: number[] = [];
   driver.brightnessUpdates.subscribe((value) => updates.push(value));
-  const report = (value: SteamFrameBrightness | null, status = 'connected') =>
+  const report = (value: Brightness | null, status = 'connected') =>
     connections.next({
       'pairing-1': {
         pairingId: 'pairing-1',
@@ -200,7 +200,13 @@ describe('SteamFrameHardwareBrightnessControlDriver', () => {
     await new Promise((resolve) => setTimeout(resolve, 0));
     expect(invoke).toHaveBeenCalledWith('steam_frame_fade', {
       pairingId: 'pairing-1',
-      request: { control: 'brightness', target: 125, durationMs: 1000, operation: fade.operation },
+      request: {
+        control: 'brightness',
+        target: 125,
+        durationMs: 1000,
+        simple: null,
+        operation: fade.operation,
+      },
     });
     expect(fade.targetBrightness).toBe(200);
     fade.cancel();

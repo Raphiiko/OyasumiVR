@@ -22,8 +22,7 @@ import {
 import { AutomationConfigService } from '../automation-config.service';
 import { SleepService } from '../sleep.service';
 import { SleepPreparationService } from '../sleep-preparation.service';
-import { listen } from '@tauri-apps/api/event';
-import { invoke } from '@tauri-apps/api/core';
+import { commands, events } from '../../bindings';
 import { clamp } from '../../utils/number-utils';
 import { APP_SETTINGS_DEFAULT, AppSettings } from '../../models/settings';
 import { AppSettingsService } from '../app-settings.service';
@@ -68,14 +67,14 @@ export class BigscreenBeyondFanAutomationService {
       .pipe(map((c) => c.BIGSCREEN_BEYOND_FAN_CONTROL))
       .subscribe((config) => (this.config = config));
     // Listen for the connection state of the Bigscreen Beyond
-    listen<boolean>('BIGSCREEN_BEYOND_CONNECTED', (event) => {
+    events.bigscreenBeyondConnectedEvent.listen((event) => {
       this._connected.next(event.payload);
     });
     interval(10000)
       .pipe(
         startWith(0),
         switchMap(async () => {
-          const connected = await invoke<boolean>('bigscreen_beyond_is_connected');
+          const connected = await commands.bigscreenBeyondIsConnected();
           this._connected.next(connected);
         })
       )
@@ -172,7 +171,7 @@ export class BigscreenBeyondFanAutomationService {
       speed = 100;
     // Set the fan speed
     this._fanSpeed.next(speed);
-    return invoke('bigscreen_beyond_set_fan_speed', { speed }).then(
+    return commands.bigscreenBeyondSetFanSpeed(speed).then(
       () => speed,
       (e) => {
         warn(`[BigscreenBeyondFanAutomation] Could not set the fan speed: ${e}`);
@@ -182,7 +181,7 @@ export class BigscreenBeyondFanAutomationService {
   }
 
   private getBeyondDriverSavedFanSpeed(): Promise<number | null> {
-    return invoke<string>('bigscreen_beyond_get_saved_preferences').then((result) => {
+    return commands.bigscreenBeyondGetSavedPreferences().then((result) => {
       if (!result) return null;
       let preferences: { fan_speed: number } | undefined;
       try {

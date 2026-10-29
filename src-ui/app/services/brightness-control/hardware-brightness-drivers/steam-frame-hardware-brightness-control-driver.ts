@@ -1,4 +1,3 @@
-import { invoke } from '@tauri-apps/api/core';
 import { warn } from '@tauri-apps/plugin-log';
 import { isEqual } from 'lodash';
 import {
@@ -12,8 +11,8 @@ import {
 import { AppSettings } from '../../../models/settings';
 import { OVRDevice } from '../../../models/ovr-device';
 import type { OpenVRService, OpenVRStatus } from '../../openvr.service';
+import { Brightness, commands } from '../../../bindings';
 import {
-  SteamFrameBrightness,
   SteamFrameConnectionState,
   SteamFrameFadeEnded,
   SteamFramePairing,
@@ -40,7 +39,7 @@ export const STEAM_FRAME_HARDWARE_BRIGHTNESS_CONTROL_DRIVER_BOUNDS: HardwareBrig
 
 /** The active HMD: a paired Frame, or none for no HMD and for a headset without a pairing. */
 type ActiveHmd =
-  { kind: 'none' } | { kind: 'frame'; pairingId: string; brightness: SteamFrameBrightness | null };
+  { kind: 'none' } | { kind: 'frame'; pairingId: string; brightness: Brightness | null };
 
 /** Sets a paired Steam Frame's brightness through its helper, which also reports it. */
 export class SteamFrameHardwareBrightnessControlDriver extends HardwareBrightnessControlDriver {
@@ -52,7 +51,7 @@ export class SteamFrameHardwareBrightnessControlDriver extends HardwareBrightnes
   private readonly matching: Observable<boolean>;
   private readonly available: Observable<boolean>;
   private currentHmd: ActiveHmd = { kind: 'none' };
-  private frame: { pairingId: string; brightness: SteamFrameBrightness } | null = null;
+  private frame: { pairingId: string; brightness: Brightness } | null = null;
   /** Set while a command runs; a newer value waits in `pending` and replaces an older one. */
   private sending = false;
   /** Also holds a value set while the paired Frame cannot take it, which goes out once it can. */
@@ -115,13 +114,12 @@ export class SteamFrameHardwareBrightnessControlDriver extends HardwareBrightnes
       const { percentage } = this.pending;
       this.pending = null;
       sentTo = this.frame.pairingId;
-      applied = await invoke<number>('steam_frame_set_brightness', {
-        pairingId: sentTo,
-        percentage: this.softwarePercentageToHardwarePercentage(percentage),
-      }).catch((e) => {
-        warn(`[SteamFrameHardwareBrightnessControlDriver] Could not set brightness: ${e}`);
-        return null;
-      });
+      applied = await commands
+        .steamFrameSetBrightness(sentTo, this.softwarePercentageToHardwarePercentage(percentage))
+        .catch((e) => {
+          warn(`[SteamFrameHardwareBrightnessControlDriver] Could not set brightness: ${e}`);
+          return null;
+        });
     }
     this.sending = false;
 
@@ -173,7 +171,7 @@ export class SteamFrameHardwareBrightnessControlDriver extends HardwareBrightnes
     return { kind: 'frame', pairingId: pairing.id, brightness };
   }
 
-  private usable(brightness: SteamFrameBrightness | null): brightness is SteamFrameBrightness {
+  private usable(brightness: Brightness | null): brightness is Brightness {
     return !!brightness?.supported && brightness.percentage !== null;
   }
 

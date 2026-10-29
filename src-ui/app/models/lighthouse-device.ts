@@ -1,13 +1,10 @@
-export interface LighthouseDevice {
-  id: string;
-  deviceName: string;
-  deviceType: LighthouseDeviceType;
-  powerState: LighthouseDevicePowerState;
-  v1Timeout: number | null;
+import { LighthouseDeviceModel, LighthousePowerState } from '../bindings';
+
+export interface LighthouseDevice extends LighthouseDeviceModel {
   // For UI purposes only
-  transitioningToPowerState: LighthouseDevicePowerState | undefined;
+  transitioningToPowerState?: LighthousePowerState;
 }
 
-export type LighthouseDeviceType = 'lighthouseV1' | 'lighthouseV2';
+export type { LighthouseDeviceType } from '../bindings';
 
-export type LighthouseDevicePowerState = 'on' | 'unknown' | 'sleep' | 'standby' | 'booting';
+export type LighthouseDevicePowerState = LighthousePowerState;

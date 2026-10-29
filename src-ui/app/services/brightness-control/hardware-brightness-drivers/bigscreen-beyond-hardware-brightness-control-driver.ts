@@ -13,9 +13,8 @@ import {
   startWith,
   switchMap,
 } from 'rxjs';
-import { invoke } from '@tauri-apps/api/core';
+import { commands, events } from '../../../bindings';
 import { AppSettings } from '../../../models/settings';
-import { listen } from '@tauri-apps/api/event';
 import { warn } from '@tauri-apps/plugin-log';
 
 export const BIGSCREEN_BEYOND_HARDWARE_BRIGHTNESS_CONTROL_DRIVER_BOUNDS: HardwareBrightnessControlDriverBounds =
@@ -32,14 +31,14 @@ export class BigscreenBeyondHardwareBrightnessControlDriver extends HardwareBrig
 
   constructor(appSettings: Observable<AppSettings>) {
     super(appSettings);
-    listen<boolean>('BIGSCREEN_BEYOND_CONNECTED', (event) => {
+    events.bigscreenBeyondConnectedEvent.listen((event) => {
       this.connected.next(event.payload);
     });
     interval(10000)
       .pipe(
         startWith(0),
         switchMap(() =>
-          invoke<boolean>('bigscreen_beyond_is_connected').then((connected) => {
+          commands.bigscreenBeyondIsConnected().then((connected) => {
             this.connected.next(connected);
           })
         )
@@ -75,9 +74,9 @@ export class BigscreenBeyondHardwareBrightnessControlDriver extends HardwareBrig
     const hwPercentage = this.softwarePercentageToHardwarePercentage(percentage);
     this.lastSetBrightnessPercentage = percentage;
     const hwValue = this.swValueToHWValue(hwPercentage);
-    invoke('bigscreen_beyond_set_brightness', {
-      brightness: hwValue,
-    }).catch((e) => warn(`[BSBHardwareBrightnessControlDriver] Could not set brightness: ${e}`));
+    commands
+      .bigscreenBeyondSetBrightness(hwValue)
+      .catch((e) => warn(`[BSBHardwareBrightnessControlDriver] Could not set brightness: ${e}`));
   }
 
   isAvailable(): Observable<boolean> {
@@ -93,7 +92,7 @@ export class BigscreenBeyondHardwareBrightnessControlDriver extends HardwareBrig
   }
 
   private getBeyondDriverSavedBrightness(): Promise<number | null> {
-    return invoke<string>('bigscreen_beyond_get_saved_preferences').then((result) => {
+    return commands.bigscreenBeyondGetSavedPreferences().then((result) => {
       if (!result) return null;
       let preferences:
         { brightness: number; overdrive: boolean; overdrive_brightness: number } | undefined;

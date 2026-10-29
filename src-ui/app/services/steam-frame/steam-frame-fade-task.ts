@@ -1,13 +1,8 @@
-import { invoke } from '@tauri-apps/api/core';
 import { filter, firstValueFrom, map, Observable, race, ReplaySubject, timer } from 'rxjs';
 import { v4 as uuidv4 } from 'uuid';
 import { DeviceFade, DeviceFadeEnd } from '../../utils/device-fade';
-import {
-  SteamFrameControl,
-  SteamFrameFadeEnded,
-  SteamFrameFadeError,
-  SteamFrameFadeOutcome,
-} from '../../models/steam-frame';
+import { SteamFrameFadeEnded, SteamFrameFadeOutcome } from '../../models/steam-frame';
+import { commands, Control, FadeError, SimpleCurve } from '../../bindings';
 
 /** The longest fade the helper accepts; it sends no reply to a longer one. */
 export const STEAM_FRAME_MAX_FADE_MS = 24 * 60 * 60 * 1000;
@@ -22,11 +17,11 @@ export interface SteamFrameFadeSource {
 /** A fade for the helper. `target` is in percent or Kelvin. A longer fade than 24 hours is cut. */
 export interface SteamFrameFadeRequest {
   pairingId: string;
-  control: SteamFrameControl;
+  control: Control;
   target: number;
   durationMs: number;
   /** A simple-mode curve, which the helper maps to hardware brightness at every step. */
-  simple?: { from: number; to: number };
+  simple?: SimpleCurve;
 }
 
 /**
@@ -94,22 +89,22 @@ export class SteamFrameFadeTask extends DeviceFade {
     if (outcome !== 'completed') this.cancel();
   }
 
-  private send(): Promise<SteamFrameFadeError | null> {
+  private send(): Promise<FadeError | null> {
     const { pairingId, ...fade } = this.request;
-    return invoke('steam_frame_fade', {
-      pairingId,
-      request: { ...fade, operation: this.operation },
-    }).then(
-      () => null,
-      (error: SteamFrameFadeError) => error
-    );
+    return commands
+      .steamFrameFade(pairingId, {
+        ...fade,
+        simple: fade.simple ?? null,
+        operation: this.operation,
+      })
+      .then(
+        () => null,
+        (error: FadeError) => error
+      );
   }
 
   private cancelOnHelper() {
-    void invoke('steam_frame_cancel_fade', {
-      pairingId: this.request.pairingId,
-      operation: this.operation,
-    }).catch(() => {});
+    void commands.steamFrameCancelFade(this.request.pairingId, this.operation).catch(() => {});
   }
 
   private cancelled(): Observable<null> {

@@ -1,27 +1,25 @@
 import { Injectable, computed, signal } from '@angular/core';
-import { invoke } from '@tauri-apps/api/core';
-import { listen } from '@tauri-apps/api/event';
 import { error, info } from '@tauri-apps/plugin-log';
 import { v4 as uuidv4 } from 'uuid';
 import { DMKnownDevice } from '../../models/device-manager';
 import {
-  SteamFrameCandidate,
-  SteamFrameCleanupMode,
-  SteamFrameCleanupOutcome,
   SteamFrameFlow,
-  SteamFrameOtherPcsOutcome,
   SteamFramePage,
   SteamFramePairing,
-  SteamFrameProbeOutcome,
-  SteamFrameRegisterOutcome,
-  SteamFrameSetupStage,
   SteamFrameUnpairFailure,
 } from '../../models/steam-frame';
+import {
+  CleanupMode,
+  commands,
+  events,
+  PairingKeys,
+  ProbeOutcome,
+  RegisterOutcome,
+  SteamFrameSetupStageEvent,
+} from '../../bindings';
 import { ModalService } from '../modal.service';
 import { DeviceManagerService } from '../device-manager.service';
 import { SteamFrameService } from './steam-frame.service';
-
-type SetupStageEvent = { attemptId: string; stage: SteamFrameSetupStage };
 
 /**
  * Enrolls a Steam Frame through the pairing wizard, and unenrolls it. Enrolling ends in a pairing,
@@ -55,13 +53,11 @@ export class SteamFrameEnrollmentService {
 
   /** Follows the running setup's stages. */
   async init() {
-    await listen<SetupStageEvent>('STEAM_FRAME_SETUP_STAGE', (event) =>
-      this.onSetupStage(event.payload)
-    );
+    await events.steamFrameSetupStageEvent.listen((event) => this.onSetupStage(event.payload));
   }
 
   /** Shows the running setup's stage. */
-  private onSetupStage({ attemptId, stage }: SetupStageEvent) {
+  private onSetupStage({ attemptId, stage }: SteamFrameSetupStageEvent) {
     if (attemptId !== this.setupAttemptId) return;
     this.patchFlow({ stage });
   }
@@ -134,7 +130,7 @@ export class SteamFrameEnrollmentService {
   private async discoverSteps() {
     const search = ++this.search;
     this.patchFlow({ page: 'search', manualAddress: undefined, error: undefined, busy: true });
-    const candidates = await invoke<SteamFrameCandidate[]>('steam_frame_discover_headsets');
+    const candidates = await commands.steamFrameDiscoverHeadsets();
     if (this.stopForCancel() || search !== this.search) return;
     this.patchFlow({
       busy: false,
@@ -148,7 +144,7 @@ export class SteamFrameEnrollmentService {
     address = address.trim();
     const search = ++this.search;
     this.patchFlow({ page: 'search', manualAddress: address, error: undefined, busy: true });
-    const user = await invoke<string | null>('steam_frame_get_ssh_user', { address });
+    const user = await commands.steamFrameGetSshUser(address);
     if (this.stopForCancel() || search !== this.search) return;
     this.patchFlow({
       busy: false,
@@ -194,9 +190,7 @@ export class SteamFrameEnrollmentService {
 
     // make sure the devkit service still answers
     this.patchFlow({ page: 'request', error: undefined, busy: true });
-    const user = await invoke<string | null>('steam_frame_get_ssh_user', {
-      address: candidate.address,
-    });
+    const user = await commands.steamFrameGetSshUser(candidate.address);
     if (this.stopForCancel()) return;
     if (!user) return this.patchFlow({ page: 'notfound', busy: false });
 
@@ -233,10 +227,7 @@ export class SteamFrameEnrollmentService {
     if (this.stopForCancel()) return;
 
     // ask the user on the headset and wait
-    const outcome = await invoke<SteamFrameRegisterOutcome>('steam_frame_request_approval', {
-      address: pairing.address,
-      publicKey: pairing.publicKey,
-    });
+    const outcome = await commands.steamFrameRequestApproval(pairing.address, pairing.publicKey);
     info(`[SteamFramePairing] Registration: ${outcome}`);
 
     // approved or unclear: check whether access works
@@ -248,7 +239,7 @@ export class SteamFrameEnrollmentService {
     // a clear no: restore the flag and show why
     await this.steamFrame.updatePairing(pairing.deviceId, { mayBeApproved });
     if (this.stopForCancel()) return;
-    const pages: Partial<Record<SteamFrameRegisterOutcome, SteamFramePage>> = {
+    const pages: Partial<Record<RegisterOutcome, SteamFramePage>> = {
       declined: 'declined',
       timeout: 'timeout',
       notReady: 'notready',
@@ -281,7 +272,7 @@ export class SteamFrameEnrollmentService {
   }
 
   /** Probes a few times, because sshd may still be starting right after an approval. */
-  private async probeUntilReady(pairing: SteamFramePairing): Promise<SteamFrameProbeOutcome> {
+  private async probeUntilReady(pairing: SteamFramePairing): Promise<ProbeOutcome> {
     let probe = await this.probe(pairing);
     for (
       let attempt = 1;
@@ -364,10 +355,10 @@ export class SteamFrameEnrollmentService {
 
   /** Counts the other PCs using this headset's helper, or says why the headset can't be asked. */
   async otherPcCount(pairing: SteamFramePairing): Promise<number | SteamFrameUnpairFailure> {
-    const outcome = await invoke<SteamFrameOtherPcsOutcome>('steam_frame_count_other_pcs', {
-      access: this.steamFrame.accessOf(pairing),
-      pcId: pairing.id,
-    });
+    const outcome = await commands.steamFrameCountOtherPcs(
+      this.steamFrame.accessOf(pairing),
+      pairing.id
+    );
     return outcome.status === 'ok' ? outcome.count : outcome.status;
   }
 
@@ -482,20 +473,16 @@ export class SteamFrameEnrollmentService {
 
   /** Tries this PC's key on the headset once. */
   private probe(pairing: SteamFramePairing) {
-    return invoke<SteamFrameProbeOutcome>('steam_frame_check_ssh_access', {
-      access: this.steamFrame.accessOf(pairing),
-    });
+    return commands.steamFrameCheckSshAccess(this.steamFrame.accessOf(pairing));
   }
 
   /** Removes this PC's access from the headset, and the helper as `mode` asks. */
-  private cleanup(pairing: SteamFramePairing, mode: SteamFrameCleanupMode) {
-    return invoke<SteamFrameCleanupOutcome>('steam_frame_remove_access', {
-      request: {
-        access: this.steamFrame.accessOf(pairing),
-        pcId: pairing.id,
-        publicKey: pairing.publicKey,
-        mode,
-      },
+  private cleanup(pairing: SteamFramePairing, mode: CleanupMode) {
+    return commands.steamFrameRemoveAccess({
+      access: this.steamFrame.accessOf(pairing),
+      pcId: pairing.id,
+      publicKey: pairing.publicKey,
+      mode,
     });
   }
 
@@ -515,9 +502,9 @@ export class SteamFrameEnrollmentService {
     }
 
     // create a new key and token
-    let credentials: { privateKey: string; publicKey: string; token: string };
+    let credentials: PairingKeys;
     try {
-      credentials = await invoke('steam_frame_create_pairing_keys');
+      credentials = await commands.steamFrameCreatePairingKeys();
     } catch (e) {
       error(`[SteamFramePairing] Could not create the pairing key: ${e}`);
       this.patchFlow({ page: 'found', busy: false, error: 'keys' });

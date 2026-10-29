@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, firstValueFrom, Observable, pairwise, startWith } from 'rxjs';
 import { OpenVRService } from './openvr.service';
 import { AppSettingsService } from './app-settings.service';
-import { invoke } from '@tauri-apps/api/core';
+import { commands } from '../bindings';
 import { OVRDevice } from '../models/ovr-device';
 import { error, info } from '@tauri-apps/plugin-log';
 import { ExecutableReferenceStatus } from '../models/settings';
@@ -62,14 +62,11 @@ export class LighthouseConsoleService {
     let stdout;
     try {
       stdout = (
-        await invoke<{ stdout: string; stderr: string; status: number }>('run_command', {
-          command: path,
-          args: [
-            '/serial',
-            'bogus_device_id_that_absolutely_does_not_exist',
-            'bogus_command_that_absolutely_does_not_exist',
-          ],
-        })
+        await commands.runCommand(path, [
+          '/serial',
+          'bogus_device_id_that_absolutely_does_not_exist',
+          'bogus_command_that_absolutely_does_not_exist',
+        ])
       ).stdout;
     } catch (e) {
       if (generation !== this.validationGeneration) return;
@@ -177,13 +174,16 @@ export class LighthouseConsoleService {
 
   /** Resolves true when the console exits with status 0. */
   private async powerOffDevice(device: OVRDevice, lighthouseConsolePath: string): Promise<boolean> {
+    const dongleId = device.dongleId;
+    if (!dongleId) return false;
     this.openvr.setTurningOff(device.index, true);
     info(`[Lighthouse] Turning off device ${device.class}:${device.serialNumber}`);
     try {
-      const output = await invoke<{ status: number }>('run_command', {
-        command: lighthouseConsolePath,
-        args: ['/serial', device.dongleId, 'poweroff'],
-      });
+      const output = await commands.runCommand(lighthouseConsolePath, [
+        '/serial',
+        dongleId,
+        'poweroff',
+      ]);
       if (output.status === 0) return true;
       error(
         `[Lighthouse] Power-off command failed for ${device.serialNumber}: exit ${output.status}`
