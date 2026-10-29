@@ -27,6 +27,10 @@ async function makeService() {
     ],
   });
   const service = runInInjectionContext(injector, () => new VRChatService());
+  vi.spyOn(service as never, 'loadSettings').mockResolvedValue(undefined as never);
+  vi.spyOn(service['api'], 'init').mockResolvedValue();
+  vi.spyOn(service['auth'], 'init').mockResolvedValue();
+  vi.spyOn(service['socket'], 'init').mockReturnValue();
   await service.init();
   const login = (id: string) =>
     service['auth']['userSubject'].next({ id } as unknown as CurrentUser);
@@ -34,19 +38,6 @@ async function makeService() {
 }
 
 describe('VRChatService world context', () => {
-  it('receives log events after init, without a session', async () => {
-    const { service, logEvents } = await makeService();
-
-    logEvents.next({
-      type: 'OnLocationChange',
-      instanceId: 'wrld_a:1',
-      timestamp: new Date(1000),
-      initialLoad: true,
-    });
-
-    expect((await firstValueFrom(service.world)).instanceId).toBe('wrld_a:1');
-  });
-
   it('marks the world loaded when login follows the own join', async () => {
     const { service, logEvents, login } = await makeService();
     logEvents.next({

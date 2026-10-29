@@ -677,10 +677,7 @@ export class AppModule {
               ),
             this.logInit('Initializing sleep services', this.sleepService.init()),
             this.logInit('Initializing VRChat services', this.vrchatService.init()).then(() =>
-              Promise.all([
-                this.logInit('Initializing VRChat log handling', this.vrchatLogService.init()),
-                this.logInit('Initializing VRChat session', this.vrchatService.initSession()),
-              ])
+              this.logInit('Initializing VRChat log handling', this.vrchatLogService.init())
             ),
             this.logInit('Initializing image cache', this.imageCacheService.init()),
             this.logInit('Initializing fonts', this.fontLoaderService.init()),
