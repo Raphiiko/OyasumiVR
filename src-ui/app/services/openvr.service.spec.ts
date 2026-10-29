@@ -8,7 +8,6 @@ import { listen, type EventCallback } from '@tauri-apps/api/event';
 import { OpenVRService, type OpenVRStatus } from './openvr.service';
 import { APP_SETTINGS_DEFAULT } from '../models/settings';
 import type { OVRDevice } from '../models/ovr-device';
-import type { DeviceUpdateEvent } from '../models/events';
 
 vi.mock('@tauri-apps/api/core', () => ({ invoke: vi.fn() }));
 vi.mock('@tauri-apps/api/event', () => ({ listen: vi.fn(async () => () => {}) }));
@@ -81,7 +80,7 @@ describe('OpenVR initial device snapshot', () => {
   it('keeps newer device events while filling missing cached devices', async () => {
     const { service, initialized, resolveSnapshot } = await beginInitialization();
     const latest = { ...controller, battery: 60 };
-    emit<DeviceUpdateEvent>('OVR_DEVICE_UPDATE', { device: latest });
+    emit('ovr-device-update-event', { device: latest });
     const tracker = { ...controller, index: 2, class: 'GenericTracker' as const };
     resolveSnapshot([controller, tracker]);
     await initialized;
@@ -92,7 +91,7 @@ describe('OpenVR initial device snapshot', () => {
     'does not restore stale devices after %s',
     async (status) => {
       const { service, initialized, resolveSnapshot } = await beginInitialization();
-      emit<OpenVRStatus>('OVR_STATUS_UPDATE', status);
+      emit<OpenVRStatus>('ovr-status-update-event', status);
       resolveSnapshot([controller]);
       await initialized;
       expect(await firstValueFrom(service.devices)).toEqual([]);
@@ -101,10 +100,10 @@ describe('OpenVR initial device snapshot', () => {
 
   it('does not restore an old session after OpenVR reconnects during the cache read', async () => {
     const { service, initialized, resolveSnapshot } = await beginInitialization();
-    emit<OpenVRStatus>('OVR_STATUS_UPDATE', 'INACTIVE');
-    emit<OpenVRStatus>('OVR_STATUS_UPDATE', 'INITIALIZED');
+    emit<OpenVRStatus>('ovr-status-update-event', 'INACTIVE');
+    emit<OpenVRStatus>('ovr-status-update-event', 'INITIALIZED');
     const replacement = { ...controller, serialNumber: 'new controller' };
-    emit<DeviceUpdateEvent>('OVR_DEVICE_UPDATE', { device: replacement });
+    emit('ovr-device-update-event', { device: replacement });
     resolveSnapshot([controller, { ...controller, index: 2 }]);
     await initialized;
     expect(await firstValueFrom(service.devices)).toEqual([replacement]);
@@ -139,7 +138,7 @@ describe('Start with SteamVR synchronization', () => {
   it('adopts the SteamVR value when no write is pending', async () => {
     const appSettings = createSettingsService();
     const service = await startInactiveService(appSettings, true);
-    emit<OpenVRStatus>('OVR_STATUS_UPDATE', 'INITIALIZED');
+    emit<OpenVRStatus>('ovr-status-update-event', 'INITIALIZED');
     await flushAutoLaunch(service);
     expect(appSettings.settingsSync).toMatchObject({
       startWithSteamVR: true,
@@ -165,7 +164,7 @@ describe('Start with SteamVR synchronization', () => {
     });
     const service = createService(appSettings);
     await service.init();
-    emit<OpenVRStatus>('OVR_STATUS_UPDATE', 'INITIALIZED');
+    emit<OpenVRStatus>('ovr-status-update-event', 'INITIALIZED');
     await flushAutoLaunch(service);
     expect(appSettings.settingsSync.startWithSteamVRPending).toBe(false);
     expect(autoLaunch).toBe(true);
@@ -193,7 +192,7 @@ describe('Start with SteamVR synchronization', () => {
     });
     const service = createService(appSettings);
     await service.init();
-    emit<OpenVRStatus>('OVR_STATUS_UPDATE', 'INITIALIZED');
+    emit<OpenVRStatus>('ovr-status-update-event', 'INITIALIZED');
     await flushAutoLaunch(service);
     expect(appSettings.settingsSync.startWithSteamVR).toBe(false);
     autoLaunch = true;
@@ -213,7 +212,7 @@ describe('Start with SteamVR synchronization', () => {
     });
     const service = createService(appSettings);
     await service.init();
-    emit<OpenVRStatus>('OVR_STATUS_UPDATE', 'INITIALIZED');
+    emit<OpenVRStatus>('ovr-status-update-event', 'INITIALIZED');
     await flushAutoLaunch(service);
     expect(appSettings.settingsSync.startWithSteamVR).toBe(false);
     await service.setStartWithSteamVR(true);
@@ -245,7 +244,7 @@ describe('Start with SteamVR synchronization', () => {
     });
     const service = createService(appSettings);
     await service.init();
-    emit<OpenVRStatus>('OVR_STATUS_UPDATE', 'INITIALIZED');
+    emit<OpenVRStatus>('ovr-status-update-event', 'INITIALIZED');
     await flushAutoLaunch(service);
     expect(appSettings.settingsSync.startWithSteamVR).toBe(false);
     const write = service.setStartWithSteamVR(true);
@@ -276,9 +275,9 @@ describe('Start with SteamVR synchronization', () => {
     });
     const service = createService(appSettings);
     await service.init();
-    emit<OpenVRStatus>('OVR_STATUS_UPDATE', 'INITIALIZED');
+    emit<OpenVRStatus>('ovr-status-update-event', 'INITIALIZED');
     await Promise.resolve();
-    emit<OpenVRStatus>('OVR_STATUS_UPDATE', 'INACTIVE');
+    emit<OpenVRStatus>('ovr-status-update-event', 'INACTIVE');
     resolveRead(true);
     await (service as unknown as { autoLaunchQueue: Promise<void> }).autoLaunchQueue;
     expect(appSettings.settingsSync.startWithSteamVR).toBe(false);

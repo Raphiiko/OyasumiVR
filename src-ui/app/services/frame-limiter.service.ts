@@ -12,7 +12,7 @@ import {
   firstValueFrom,
 } from 'rxjs';
 import { isEqual, omit } from 'lodash';
-import { invoke } from '@tauri-apps/api/core';
+import { commands } from '../bindings';
 import { OpenVRService } from './openvr.service';
 
 export interface FrameLimiterAppPreset {
@@ -101,10 +101,7 @@ export class FrameLimiterService {
             appId
           )
         );
-        await invoke('openvr_set_app_framelimit', {
-          appId,
-          limits: null,
-        });
+        await commands.openvrSetAppFramelimit(appId, null);
         return;
       default:
         if (typeof value !== 'number') throw new Error('Invalid frame limit value');
@@ -112,12 +109,9 @@ export class FrameLimiterService {
           ...this._activeFrameLimits.value,
           [appId]: value,
         });
-        await invoke('openvr_set_app_framelimit', {
-          appId,
-          limits: {
-            additionalFramesToPredict: value,
-            framesToThrottle: value,
-          },
+        await commands.openvrSetAppFramelimit(appId, {
+          additionalFramesToPredict: value,
+          framesToThrottle: value,
         });
         return;
     }
@@ -127,12 +121,7 @@ export class FrameLimiterService {
     const status = await firstValueFrom(this.openvr.status);
     if (status !== 'INITIALIZED') return null;
     try {
-      const result = await invoke<{
-        additionalFramesToPredict: number;
-        framesToThrottle: number;
-      } | null>('openvr_get_app_framelimit', {
-        appId,
-      });
+      const result = await commands.openvrGetAppFramelimit(appId);
       if (result === null) return 'AUTO';
       return Math.max(result.framesToThrottle, result.additionalFramesToPredict);
     } catch {

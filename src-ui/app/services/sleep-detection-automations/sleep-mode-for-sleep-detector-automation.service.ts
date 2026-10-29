@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { AutomationConfigService } from '../automation-config.service';
-import { listen } from '@tauri-apps/api/event';
+import { events, type SleepDetectorStateReport } from '../../bindings';
 import {
   AUTOMATION_CONFIGS_DEFAULT,
   SleepModeEnableForSleepDetectorAutomationConfig,
@@ -18,7 +18,6 @@ import {
   startWith,
 } from 'rxjs';
 import { SleepService } from '../sleep.service';
-import { SleepDetectorStateReport } from '../../models/events';
 import { NotificationService } from '../notification.service';
 import { TranslocoService } from '@jsverse/transloco';
 import { EventLogService } from '../event-log.service';
@@ -106,12 +105,12 @@ export class SleepModeForSleepDetectorAutomationService {
           this.lastUprightPose = Date.now();
       });
     new Promise((resolve) => setTimeout(resolve, 15000)).then(async () => {
-      await listen<SleepDetectorStateReport>('SLEEP_DETECTOR_STATE_REPORT', async (event) => {
+      await events.sleepDetectorStateReportEvent.listen(async (event) => {
         this._lastStateReport.next(event.payload);
         const result = await this.handleStateReportForEnable(event.payload);
         this._lastStateReportHandlingResult.next(result);
       });
-      await listen<{ gesture: string }>('GESTURE_DETECTED', (event) => {
+      await events.gestureDetectedEvent.listen((event) => {
         if (event.payload.gesture !== 'head_shake') return;
         this.dismissSleepCheck();
       });

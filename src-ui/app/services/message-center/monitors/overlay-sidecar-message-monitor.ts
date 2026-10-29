@@ -1,7 +1,6 @@
 import { inject } from '@angular/core';
 import { MessageMonitor } from './message-monitor';
 import { AppSettingsService } from '../../app-settings.service';
-import { listen } from '@tauri-apps/api/event';
 import {
   BehaviorSubject,
   combineLatest,
@@ -13,6 +12,7 @@ import {
 import { isEqual } from 'lodash';
 import { ExternalLinkService } from '../../external-link.service';
 import { ShowInFolderService } from '../../show-in-folder.service';
+import { events } from '../../../bindings';
 
 // the sidecar reports its start before it builds any overlays, so a crash loop reads as start then stop
 const FAILED_STARTS_BEFORE_WARNING = 3;
@@ -27,11 +27,11 @@ export class OverlaySidecarMessageMonitor extends MessageMonitor {
 
   public override async init(): Promise<void> {
     // count every start that fails to stay up
-    await listen('OVERLAY_SIDECAR_STARTED', () => {
+    await events.overlaySidecarStartedEvent.listen(() => {
       clearTimeout(this.healthyTimeout);
       this.healthyTimeout = setTimeout(() => this.failedStarts.next(0), HEALTHY_AFTER_MS);
     });
-    await listen('OVERLAY_SIDECAR_STOPPED', () => {
+    await events.overlaySidecarStoppedEvent.listen(() => {
       clearTimeout(this.healthyTimeout);
       this.failedStarts.next(this.failedStarts.value + 1);
     });

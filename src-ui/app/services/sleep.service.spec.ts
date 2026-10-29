@@ -28,7 +28,7 @@ vi.mock('@tauri-apps/api/core', () => ({
     }
     if (command === 'sleeping_pose_force') {
       core.pose = args!.pose;
-      core.listeners.get('SLEEPING_POSE_UPDATE')!({ payload: core.pose });
+      core.listeners.get('sleeping-pose-update-event')!({ payload: core.pose });
     }
   }),
 }));
@@ -53,8 +53,8 @@ describe('sleeping pose from the core', () => {
     const poses: SleepingPose[] = [];
     service.pose.subscribe((pose) => poses.push(pose));
     await service.init();
-    core.listeners.get('SLEEPING_POSE_UPDATE')!({ payload: 'SIDE_LEFT' });
-    core.listeners.get('SLEEPING_POSE_UPDATE')!({ payload: 'SIDE_LEFT' });
+    core.listeners.get('sleeping-pose-update-event')!({ payload: 'SIDE_LEFT' });
+    core.listeners.get('sleeping-pose-update-event')!({ payload: 'SIDE_LEFT' });
     expect(poses).toEqual(['UNKNOWN', 'SIDE_BACK', 'SIDE_LEFT']);
     expect(zone.run).toHaveBeenCalledTimes(2);
   });
@@ -63,7 +63,7 @@ describe('sleeping pose from the core', () => {
     core.pose = 'SIDE_BACK';
     core.beforeGetResolves = () => {
       core.pose = 'SIDE_LEFT';
-      core.listeners.get('SLEEPING_POSE_UPDATE')!({ payload: core.pose });
+      core.listeners.get('sleeping-pose-update-event')!({ payload: core.pose });
     };
     const { service } = createService();
     const poses: SleepingPose[] = [];

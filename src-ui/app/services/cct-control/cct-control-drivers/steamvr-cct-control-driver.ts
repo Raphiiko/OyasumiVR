@@ -1,4 +1,4 @@
-import { invoke } from '@tauri-apps/api/core';
+import { commands } from '../../../bindings';
 import { warn } from '@tauri-apps/plugin-log';
 import {
   combineLatest,
@@ -63,8 +63,8 @@ export class SteamVrCctControlDriver extends CctControlDriver {
   }
 
   async setCCT(kelvin: number): Promise<void> {
-    invoke('openvr_set_analog_color_temp', { temperature: kelvin }).catch((e) =>
-      warn(`[SteamVRCCTControl] Could not set color temperature: ${e}`)
-    );
+    commands
+      .openvrSetAnalogColorTemp(kelvin)
+      .catch((e) => warn(`[SteamVRCCTControl] Could not set color temperature: ${e}`));
   }
 }

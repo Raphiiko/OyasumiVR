@@ -1,8 +1,6 @@
 import { ApplicationRef, Injectable } from '@angular/core';
-import { listen } from '@tauri-apps/api/event';
-import { DeviceUpdateEvent } from '../models/events';
-import { invoke } from '@tauri-apps/api/core';
-import { OVRDevice } from '../models/ovr-device';
+import { commands, events, type OpenVRStatus } from '../bindings';
+import { fromCoreDevice, OVRDevice } from '../models/ovr-device';
 import {
   BehaviorSubject,
   distinctUntilChanged,
@@ -19,7 +17,7 @@ import { AppSettingsService } from './app-settings.service';
 import { error, info, warn } from '@tauri-apps/plugin-log';
 import { TelemetryService } from './telemetry/telemetry.service';
 
-export type OpenVRStatus = 'INACTIVE' | 'INITIALIZING' | 'INITIALIZED';
+export type { OpenVRStatus };
 
 @Injectable({
   providedIn: 'root',
@@ -53,7 +51,7 @@ export class OpenVRService {
   async init() {
     let statusReceived = false;
     let deviceSession = 0;
-    this._status.next(await invoke<OpenVRStatus>('openvr_status'));
+    this._status.next(await commands.openvrStatus());
     this.appSettings.settings
       .pipe(
         map((settings) => settings.openVrInitDelayFix),
@@ -67,26 +65,26 @@ export class OpenVRService {
         else info('[OpenVR] Removing OpenVR initialization delay fix');
       });
     await Promise.all([
-      listen<DeviceUpdateEvent>('OVR_DEVICE_UPDATE', (event) =>
-        this.onDeviceUpdate(event.payload.device)
+      events.ovrDeviceUpdateEvent.listen((event) =>
+        this.onDeviceUpdate(fromCoreDevice(event.payload.device))
       ),
-      listen<OpenVRStatus>('OVR_STATUS_UPDATE', (event) => {
+      events.ovrStatusUpdateEvent.listen((event) => {
         statusReceived = true;
         deviceSession++;
         this.onStatusUpdate(event.payload);
       }),
-      listen<number>('OVR_ANALOG_GAIN_UPDATE', (event) =>
+      events.ovrAnalogGainUpdateEvent.listen((event) =>
         this._analogGainUpdates.next(event.payload)
       ),
     ]);
     // A status update sent while the listener above was still being registered is never delivered
-    const status = await invoke<OpenVRStatus>('openvr_status');
+    const status = await commands.openvrStatus();
     if (!statusReceived) this.onStatusUpdate(status);
     interval(2000).subscribe(() => this.syncAutoLaunch());
 
     // restore cached devices missed before listener registration
     const snapshotSession = deviceSession;
-    const devices = await invoke<OVRDevice[]>('openvr_get_devices');
+    const devices = (await commands.openvrGetDevices()).map(fromCoreDevice);
     if (snapshotSession === deviceSession && this._status.value === 'INITIALIZED') {
       for (const device of devices) {
         if (!this.reportedDevices.some((current) => current.index === device.index)) {
@@ -146,9 +144,9 @@ export class OpenVRService {
   /** Logs a failure instead of rejecting, as SteamVR or the headset can go away mid-transition. */
   public async setAnalogGain(analogGain: number): Promise<void> {
     if (typeof analogGain === 'number' && isFinite(analogGain)) {
-      return invoke<void>('openvr_set_analog_gain', { analogGain }).catch((e) =>
-        warn(`[OpenVR] Could not set analog gain: ${e}`)
-      );
+      await commands
+        .openvrSetAnalogGain(analogGain)
+        .catch((e) => warn(`[OpenVR] Could not set analog gain: ${e}`));
     } else {
       console.error('[OpenVR] Attempted to set analogGain to invalid value', analogGain);
       error('[OpenVR] Attempted to set analogGain to invalid value: ' + analogGain);
@@ -156,23 +154,23 @@ export class OpenVRService {
   }
 
   public getAnalogGain(): Promise<number> {
-    return invoke<number>('openvr_get_analog_gain');
+    return commands.openvrGetAnalogGain();
   }
 
-  public setSupersampleScale(supersampleScale: number | null): Promise<void> {
-    return invoke('openvr_set_supersample_scale', { supersampleScale });
+  public async setSupersampleScale(supersampleScale: number | null): Promise<void> {
+    await commands.openvrSetSupersampleScale(supersampleScale);
   }
 
   public getSupersampleScale(): Promise<number | null> {
-    return invoke<number | null>('openvr_get_supersample_scale');
+    return commands.openvrGetSupersampleScale();
   }
 
-  public setFadeDistance(fadeDistance: number): Promise<void> {
-    return invoke('openvr_set_fade_distance', { fadeDistance });
+  public async setFadeDistance(fadeDistance: number): Promise<void> {
+    await commands.openvrSetFadeDistance(fadeDistance);
   }
 
   public getFadeDistance(): Promise<number> {
-    return invoke<number>('openvr_get_fade_distance');
+    return commands.openvrGetFadeDistance();
   }
 
   public setStartWithSteamVR(enabled: boolean): Promise<void> {
@@ -184,7 +182,7 @@ export class OpenVRService {
   }
 
   public async isDashboardVisible(): Promise<boolean> {
-    return invoke<boolean>('openvr_is_dashboard_visible');
+    return commands.openvrIsDashboardVisible();
   }
 
   private onStatusUpdate(status: OpenVRStatus) {
@@ -210,7 +208,7 @@ export class OpenVRService {
       if (!this.appSettings.settingsSync.startWithSteamVRPending) {
         let enabled: boolean;
         try {
-          enabled = await invoke<boolean>('openvr_get_application_auto_launch');
+          enabled = await commands.openvrGetApplicationAutoLaunch();
         } catch (cause) {
           error(`[OpenVR] Could not read application auto-launch: ${cause}`);
           return;
@@ -226,8 +224,8 @@ export class OpenVRService {
       }
       const enabled = this.appSettings.settingsSync.startWithSteamVR;
       try {
-        await invoke('openvr_set_application_auto_launch', { enabled });
-        const confirmed = await invoke<boolean>('openvr_get_application_auto_launch');
+        await commands.openvrSetApplicationAutoLaunch(enabled);
+        const confirmed = await commands.openvrGetApplicationAutoLaunch();
         if (confirmed !== enabled) throw new Error('AUTO_LAUNCH_WRITE_NOT_CONFIRMED');
       } catch (cause) {
         error(`[OpenVR] Could not set application auto-launch: ${cause}`);
@@ -243,7 +241,7 @@ export class OpenVRService {
   }
 
   private async applyOpenVrInitDelayFix(enabled: boolean) {
-    await invoke('openvr_set_init_delay_fix', { enabled });
+    await commands.openvrSetInitDelayFix(enabled);
   }
 
   private handleTelemetry() {
