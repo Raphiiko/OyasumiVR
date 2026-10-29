@@ -34,7 +34,7 @@ import { OpenVRService } from './openvr.service';
 import { DeviceControlService } from './device-control.service';
 import { LighthouseService } from './lighthouse.service';
 import { OVRDevice } from '../models/ovr-device';
-import { invoke } from '@tauri-apps/api/core';
+import { commands } from '../bindings';
 import { warn } from '@tauri-apps/plugin-log';
 import {
   EventLogShutdownSequenceCancelled,
@@ -192,10 +192,7 @@ export class ShutdownAutomationsService {
       reason,
     } as EventLogShutdownSequenceCancelled);
     // Cancel any pending shutdown
-    await invoke('run_command', {
-      command: 'shutdown',
-      args: ['/a'],
-    });
+    await commands.runCommand('shutdown', ['/a']);
   }
 
   async runSequence(reason: EventLogShutdownSequenceStartedReason) {
@@ -296,7 +293,7 @@ export class ShutdownAutomationsService {
     if (!this.config.quitSteamVR) return true;
     this._stage.next('QUITTING_STEAMVR');
     // Quit steam
-    await invoke('quit_steamvr', { kill: false });
+    await commands.quitSteamvr(false);
     // Wait up to 10 seconds for SteamVR to quit, killing it after 5, even after a cancel
     const quit = this.openvr.status.pipe(
       filter((s) => s === 'INACTIVE'),
@@ -307,7 +304,7 @@ export class ShutdownAutomationsService {
     const forceQuit = of(null).pipe(
       delay(5000),
       takeUntil(quit),
-      switchMap(() => invoke('quit_steamvr', { kill: true })),
+      switchMap(() => commands.quitSteamvr(true)),
       ignoreElements()
     );
     const steamVrQuit = await firstValueFrom(merge(quit, forceQuit, of(false).pipe(delay(10000))));
@@ -418,26 +415,25 @@ export class ShutdownAutomationsService {
             ? 'shutdown-automations.sequence.powerDownWindows.shutdownMessage'
             : 'shutdown-automations.sequence.powerDownWindows.rebootMessage'
         );
-        const command = mode === 'SHUTDOWN' ? 'windows_shutdown' : 'windows_reboot';
-        const args = { message, timeout: 20, forceCloseApps: true };
-        if (await this.runPowerCommand(mode, command, args)) {
+        const command = mode === 'SHUTDOWN' ? commands.windowsShutdown : commands.windowsReboot;
+        if (await this.runPowerCommand(mode, () => command(message, 20, true))) {
           await firstValueFrom(merge(of(null).pipe(delay(30000)), this.cancelEvent));
         }
         break;
       }
       case 'SLEEP':
-        return this.dispatchDelayedPowerCommand('SLEEP', 'windows_sleep');
+        return this.dispatchDelayedPowerCommand('SLEEP', commands.windowsSleep);
       case 'HIBERNATE':
-        return this.dispatchDelayedPowerCommand('HIBERNATE', 'windows_hibernate');
+        return this.dispatchDelayedPowerCommand('HIBERNATE', commands.windowsHibernate);
       case 'LOGOUT':
-        return this.dispatchDelayedPowerCommand('LOGOUT', 'windows_logout');
+        return this.dispatchDelayedPowerCommand('LOGOUT', commands.windowsLogout);
     }
     return true;
   }
 
   private async dispatchDelayedPowerCommand(
     mode: PowerDownWindowsMode,
-    command: string
+    command: () => Promise<unknown>
   ): Promise<boolean> {
     await firstValueFrom(merge(of(null).pipe(delay(500)), this.cancelEvent));
     if (this.cancelFlag) return false;
@@ -449,13 +445,12 @@ export class ShutdownAutomationsService {
   /** Resolves false, and logs a failed step, when Windows refused the command. */
   private runPowerCommand(
     mode: PowerDownWindowsMode,
-    command: string,
-    args?: Record<string, unknown>
+    command: () => Promise<unknown>
   ): Promise<boolean> {
-    return invoke(command, args).then(
+    return command().then(
       () => true,
       (e) => {
-        warn(`[ShutdownAutomations] Windows refused ${command}: ${e}`);
+        warn(`[ShutdownAutomations] Windows refused ${mode}: ${e}`);
         this.logStepFailed(mode, 'UNKNOWN');
         return false;
       }

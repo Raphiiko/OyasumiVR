@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
-import { invoke } from '@tauri-apps/api/core';
-import { listen } from '@tauri-apps/api/event';
+import { commands, events } from '../bindings';
 import { FLAVOUR } from '../../build';
 import {
   asyncScheduler,
@@ -57,7 +56,7 @@ export class SteamService {
     if (FLAVOUR !== 'STEAM' && FLAVOUR !== 'DEV') return;
     // Keep track of Steamworks status
     await this.getSteamActive();
-    await listen<boolean>('STEAMWORKS_READY', (data) => this._active.next(data.payload));
+    await events.steamworksReadyEvent.listen((data) => this._active.next(data.payload));
     // Check if Steamworks has been initialized.
     setTimeout(() => {
       if (!this._active.value) {
@@ -77,7 +76,7 @@ export class SteamService {
   }
 
   public async getSteamActive(): Promise<boolean> {
-    const active = await invoke<boolean>('steam_active');
+    const active = await commands.steamActive();
     this._active.next(active);
     return active;
   }
@@ -86,12 +85,12 @@ export class SteamService {
     if (!this._active.value) throw 'STEAMWORKS_INACTIVE';
     if (unlocked) info('[Steam] Unlocking achievement: ' + achievementId);
     else info('[Steam] Locking achievement: ' + achievementId);
-    return invoke('steam_achievement_set', { achievementId, unlocked });
+    await commands.steamAchievementSet(achievementId, unlocked);
   }
 
   public async getAchievement(achievementId: string): Promise<boolean> {
     if (!this._active.value) throw 'STEAMWORKS_INACTIVE';
-    return invoke<boolean>('steam_achievement_get', { achievementId });
+    return commands.steamAchievementGet(achievementId);
   }
 
   /** Unlocks the achievement if it is still locked. Resolves false and logs instead of rejecting. */

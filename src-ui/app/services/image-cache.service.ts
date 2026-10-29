@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { invoke } from '@tauri-apps/api/core';
+import { commands } from '../bindings';
 import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
@@ -12,7 +12,7 @@ export class ImageCacheService {
 
   async init() {
     while (!this.httpServerPort.value) {
-      const port = (await invoke<number>('get_http_server_port')) || null;
+      const port = (await commands.getHttpServerPort()) || null;
       if (port) this.httpServerPort.next(port);
       else await new Promise((resolve) => setTimeout(resolve, 50));
     }

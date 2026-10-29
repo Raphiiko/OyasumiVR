@@ -13,7 +13,7 @@ import {
 } from 'rxjs';
 import { TELEMETRY_SETTINGS_DEFAULT, TelemetrySettings } from '../../models/telemetry-settings';
 
-import { invoke } from '@tauri-apps/api/core';
+import { commands } from '../../bindings';
 import { isEqual } from 'lodash';
 import { FeatureSnapshotService } from './feature-snapshot.service';
 
@@ -31,7 +31,7 @@ export class TelemetryService {
   async init() {
     await this.loadSettings();
     // the core rejects events until it is enabled, and the throttled sync below waits 2 seconds
-    await invoke('set_telemetry_enabled', { enable: this._settings.value.enabled });
+    await commands.setTelemetryEnabled(this._settings.value.enabled);
     // resolved lazily: its dependencies are not initialized yet, and some of them use this service
     this.injector.get(FeatureSnapshotService).init();
     this.settings
@@ -41,7 +41,7 @@ export class TelemetryService {
         throttleTime(2000, asyncScheduler, { leading: false, trailing: true }),
         distinctUntilChanged(),
         switchMap(async (enable) => {
-          await invoke('set_telemetry_enabled', { enable });
+          await commands.setTelemetryEnabled(enable);
         })
       )
       .subscribe();
@@ -88,7 +88,7 @@ export class TelemetryService {
   /** Resolves to whether the core sent the event. Never rejects. */
   private async send(event: string, props: { [key: string]: string | number }): Promise<boolean> {
     try {
-      await invoke('track_event', { name: event, props });
+      await commands.trackEvent(event, props);
       return true;
     } catch {
       return false;

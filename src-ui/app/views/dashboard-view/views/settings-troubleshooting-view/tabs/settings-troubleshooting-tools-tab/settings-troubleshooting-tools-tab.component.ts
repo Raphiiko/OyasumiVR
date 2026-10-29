@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { invoke } from '@tauri-apps/api/core';
+import { commands } from '../../../../../../bindings';
 import { error } from '@tauri-apps/plugin-log';
 import { firstValueFrom } from 'rxjs';
 import { OpenVRService } from '../../../../../../services/openvr.service';
@@ -21,7 +21,7 @@ const MANIFEST_REREGISTER_ERRORS = [
   standalone: false,
 })
 export class SettingsTroubleshootingToolsTabComponent {
-  protected readonly devToolsAvailable = invoke<boolean>('dev_tools_available');
+  protected readonly devToolsAvailable = commands.devToolsAvailable();
 
   constructor(
     protected openvr: OpenVRService,
@@ -36,7 +36,7 @@ export class SettingsTroubleshootingToolsTabComponent {
   async reregisterVRManifest() {
     if ((await firstValueFrom(this.openvr.status)) !== 'INITIALIZED') return;
     try {
-      await invoke('openvr_reregister_manifest');
+      await commands.openvrReregisterManifest();
     } catch (e) {
       error(`[Troubleshooting] Could not re-register VR manifest: ${JSON.stringify(e)}`);
       const result = MANIFEST_REREGISTER_ERRORS.includes(e as string) ? (e as string) : 'UNKNOWN';
@@ -56,6 +56,6 @@ export class SettingsTroubleshootingToolsTabComponent {
   }
 
   async openDevTools() {
-    await invoke('open_dev_tools');
+    await commands.openDevTools();
   }
 }

@@ -1,4 +1,4 @@
-import { invoke } from '@tauri-apps/api/core';
+import { commands } from '../bindings';
 import { appDataDir, join } from '@tauri-apps/api/path';
 import { exists, readTextFile } from '@tauri-apps/plugin-fs';
 import { debug, error, info, warn } from '@tauri-apps/plugin-log';
@@ -76,10 +76,7 @@ export class StoreProtector {
   public async restoreSnapshot(): Promise<boolean> {
     if (!(await this.hasAvailableSnapshot())) return false;
     info("[StoreProtector] Restoring snapshot for store '" + this.storeName + "'");
-    const restored = await invoke<boolean>('store_safety_restore_snapshot', {
-      storeName: this.storeName,
-      storeFileName: this.storePath,
-    });
+    const restored = await commands.storeSafetyRestoreSnapshot(this.storeName, this.storePath);
     if (!restored) return false;
     await this.store.reload({ ignoreDefaults: true });
     info("[StoreProtector] Successfully restored snapshot for store '" + this.storeName + "'");
@@ -109,10 +106,7 @@ export class StoreProtector {
     const storeDataString = await serializeStoreContents(this.store);
     const storeDataHash = await this.generateHash(storeDataString);
     if ((await exists(this.snapshotPath)) && this.lastSavedHash === storeDataHash) return;
-    await invoke('store_safety_save_snapshot', {
-      storeName: this.storeName,
-      contents: storeDataString,
-    });
+    await commands.storeSafetySaveSnapshot(this.storeName, storeDataString);
     this.lastSavedHash = storeDataHash;
     debug("[StoreProtector] Successfully saved snapshot for store '" + this.storeName + "'");
   }

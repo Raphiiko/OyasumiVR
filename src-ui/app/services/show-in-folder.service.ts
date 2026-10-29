@@ -1,5 +1,5 @@
 import { inject, Injectable } from '@angular/core';
-import { invoke } from '@tauri-apps/api/core';
+import { commands } from '../bindings';
 import { appLogDir } from '@tauri-apps/api/path';
 import { ToastService } from './toast.service';
 
@@ -9,7 +9,7 @@ export class ShowInFolderService {
 
   /** Selects the file in a new Explorer window, and tells the user it opened on the desktop. */
   async show(path: string) {
-    await invoke('show_in_folder', { path });
+    await commands.showInFolder(path);
     this.toasts.show({ title: 'toasts.showInFolder.opened' });
   }
 

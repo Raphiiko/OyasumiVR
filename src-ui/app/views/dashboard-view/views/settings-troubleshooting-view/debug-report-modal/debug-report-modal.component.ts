@@ -7,7 +7,7 @@ import {
   OnDestroy,
   ViewChild,
 } from '@angular/core';
-import { invoke } from '@tauri-apps/api/core';
+import { commands, JsonValue } from '../../../../../bindings';
 import { writeText } from '@tauri-apps/plugin-clipboard-manager';
 import { error } from '@tauri-apps/plugin-log';
 import { BaseModalComponent } from '../../../../../components/base-modal/base-modal.component';
@@ -71,10 +71,10 @@ export class DebugReportModalComponent
     this.setStep('uploading');
     try {
       if (!this.reportCreated) {
-        await invoke('debug_report_create', { uiState: await this.collectUiState() });
+        await commands.debugReportCreate((await this.collectUiState()) as JsonValue);
         this.reportCreated = true;
       }
-      this.reportCode = await invoke<string>('debug_report_upload');
+      this.reportCode = await commands.debugReportUpload();
       this.debugReports.setRecentCode(this.reportCode);
       this.setStep('done');
       await this.discardReport();
@@ -101,7 +101,7 @@ export class DebugReportModalComponent
     this.saveFallbackStep = this.step;
     this.setStep('saving');
     try {
-      await invoke('debug_report_save', { path });
+      await commands.debugReportSave(path);
     } catch (e) {
       error(`[DebugReport] Could not save the debug report: ${JSON.stringify(e)}`);
       this.toasts.show({ type: 'error', title: 'settings.troubleshooting.debugReport.saveFailed' });
@@ -131,7 +131,7 @@ export class DebugReportModalComponent
   /** Drops the zip from the core's memory; only Retry and Save to file need it. */
   private async discardReport() {
     this.reportCreated = false;
-    await invoke('debug_report_discard').catch((e) => {
+    await commands.debugReportDiscard().catch((e) => {
       error(`[DebugReport] Could not discard the debug report: ${JSON.stringify(e)}`);
     });
   }

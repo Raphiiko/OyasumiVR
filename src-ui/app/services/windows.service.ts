@@ -1,13 +1,8 @@
 import { Injectable } from '@angular/core';
-import { invoke } from '@tauri-apps/api/core';
+import { commands, WindowsPowerPolicy } from '../bindings';
 import { EventLogService } from './event-log.service';
 import { error } from '@tauri-apps/plugin-log';
 import { BehaviorSubject } from 'rxjs';
-
-interface WindowsPowerPolicy {
-  guid: string;
-  name: string;
-}
 
 @Injectable({
   providedIn: 'root',
@@ -23,7 +18,7 @@ export class WindowsService {
   }
 
   public async getWindowsPowerPolicies() {
-    this._policies.next(await invoke<WindowsPowerPolicy[]>('get_windows_power_policies'));
+    this._policies.next(await commands.getWindowsPowerPolicies());
     return this._policies.value;
   }
 
@@ -32,7 +27,7 @@ export class WindowsService {
     reason: 'SLEEP_MODE_ENABLED' | 'SLEEP_MODE_DISABLED'
   ): Promise<void> {
     guid = guid.toUpperCase();
-    await invoke<void>('set_windows_power_policy', { guid });
+    await commands.setWindowsPowerPolicy(guid);
     // the command reports no result, so read the active policy back
     const currentPolicy = await this.getWindowsPowerPolicy();
     const applied = currentPolicy?.guid === guid;
@@ -51,8 +46,7 @@ export class WindowsService {
   }
 
   public async getWindowsPowerPolicy(): Promise<WindowsPowerPolicy | undefined> {
-    const policy =
-      (await invoke<WindowsPowerPolicy | null>('active_windows_power_policy')) ?? undefined;
+    const policy = (await commands.activeWindowsPowerPolicy()) ?? undefined;
     // Update local policy cache
     if (policy) {
       const knownPolicy = this._policies.value.find((p) => p.guid === policy.guid);

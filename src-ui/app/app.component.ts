@@ -17,7 +17,7 @@ import {
 import { fade } from './utils/animations';
 import { TelemetryService } from './services/telemetry/telemetry.service';
 import { isHolidaysEventActive } from './utils/event-utils';
-import { invoke } from '@tauri-apps/api/core';
+import { commands } from './bindings';
 
 @Component({
   selector: 'app-root',
@@ -51,7 +51,7 @@ export class AppComponent implements OnInit {
         }),
         tap((userLanguage) => {
           translate.setActiveLang(userLanguage);
-          invoke('set_ui_language', { language: userLanguage });
+          commands.setUiLanguage(userLanguage);
         }),
         debounceTime(10000),
         tap((userLanguage) =>

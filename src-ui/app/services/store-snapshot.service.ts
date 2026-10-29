@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { invoke } from '@tauri-apps/api/core';
+import { CheckpointMetadata, commands, SnapshotData } from '../bindings';
 import { LazyStore } from '@tauri-apps/plugin-store';
 import { appDataDir, join } from '@tauri-apps/api/path';
 import { exists, readTextFile } from '@tauri-apps/plugin-fs';
@@ -15,30 +15,11 @@ import {
 import { getVersion } from '../utils/app-utils';
 import { serializeStoreContents, StoreProtector } from '../utils/store-protector';
 
-export interface StoreCheckpoint {
-  formatVersion: number;
-  id: string;
-  storeName: string;
-  appVersion: string;
-  reason: string;
-  createdAt: string;
-  createdAtMillis: number;
-  sequence: number;
-  schemaVersions: Record<string, number>;
-  contentChecksum: string;
-  contentSizeBytes: number;
-  contentFile: string;
-  contentFileExists: boolean;
-}
+export type { CheckpointMetadata as StoreCheckpoint } from '../bindings';
 
 export interface LiveStoreRead {
   exists: boolean;
   contents: string | null;
-}
-
-export interface StoreSnapshot {
-  contents: string;
-  modifiedAtMillis: number;
 }
 
 const PROTECTED_STORES: Record<string, { file: string; store: LazyStore }> = {
@@ -85,8 +66,8 @@ export class StoreSnapshotService {
     }
   }
 
-  public readSnapshot(storeName: string): Promise<StoreSnapshot | null> {
-    return invoke<StoreSnapshot | null>('store_safety_read_snapshot', { storeName });
+  public readSnapshot(storeName: string): Promise<SnapshotData | null> {
+    return commands.storeSafetyReadSnapshot(storeName);
   }
 
   public async createCheckpoint(
@@ -94,38 +75,32 @@ export class StoreSnapshotService {
     reason: string,
     schemaVersions: Record<string, number>,
     contents?: string
-  ): Promise<StoreCheckpoint> {
+  ): Promise<CheckpointMetadata> {
     const store = this.getStoreEntry(storeName).store;
-    return invoke<StoreCheckpoint>('store_safety_create_checkpoint', {
+    return commands.storeSafetyCreateCheckpoint(
       storeName,
-      contents: contents ?? (await serializeStoreContents(store)),
+      contents ?? (await serializeStoreContents(store)),
       reason,
-      appVersion: await getVersion(),
-      schemaVersions,
-    });
+      await getVersion(),
+      schemaVersions
+    );
   }
 
-  public listCheckpoints(storeName: string): Promise<StoreCheckpoint[]> {
-    return invoke<StoreCheckpoint[]>('store_safety_list_checkpoints', { storeName });
+  public listCheckpoints(storeName: string): Promise<CheckpointMetadata[]> {
+    return commands.storeSafetyListCheckpoints(storeName);
   }
 
   public readCheckpoint(storeName: string, checkpointId: string): Promise<string> {
-    return invoke<string>('store_safety_read_checkpoint', { storeName, checkpointId });
+    return commands.storeSafetyReadCheckpoint(storeName, checkpointId);
   }
 
   public quarantineStore(storeName: string): Promise<string | null> {
-    return invoke<string | null>('store_safety_quarantine_store', {
-      storeName,
-      storeFileName: this.getStoreEntry(storeName).file,
-    });
+    return commands.storeSafetyQuarantineStore(storeName, this.getStoreEntry(storeName).file);
   }
 
   public async replaceStore(storeName: string, contents: string): Promise<void> {
     const entry = this.getStoreEntry(storeName);
-    await invoke('store_safety_replace_store', {
-      storeFileName: entry.file,
-      contents,
-    });
+    await commands.storeSafetyReplaceStore(entry.file, contents);
     await entry.store.reload({ ignoreDefaults: true });
   }
 

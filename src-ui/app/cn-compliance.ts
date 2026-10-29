@@ -1,5 +1,4 @@
-import { invoke } from '@tauri-apps/api/core';
-import { listen } from '@tauri-apps/api/event';
+import { commands, events } from './bindings';
 import { LANGUAGES } from './globals';
 import translationContributorData from '../../docs/translation_contributors.json';
 
@@ -9,12 +8,12 @@ export async function initCnCompliance() {
   await applyCnCompliance();
   // The marker file answers on its own, but the Steam China launcher check only answers once
   // Steamworks has finished initializing.
-  await listen<boolean>('STEAMWORKS_READY', () => applyCnCompliance());
+  await events.steamworksReadyEvent.listen(() => applyCnCompliance());
 }
 
 async function applyCnCompliance() {
   if (applied) return;
-  if (!(await invoke<boolean>('cn_compliance_mode'))) return;
+  if (!(await commands.cnComplianceMode())) return;
   applied = true;
   LANGUAGES.filter((language) => language.flag === 'tw').forEach(
     (language) => (language.flag = 'hk')
