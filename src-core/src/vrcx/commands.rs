@@ -3,6 +3,7 @@ use log::debug;
 use crate::vrcx::*;
 
 #[tauri::command]
+#[specta::specta]
 pub async fn vrcx_log(msg: String) -> bool {
     let sender = &mut VRCX_NOTIFICATION_SENDER.lock().unwrap();
     if sender.sender.is_none() && sender.connect().is_err() {

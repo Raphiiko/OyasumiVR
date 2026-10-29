@@ -11,6 +11,7 @@ pub(super) async fn start_sidecar() -> StartOutcome {
 }
 
 #[tauri::command]
+#[specta::specta]
 pub async fn elevated_sidecar_started() -> bool {
     let mut sidecar_manager_guard = super::SIDECAR_MANAGER.lock().await;
     let sidecar_manager = sidecar_manager_guard.as_mut().unwrap();
@@ -18,6 +19,7 @@ pub async fn elevated_sidecar_started() -> bool {
 }
 
 #[tauri::command]
+#[specta::specta]
 pub async fn elevated_sidecar_get_grpc_web_port() -> Option<u32> {
     let manager_guard = super::SIDECAR_MANAGER.lock().await;
     let manager = manager_guard.as_ref();
@@ -31,6 +33,7 @@ pub async fn elevated_sidecar_get_grpc_web_port() -> Option<u32> {
 }
 
 #[tauri::command]
+#[specta::specta]
 pub async fn elevated_sidecar_get_grpc_port() -> Option<u32> {
     let manager_guard = super::SIDECAR_MANAGER.lock().await;
     let manager = manager_guard.as_ref();
@@ -46,11 +49,13 @@ pub async fn elevated_sidecar_get_grpc_port() -> Option<u32> {
 /// The one call that can raise a UAC prompt. The result distinguishes a declined prompt from a
 /// failure, which the UI reports differently.
 #[tauri::command]
+#[specta::specta]
 pub async fn elevated_features_enable() -> super::launcher::EnableResult {
     super::launcher::enable().await
 }
 
 #[tauri::command]
+#[specta::specta]
 pub async fn elevated_features_disable() -> DisableResult {
     // taken before the manager lock, the same order enable uses
     let _transition = super::TRANSITION.lock().await;
@@ -103,7 +108,7 @@ pub async fn elevated_features_disable() -> DisableResult {
     DisableResult::Ok
 }
 
-#[derive(Debug, Clone, PartialEq, Eq, serde::Serialize)]
+#[derive(Debug, Clone, PartialEq, Eq, serde::Serialize, specta::Type)]
 #[serde(tag = "result", rename_all = "camelCase")]
 pub enum DisableResult {
     Ok,

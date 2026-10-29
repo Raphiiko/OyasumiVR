@@ -4,6 +4,7 @@ use log::info;
 use serde_json::{Map, Value};
 
 #[tauri::command]
+#[specta::specta]
 pub async fn set_telemetry_enabled(enable: bool) {
     let initialized = { *super::TELEMETRY_INITIALIZED.lock().await };
     let is_enabled = super::TELEMETRY_ENABLED.load(Ordering::Relaxed);
@@ -22,6 +23,7 @@ pub async fn set_telemetry_enabled(enable: bool) {
 
 /// Resolves only once OpenPanel accepted the event, so the UI can retry an event that did not arrive.
 #[tauri::command]
+#[specta::specta]
 pub async fn track_event(name: String, props: Option<Map<String, Value>>) -> Result<(), String> {
     if !super::TELEMETRY_ENABLED.load(Ordering::Relaxed) {
         return Err("telemetry is disabled in the core".into());

@@ -24,6 +24,7 @@ static TRANSLATIONS: LazyLock<RwLock<Translations>> = LazyLock::new(|| {
 
 /// Mirrors the UI's language setting; `language` is an OyasumiVR locale code such as `ja`.
 #[tauri::command]
+#[specta::specta]
 pub fn set_ui_language(app: AppHandle, language: String) {
     let active = (language != "en")
         .then(|| read_translations(&app, &language))

@@ -53,6 +53,7 @@
     "tl:check-icu": "node scripts/check-icu.mjs",
     "symbolicate": "node scripts/symbolicate-event.js",
     "generate:readmes": "node scripts/readme-generator.js",
+    "generate:bindings": "cargo test --manifest-path src-core/Cargo.toml --no-default-features export_bindings -- --ignored",
     "generate:grpc-web-client": "@powershell -NoProfile -ExecutionPolicy Unrestricted -Command ./scripts/ts-proto-gen.ps1 && prettier --loglevel silent --write src-grpc-web-client/**/*",
     "tauri": "tauri",
     "ng": "ng",

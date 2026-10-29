@@ -18,6 +18,7 @@ use uuid::Uuid;
 use windows_sys::Win32::System::Threading::CREATE_NO_WINDOW;
 
 #[tauri::command]
+#[specta::specta]
 pub async fn play_sound(name: String, volume: f32) -> Result<(), String> {
     if volume == 0.0 {
         return Ok(());
@@ -41,17 +42,20 @@ pub async fn play_sound(name: String, volume: f32) -> Result<(), String> {
 }
 
 #[tauri::command]
+#[specta::specta]
 pub async fn quit_steamvr(kill: bool) {
     crate::utils::stop_process("vrmonitor.exe", kill).await;
 }
 
 #[tauri::command]
+#[specta::specta]
 pub async fn is_vrchat_active() -> bool {
     let vrc_active_guard = VRCHAT_ACTIVE.lock().await;
     *vrc_active_guard
 }
 
 #[tauri::command]
+#[specta::specta]
 pub async fn run_command(command: String, args: Vec<String>) -> Result<Output, String> {
     let command = {
         let handle = TAURI_APP_HANDLE.lock().await;
@@ -108,6 +112,7 @@ pub async fn run_command(command: String, args: Vec<String>) -> Result<Output, S
 }
 
 #[tauri::command]
+#[specta::specta]
 pub async fn run_cmd_commands(commands: String) -> Result<(), String> {
     info!("[Core] Running commands:\n{commands}");
 
@@ -204,6 +209,7 @@ pub async fn run_cmd_commands(commands: String) -> Result<(), String> {
 }
 
 #[tauri::command]
+#[specta::specta]
 pub async fn show_in_folder(path: String) {
     let handle = TAURI_APP_HANDLE.lock().await;
     handle
@@ -217,6 +223,7 @@ pub async fn show_in_folder(path: String) {
 }
 
 #[tauri::command]
+#[specta::specta]
 pub async fn set_windows_power_policy(guid: String) {
     let guid = guid.to_uppercase();
     let parsed_guid = match crate::utils::serialization::string_to_guid(&guid) {
@@ -231,6 +238,7 @@ pub async fn set_windows_power_policy(guid: String) {
 }
 
 #[tauri::command]
+#[specta::specta]
 pub async fn active_windows_power_policy() -> Option<WindowsPowerPolicy> {
     let guid = super::active_windows_power_policy();
     guid?;
@@ -243,6 +251,7 @@ pub async fn active_windows_power_policy() -> Option<WindowsPowerPolicy> {
 }
 
 #[tauri::command]
+#[specta::specta]
 pub async fn get_windows_power_policies() -> Vec<WindowsPowerPolicy> {
     let mut policies = Vec::new();
     let schemes = super::get_windows_power_policies();
@@ -257,11 +266,13 @@ pub async fn get_windows_power_policies() -> Vec<WindowsPowerPolicy> {
 }
 
 #[tauri::command]
+#[specta::specta]
 pub async fn windows_is_elevated() -> bool {
     is_elevated()
 }
 
 #[tauri::command]
+#[specta::specta]
 pub async fn windows_shutdown(
     message: String,
     timeout: u32,
@@ -272,6 +283,7 @@ pub async fn windows_shutdown(
 }
 
 #[tauri::command]
+#[specta::specta]
 pub async fn windows_reboot(
     message: String,
     timeout: u32,
@@ -282,16 +294,19 @@ pub async fn windows_reboot(
 }
 
 #[tauri::command]
+#[specta::specta]
 pub async fn windows_sleep() -> Result<(), String> {
     system_shutdown::sleep().map_err(|e| power_command_error("sleep", e))
 }
 
 #[tauri::command]
+#[specta::specta]
 pub async fn windows_hibernate() -> Result<(), String> {
     system_shutdown::hibernate().map_err(|e| power_command_error("hibernate", e))
 }
 
 #[tauri::command]
+#[specta::specta]
 pub async fn windows_logout() -> Result<(), String> {
     system_shutdown::logout().map_err(|e| power_command_error("log out", e))
 }
@@ -302,6 +317,7 @@ fn power_command_error(action: &str, e: std::io::Error) -> String {
 }
 
 #[tauri::command]
+#[specta::specta]
 pub async fn get_audio_devices(refresh: bool) -> Vec<AudioDeviceDto> {
     let manager_guard = super::AUDIO_DEVICE_MANAGER.lock().await;
     let manager = match manager_guard.as_ref() {
@@ -322,6 +338,7 @@ pub async fn get_audio_devices(refresh: bool) -> Vec<AudioDeviceDto> {
 }
 
 #[tauri::command]
+#[specta::specta]
 pub async fn set_audio_device_volume(device_id: String, volume: f32) -> Result<(), String> {
     let manager_guard = super::AUDIO_DEVICE_MANAGER.lock().await;
     let Some(manager) = manager_guard.as_ref() else {
@@ -334,6 +351,7 @@ pub async fn set_audio_device_volume(device_id: String, volume: f32) -> Result<(
 }
 
 #[tauri::command]
+#[specta::specta]
 pub async fn set_audio_device_mute(device_id: String, mute: bool) -> Result<(), String> {
     let manager_guard = super::AUDIO_DEVICE_MANAGER.lock().await;
     let Some(manager) = manager_guard.as_ref() else {
@@ -344,6 +362,7 @@ pub async fn set_audio_device_mute(device_id: String, mute: bool) -> Result<(), 
 }
 
 #[tauri::command]
+#[specta::specta]
 pub async fn set_hardware_mic_activity_enabled(enabled: bool) {
     let manager_guard = super::AUDIO_DEVICE_MANAGER.lock().await;
     let manager = match manager_guard.as_ref() {
@@ -359,6 +378,7 @@ pub async fn set_hardware_mic_activity_enabled(enabled: bool) {
 }
 
 #[tauri::command]
+#[specta::specta]
 pub async fn set_hardware_mic_activivation_threshold(threshold: f32) {
     let manager_guard = super::AUDIO_DEVICE_MANAGER.lock().await;
     let manager = match manager_guard.as_ref() {
@@ -374,6 +394,7 @@ pub async fn set_hardware_mic_activivation_threshold(threshold: f32) {
 }
 
 #[tauri::command]
+#[specta::specta]
 pub async fn set_mic_activity_device_id(device_id: Option<String>) {
     let manager_guard = super::AUDIO_DEVICE_MANAGER.lock().await;
     let manager = match manager_guard.as_ref() {
@@ -389,6 +410,7 @@ pub async fn set_mic_activity_device_id(device_id: Option<String>) {
 }
 
 #[tauri::command]
+#[specta::specta]
 pub async fn is_elevation_security_disabled() -> bool {
     crate::os::elevation::is_elevation_security_disabled()
 }

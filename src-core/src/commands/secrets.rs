@@ -63,11 +63,13 @@ fn unprotect(secret: &[u8]) -> Result<Vec<u8>, String> {
 }
 
 #[tauri::command]
+#[specta::specta]
 pub fn protect_secret(secret: String) -> Result<String, String> {
     Ok(STANDARD.encode(protect(secret.as_bytes())?))
 }
 
 #[tauri::command]
+#[specta::specta]
 pub fn unprotect_secret(secret: String) -> Result<String, String> {
     let protected = STANDARD.decode(secret).map_err(|error| error.to_string())?;
     String::from_utf8(unprotect(&protected)?).map_err(|error| error.to_string())

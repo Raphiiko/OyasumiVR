@@ -6,7 +6,7 @@
 
 use serde::{Deserialize, Serialize};
 
-#[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize, Deserialize, specta::Type)]
 #[serde(rename_all = "SCREAMING_SNAKE_CASE")]
 pub enum SleepingPose {
     Unknown,
@@ -51,7 +51,7 @@ const RECEIVERS: [(SleepingPose, f64, [f64; 3]); 9] = [
 ];
 
 /// An oriented box; `axes` holds its unit axes, `half_size` its extent along each.
-#[derive(Clone, Debug, Serialize)]
+#[derive(Clone, Debug, Serialize, specta::Type)]
 #[serde(rename_all = "camelCase")]
 pub struct Obb {
     pub center: [f64; 3],
@@ -59,7 +59,7 @@ pub struct Obb {
     pub axes: [[f64; 3]; 3],
 }
 
-#[derive(Clone, Debug, Serialize)]
+#[derive(Clone, Debug, Serialize, specta::Type)]
 #[serde(rename_all = "camelCase")]
 pub struct Receiver {
     pub pose: SleepingPose,
@@ -69,7 +69,7 @@ pub struct Receiver {
     pub colliding: bool,
 }
 
-#[derive(Clone, Debug, Serialize)]
+#[derive(Clone, Debug, Serialize, specta::Type)]
 #[serde(rename_all = "camelCase")]
 pub struct PoseGeometry {
     /// Collides with the front and back receivers.

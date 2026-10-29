@@ -18,6 +18,7 @@ pub async fn is_cn_release() -> bool {
 }
 
 #[tauri::command]
+#[specta::specta]
 pub async fn cn_compliance_mode() -> bool {
     is_cn_release().await
 }

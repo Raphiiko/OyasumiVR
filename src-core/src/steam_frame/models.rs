@@ -2,13 +2,13 @@ use serde::{Deserialize, Serialize};
 
 use super::SUPPORTED_MODELS;
 
-#[derive(Serialize, Clone, Copy)]
+#[derive(Serialize, Clone, Copy, specta::Type)]
 pub struct SupportedModel {
     pub manufacturer: &'static str,
     pub model: &'static str,
 }
 
-#[derive(Serialize, Deserialize, Clone, Debug, PartialEq, Eq)]
+#[derive(Serialize, Deserialize, Clone, Debug, PartialEq, Eq, specta::Type)]
 pub struct Identity {
     pub serial: String,
     pub model: String,
@@ -29,7 +29,7 @@ impl Identity {
 }
 
 /// How this PC reaches a headset over SSH. A missing pin trusts the first host key it sees.
-#[derive(Deserialize, Clone, Debug, PartialEq)]
+#[derive(Deserialize, Clone, Debug, PartialEq, specta::Type)]
 #[serde(rename_all = "camelCase")]
 pub struct Access {
     pub address: String,
@@ -38,13 +38,13 @@ pub struct Access {
     pub host_key_pin: Option<String>,
 }
 
-#[derive(Serialize, Clone, Debug, PartialEq)]
+#[derive(Serialize, Clone, Debug, PartialEq, specta::Type)]
 pub struct Candidate {
     pub name: String,
     pub address: String,
 }
 
-#[derive(Serialize, Debug, PartialEq)]
+#[derive(Serialize, Debug, PartialEq, specta::Type)]
 #[serde(rename_all = "camelCase")]
 pub enum RegisterOutcome {
     Registered,
@@ -58,7 +58,7 @@ pub enum RegisterOutcome {
 }
 
 /// A completed pairing, as the UI stores it.
-#[derive(Deserialize, Clone, Debug, PartialEq)]
+#[derive(Deserialize, Clone, Debug, PartialEq, specta::Type)]
 #[serde(rename_all = "camelCase")]
 pub struct Pairing {
     pub id: String,
@@ -70,7 +70,7 @@ pub struct Pairing {
     pub identity: Identity,
 }
 
-#[derive(Serialize, Clone, Copy, Debug, PartialEq)]
+#[derive(Serialize, Clone, Copy, Debug, PartialEq, specta::Type)]
 #[serde(rename_all = "camelCase")]
 pub enum Status {
     Connecting,
@@ -85,7 +85,7 @@ pub enum Status {
     PairingRemoved,
 }
 
-#[derive(Serialize, Clone, Debug, PartialEq)]
+#[derive(Serialize, Clone, Debug, PartialEq, specta::Type)]
 #[serde(tag = "kind", rename_all = "camelCase")]
 pub enum Maintenance {
     Updating,
@@ -93,7 +93,7 @@ pub enum Maintenance {
     Failed,
 }
 
-#[derive(Serialize, Clone, Debug)]
+#[derive(Serialize, Clone, Debug, specta::Type)]
 #[serde(rename_all = "camelCase")]
 pub struct State {
     pub pairing_id: String,
@@ -115,7 +115,7 @@ pub struct State {
     pub controllers: Option<Vec<Controller>>,
 }
 
-#[derive(Serialize, Deserialize, Clone, Debug, PartialEq)]
+#[derive(Serialize, Deserialize, Clone, Debug, PartialEq, specta::Type)]
 pub struct Controller {
     pub serial: String,
     pub connected: bool,
@@ -138,7 +138,7 @@ pub struct Seen<T> {
 }
 
 /// The headset's hardware brightness in percent, as the helper reports it.
-#[derive(Serialize, Deserialize, Clone, Debug, PartialEq)]
+#[derive(Serialize, Deserialize, Clone, Debug, PartialEq, specta::Type)]
 #[serde(rename_all = "camelCase")]
 pub struct Brightness {
     /// False while the helper has no SteamVR session; nothing else is known then.
@@ -150,7 +150,7 @@ pub struct Brightness {
     pub percentage: Option<f64>,
 }
 
-#[derive(Serialize, Deserialize, Clone, Copy, Debug, PartialEq)]
+#[derive(Serialize, Deserialize, Clone, Copy, Debug, PartialEq, specta::Type)]
 #[serde(rename_all = "camelCase")]
 pub enum Control {
     Brightness,
@@ -178,7 +178,7 @@ pub struct FadeEnded {
     pub outcome: FadeOutcome,
 }
 
-#[derive(Serialize, Deserialize, Clone, Copy, Debug, PartialEq)]
+#[derive(Serialize, Deserialize, Clone, Copy, Debug, PartialEq, specta::Type)]
 #[serde(rename_all = "camelCase")]
 pub enum FadeError {
     Unsupported,
@@ -189,7 +189,7 @@ pub enum FadeError {
 }
 
 /// A fade for the helper. `simple` is a simple-mode curve from and to, for brightness only.
-#[derive(Deserialize, Clone, Debug)]
+#[derive(Deserialize, Clone, Debug, specta::Type)]
 #[serde(rename_all = "camelCase")]
 pub struct FadeRequest {
     pub control: Control,
@@ -199,13 +199,13 @@ pub struct FadeRequest {
     pub simple: Option<SimpleCurve>,
 }
 
-#[derive(Serialize, Deserialize, Clone, Copy, Debug)]
+#[derive(Serialize, Deserialize, Clone, Copy, Debug, specta::Type)]
 pub struct SimpleCurve {
     pub from: f64,
     pub to: f64,
 }
 
-#[derive(Serialize, Deserialize, Clone, Copy, Debug, PartialEq)]
+#[derive(Serialize, Deserialize, Clone, Copy, Debug, PartialEq, specta::Type)]
 #[serde(rename_all = "camelCase")]
 pub enum SetBrightnessError {
     Unsupported,
@@ -216,7 +216,7 @@ pub enum SetBrightnessError {
 }
 
 /// The headset's color temperature, as the helper reports it.
-#[derive(Serialize, Deserialize, Clone, Debug, PartialEq)]
+#[derive(Serialize, Deserialize, Clone, Debug, PartialEq, specta::Type)]
 #[serde(rename_all = "camelCase")]
 pub struct Cct {
     /// False while the helper has no SteamVR session; nothing else is known then.
@@ -227,7 +227,7 @@ pub struct Cct {
     pub exact: Option<bool>,
 }
 
-#[derive(Serialize, Deserialize, Clone, Copy, Debug, PartialEq)]
+#[derive(Serialize, Deserialize, Clone, Copy, Debug, PartialEq, specta::Type)]
 #[serde(rename_all = "camelCase")]
 pub enum SetCctError {
     RuntimeUnavailable,
@@ -236,7 +236,7 @@ pub enum SetCctError {
     Offline,
 }
 
-#[derive(Serialize, Deserialize, Clone, Copy, Debug, PartialEq)]
+#[derive(Serialize, Deserialize, Clone, Copy, Debug, PartialEq, specta::Type)]
 #[serde(rename_all = "camelCase")]
 pub enum DisconnectControllerError {
     RuntimeUnavailable,
@@ -245,7 +245,7 @@ pub enum DisconnectControllerError {
     Offline,
 }
 
-#[derive(Deserialize, Clone)]
+#[derive(Deserialize, Clone, specta::Type)]
 #[serde(rename_all = "camelCase")]
 pub struct SetupRequest {
     pub attempt_id: String,
@@ -267,7 +267,7 @@ pub enum Stage {
     Connection,
 }
 
-#[derive(Serialize, Debug, PartialEq)]
+#[derive(Serialize, Debug, PartialEq, specta::Type)]
 #[serde(tag = "status", rename_all = "camelCase")]
 pub enum SetupOutcome {
     #[serde(rename_all = "camelCase")]
@@ -290,7 +290,7 @@ pub enum SetupOutcome {
     },
 }
 
-#[derive(Deserialize)]
+#[derive(Deserialize, specta::Type)]
 #[serde(rename_all = "camelCase")]
 pub struct CleanupRequest {
     pub access: Access,
@@ -300,7 +300,7 @@ pub struct CleanupRequest {
 }
 
 /// Every mode removes this PC's token file and key lines.
-#[derive(Deserialize, Clone, Copy, Debug, PartialEq)]
+#[derive(Deserialize, Clone, Copy, Debug, PartialEq, specta::Type)]
 #[serde(rename_all = "camelCase")]
 pub enum CleanupMode {
     /// Also removes the helper when no PC holds a token any more, as a cancelled pairing does.
@@ -309,7 +309,7 @@ pub enum CleanupMode {
     Uninstall,
 }
 
-#[derive(Serialize, Debug, PartialEq)]
+#[derive(Serialize, Debug, PartialEq, specta::Type)]
 #[serde(tag = "status", rename_all = "camelCase")]
 pub enum CleanupOutcome {
     Done,
@@ -322,7 +322,7 @@ pub enum CleanupOutcome {
     },
 }
 
-#[derive(Serialize)]
+#[derive(Serialize, specta::Type)]
 #[serde(rename_all = "camelCase")]
 pub struct PairingKeys {
     pub private_key: String,
@@ -330,7 +330,7 @@ pub struct PairingKeys {
     pub token: String,
 }
 
-#[derive(Serialize)]
+#[derive(Serialize, specta::Type)]
 #[serde(tag = "status", rename_all = "camelCase")]
 pub enum ProbeOutcome {
     #[serde(rename_all = "camelCase")]
@@ -390,7 +390,7 @@ mod tests {
     }
 }
 
-#[derive(Serialize, Debug, PartialEq)]
+#[derive(Serialize, Debug, PartialEq, specta::Type)]
 #[serde(tag = "status", rename_all = "camelCase")]
 pub enum OtherPcsOutcome {
     Ok {

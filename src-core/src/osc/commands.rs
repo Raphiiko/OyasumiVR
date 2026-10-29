@@ -1,6 +1,5 @@
 use super::{OSC_RECEIVE_SOCKET, OSC_SEND_SOCKET};
 use log::{debug, error, info};
-use oyasumivr_oscquery::OSCMethod;
 use rosc::{encoder, OscMessage, OscPacket, OscType};
 use serde::{Deserialize, Serialize};
 use std::{
@@ -12,7 +11,7 @@ use std::{
 use tokio::sync::Mutex;
 use tokio_util::sync::CancellationToken;
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, specta::Type)]
 pub enum SupportedOscType {
     Int,
     Float,
@@ -20,22 +19,73 @@ pub enum SupportedOscType {
     String,
 }
 
+/// The command argument for [`oyasumivr_oscquery::OSCMethod`], which has no TypeScript description.
+#[derive(Deserialize, specta::Type)]
+#[serde(rename_all = "camelCase")]
+pub struct OSCMethod {
+    address: String,
+    ad_type: OSCMethodAccessType,
+    value_type: Option<OSCMethodValueType>,
+    value: Option<String>,
+    description: Option<String>,
+}
+
+#[derive(Deserialize, specta::Type)]
+pub enum OSCMethodAccessType {
+    Write,
+    Read,
+    ReadWrite,
+}
+
+#[derive(Deserialize, specta::Type)]
+pub enum OSCMethodValueType {
+    Bool,
+    Int,
+    Float,
+    String,
+}
+
+impl From<OSCMethod> for oyasumivr_oscquery::OSCMethod {
+    fn from(method: OSCMethod) -> Self {
+        use oyasumivr_oscquery::{OSCMethodAccessType as Access, OSCMethodValueType as Value};
+        Self {
+            address: method.address,
+            ad_type: match method.ad_type {
+                OSCMethodAccessType::Write => Access::Write,
+                OSCMethodAccessType::Read => Access::Read,
+                OSCMethodAccessType::ReadWrite => Access::ReadWrite,
+            },
+            value_type: method.value_type.map(|value_type| match value_type {
+                OSCMethodValueType::Bool => Value::Bool,
+                OSCMethodValueType::Int => Value::Int,
+                OSCMethodValueType::Float => Value::Float,
+                OSCMethodValueType::String => Value::String,
+            }),
+            value: method.value,
+            description: method.description,
+        }
+    }
+}
+
 static CANCELLATION_TOKEN: LazyLock<Mutex<Option<CancellationToken>>> =
     LazyLock::new(Default::default);
 
 #[tauri::command]
+#[specta::specta]
 pub async fn get_vrchat_osc_address() -> Option<String> {
     let guard = super::VRC_OSC_ADDRESS.lock().await;
     guard.as_ref().cloned()
 }
 
 #[tauri::command]
+#[specta::specta]
 pub async fn get_vrchat_oscquery_address() -> Option<String> {
     let guard = super::VRC_OSCQUERY_ADDRESS.lock().await;
     guard.as_ref().cloned()
 }
 
 #[tauri::command]
+#[specta::specta]
 pub async fn stop_osc_server() {
     // Terminate existing task if it exists
     let mut cancellation_token = CANCELLATION_TOKEN.lock().await;
@@ -57,6 +107,7 @@ pub async fn stop_osc_server() {
 }
 
 #[tauri::command]
+#[specta::specta]
 pub async fn start_osc_server() -> Option<(String, String)> {
     info!("[Core] Starting OSC server");
     stop_osc_server().await;
@@ -123,16 +174,19 @@ pub async fn start_osc_server() -> Option<(String, String)> {
 }
 
 #[tauri::command]
+#[specta::specta]
 pub async fn add_osc_method(method: OSCMethod) {
-    oyasumivr_oscquery::server::add_osc_method(method).await;
+    oyasumivr_oscquery::server::add_osc_method(method.into()).await;
 }
 
 #[tauri::command]
+#[specta::specta]
 pub async fn set_osc_method_value(address: String, value: String) {
     oyasumivr_oscquery::server::set_osc_method_value(address, Some(value)).await;
 }
 
 #[tauri::command]
+#[specta::specta]
 pub async fn osc_send_command(
     addr: String,
     osc_addr: String,
@@ -166,6 +220,7 @@ pub async fn osc_send_command(
 }
 
 #[tauri::command]
+#[specta::specta]
 pub async fn osc_valid_addr(addr: String) -> bool {
     resolve_osc_address(&addr).await.is_ok()
 }
@@ -265,6 +320,7 @@ mod tests {
 }
 
 #[tauri::command]
+#[specta::specta]
 pub async fn set_osc_receive_address_whitelist(whitelist: Vec<String>) {
     *super::OSC_RECEIVE_ADDRESS_WHITELIST.lock().await = whitelist;
 }

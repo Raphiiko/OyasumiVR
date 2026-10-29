@@ -312,7 +312,7 @@ pub fn describe_launcher_result(code: i32) -> &'static str {
     }
 }
 
-#[derive(Debug, Clone, PartialEq, Eq, serde::Serialize)]
+#[derive(Debug, Clone, PartialEq, Eq, serde::Serialize, specta::Type)]
 #[serde(tag = "result", rename_all = "camelCase")]
 pub enum EnableResult {
     Ok,

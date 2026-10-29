@@ -5,6 +5,7 @@ use crate::Models::elevated_sidecar::{
 use log::error;
 
 #[tauri::command]
+#[specta::specta]
 pub async fn msi_afterburner_set_profile(
     executable_path: String,
     profile: u32,

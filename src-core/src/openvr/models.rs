@@ -34,7 +34,7 @@ pub struct OpenVRActionSet {
     pub handle: ActionSetHandle,
 }
 
-#[derive(Clone, Serialize, Deserialize)]
+#[derive(Clone, Serialize, Deserialize, specta::Type)]
 #[serde(rename_all = "camelCase")]
 pub struct BindingOriginData {
     pub localized_controller_type: String,
@@ -64,7 +64,7 @@ pub enum OpenVRStatus {
     Initialized,
 }
 
-#[derive(Clone, Serialize, Deserialize, PartialEq)]
+#[derive(Clone, Serialize, Deserialize, PartialEq, specta::Type)]
 pub enum TrackedControllerRole {
     Invalid,
     LeftHand,
@@ -100,7 +100,7 @@ impl From<raphii_openvr_rs::raw::ETrackedControllerRole> for TrackedControllerRo
     }
 }
 
-#[derive(Clone, Serialize, Deserialize, PartialEq)]
+#[derive(Clone, Serialize, Deserialize, PartialEq, specta::Type)]
 #[allow(clippy::upper_case_acronyms)]
 pub enum TrackedDeviceClass {
     Invalid,
@@ -137,7 +137,7 @@ impl From<raphii_openvr_rs::raw::ETrackedDeviceClass> for TrackedDeviceClass {
     }
 }
 
-#[derive(Clone, Serialize, Deserialize, PartialEq)]
+#[derive(Clone, Serialize, Deserialize, PartialEq, specta::Type)]
 #[serde(rename_all = "camelCase")]
 pub struct OVRDevice {
     pub index: u32,
@@ -165,14 +165,14 @@ pub struct OVRDevice {
 
 /// How OyasumiVR turns the device off, as far as OpenVR shows it. The UI sets `SteamFrame` for
 /// the controllers a paired Steam Frame's helper reports.
-#[derive(Clone, Copy, Serialize, Deserialize, PartialEq)]
+#[derive(Clone, Copy, Serialize, Deserialize, PartialEq, specta::Type)]
 pub enum PowerMethod {
     /// Through the Lighthouse console and the device's dongle.
     Lighthouse,
     None,
 }
 
-#[derive(Clone, Serialize, Deserialize, IntoStaticStr, EnumIter, PartialEq)]
+#[derive(Clone, Serialize, Deserialize, IntoStaticStr, EnumIter, PartialEq, specta::Type)]
 pub enum OVRHandleType {
     HandPrimary,
     HandSecondary,
@@ -257,7 +257,7 @@ pub struct GestureDetected {
     pub gesture: String,
 }
 
-#[derive(Clone, Serialize, Deserialize)]
+#[derive(Clone, Serialize, Deserialize, specta::Type)]
 #[serde(rename_all = "camelCase")]
 pub struct OVRFrameLimits {
     pub additional_frames_to_predict: u8,

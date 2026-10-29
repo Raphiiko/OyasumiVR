@@ -13,6 +13,7 @@ fn app_data_dir(app_handle: &AppHandle) -> Result<PathBuf, String> {
 }
 
 #[tauri::command]
+#[specta::specta]
 pub async fn store_safety_save_snapshot(
     app_handle: AppHandle,
     store_name: String,
@@ -23,6 +24,7 @@ pub async fn store_safety_save_snapshot(
 }
 
 #[tauri::command]
+#[specta::specta]
 pub async fn store_safety_read_snapshot(
     app_handle: AppHandle,
     store_name: String,
@@ -32,6 +34,7 @@ pub async fn store_safety_read_snapshot(
 }
 
 #[tauri::command]
+#[specta::specta]
 pub async fn store_safety_restore_snapshot(
     app_handle: AppHandle,
     store_name: String,
@@ -44,6 +47,7 @@ pub async fn store_safety_restore_snapshot(
 }
 
 #[tauri::command]
+#[specta::specta]
 pub async fn store_safety_create_checkpoint(
     app_handle: AppHandle,
     store_name: String,
@@ -69,6 +73,7 @@ pub async fn store_safety_create_checkpoint(
 }
 
 #[tauri::command]
+#[specta::specta]
 pub async fn store_safety_list_checkpoints(
     app_handle: AppHandle,
     store_name: String,
@@ -78,6 +83,7 @@ pub async fn store_safety_list_checkpoints(
 }
 
 #[tauri::command]
+#[specta::specta]
 pub async fn store_safety_read_checkpoint(
     app_handle: AppHandle,
     store_name: String,
@@ -88,6 +94,7 @@ pub async fn store_safety_read_checkpoint(
 }
 
 #[tauri::command]
+#[specta::specta]
 pub async fn store_safety_quarantine_store(
     app_handle: AppHandle,
     store_name: String,
@@ -107,6 +114,7 @@ pub async fn store_safety_quarantine_store(
 }
 
 #[tauri::command]
+#[specta::specta]
 pub async fn store_safety_replace_store(
     app_handle: AppHandle,
     store_file_name: String,

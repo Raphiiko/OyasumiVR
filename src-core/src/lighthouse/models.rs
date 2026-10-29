@@ -4,7 +4,7 @@ use btleplug::platform::{Peripheral, PeripheralId};
 use serde::{ser::SerializeStruct, Deserialize, Serialize, Serializer};
 use tokio::sync::Mutex;
 
-#[derive(Debug, Serialize, Deserialize, Clone)]
+#[derive(Debug, Serialize, Deserialize, Clone, specta::Type)]
 #[serde(rename_all = "camelCase")]
 pub enum LighthouseStatus {
     Uninitialized,
@@ -13,7 +13,7 @@ pub enum LighthouseStatus {
     Ready,
 }
 
-#[derive(Debug, Serialize, Deserialize, Clone, PartialEq)]
+#[derive(Debug, Serialize, Deserialize, Clone, PartialEq, specta::Type)]
 #[serde(rename_all = "camelCase")]
 pub enum LighthousePowerState {
     Unknown,
@@ -23,7 +23,7 @@ pub enum LighthousePowerState {
     On,
 }
 
-#[derive(Debug, Serialize, Deserialize, Clone, PartialEq)]
+#[derive(Debug, Serialize, Deserialize, Clone, PartialEq, specta::Type)]
 #[serde(rename_all = "camelCase")]
 pub enum LighthouseDeviceType {
     LighthouseV1, // V1 Base Station (HTC)
@@ -42,6 +42,20 @@ pub enum LighthouseError {
     FailedToWriteCharacteristic(btleplug::Error),
     InvalidCharacteristicValue,
     CharacteristicDoesNotSupportRead,
+}
+
+/// The shape [`LighthouseError`] serializes to.
+#[derive(specta::Type)]
+#[allow(dead_code)]
+pub struct SerializedLighthouseError {
+    error: String,
+    message: Option<String>,
+}
+
+impl specta::Type for LighthouseError {
+    fn inline(types: &mut specta::TypeCollection, generics: specta::Generics) -> specta::DataType {
+        SerializedLighthouseError::inline(types, generics)
+    }
 }
 
 impl Serialize for LighthouseError {
@@ -96,7 +110,7 @@ impl Serialize for LighthouseError {
     }
 }
 
-#[derive(Debug, Serialize, Deserialize, Clone)]
+#[derive(Debug, Serialize, Deserialize, Clone, specta::Type)]
 #[serde(rename_all = "camelCase")]
 pub struct LighthouseDeviceModel {
     pub id: String,
