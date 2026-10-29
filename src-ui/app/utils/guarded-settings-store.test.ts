@@ -119,6 +119,7 @@ describe('GuardedSettingsStore', () => {
       deleteSettled = true;
     });
     await saveStarted.promise;
+    assert.deepEqual(deleteCalls, ['KEY']);
     assert.equal(saveCalls, 1);
     assert.equal(deleteSettled, false);
     finishSave();
@@ -138,6 +139,7 @@ describe('GuardedSettingsStore', () => {
       clearSettled = true;
     });
     await saveStarted.promise;
+    assert.equal(clearCalls, 1);
     assert.equal(saveCalls, 1);
     assert.equal(clearSettled, false);
     finishSave();
