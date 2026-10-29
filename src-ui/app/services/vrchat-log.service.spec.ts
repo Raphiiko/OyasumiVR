@@ -49,12 +49,12 @@ it.each([-1, 0, 20 * 60_000 - 1, 20 * 60_000, 21 * 60_000])(
     // store the join time through the world handler
     const world = new BehaviorSubject<WorldContext>({ loaded: false, players: [] });
     const vrchat: VRChatService = Object.assign(Object.create(VRChatService.prototype), {
-      auth: { user: new BehaviorSubject({ id: 'usr_me' }) },
+      currentUserId: 'usr_me',
       worldSubject: world,
       world: world.asObservable(),
       vrchatProcessActive: new BehaviorSubject(true),
     });
-    await vrchat['handlePlayerJoined']((await parsed) as VRChatOnPlayerJoinedEvent);
+    vrchat['handlePlayerJoined']((await parsed) as VRChatOnPlayerJoinedEvent);
     expect(world.value.joinedAt).toBe(time);
 
     // trigger sleep detection with Steam writes simulated

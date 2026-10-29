@@ -32,8 +32,6 @@ function makeService() {
   return { service, logEvents, login };
 }
 
-const flush = () => new Promise((resolve) => setTimeout(resolve));
-
 describe('VRChatService world context', () => {
   it('keeps log events emitted before init', async () => {
     const { service, logEvents } = makeService();
@@ -63,9 +61,24 @@ describe('VRChatService world context', () => {
       timestamp: new Date(2000),
       initialLoad: true,
     });
-    await flush();
     expect((await firstValueFrom(service.world)).loaded).toBe(false);
 
+    login('usr_me');
+
+    const world = await firstValueFrom(service.world);
+    expect(world.loaded).toBe(true);
+    expect(world.joinedAt).toBe(2000);
+  });
+
+  it('marks the world loaded when login lands right after the own join', async () => {
+    const { service, logEvents, login } = makeService();
+    logEvents.next({
+      type: 'OnPlayerJoined',
+      displayName: 'Me',
+      userId: 'usr_me',
+      timestamp: new Date(2000),
+      initialLoad: true,
+    });
     login('usr_me');
 
     const world = await firstValueFrom(service.world);

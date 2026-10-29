@@ -11,7 +11,7 @@ import {
   VRChatAccountProfile,
   VRChatApiSettings,
 } from '../../models/vrchat-api-settings';
-import { BehaviorSubject, combineLatest, filter, firstValueFrom, map, Observable } from 'rxjs';
+import { BehaviorSubject, combineLatest, filter, map, Observable } from 'rxjs';
 import { ModalService } from 'src-ui/app/services/modal.service';
 import { AvatarEx, UserStatus, WorldContext } from '../../models/vrchat';
 import { VRChatLogService } from '../vrchat-log.service';
@@ -66,6 +66,7 @@ export class VRChatService {
     loaded: false,
     players: [],
   });
+  private currentUserId: string | null = null;
 
   private readonly api: VRChatAPI;
   private readonly auth: VRChatAuth;
@@ -117,7 +118,7 @@ export class VRChatService {
     this.websocketStatus = this.socket.status;
     // the log service emits without replay, so subscribe before any init reads the log
     this.subscribeToLogEvents();
-    this.auth.user.subscribe((user) => this.markOwnJoin(user));
+    this.auth.user.subscribe((user) => this.handleUserChange(user?.id ?? null));
   }
 
   public async init(): Promise<void> {
@@ -153,10 +154,10 @@ export class VRChatService {
     this.logService.logEvents.subscribe((event) => {
       switch (event.type) {
         case 'OnPlayerJoined':
-          void this.handlePlayerJoined(event);
+          this.handlePlayerJoined(event);
           break;
         case 'OnPlayerLeft':
-          void this.handlePlayerLeft(event);
+          this.handlePlayerLeft(event);
           break;
         case 'OnLocationChange':
           this.handleLocationChange(event);
@@ -165,8 +166,8 @@ export class VRChatService {
     });
   }
 
-  private async handlePlayerJoined(event: VRChatOnPlayerJoinedEvent): Promise<void> {
-    const isCurrentUser = event.userId === (await firstValueFrom(this.auth.user))?.id;
+  private handlePlayerJoined(event: VRChatOnPlayerJoinedEvent): void {
+    const isCurrentUser = event.userId === this.currentUserId;
     const currentWorld = this.worldSubject.value;
     const existingPlayer = currentWorld.players.some((player) => player.userId === event.userId);
     const players = existingPlayer
@@ -189,16 +190,17 @@ export class VRChatService {
     });
   }
 
-  /** Marks the world loaded when the user logs in after their own join was read from the log. */
-  private markOwnJoin(user: CurrentUser | null): void {
+  /** Tracks the logged-in user, and marks the world loaded when their own join was already read. */
+  private handleUserChange(userId: string | null): void {
+    this.currentUserId = userId;
     const world = this.worldSubject.value;
-    const ownPlayer = user && world.players.find((player) => player.userId === user.id);
+    const ownPlayer = userId && world.players.find((player) => player.userId === userId);
     if (!ownPlayer || world.loaded) return;
     this.worldSubject.next({ ...world, loaded: true, joinedAt: ownPlayer.joinedAt });
   }
 
-  private async handlePlayerLeft(event: VRChatOnPlayerLeftEvent): Promise<void> {
-    const isCurrentUser = event.userId === (await firstValueFrom(this.auth.user))?.id;
+  private handlePlayerLeft(event: VRChatOnPlayerLeftEvent): void {
+    const isCurrentUser = event.userId === this.currentUserId;
     const currentWorld = this.worldSubject.value;
 
     this.worldSubject.next({
