@@ -115,6 +115,9 @@ export class VRChatService {
     this.notifications = this.socket.notifications;
     this.isFetchingFriends = this.api.isFetchingFriends;
     this.websocketStatus = this.socket.status;
+    // the log service emits without replay, so subscribe before any init reads the log
+    this.subscribeToLogEvents();
+    this.auth.user.subscribe((user) => this.markOwnJoin(user));
   }
 
   public async init(): Promise<void> {
@@ -122,7 +125,6 @@ export class VRChatService {
     await this.api.init(this.auth.user, this.auth.patchCurrentUser.bind(this.auth));
     await this.auth.init();
     this.socket.init();
-    this.subscribeToLogEvents();
     await this.watchVRChatProcess();
   }
 
@@ -171,13 +173,28 @@ export class VRChatService {
       ? currentWorld.players.map((player) =>
           player.userId === event.userId ? { ...player, displayName: event.displayName } : player
         )
-      : [...currentWorld.players, { displayName: event.displayName, userId: event.userId }];
+      : [
+          ...currentWorld.players,
+          {
+            displayName: event.displayName,
+            userId: event.userId,
+            joinedAt: event.timestamp.getTime(),
+          },
+        ];
     this.worldSubject.next({
       ...currentWorld,
       players,
       loaded: isCurrentUser ? true : currentWorld.loaded,
       joinedAt: isCurrentUser ? event.timestamp.getTime() : currentWorld.joinedAt,
     });
+  }
+
+  /** Marks the world loaded when the user logs in after their own join was read from the log. */
+  private markOwnJoin(user: CurrentUser | null): void {
+    const world = this.worldSubject.value;
+    const ownPlayer = user && world.players.find((player) => player.userId === user.id);
+    if (!ownPlayer || world.loaded) return;
+    this.worldSubject.next({ ...world, loaded: true, joinedAt: ownPlayer.joinedAt });
   }
 
   private async handlePlayerLeft(event: VRChatOnPlayerLeftEvent): Promise<void> {

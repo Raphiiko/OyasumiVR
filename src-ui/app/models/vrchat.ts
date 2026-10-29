@@ -53,6 +53,7 @@ export interface WorldContext {
   players: {
     displayName: string;
     userId: string;
+    joinedAt?: number;
   }[];
   instanceId?: string;
   loaded: boolean;

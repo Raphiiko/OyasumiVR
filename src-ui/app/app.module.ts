@@ -676,10 +676,8 @@ export class AppModule {
                 this.logInit('Initializing avatar context', this.avatarContextService.init())
               ),
             this.logInit('Initializing sleep services', this.sleepService.init()),
-            // the initial log read must reach a subscribed VRChatService that knows the user
-            this.logInit('Initializing VRChat services', this.vrchatService.init()).then(() =>
-              this.logInit('Initializing VRChat log handling', this.vrchatLogService.init())
-            ),
+            this.logInit('Initializing VRChat services', this.vrchatService.init()),
+            this.logInit('Initializing VRChat log handling', this.vrchatLogService.init()),
             this.logInit('Initializing image cache', this.imageCacheService.init()),
             this.logInit('Initializing fonts', this.fontLoaderService.init()),
             this.logInit('Initializing lighthouse services', this.lighthouseService.init()),
