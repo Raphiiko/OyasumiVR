@@ -50,6 +50,7 @@ with [SemVer](https://semver.org/) prerelease suffixes:
 - Fixed the VRChat microphone mute automation pressing the mute button without knowing whether you were muted, which could unmute you instead
 - Fixed the player count status automation setting the same VRChat status message again every 11 minutes when the message contained punctuation
 - Fixed OyasumiVR not finding VRChat's OSC services on PCs with several network adapters, which showed the "VRChat OSC(Query) services unavailable" warning while OSC was enabled
+- Fixed invite request automations ignoring every request when OyasumiVR started shortly after VRChat, until you changed worlds
 
 ## [26.10.3]
 
