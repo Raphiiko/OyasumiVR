@@ -299,14 +299,23 @@
         "standby": "En veille"
       },
       "noDevices": "Aucun appareil détecté",
-      "title": "Appareils",
-      "turnOffAllDevices": "Éteindre tous les appareils"
+      "title": "Appareils"
     },
     "device-selector": {
       "noSelection": "Sélectionner des appareils",
       "withDevices": "{count, plural, one {# appareil} other {# appareils}}"
     },
     "event-log-entry": {
+      "failure": {
+        "BASE_STATION_NO_RESPONSE": "Une station de base n'a pas répondu. Vérifiez que vos stations de base sont à portée de votre adaptateur Bluetooth.",
+        "MUTE_STATE_UNKNOWN": "VRChat n'a pas indiqué à OyasumiVR si votre micro est coupé. Vérifiez que l'OSC est activé dans VRChat.",
+        "SEE_MESSAGE_CENTRE": "Consultez le centre de messages pour plus d'informations.",
+        "UNKNOWN": "Une erreur s'est produite. Si le problème se répète, demandez de l'aide sur le Discord d'OyasumiVR.",
+        "VRCHAT_AVATAR_UNAVAILABLE": "L'avatar n'est plus disponible.",
+        "VRCHAT_LOGGED_OUT": "OyasumiVR n'est pas connecté à votre compte VRChat.",
+        "VRCHAT_NOT_GROUP_MEMBER": "Vous n'êtes plus membre de ce groupe.",
+        "VRCHAT_RATE_LIMITED": "VRChat a reçu trop de requêtes d'OyasumiVR et a refusé celle-ci."
+      },
       "type": {
         "acceptedInviteRequest": {
           "subtitle": {
@@ -355,7 +364,8 @@
             "SLEEP_MODE_ENABLED": "Car le mode sommeil a été activé",
             "SLEEP_PREPARATION": "Car vous vous prépariez à dormir"
           },
-          "title": "Volume de l'appareil audio ''{deviceName}'' réglé à {percentage}"
+          "title": "Volume de l'appareil audio ''{deviceName}'' réglé à {percentage}",
+          "title_FAILED": "Impossible de régler le volume de l'appareil audio ''{deviceName}'' à {percentage}"
         },
         "changedSystemMicControllerButtonBehavior": {
           "reason": {
@@ -376,7 +386,9 @@
           },
           "title": {
             "MUTE": "Micro coupé : {deviceName}",
-            "UNMUTE": "Micro réactivé : {deviceName}"
+            "MUTE_FAILED": "Impossible de couper le micro : {deviceName}",
+            "UNMUTE": "Micro réactivé : {deviceName}",
+            "UNMUTE_FAILED": "Impossible de réactiver le micro : {deviceName}"
           }
         },
         "changedVRChatMicMuteState": {
@@ -387,7 +399,9 @@
           },
           "title": {
             "MUTE": "Micro coupé dans VRChat",
-            "UNMUTE": "Micro réactivé dans VRChat"
+            "MUTE_FAILED": "Impossible de couper le micro dans VRChat",
+            "UNMUTE": "Micro réactivé dans VRChat",
+            "UNMUTE_FAILED": "Impossible de réactiver le micro dans VRChat"
           }
         },
         "chaperoneFadeDistanceChanged": {
@@ -395,13 +409,15 @@
             "SLEEP_MODE_DISABLED": "Car le mode sommeil a été désactivé",
             "SLEEP_MODE_ENABLED": "Car le mode sommeil a été activé"
           },
-          "title": "Distance d'apparition du chaperone réglée sur {value}"
+          "title": "Distance d'apparition du chaperone réglée sur {value}",
+          "title_FAILED": "Impossible de régler la distance d'apparition du chaperone sur {value}"
         },
         "declinedInvite": {
           "reason": {
             "SLEEP_MODE_ENABLED": "Car le mode sommeil était actif"
           },
-          "title": "Invitation de ''{displayName}'' refusée automatiquement"
+          "title": "Invitation de ''{displayName}'' refusée automatiquement",
+          "title_FAILED": "Impossible de refuser automatiquement l'invitation de ''{displayName}''"
         },
         "declinedInviteRequest": {
           "reason": {
@@ -410,14 +426,16 @@
             "PLAYER_COUNT_CONDITION_FAILED": "Car il y avait trop de joueurs dans l'instance",
             "SLEEP_MODE_ENABLED_CONDITION_FAILED": "Car le mode sommeil était inactif"
           },
-          "title": "Demande d'invitation de ''{displayName}'' refusée automatiquement"
+          "title": "Demande d'invitation de ''{displayName}'' refusée automatiquement",
+          "title_FAILED": "Impossible de refuser automatiquement la demande d'invitation de ''{displayName}''"
         },
         "failedInviteRequest": {
           "subtitle": {
             "noMessage": "VRChat a refusé sans donner de raison",
             "vrchatMessage": "VRChat a refusé car : ''{message}''"
           },
-          "title": "Impossible d'accepter la demande d'invitation de ''{displayName}''"
+          "title": "Impossible d'accepter la demande d'invitation de ''{displayName}''",
+          "title_FAILED": "Impossible d'accepter la demande d'invitation de ''{displayName}''"
         },
         "frameLimitChanged": {
           "reason": {
@@ -425,7 +443,8 @@
             "SLEEP_MODE_ENABLED": "Car le mode sommeil a été activé",
             "SLEEP_PREPARATION": "Car vous vous prépariez à dormir"
           },
-          "title": "Limite d'images par seconde de ''{appName}'' réglée sur {limit}"
+          "title": "Limite d'images par seconde de ''{appName}'' réglée sur {limit}",
+          "title_FAILED": "Impossible de régler la limite d'images par seconde de ''{appName}'' sur {limit}"
         },
         "gpuPowerLimitChanged": {
           "reason": {
@@ -433,8 +452,11 @@
             "SLEEP_MODE_ENABLED": "Car le mode sommeil a été activé"
           },
           "title": {
+            "noDevice_FAILED": "Impossible de changer la limite de consommation de votre carte graphique",
             "reset": "Limite de consommation pour ''{device}'' restaurée à {limit}",
-            "set": "Limite de consommation pour ''{device}'' définie à {limit}"
+            "reset_FAILED": "Impossible de restaurer la limite de consommation de ''{device}'' à {limit}",
+            "set": "Limite de consommation pour ''{device}'' définie à {limit}",
+            "set_FAILED": "Impossible de définir la limite de consommation de ''{device}'' à {limit}"
           }
         },
         "hardwareBrightnessChanged": {
@@ -453,18 +475,27 @@
         "lighthouseSetPowerState": {
           "ALL": {
             "on": "Toutes les stations de base ont été allumées",
+            "on_FAILED": "Impossible d'allumer toutes les stations de base",
             "sleep": "Toutes les stations de base ont été mises en sommeil",
-            "standby": "Toutes les stations de base ont été mises en veille"
+            "sleep_FAILED": "Impossible de mettre toutes les stations de base en sommeil",
+            "standby": "Toutes les stations de base ont été mises en veille",
+            "standby_FAILED": "Impossible de mettre toutes les stations de base en veille"
           },
           "SINGLE": {
             "on": "Une station de base a été allumée",
+            "on_FAILED": "Impossible d'allumer une station de base",
             "sleep": "Une station de base a été mise en sommeil",
-            "standby": "Une station de base a été mise en veille"
+            "sleep_FAILED": "Impossible de mettre une station de base en sommeil",
+            "standby": "Une station de base a été mise en veille",
+            "standby_FAILED": "Impossible de mettre une station de base en veille"
           },
           "VARIOUS": {
             "on": "Plusieurs stations de base ont été allumées",
+            "on_FAILED": "Impossible d'allumer plusieurs stations de base",
             "sleep": "Plusieurs stations de base ont été mises en sommeil",
-            "standby": "Plusieurs stations de base ont été mises en veille"
+            "sleep_FAILED": "Impossible de mettre plusieurs stations de base en sommeil",
+            "standby": "Plusieurs stations de base ont été mises en veille",
+            "standby_FAILED": "Impossible de mettre plusieurs stations de base en veille"
           },
           "reasons": {
             "HOTKEY": "Car un raccourci clavier a été utilisé",
@@ -480,7 +511,8 @@
             "SLEEP_MODE_DISABLED": "Car le mode sommeil a été désactivé",
             "SLEEP_MODE_ENABLED": "Car le mode sommeil a été activé"
           },
-          "title": "Le profil {profile} de MSI Afterburner a été appliqué"
+          "title": "Le profil {profile} de MSI Afterburner a été appliqué",
+          "title_FAILED": "Impossible d'appliquer le profil {profile} de MSI Afterburner"
         },
         "mutedAudioDevice": {
           "reason": {
@@ -488,7 +520,8 @@
             "SLEEP_MODE_ENABLED": "Car le mode sommeil a été activé",
             "SLEEP_PREPARATION": "Car vous vous prépariez à dormir"
           },
-          "title": "Appareil audio ''{deviceName}'' coupé"
+          "title": "Appareil audio ''{deviceName}'' coupé",
+          "title_FAILED": "Impossible de couper l'appareil audio ''{deviceName}''"
         },
         "renderResolutionChanged": {
           "reason": {
@@ -497,7 +530,9 @@
           },
           "title": {
             "auto": "Résolution de rendu de SteamVR réglée sur 'auto'",
-            "custom": "Résolution de rendu de SteamVR réglée sur {value}"
+            "auto_FAILED": "Impossible de régler la résolution de rendu de SteamVR sur 'auto'",
+            "custom": "Résolution de rendu de SteamVR réglée sur {value}",
+            "custom_FAILED": "Impossible de régler la résolution de rendu de SteamVR sur {value}"
           }
         },
         "runAutomationExecuted": {
@@ -506,7 +541,8 @@
             "SLEEP_MODE_ENABLED": "Car le mode sommeil a été activé",
             "SLEEP_PREPARATION": "Car vous vous prépariez à dormir"
           },
-          "title": "Commandes personnalisées exécutées via l'invite de commandes Windows"
+          "title": "Commandes personnalisées exécutées via l'invite de commandes Windows",
+          "title_FAILED": "Impossible d'exécuter les commandes personnalisées via l'invite de commandes Windows"
         },
         "shutdownSequenceCancelled": {
           "reason": {
@@ -523,6 +559,17 @@
             "VRC_ALONE_TRIGGER": "Car vous étiez seul dans votre instance depuis assez longtemps"
           },
           "title": "La séquence d'arrêt a été lancée"
+        },
+        "shutdownSequenceStepFailed": {
+          "title": {
+            "HIBERNATE_FAILED": "Impossible de mettre Windows en veille prolongée pendant la séquence d'arrêt",
+            "LOGOUT_FAILED": "Impossible de fermer la session Windows pendant la séquence d'arrêt",
+            "QUITTING_STEAMVR_FAILED": "Impossible de quitter SteamVR pendant la séquence d'arrêt",
+            "REBOOT_FAILED": "Impossible de redémarrer Windows pendant la séquence d'arrêt",
+            "SHUTDOWN_FAILED": "Impossible d'arrêter Windows pendant la séquence d'arrêt",
+            "SLEEP_FAILED": "Impossible de mettre Windows en veille pendant la séquence d'arrêt",
+            "TURNING_OFF_DEVICES_FAILED": "Impossible d'éteindre vos appareils pendant la séquence d'arrêt"
+          }
         },
         "simpleBrightnessChanged": {
           "reason": {
@@ -553,7 +600,7 @@
                 "join": "Car {name} a rejoint votre monde",
                 "leave": "Car {name} a quitté votre monde"
               },
-              "SLEEP_MODE_DISABLE_ON_UPRIGHT_POSE": "Car vous êtes resté assis assez longtemps",
+              "SLEEP_MODE_DISABLE_ON_SIDE_FRONT_POSE": "Car vous êtes resté assis assez longtemps",
               "unknown": "Par une automatisation inconnue"
             },
             "hotkey": "Vous avez désactivé le mode sommeil avec le raccourci clavier",
@@ -599,14 +646,16 @@
             "SLEEP_MODE_ENABLED": "Car le mode sommeil a été activé",
             "SLEEP_PREPARATION": "Car vous vous prépariez à dormir"
           },
-          "title": "Statut VRChat changé de {oldStatus} à {newStatus}"
+          "title": "Statut VRChat changé : {statusChange}",
+          "title_FAILED": "Impossible de changer votre statut VRChat : {statusChange}"
         },
         "statusChangedOnPlayerCountChange": {
           "reason": {
             "AT_LIMIT_OR_ABOVE": "Car le nombre de joueurs dans votre monde a atteint la limite de {threshold}",
             "BELOW_LIMIT": "Car le nombre de joueurs dans votre monde est passé sous {threshold}"
           },
-          "title": "Statut VRChat changé de {oldStatus} à {newStatus}"
+          "title": "Statut VRChat changé : {statusChange}",
+          "title_FAILED": "Impossible de changer votre statut VRChat : {statusChange}"
         },
         "turnedOffOpenVRDevices": {
           "reason": {
@@ -621,11 +670,17 @@
           },
           "title": {
             "ALL": "Tous les appareils ont été éteints",
+            "ALL_FAILED": "Impossible d'éteindre tous les appareils",
             "CONTROLLER": "Une manette a été éteinte",
             "CONTROLLERS": "Plusieurs manettes ont été éteintes",
+            "CONTROLLERS_FAILED": "Impossible d'éteindre plusieurs manettes",
+            "CONTROLLER_FAILED": "Impossible d'éteindre une manette",
             "TRACKER": "Un tracker a été éteint",
             "TRACKERS": "Plusieurs trackers ont été éteints",
-            "VARIOUS": "Divers appareils ont été éteints"
+            "TRACKERS_FAILED": "Impossible d'éteindre plusieurs trackers",
+            "TRACKER_FAILED": "Impossible d'éteindre un tracker",
+            "VARIOUS": "Divers appareils ont été éteints",
+            "VARIOUS_FAILED": "Impossible d'éteindre divers appareils"
           }
         },
         "unmutedAudioDevice": {
@@ -634,7 +689,8 @@
             "SLEEP_MODE_ENABLED": "Car le mode sommeil a été activé",
             "SLEEP_PREPARATION": "Car vous vous prépariez à dormir"
           },
-          "title": "Appareil audio ''{deviceName}'' réactivé"
+          "title": "Appareil audio ''{deviceName}'' réactivé",
+          "title_FAILED": "Impossible de réactiver l'appareil audio ''{deviceName}''"
         },
         "vrchatAvatarChanged": {
           "reason": {
@@ -642,7 +698,8 @@
             "SLEEP_MODE_ENABLED": "Car le mode sommeil a été activé",
             "SLEEP_PREPARATION": "Car vous vous prépariez à dormir"
           },
-          "title": "Avatar VRChat changé en ''{avatarName}''"
+          "title": "Avatar VRChat changé en ''{avatarName}''",
+          "title_FAILED": "Impossible de changer votre avatar VRChat en ''{avatarName}''"
         },
         "vrchatGroupChanged": {
           "reason": {
@@ -652,7 +709,10 @@
           },
           "title": {
             "clear": "Le groupe VRChat ''{groupName}'' n'est plus affiché",
-            "set": "Groupe VRChat affiché changé en ''{groupName}''"
+            "clearUnknown_FAILED": "Impossible de ne plus afficher votre groupe VRChat",
+            "clear_FAILED": "Impossible de ne plus afficher le groupe VRChat ''{groupName}''",
+            "set": "Groupe VRChat affiché changé en ''{groupName}''",
+            "set_FAILED": "Impossible de changer le groupe VRChat affiché en ''{groupName}''"
           }
         },
         "windowsPowerPolicySet": {
@@ -660,83 +720,50 @@
             "SLEEP_MODE_DISABLED": "Car le mode sommeil a été désactivé",
             "SLEEP_MODE_ENABLED": "Car le mode sommeil a été activé"
           },
-          "title": "Plan d'alimentation Windows réglé sur ''{policy}''"
+          "title": "Plan d'alimentation Windows réglé sur ''{policy}''",
+          "title_FAILED": "Impossible de régler le plan d'alimentation Windows sur ''{policy}''"
         }
       }
-    },
-    "event-log-filter-dialog": {
-      "filters": {
-        "AUDIO_CONTROL": {
-          "description": "Évènements liés au contrôle des micros et autres appareils audio",
-          "title": "Contrôle audio"
-        },
-        "BRIGHTNESS_CCT": {
-          "description": "Évènements liés au contrôle de la luminosité et de la température de couleur de votre casque VR",
-          "title": "Luminosité et température de couleur"
-        },
-        "BSB_CONTROL": {
-          "description": "Évènements liés au contrôle du Bigscreen Beyond",
-          "title": "Bigscreen Beyond"
-        },
-        "DEVICE_POWER": {
-          "description": "Évènements liés à l'allumage et à l'extinction d'appareils comme les trackers, les manettes et les stations de base",
-          "title": "Alimentation des appareils"
-        },
-        "FRAME_LIMITING": {
-          "description": "Évènements liés à la limitation d'images par seconde des applications",
-          "title": "Limitation d'images"
-        },
-        "GPU_CONTROL": {
-          "description": "Évènements liés au contrôle de votre carte graphique",
-          "title": "Contrôle du GPU"
-        },
-        "RUN_AUTOMATIONS": {
-          "description": "Évènements liés aux automatisations qui exécutent des commandes via l'invite de commandes Windows",
-          "title": "Automatisations de commandes"
-        },
-        "SHUTDOWN_SEQUENCE": {
-          "description": "Évènements liés à la séquence d'arrêt",
-          "title": "Séquence d'arrêt"
-        },
-        "SLEEP_MODE": {
-          "description": "Évènements liés au mode sommeil et à la détection du sommeil",
-          "title": "Mode sommeil"
-        },
-        "STEAMVR_SETTINGS": {
-          "description": "Évènements liés aux changements des paramètres SteamVR, comme la résolution de rendu et la distance d'apparition",
-          "title": "Paramètres SteamVR"
-        },
-        "VRCHAT_AVATAR": {
-          "description": "Évènements liés au changement de votre avatar VRChat par OyasumiVR",
-          "title": "Avatar VRChat"
-        },
-        "VRCHAT_GROUP": {
-          "description": "Évènements liés au changement, par OyasumiVR, du groupe VRChat que vous affichez",
-          "title": "Groupe VRChat"
-        },
-        "VRCHAT_INVITES": {
-          "description": "Évènements liés aux invitations et demandes d'invitation VRChat",
-          "title": "Invitations VRChat"
-        },
-        "VRCHAT_STATUS": {
-          "description": "Évènements liés aux changements de votre statut VRChat",
-          "title": "Statut VRChat"
-        },
-        "WINDOWS_POWER_POLICY": {
-          "description": "Évènements liés aux changements du plan d'alimentation Windows",
-          "title": "Plan d'alimentation Windows"
-        }
-      },
-      "selectAll": "Tout sélectionner",
-      "selectDescription": "Sélectionnez les types d'entrées à afficher dans le journal d'évènements",
-      "selectNone": "Ne rien sélectionner",
-      "title": "Filtrer le journal d'évènements"
     },
     "event-log": {
       "clearLog": "Effacer",
       "clearLogModal": {
         "message": "Voulez-vous vraiment effacer le journal d'évènements ? Cette action est irréversible.",
         "title": "Confirmer l'effacement"
+      },
+      "filters": {
+        "categories": {
+          "bigscreenBeyond": "Bigscreen Beyond",
+          "brightnessCct": "Luminosité et température de couleur",
+          "devicePower": "Alimentation des appareils",
+          "fadeDistance": "Distance d'apparition",
+          "frameLimiting": "Limitation d'images",
+          "gpu": "GPU",
+          "resolution": "Résolution",
+          "runCommands": "Exécution de commandes",
+          "shutdownSequence": "Séquence d'arrêt",
+          "sleepMode": "Mode sommeil",
+          "systemMic": "Micro système",
+          "volume": "Volume",
+          "vrchatAvatar": "Avatar",
+          "vrchatGroup": "Groupe",
+          "vrchatInvites": "Invitations",
+          "vrchatMicMute": "Micro coupé",
+          "vrchatStatus": "Statut",
+          "windowsPowerPolicy": "Plan d'alimentation Windows"
+        },
+        "groups": {
+          "general": "Général",
+          "hardware": "Matériel",
+          "vrchat": "VRChat"
+        },
+        "hiddenCount": "{count} masqués",
+        "hideAll": "Tout masquer",
+        "hiding": "Masqué",
+        "showAll": "Tout afficher",
+        "showEverything": "Tout afficher",
+        "shownCount": "{shown} sur {total} affichés",
+        "title": "Filtrer les évènements"
       },
       "group": {
         "cause": {
@@ -746,7 +773,8 @@
           "sunrise": "Au lever du soleil",
           "sunset": "Au coucher du soleil"
         },
-        "count": "{count, plural, one {# action} other {# actions}}"
+        "count": "{count, plural, one {# action} other {# actions}}",
+        "countWithWarnings": "{count, plural, one {1 action} other {# actions}}, <span class=\"warning\">{warnings, plural, one {1 échec} other {# échecs}}</span>"
       },
       "no-logs": "Aucun évènement n'a encore été enregistré.\nLes journaux sont conservés 48 heures au maximum.",
       "openFilters": "Filtrer les évènements",
@@ -1481,12 +1509,12 @@
         "enable": {
           "title": "Droits d'administrateur indisponibles"
         },
-        "startupPromptDeclined": {
+        "startupPromptNotApproved": {
           "actions": {
-            "enable": "Réactiver"
+            "enable": "Afficher la demande"
           },
-          "message": "OyasumiVR a demandé les droits d'administrateur au démarrage, et la demande a été refusée. Les fonctionnalités qui en ont besoin sont désormais désactivées.",
-          "title": "Droits d'administrateur désactivés"
+          "message": "OyasumiVR a demandé les droits d'administrateur au démarrage, mais la demande de Windows a été refusée ou n'a pas reçu de réponse à temps. Les fonctionnalités qui en ont besoin restent indisponibles jusqu'à ce que vous acceptiez la demande.",
+          "title": "Les droits d'administrateur attendent votre accord"
         }
       },
       "gpuAutomationsAfterburnerError": {
@@ -1540,6 +1568,10 @@
           "unknown": "Les overlays SteamVR d'OyasumiVR échouent à démarrer de façon répétée.\n\nL'accélération GPU est déjà désactivée, la cause est donc ailleurs. Veuillez signaler le problème en joignant vos fichiers journaux."
         },
         "title": "Overlays indisponibles"
+      },
+      "psvr2ToolkitMissing": {
+        "message": "OyasumiVR ne peut contrôler la luminosité matérielle et la température de couleur de votre PlayStation VR2 que si PSVR2Toolkit est installé. Sans lui, OyasumiVR ne peut contrôler que la luminosité logicielle.\n\nInstallez PSVR2Toolkit et redémarrez SteamVR pour activer ces fonctionnalités.",
+        "title": "PSVR2Toolkit n'est pas installé"
       },
       "sleepCalibrationRequired": {
         "calibrate": "Calibrer maintenant",
@@ -1642,6 +1674,9 @@
     "autoDeclinedInviteRequest": {
       "content": "Demande d'invitation de {username} refusée automatiquement"
     },
+    "failedInviteRequest": {
+      "content": "Impossible d'accepter la demande d'invitation de {username}"
+    },
     "sleepCheck": {
       "content": "Le mode sommeil s'activera dans 20 secondes.\nDormez-vous ?\n\nPour annuler :\nsecouez la tête ou appuyez sur un bouton de la manette"
     },
@@ -1722,7 +1757,7 @@
         },
         "positions": {
           "SIDE_BACK": "Sur le dos",
-          "SIDE_FRONT": "Assis",
+          "SIDE_FRONT": "Sur le ventre",
           "SIDE_LEFT": "Sur le côté gauche",
           "SIDE_RIGHT": "Sur le côté droit",
           "UNKNOWN": "Inconnue",
@@ -1963,6 +1998,11 @@
           },
           "enableFailed": {
             "title": "Impossible d'activer les droits d'administrateur"
+          },
+          "promptOnDesktop": {
+            "closesItself": "Cette fenêtre se ferme d'elle-même dès que vous répondez.",
+            "message": "Windows demande les droits d'administrateur dans une fenêtre sur votre bureau. Cette fenêtre peut ne pas s'afficher en VR.",
+            "title": "Répondez à la demande sur votre bureau"
           }
         },
         "errors": {
@@ -2401,6 +2441,11 @@
           "loggedIn": "Connecté",
           "loggedOut": "Non connecté"
         },
+        "steamFrame": {
+          "label": "Steam Frame",
+          "notPaired": "Non associé",
+          "pairingRemoved": "Association supprimée"
+        },
         "steamvr": {
           "INACTIVE": "Arrêté",
           "INITIALIZED": "Lancé",
@@ -2416,6 +2461,7 @@
           "hardware": "Accélération matérielle",
           "label": "Tableau de bord SteamVR",
           "notRendering": "Aucun rendu",
+          "pending": "En attente de l'ouverture du tableau de bord",
           "software": "Rendu logiciel",
           "softwareFallback": "Rendu logiciel (secours)"
         },
@@ -2910,6 +2956,249 @@
     },
     "title": "Automatisations de statut"
   },
+  "steamFrame": {
+    "actions": {
+      "back": "Retour",
+      "cancel": "Annuler",
+      "cancelPairing": "Annuler l'association",
+      "close": "Fermer",
+      "closeForNow": "Fermer pour l'instant",
+      "connect": "Se connecter",
+      "continue": "Continuer",
+      "copyCommand": "Copier la commande",
+      "done": "Terminé",
+      "enterAddress": "Saisir l'adresse",
+      "findHeadset": "Trouver votre casque",
+      "forget": "Oublier",
+      "pair": "Associer le casque",
+      "pairAgain": "Associer à nouveau",
+      "pairThis": "Associer ce casque",
+      "reinstall": "Réinstaller",
+      "repair": "Réparer",
+      "retry": "Réessayer",
+      "retryUpdate": "Réessayer",
+      "searchAgain": "Chercher à nouveau",
+      "sendAgain": "Renvoyer",
+      "tryAgain": "Réessayer",
+      "unpair": "Dissocier",
+      "unpairAll": "Désinstaller le Helper",
+      "update": "Mettre à jour",
+      "yesPair": "Oui, l'associer"
+    },
+    "details": {
+      "helper": "OyasumiVR Helper",
+      "pairing": "Association",
+      "pairingDescription": "Ne plus utiliser ce casque avec OyasumiVR sur ce PC",
+      "repair": "Réparer le Helper",
+      "repairDescription": "Réinstaller le Helper et le redémarrer, si le casque ne répond plus à OyasumiVR",
+      "repairing": "Réparation…",
+      "upToDate": "À jour",
+      "updating": "Mise à jour…",
+      "version": "Version {version}",
+      "versionUnknown": "La version s'affiche dès que le casque se connecte"
+    },
+    "errors": {
+      "identityMissing": "OyasumiVR n'a pas pu confirmer de quel casque il s'agit. Vérifiez que le casque n'est pas en veille, puis réessayez.",
+      "keys": "Une erreur s'est produite au démarrage de l'association. Réessayez.",
+      "offline": "Le casque est injoignable. Vérifiez qu'il n'est pas en veille et qu'il est sur le même réseau, puis réessayez.",
+      "persistence": "Une erreur s'est produite sur ce PC. Réessayez.",
+      "setupFailed": "Une erreur s'est produite pendant l'installation. Réessayez.",
+      "wrongDeviceAccessLeft": "OyasumiVR n'a pas pu finir de nettoyer ce casque. Ce qui reste dessus est sans danger."
+    },
+    "headset": "Steam Frame",
+    "invitation": {
+      "body": "Associer votre casque vous donne accès à des fonctionnalités et automatisations propres au matériel, comme le contrôle de la luminosité.",
+      "title": "Associez votre Steam Frame"
+    },
+    "pages": {
+      "awaiting": {
+        "body": "Mettez le casque. Il vous demande s'il faut autoriser ce PC à se connecter. Choisissez <kbd>Allow</kbd>.",
+        "return": "Retirez ensuite le casque et revenez ici.",
+        "title": "Acceptez la demande dans votre casque"
+      },
+      "cancelling": {
+        "access": "OyasumiVR supprime ce que cette association a installé sur le casque.",
+        "body": "Attente de la fin de l'étape en cours, puis nettoyage.",
+        "title": "Annulation de l'association"
+      },
+      "cleanupFailed": {
+        "body": "OyasumiVR n'a pas pu supprimer ce que cette association a laissé sur le casque. Pour le supprimer vous-même, exécutez cette commande dans un terminal sur le casque.",
+        "note": "Si la commande indique que le fichier n'existe pas, OyasumiVR Helper n'est pas installé sur ce casque.",
+        "title": "Le nettoyage n'a pas pu se terminer"
+      },
+      "declined": {
+        "body": "Le casque a refusé la demande de ce PC. Si ce n'était pas vous, vérifiez qui le porte.",
+        "nothing": "Rien n'a été installé.",
+        "title": "La demande a été refusée"
+      },
+      "devmode": {
+        "enable": "Activez <kbd>Developer Mode</kbd>.",
+        "open": "Mettez le casque et ouvrez <kbd>Settings</kbd> › <kbd>System</kbd>.",
+        "title": "Activez le mode développeur"
+      },
+      "found": {
+        "body": "Vérifiez que l'adresse correspond à celle affichée sur l'écran <kbd>Pair new host</kbd>.",
+        "multiple": "L'écran <kbd>Pair new host</kbd> affiche l'adresse du casque.",
+        "multipleTitle": "Lequel est votre casque ?",
+        "title": "Est-ce votre casque ?"
+      },
+      "intro": {
+        "install": "Quand vous associez votre casque, OyasumiVR installe OyasumiVR Helper sur votre Steam Frame. Il vous donne le contrôle matériel de la luminosité et de la température de couleur, ainsi que d'autres fonctionnalités propres au matériel.",
+        "nearby": "Gardez le casque à portée de main. Vous allez le mettre et le retirer plusieurs fois.",
+        "title": "Associez votre casque",
+        "uninstall": "Vous pouvez le désinstaller à tout moment en dissociant le casque, ou en suivant les <a href=\"https://raphii.co/oyasumivr/hidden/troubleshooting/steam-frame-uninstall/\">instructions de désinstallation manuelle</a>."
+      },
+      "manual": {
+        "body": "L'écran <kbd>Pair new host</kbd> affiche l'adresse du casque.",
+        "hint": "Saisissez une adresse IP ou un nom d'hôte, sans port ni URL.",
+        "label": "Adresse",
+        "title": "Saisissez l'adresse du casque"
+      },
+      "needsUpdate": {
+        "body": "Le casque a une version plus récente d'OyasumiVR Helper que cette version d'OyasumiVR ne peut pas utiliser. OyasumiVR ne l'a pas remplacée. Mettez à jour OyasumiVR, puis associez à nouveau le casque.",
+        "title": "OyasumiVR doit être mis à jour pour contrôler ce Frame"
+      },
+      "notfound": {
+        "body": "Vérifiez que le casque n'est pas en veille, qu'il est sur le même réseau que ce PC et qu'il affiche toujours <kbd>Pair new host</kbd>.",
+        "title": "Casque introuvable"
+      },
+      "notready": {
+        "body": "L'écran <kbd>Pair new host</kbd> n'est pas ouvert. Ouvrez-le dans le casque, puis réessayez.",
+        "title": "Casque trouvé, mais pas prêt à être associé"
+      },
+      "pairhost": {
+        "open": "Mettez le casque et ouvrez <kbd>Settings</kbd> › <kbd>Developer</kbd>.",
+        "return": "Laissez cet écran ouvert, retirez le casque et continuez ici.",
+        "select": "Sous <kbd>Development Kit</kbd>, sélectionnez <kbd>Pair new host</kbd>.",
+        "title": "Sélectionnez Pair new host"
+      },
+      "request": {
+        "body": "Cela peut prendre un moment.",
+        "title": "Connexion à votre casque"
+      },
+      "search": {
+        "body": "Gardez le casque éveillé et sur l'écran <kbd>Pair new host</kbd>.",
+        "manualTitle": "Connexion à {address}",
+        "title": "Recherche de votre casque"
+      },
+      "setup": {
+        "body": "Vous pouvez retirer le casque. Gardez-le éveillé et connecté pendant la fin de l'installation.",
+        "title": "Installation d'OyasumiVR Helper"
+      },
+      "setupFailed": {
+        "body": "OyasumiVR n'a pas pu terminer l'installation sur votre casque.",
+        "title": "L'installation n'a pas abouti"
+      },
+      "success": {
+        "body": "OyasumiVR Helper est installé et connecté.",
+        "title": "Le Steam Frame est associé"
+      },
+      "timeout": {
+        "body": "La demande a expiré avant d'être acceptée. Mettez le casque et réessayez quand vous êtes prêt.",
+        "title": "Aucune réponse du casque"
+      },
+      "uncertain": {
+        "body": "Le casque n'a pas confirmé la demande. Vérifiez le casque, puis renvoyez la demande.",
+        "title": "L'acceptation n'a pas pu être confirmée"
+      },
+      "wrongDevice": {
+        "body": "Le casque à cette adresse n'est pas celui que vous avez sélectionné dans le gestionnaire d'appareils. OyasumiVR n'a rien installé dessus.",
+        "title": "C'est un autre casque"
+      }
+    },
+    "stages": {
+      "connection": "Vérification de la connexion",
+      "install": "Installation d'OyasumiVR Helper",
+      "verify": "Vérification du casque"
+    },
+    "status": {
+      "connected": "Connecté",
+      "connecting": "Connexion",
+      "helperMissing": "Helper absent",
+      "helperUpdated": "Helper mis à jour vers {version}",
+      "notRecognized": "Non reconnu",
+      "offline": "Hors ligne",
+      "reinstalling": "Réinstallation du Helper",
+      "updateApp": "Mettre à jour OyasumiVR",
+      "updateFailed": "Échec de la mise à jour",
+      "updateHelper": "Mettre à jour le Helper",
+      "updatingHelper": "Mise à jour du Helper"
+    },
+    "statusDetail": {
+      "helperMissing": {
+        "body": "OyasumiVR Helper n'est plus sur ce casque, par exemple parce qu'un autre PC l'a désinstallé. Utilisez Réinstaller pour l'installer à nouveau. Les autres PC associés à ce casque se reconnectent ensuite d'eux-mêmes.",
+        "title": "OyasumiVR Helper est absent"
+      },
+      "needsAppUpdate": {
+        "body": "Le Helper de ce casque est plus récent que cette version d'OyasumiVR. Mettez à jour OyasumiVR sur ce PC avec l'outil de mise à jour dans Paramètres › Mises à jour, ou en installant la dernière version, pour vous y reconnecter.",
+        "title": "OyasumiVR doit être mis à jour"
+      },
+      "needsAppUpdateSteam": {
+        "body": "Le Helper de ce casque est plus récent que cette version d'OyasumiVR. Steam met OyasumiVR à jour pour vous : laissez Steam terminer la mise à jour, puis redémarrez OyasumiVR pour vous y reconnecter.",
+        "title": "OyasumiVR doit être mis à jour"
+      },
+      "notRecognized": {
+        "body": "OyasumiVR ne peut pas confirmer qu'il s'agit du casque que vous avez associé, par exemple après une réinitialisation du casque. Associez-le à nouveau pour vous reconnecter.",
+        "title": "Casque non reconnu"
+      },
+      "updateFailed": {
+        "body": "Une erreur s'est produite pendant la mise à jour. OyasumiVR continue d'utiliser le Helper installé quand c'est possible. Utilisez Réessayer pour recommencer.",
+        "title": "Échec de la mise à jour du Helper"
+      }
+    },
+    "steps": {
+      "approve": "Accepter",
+      "before": "Avant de commencer",
+      "developer": "Mode développeur",
+      "find": "Trouver le casque",
+      "finished": "Terminé",
+      "install": "Installer le Helper",
+      "pairhost": "Pair new host"
+    },
+    "unpair": {
+      "checking": "Vérification du casque…",
+      "choose": {
+        "onlyPc": "Ce PC ne se connectera plus au casque. Aucun autre PC n'utilise OyasumiVR Helper, il sera donc aussi désinstallé du casque.",
+        "otherPcsMany": "Ce PC ne se connectera plus au casque. OyasumiVR Helper reste installé, car {count} autres PC l'utilisent encore. Pour les déconnecter aussi, désinstallez le Helper.",
+        "otherPcsOne": "Ce PC ne se connectera plus au casque. OyasumiVR Helper reste installé, car 1 autre PC l'utilise encore. Pour déconnecter aussi ce PC, désinstallez le Helper.",
+        "title": "Dissocier le Steam Frame ?"
+      },
+      "failed": {
+        "hostKeyChanged": "OyasumiVR ne peut pas confirmer qu'il s'agit du casque que vous avez associé, il n'y a donc rien changé. Oubliez-le pour supprimer l'association de ce PC uniquement.",
+        "other": "Une erreur s'est produite. Réessayez, ou oubliez le casque pour supprimer l'association de ce PC uniquement.",
+        "rejected": "Ce casque n'accepte plus ce PC, OyasumiVR ne peut donc rien y changer. Oubliez-le pour supprimer l'association de ce PC uniquement.",
+        "title": "Impossible de dissocier",
+        "unreachable": "Le casque n'a pas répondu. Vérifiez qu'il est allumé et connecté, puis réessayez."
+      },
+      "forget": {
+        "body": "Cela supprime l'association de ce PC uniquement. OyasumiVR Helper reste installé sur le casque, et les autres PC associés continuent de fonctionner.",
+        "command": "Exécutez ceci dans un terminal sur le casque pour désinstaller OyasumiVR Helper du casque :",
+        "noPcLeft": "Impossible de dissocier depuis un PC ?",
+        "removed": "Ce casque n'accepte plus ce PC. Oubliez-le pour supprimer l'association de ce PC uniquement.",
+        "title": "Oublier le Steam Frame ?"
+      },
+      "working": {
+        "removeHelper": "Suppression de l'accès de ce PC et désinstallation d'OyasumiVR Helper.",
+        "removePc": "Suppression de l'accès de ce PC au casque.",
+        "title": "Dissociation du Steam Frame"
+      }
+    },
+    "waiting": {
+      "awaiting": "En attente de votre réponse dans le casque…",
+      "cancelling": "Nettoyage…",
+      "request": "Contact du casque…",
+      "search": "Recherche sur le réseau…",
+      "setup": "Installation…",
+      "wrongDevice": "Nettoyage…"
+    }
+  },
+  "steamvr-dashboard": {
+    "desktopNotice": {
+      "button": "L'afficher ici",
+      "message": "Il ne peut s'afficher qu'à un seul endroit à la fois. Affichez-le ici pour masquer la fenêtre du bureau.",
+      "title": "OyasumiVR est ouvert sur votre bureau"
+    }
+  },
   "systemMicMuteAutomations": {
     "audioDevice": {
       "description": "Vérifiez bien qu'il s'agit exactement du même micro que celui que vous utilisez dans VRChat !",
@@ -3050,8 +3339,16 @@
       "turnOffFailed": {
         "commandFailed": "La console Lighthouse n'a pas pu joindre l'appareil. Consultez les journaux pour plus de détails.",
         "consoleNotReady": "Configurez d'abord la console Lighthouse de SteamVR dans les paramètres généraux.",
+        "frameHelperFailed": "Le Helper du Steam Frame n'a pas pu déconnecter la manette. Consultez les journaux pour plus de détails.",
         "title": "Impossible d'éteindre {name}"
       }
+    },
+    "externalLink": {
+      "opened": "Lien ouvert dans votre navigateur"
+    },
+    "fileDialog": {
+      "open": "Une fenêtre s'est ouverte sur votre bureau pour choisir le fichier",
+      "save": "Une fenêtre s'est ouverte sur votre bureau pour choisir où enregistrer"
     },
     "oscTest": {
       "noTarget": {
@@ -3097,6 +3394,9 @@
         "message": "OyasumiVR se fermera à la fin de la séquence d'arrêt.",
         "title": "En attente de la séquence d'arrêt"
       }
+    },
+    "showInFolder": {
+      "opened": "Dossier ouvert sur votre bureau"
     },
     "sunTimes": {
       "failed": {
