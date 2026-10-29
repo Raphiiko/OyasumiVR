@@ -103,7 +103,7 @@ pub async fn steam_frame_set_up_helper(request: SetupRequest) -> SetupOutcome {
             attempt_id: attempt_id.clone(),
             stage,
         };
-        tokio::spawn(send_event("STEAM_FRAME_SETUP_STAGE", event));
+        tokio::spawn(send_event(event));
     })
     .await
 }

@@ -1,5 +1,5 @@
 pub mod commands;
-mod models;
+pub mod models;
 mod vrchat;
 
 use std::{
@@ -15,6 +15,17 @@ use tokio::sync::Mutex;
 use tokio_util::sync::CancellationToken;
 
 use crate::utils::send_event;
+
+#[derive(serde::Serialize, Clone, specta::Type)]
+pub struct VrcOscAddressChangedEvent(pub Option<String>);
+crate::utils::event!(VrcOscAddressChangedEvent, "VRC_OSC_ADDRESS_CHANGED");
+
+#[derive(serde::Serialize, Clone, specta::Type)]
+pub struct VrcOscQueryAddressChangedEvent(pub Option<String>);
+crate::utils::event!(
+    VrcOscQueryAddressChangedEvent,
+    "VRC_OSCQUERY_ADDRESS_CHANGED"
+);
 
 pub static OSC_SEND_SOCKET: LazyLock<Mutex<Option<UdpSocket>>> = LazyLock::new(Default::default);
 pub static OSC_RECEIVE_SOCKET: LazyLock<Mutex<Option<UdpSocket>>> = LazyLock::new(Default::default);
@@ -92,38 +103,35 @@ async fn spawn_receiver_task() -> CancellationToken {
                             let address_whitelist = address_whitelist_guard.clone();
                             drop(address_whitelist_guard);
                             if address_whitelist.contains(&msg.addr) {
-                                send_event(
-                                    "OSC_MESSAGE",
-                                    OSCMessage {
-                                        address: msg.addr,
-                                        values: msg
-                                            .args
-                                            .iter()
-                                            .map(|value| match value {
-                                                OscType::Int(v) => OSCValue {
-                                                    kind: "int".into(),
-                                                    value: Some(v.to_string()),
-                                                },
-                                                OscType::Float(v) => OSCValue {
-                                                    kind: "float".into(),
-                                                    value: Some(v.to_string()),
-                                                },
-                                                OscType::String(v) => OSCValue {
-                                                    kind: "string".into(),
-                                                    value: Some(v.clone()),
-                                                },
-                                                OscType::Bool(v) => OSCValue {
-                                                    kind: "bool".into(),
-                                                    value: Some(v.to_string()),
-                                                },
-                                                _ => OSCValue {
-                                                    kind: "unsupported".into(),
-                                                    value: None,
-                                                },
-                                            })
-                                            .collect(),
-                                    },
-                                )
+                                send_event(OSCMessage {
+                                    address: msg.addr,
+                                    values: msg
+                                        .args
+                                        .iter()
+                                        .map(|value| match value {
+                                            OscType::Int(v) => OSCValue {
+                                                kind: "int".into(),
+                                                value: Some(v.to_string()),
+                                            },
+                                            OscType::Float(v) => OSCValue {
+                                                kind: "float".into(),
+                                                value: Some(v.to_string()),
+                                            },
+                                            OscType::String(v) => OSCValue {
+                                                kind: "string".into(),
+                                                value: Some(v.clone()),
+                                            },
+                                            OscType::Bool(v) => OSCValue {
+                                                kind: "bool".into(),
+                                                value: Some(v.to_string()),
+                                            },
+                                            _ => OSCValue {
+                                                kind: "unsupported".into(),
+                                                value: None,
+                                            },
+                                        })
+                                        .collect(),
+                                })
                                 .await;
                             }
                         }
@@ -155,7 +163,7 @@ pub async fn set_vr_chat_osc_query_address(addr: Option<(String, u16)>) {
             (None, None) => {}
         }
         *VRC_OSCQUERY_ADDRESS.lock().await = address.clone();
-        send_event("VRC_OSCQUERY_ADDRESS_CHANGED", address.clone()).await;
+        send_event(VrcOscQueryAddressChangedEvent(address.clone())).await;
     }
 }
 
@@ -170,6 +178,6 @@ pub async fn set_vr_chat_osc_address(addr: Option<(String, u16)>) {
             (None, None) => {}
         }
         *VRC_OSC_ADDRESS.lock().await = address.clone();
-        send_event("VRC_OSC_ADDRESS_CHANGED", address).await;
+        send_event(VrcOscAddressChangedEvent(address)).await;
     }
 }

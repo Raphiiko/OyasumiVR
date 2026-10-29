@@ -9,6 +9,10 @@ use tokio::sync::Mutex;
 
 use crate::utils::send_event;
 
+#[derive(serde::Serialize, Clone, specta::Type)]
+pub struct BigscreenBeyondConnectedEvent(pub bool);
+crate::utils::event!(BigscreenBeyondConnectedEvent, "BIGSCREEN_BEYOND_CONNECTED");
+
 pub mod commands;
 mod detector;
 
@@ -79,14 +83,14 @@ async fn on_bsb_plugged(api: &HidApi) {
     *BSB_DEVICE.lock().await = Some(device);
     BSB_CONNECTED.store(true, Ordering::Relaxed);
     info!("[Core] Bigscreen Beyond connected");
-    send_event("BIGSCREEN_BEYOND_CONNECTED", true).await;
+    send_event(BigscreenBeyondConnectedEvent(true)).await;
 }
 
 async fn on_bsb_unplugged() {
     *BSB_DEVICE.lock().await = None;
     BSB_CONNECTED.store(false, Ordering::Relaxed);
     info!("[Core] Bigscreen Beyond disconnected");
-    send_event("BIGSCREEN_BEYOND_CONNECTED", false).await;
+    send_event(BigscreenBeyondConnectedEvent(false)).await;
 }
 
 pub fn set_led_color(device: &HidDevice, r: u8, g: u8, b: u8) -> Result<(), String> {

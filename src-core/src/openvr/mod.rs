@@ -1,4 +1,4 @@
-mod brightness_analog;
+pub mod brightness_analog;
 mod brightness_overlay;
 mod chaperone;
 mod colortemp_analog;
@@ -8,7 +8,7 @@ pub(crate) use dashboard::interface_table;
 pub mod devices;
 mod framelimiter;
 mod gesture_detector;
-mod models;
+pub mod models;
 mod sleep_detector;
 pub mod sleeping_pose;
 mod supersampling;
@@ -32,7 +32,6 @@ use std::{
     },
     time::{Duration, Instant},
 };
-use substring::Substring;
 use tokio::sync::Mutex;
 
 #[derive(Default)]
@@ -370,10 +369,5 @@ pub fn settings_interface_available(context: &ovr::Context) -> bool {
 async fn update_status(new_status: OpenVRStatus) {
     let mut status = OVR_STATUS.lock().await;
     *status = new_status.clone();
-    let status_str = serde_json::to_string(&new_status).unwrap();
-    send_event(
-        "OVR_STATUS_UPDATE",
-        status_str.substring(1, status_str.len() - 1).to_string(),
-    )
-    .await;
+    send_event(models::OvrStatusUpdateEvent(new_status)).await;
 }

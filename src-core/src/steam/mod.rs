@@ -3,6 +3,10 @@ use std::sync::LazyLock;
 use steamworks::{AppId, CallbackHandle, Client, UserStatsReceived};
 use tokio::sync::Mutex;
 
+#[derive(serde::Serialize, Clone, specta::Type)]
+pub struct SteamworksReadyEvent(pub bool);
+crate::utils::event!(SteamworksReadyEvent, "STEAMWORKS_READY");
+
 pub mod commands;
 
 pub const STEAM_APP_ID: AppId = AppId(2538150);
@@ -27,7 +31,7 @@ pub async fn init() {
     // Store the steamworks client
     *STEAMWORKS_CLIENT.lock().await = Some(client);
     // Send an event to the UI to indicate that Steamworks is ready
-    crate::utils::send_event("STEAMWORKS_READY", true).await;
+    crate::utils::send_event(SteamworksReadyEvent(true)).await;
     // Move into async task from here on
     tokio::spawn(async {
         // Fetch user stats

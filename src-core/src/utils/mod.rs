@@ -156,16 +156,30 @@ pub fn get_time() -> u128 {
     since_the_epoch.as_millis()
 }
 
-pub async fn send_event<S: Serialize + Clone>(event: &str, payload: S) {
+pub async fn send_event<E: tauri_specta::Event + Serialize + Clone>(event: E) {
+    // Event::emit panics on an event missing from the builder, so emit under its name directly
+    send_raw_event(E::NAME, event).await;
+}
+
+/// Sends an event the bindings do not describe, such as one a sidecar names at runtime.
+pub async fn send_raw_event<S: Serialize + Clone>(event: &str, payload: S) {
     let app_handle_guard = TAURI_APP_HANDLE.lock().await;
     let app_handle = app_handle_guard.as_ref().unwrap();
-    match app_handle.emit(event, payload) {
-        Ok(_) => {}
-        Err(e) => {
-            error!("[Core] Failed to send event {event}: {e}");
+    if let Err(e) = app_handle.emit(event, payload) {
+        error!("[Core] Failed to send event {event}: {e}");
+    }
+}
+
+/// Implements [`tauri_specta::Event`] for `$event` under `$name`, the name the UI listens for.
+/// Register the event in `specta_builder()` too.
+macro_rules! event {
+    ($event:ty, $name:literal) => {
+        impl tauri_specta::Event for $event {
+            const NAME: &'static str = $name;
         }
     };
 }
+pub(crate) use event;
 
 pub async fn cli_core_mode() -> models::CoreMode {
     let default = "release";

@@ -4,7 +4,7 @@ mod devkit;
 pub mod diagnostics;
 mod discovery;
 mod maintenance;
-mod models;
+pub mod models;
 mod setup;
 mod ssh;
 mod wss;

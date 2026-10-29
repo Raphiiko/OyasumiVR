@@ -16,14 +16,20 @@ use std::{
 };
 use tokio_util::sync::CancellationToken;
 
-#[derive(Clone, Serialize, Deserialize, Debug)]
+#[derive(Clone, Serialize, Deserialize, Debug, specta::Type)]
 #[serde(rename_all = "camelCase")]
-struct VRCLogEvent {
+pub struct VRCLogEvent {
     time: u64,
     event: String,
     data: String,
     initial_load: bool,
 }
+crate::utils::event!(VRCLogEvent, "VRC_LOG_EVENT");
+
+/// The VRChat log file the parser reads, if any.
+#[derive(serde::Serialize, Clone, specta::Type)]
+pub struct VrcLogCurrentFileEvent(pub Option<String>);
+crate::utils::event!(VrcLogCurrentFileEvent, "VRC_LOG_CURRENT_FILE");
 
 static MUTE_LOG_DIR_NO_EXIST_WARNINGS: AtomicBool = AtomicBool::new(false);
 
@@ -147,7 +153,7 @@ async fn parse_on_player_joined(line: String, initial_load: bool) -> bool {
             data: display_name,
             initial_load,
         };
-        send_event("VRC_LOG_EVENT", event.clone()).await;
+        send_event(event.clone()).await;
         if initial_load {
             trace!("[Core] VRC Log Event: {event:#?}");
         } else {
@@ -182,7 +188,7 @@ async fn parse_on_player_left(line: String, initial_load: bool) -> bool {
             data: display_name,
             initial_load,
         };
-        send_event("VRC_LOG_EVENT", event.clone()).await;
+        send_event(event.clone()).await;
         if initial_load {
             trace!("[Core] VRC Log Event: {event:#?}");
         } else {
@@ -217,7 +223,7 @@ async fn parse_on_location_change(line: String, initial_load: bool) -> bool {
             data: instance_id,
             initial_load,
         };
-        send_event("VRC_LOG_EVENT", event.clone()).await;
+        send_event(event.clone()).await;
         if initial_load {
             trace!("[Core] VRC Log Event: {event:?}");
         } else {
@@ -273,18 +279,15 @@ fn start_log_watch_task(path: String) -> CancellationToken {
 
             if first_run {
                 debug!("[Core] Initial read of VRChat log file complete. ({path})");
-                send_event(
-                    "VRC_LOG_EVENT",
-                    VRCLogEvent {
-                        time: Arc::new(SystemTime::now())
-                            .duration_since(UNIX_EPOCH)
-                            .unwrap()
-                            .as_millis() as u64,
-                        event: String::from("InitialLoadComplete"),
-                        data: String::from(""),
-                        initial_load: true,
-                    },
-                )
+                send_event(VRCLogEvent {
+                    time: Arc::new(SystemTime::now())
+                        .duration_since(UNIX_EPOCH)
+                        .unwrap()
+                        .as_millis() as u64,
+                    event: String::from("InitialLoadComplete"),
+                    data: String::from(""),
+                    initial_load: true,
+                })
                 .await;
                 first_run = false;
             }
@@ -342,7 +345,7 @@ pub fn start_log_locator_task() -> CancellationToken {
                 // If we are currently reading a log file, stop the reader task
                 if ctx.current_log_path.is_some() {
                     if let Some(token) = &ctx.reader_task_cancellation_token {
-                        send_event("VRC_LOG_CURRENT_FILE", None::<String>).await;
+                        send_event(VrcLogCurrentFileEvent(None)).await;
                         token.cancel();
                     }
                     *ctx = LoopContext {
@@ -360,7 +363,7 @@ pub fn start_log_locator_task() -> CancellationToken {
             }
             // We need to watch a new file. Terminate the old reader task first if it exists.
             if let Some(token) = &ctx.reader_task_cancellation_token {
-                send_event("VRC_LOG_CURRENT_FILE", None::<String>).await;
+                send_event(VrcLogCurrentFileEvent(None)).await;
                 token.cancel();
             }
             // Start watching the new file
@@ -370,14 +373,14 @@ pub fn start_log_locator_task() -> CancellationToken {
                 reader_task_cancellation_token: Some(start_log_watch_task(log_path.clone())),
             };
             // Inform the front of the current log path
-            send_event("VRC_LOG_CURRENT_FILE", Some(log_path.clone())).await;
+            send_event(VrcLogCurrentFileEvent(Some(log_path.clone()))).await;
         }
         // Terminate any reader task
         if let Some(token) = &ctx.reader_task_cancellation_token {
             token.cancel();
         }
         // Inform the front of the current log path
-        send_event("VRC_LOG_CURRENT_FILE", None::<String>).await;
+        send_event(VrcLogCurrentFileEvent(None)).await;
         // Break to terminate this task
         info!("[Core] Terminated VRChat log watcher");
     });

@@ -133,28 +133,55 @@ pub struct LighthouseDevice {
 //
 // Events
 //
-#[derive(Debug, Serialize, Clone)]
+#[derive(Debug, Serialize, Clone, specta::Type)]
 #[serde(rename_all = "camelCase")]
 pub struct LighthouseScanningStatusChangedEvent {
     pub scanning: bool,
 }
+crate::utils::event!(
+    LighthouseScanningStatusChangedEvent,
+    "LIGHTHOUSE_SCANNING_STATUS_CHANGED"
+);
 
-#[derive(Debug, Serialize, Clone)]
+#[derive(Debug, Serialize, Clone, specta::Type)]
 #[serde(rename_all = "camelCase")]
 pub struct LighthouseStatusChangedEvent {
     pub status: LighthouseStatus,
 }
+crate::utils::event!(LighthouseStatusChangedEvent, "LIGHTHOUSE_STATUS_CHANGED");
 
-#[derive(Debug, Serialize, Clone)]
+#[derive(Debug, Serialize, Clone, specta::Type)]
 #[serde(rename_all = "camelCase")]
 pub struct LighthouseDeviceDiscoveredEvent {
     pub device: LighthouseDeviceModel,
 }
+crate::utils::event!(
+    LighthouseDeviceDiscoveredEvent,
+    "LIGHTHOUSE_DEVICE_DISCOVERED"
+);
 
-#[derive(Debug, Serialize, Clone)]
+#[derive(Debug, Serialize, Clone, specta::Type)]
 #[serde(rename_all = "camelCase")]
 pub struct LighthouseDevicePowerStateChangedEvent {
     pub device_id: String,
     pub power_state: LighthousePowerState,
     pub v1_timeout: Option<u16>,
 }
+crate::utils::event!(
+    LighthouseDevicePowerStateChangedEvent,
+    "LIGHTHOUSE_DEVICE_POWER_STATE_CHANGED"
+);
+
+#[derive(serde::Serialize, Clone, specta::Type)]
+pub struct LighthouseConnectsFailingEvent;
+crate::utils::event!(
+    LighthouseConnectsFailingEvent,
+    "LIGHTHOUSE_CONNECTS_FAILING"
+);
+
+#[derive(serde::Serialize, Clone, specta::Type)]
+pub struct LighthouseConnectsRecoveredEvent;
+crate::utils::event!(
+    LighthouseConnectsRecoveredEvent,
+    "LIGHTHOUSE_CONNECTS_RECOVERED"
+);

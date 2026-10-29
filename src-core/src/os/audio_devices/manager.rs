@@ -53,7 +53,7 @@ pub struct AudioDeviceManagerState {
 impl AudioDeviceManagerState {
     pub async fn notify_devices_changed(&self) {
         let devices = self.get_devices().await;
-        crate::utils::send_event("audioDevicesUpdated", &devices).await;
+        crate::utils::send_event(super::device::AudioDevicesUpdatedEvent(devices)).await;
     }
 
     pub async fn get_devices(&self) -> Vec<AudioDeviceDto> {

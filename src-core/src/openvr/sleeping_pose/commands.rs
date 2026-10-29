@@ -13,7 +13,7 @@ pub async fn sleeping_pose_get() -> SleepingPose {
 pub async fn sleeping_pose_force(pose: SleepingPose) {
     let mut tracker = TRACKER.lock().await;
     for pose in tracker.force(now_ms(), pose) {
-        send_event("SLEEPING_POSE_UPDATE", pose).await;
+        send_event(super::SleepingPoseUpdateEvent(pose)).await;
     }
 }
 

@@ -17,6 +17,19 @@ use std::time::Duration;
 use tokio::sync::Mutex;
 use tonic::transport::Channel;
 
+/// Carries the sidecar's gRPC-web port.
+#[derive(serde::Serialize, Clone, specta::Type)]
+pub struct ElevatedSidecarStartedEvent(pub u32);
+crate::utils::event!(ElevatedSidecarStartedEvent, "ELEVATED_SIDECAR_STARTED");
+
+#[derive(serde::Serialize, Clone, specta::Type)]
+pub struct ElevatedSidecarStoppedEvent;
+crate::utils::event!(ElevatedSidecarStoppedEvent, "ELEVATED_SIDECAR_STOPPED");
+
+#[derive(serde::Serialize, Clone, specta::Type)]
+pub struct ElevationPromptShownEvent;
+crate::utils::event!(ElevationPromptShownEvent, "ELEVATION_PROMPT_SHOWN");
+
 pub static SIDECAR_GRPC_CLIENT: LazyLock<Mutex<Option<OyasumiElevatedSidecarClient<Channel>>>> =
     LazyLock::new(Default::default);
 static SIDECAR_MANAGER: LazyLock<Mutex<Option<SidecarManager>>> = LazyLock::new(Default::default);
@@ -44,7 +57,7 @@ pub async fn init() {
     tokio::spawn(async move {
         while (rx.recv().await).is_some() {
             *SIDECAR_GRPC_CLIENT.lock().await = None;
-            send_event("ELEVATED_SIDECAR_STOPPED", ()).await;
+            send_event(ElevatedSidecarStoppedEvent).await;
         }
     });
 }
@@ -407,6 +420,6 @@ pub async fn handle_elevated_sidecar_start(
     }
     *client_guard = Some(grpc_client);
     drop(client_guard);
-    send_event("ELEVATED_SIDECAR_STARTED", args.grpc_web_port).await;
+    send_event(ElevatedSidecarStartedEvent(args.grpc_web_port)).await;
     Ok(())
 }

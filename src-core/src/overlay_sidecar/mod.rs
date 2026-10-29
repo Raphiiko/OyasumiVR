@@ -18,6 +18,15 @@ use std::{
 use tokio::sync::Mutex;
 use tonic::transport::Channel;
 
+/// Carries the sidecar's gRPC-web port.
+#[derive(serde::Serialize, Clone, specta::Type)]
+pub struct OverlaySidecarStartedEvent(pub u32);
+crate::utils::event!(OverlaySidecarStartedEvent, "OVERLAY_SIDECAR_STARTED");
+
+#[derive(serde::Serialize, Clone, specta::Type)]
+pub struct OverlaySidecarStoppedEvent;
+crate::utils::event!(OverlaySidecarStoppedEvent, "OVERLAY_SIDECAR_STOPPED");
+
 pub static SIDECAR_GRPC_CLIENT: LazyLock<Mutex<Option<OyasumiOverlaySidecarClient<Channel>>>> =
     LazyLock::new(Default::default);
 static SIDECAR_MANAGER: LazyLock<Mutex<Option<SidecarManager>>> = LazyLock::new(Default::default);
@@ -41,7 +50,7 @@ pub async fn init() {
     tokio::spawn(async move {
         while rx.recv().await.is_some() {
             *SIDECAR_GRPC_CLIENT.lock().await = None;
-            send_event("OVERLAY_SIDECAR_STOPPED", ()).await;
+            send_event(OverlaySidecarStoppedEvent).await;
         }
     });
 }
@@ -121,7 +130,7 @@ pub async fn handle_overlay_sidecar_start(
     }
     *client_guard = Some(grpc_client);
     drop(client_guard);
-    send_event("OVERLAY_SIDECAR_STARTED", args.grpc_web_port).await;
+    send_event(OverlaySidecarStartedEvent(args.grpc_web_port)).await;
     Ok(())
 }
 

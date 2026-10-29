@@ -19,7 +19,7 @@ use super::{
     models::{
         Brightness, Cct, Control, Controller, DisconnectControllerError, FadeEnded, FadeError,
         FadeOutcome, FadeRequest, LastSeen, Maintenance, Pairing, Seen, SetBrightnessError,
-        SetCctError, State, Status,
+        SetCctError, State, Status, SteamFrameConnectionStateEvent,
     },
     setup::{
         self, bundled_digest, install_decision, InstallDecision, ProvisionError, Replace,
@@ -32,8 +32,6 @@ use super::{
 };
 use crate::utils::send_event;
 
-const EVENT: &str = "STEAM_FRAME_CONNECTION_STATE";
-const FADE_ENDED_EVENT: &str = "STEAM_FRAME_FADE_ENDED";
 const PING_INTERVAL: Duration = Duration::from_secs(15);
 const SILENCE_LIMIT: Duration = Duration::from_secs(40);
 const MAX_BACKOFF: Duration = Duration::from_secs(60);
@@ -274,7 +272,7 @@ async fn publish(state: &State) {
         .lock()
         .await
         .insert(state.pairing_id.clone(), state.clone());
-    send_event(EVENT, state.clone()).await;
+    send_event(SteamFrameConnectionStateEvent(state.clone())).await;
 }
 
 /// Keeps the values the state holds as last seen now, and returns this pairing's last seen values.
@@ -606,7 +604,7 @@ async fn receive(text: &str, relay: &mut Relay, state: &mut State) {
                 operation,
                 outcome,
             };
-            send_event(FADE_ENDED_EVENT, ended).await;
+            send_event(ended).await;
         }
         Ok(HelperMessage::Controllers { controllers }) => {
             state.controllers = Some(controllers);

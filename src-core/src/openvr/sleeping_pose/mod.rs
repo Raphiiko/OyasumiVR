@@ -14,6 +14,14 @@ use std::sync::{
 use std::time::Instant;
 use tokio::sync::Mutex;
 
+#[derive(serde::Serialize, Clone, specta::Type)]
+pub struct SleepingPoseUpdateEvent(pub SleepingPose);
+crate::utils::event!(SleepingPoseUpdateEvent, "SLEEPING_POSE_UPDATE");
+
+#[derive(serde::Serialize, Clone, specta::Type)]
+pub struct SleepingPoseDebugEvent(pub DebugSnapshot);
+crate::utils::event!(SleepingPoseDebugEvent, "SLEEPING_POSE_DEBUG");
+
 /// The shortest time between two classified headset poses.
 const SAMPLE_INTERVAL_MS: u64 = 250;
 /// The length of the window in which every classification must agree.
@@ -120,7 +128,7 @@ fn now_ms() -> u64 {
 /// Call with the tracker locked, so a forced pose cannot overtake the update.
 async fn publish_closed_windows(tracker: &mut PoseTracker, now: u64) {
     if let Some(pose) = tracker.advance(now) {
-        send_event("SLEEPING_POSE_UPDATE", pose).await;
+        send_event(SleepingPoseUpdateEvent(pose)).await;
     }
 }
 
@@ -150,6 +158,6 @@ pub async fn on_ovr_tick(hmd_quaternion: Option<[f64; 4]>) {
     drop(tracker);
 
     if let Some(snapshot) = snapshot {
-        send_event("SLEEPING_POSE_DEBUG", snapshot).await;
+        send_event(SleepingPoseDebugEvent(snapshot)).await;
     }
 }

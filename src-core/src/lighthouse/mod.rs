@@ -26,6 +26,7 @@ use uuid::Uuid;
 use crate::utils::send_event;
 
 use self::models::{
+    LighthouseConnectsFailingEvent, LighthouseConnectsRecoveredEvent,
     LighthouseDeviceDiscoveredEvent, LighthouseDeviceModel, LighthouseDevicePowerStateChangedEvent,
     LighthouseDeviceType, LighthouseError, LighthousePowerState,
     LighthouseScanningStatusChangedEvent, LighthouseStatus, LighthouseStatusChangedEvent,
@@ -37,12 +38,6 @@ const LIGHTHOUSE_V1_PWR_CHARACTERISTIC: Uuid =
 const LIGHTHOUSE_V2_PWR_SERVICE: Uuid = Uuid::from_u128(0x00001523_1212_EFDE_1523_785FEABCD124);
 const LIGHTHOUSE_V2_PWR_CHARACTERISTIC: Uuid =
     Uuid::from_u128(0x00001525_1212_EFDE_1523_785FEABCD124);
-static EVENT_STATUS_CHANGED: &str = "LIGHTHOUSE_STATUS_CHANGED";
-static EVENT_SCANNING_STATUS_CHANGED: &str = "LIGHTHOUSE_SCANNING_STATUS_CHANGED";
-static EVENT_DEVICE_DISCOVERED: &str = "LIGHTHOUSE_DEVICE_DISCOVERED";
-static EVENT_DEVICE_POWER_STATE_CHANGED: &str = "LIGHTHOUSE_DEVICE_POWER_STATE_CHANGED";
-static EVENT_CONNECTS_FAILING: &str = "LIGHTHOUSE_CONNECTS_FAILING";
-static EVENT_CONNECTS_RECOVERED: &str = "LIGHTHOUSE_CONNECTS_RECOVERED";
 
 // const LIGHTHOUSE_V2_IDENTIFY_CHARACTERISTIC: Uuid =
 //     Uuid::from_u128(0x00008421_1212_EFDE_1523_785FEABCD124);
@@ -162,11 +157,7 @@ pub async fn start_scan(duration: Duration) {
         }
         *scanning_guard = true;
     }
-    send_event(
-        EVENT_SCANNING_STATUS_CHANGED,
-        LighthouseScanningStatusChangedEvent { scanning: true },
-    )
-    .await;
+    send_event(LighthouseScanningStatusChangedEvent { scanning: true }).await;
     let started = Instant::now();
     scan_for_devices(duration).await;
     // The UI schedules the next scan only after a window that lasts longer than its debounce
@@ -328,14 +319,11 @@ pub async fn get_device_power_state(
 
     // Send event if either state or timeout changed
     if state_changed || timeout_changed {
-        send_event(
-            EVENT_DEVICE_POWER_STATE_CHANGED,
-            LighthouseDevicePowerStateChangedEvent {
-                device_id: device_id.clone(),
-                power_state: state.clone(),
-                v1_timeout,
-            },
-        )
+        send_event(LighthouseDevicePowerStateChangedEvent {
+            device_id: device_id.clone(),
+            power_state: state.clone(),
+            v1_timeout,
+        })
         .await;
     }
     Ok((state, v1_timeout))
@@ -538,12 +526,9 @@ async fn identify_discovered_device(device: &Peripheral, device_id: &PeripheralI
         lighthouse_devices_guard.push(discovered_device.clone());
     }
     // Send an event
-    send_event(
-        EVENT_DEVICE_DISCOVERED,
-        LighthouseDeviceDiscoveredEvent {
-            device: map_discovered_device_to_lighthouse_device(discovered_device.clone()).await,
-        },
-    )
+    send_event(LighthouseDeviceDiscoveredEvent {
+        device: map_discovered_device_to_lighthouse_device(discovered_device.clone()).await,
+    })
     .await;
     info!(
         "[Core] Discovered {:#?} device: {}",
@@ -555,22 +540,15 @@ async fn identify_discovered_device(device: &Peripheral, device_id: &PeripheralI
 
 async fn set_lighthouse_status(status: LighthouseStatus) {
     *STATUS.lock().await = status.clone();
-    send_event(
-        EVENT_STATUS_CHANGED,
-        LighthouseStatusChangedEvent {
-            status: status.clone(),
-        },
-    )
+    send_event(LighthouseStatusChangedEvent {
+        status: status.clone(),
+    })
     .await;
 }
 
 async fn set_scanning_status(scanning: bool) {
     *SCANNING.lock().await = scanning;
-    send_event(
-        EVENT_SCANNING_STATUS_CHANGED,
-        LighthouseScanningStatusChangedEvent { scanning },
-    )
-    .await;
+    send_event(LighthouseScanningStatusChangedEvent { scanning }).await;
 }
 
 async fn get_device(device_id: String) -> Option<LighthouseDevice> {
@@ -678,14 +656,14 @@ async fn register_connect_failure(
     }
     *visible_streak += 1;
     if *visible_streak == STUCK_STACK_THRESHOLD {
-        send_event(EVENT_CONNECTS_FAILING, ()).await;
+        send_event(LighthouseConnectsFailingEvent).await;
     }
 }
 
 async fn reset_visible_failure_streak() {
     let mut visible_streak = VISIBLE_CONNECT_FAILURE_STREAK.lock().await;
     *visible_streak = 0;
-    send_event(EVENT_CONNECTS_RECOVERED, ()).await;
+    send_event(LighthouseConnectsRecoveredEvent).await;
 }
 
 /// Stations that are off or out of range stop advertising, so their failures do not count.

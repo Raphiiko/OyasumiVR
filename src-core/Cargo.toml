@@ -67,7 +67,6 @@ steamlocate = "2.1.1"
 steamworks = { version = "0.13.1", features = ["raw-bindings"] }
 strum = "0.28.0"
 strum_macros = "0.28.0"
-substring = "1.4.5"
 suncalc = "0.4.0"
 sysinfo = "0.39.6"
 system_shutdown = "4.1.0"

@@ -28,7 +28,7 @@ use super::wrappers::{
     AudioDeviceIAudioMeterInformation, AudioDeviceIMMDevice,
 };
 
-#[derive(Serialize, specta::Type)]
+#[derive(Serialize, Clone, specta::Type)]
 #[serde(rename_all = "camelCase")]
 pub struct AudioDeviceDto {
     pub id: String,
@@ -40,13 +40,22 @@ pub struct AudioDeviceDto {
     pub default_communications: bool,
 }
 
-#[derive(Serialize, Clone)]
+#[derive(Serialize, Clone, specta::Type)]
 #[serde(rename_all = "camelCase")]
 pub struct MicLevelReport {
     pub device_id: String,
     pub level: f32,
     pub active: bool,
 }
+crate::utils::event!(MicLevelReport, "mic_level");
+
+#[derive(serde::Serialize, Clone, specta::Type)]
+pub struct AudioDeviceUpdatedEvent(pub AudioDeviceDto);
+crate::utils::event!(AudioDeviceUpdatedEvent, "audioDeviceUpdated");
+
+#[derive(serde::Serialize, Clone, specta::Type)]
+pub struct AudioDevicesUpdatedEvent(pub Vec<AudioDeviceDto>);
+crate::utils::event!(AudioDevicesUpdatedEvent, "audioDevicesUpdated");
 
 impl AudioDeviceDto {
     pub async fn from(value: &AudioDevice) -> Self {
@@ -84,7 +93,7 @@ pub struct AudioDeviceState {
 impl AudioDeviceState {
     pub async fn notify_device_changed(&self) {
         let device = AudioDeviceDto::from_state(self).await;
-        crate::utils::send_event("audioDeviceUpdated", &device).await;
+        crate::utils::send_event(AudioDeviceUpdatedEvent(device)).await;
     }
 }
 
@@ -352,14 +361,11 @@ impl AudioDevice {
                     .await;
                 }
                 // Report the peak value
-                send_event(
-                    "mic_level",
-                    MicLevelReport {
-                        device_id: state.id.clone(),
-                        level: value,
-                        active: currently_active,
-                    },
-                )
+                send_event(MicLevelReport {
+                    device_id: state.id.clone(),
+                    level: value,
+                    active: currently_active,
+                })
                 .await;
                 tokio::time::sleep(SAMPLE_INTERVAL).await;
             }

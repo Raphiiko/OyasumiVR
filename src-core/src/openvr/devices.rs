@@ -317,7 +317,7 @@ async fn update_device(device_index: ovr::TrackedDeviceIndex, emit: bool) {
     };
     if emit && changed {
         let event = DeviceUpdateEvent { device };
-        send_event("OVR_DEVICE_UPDATE", event).await;
+        send_event(event).await;
     }
 }
 
@@ -448,7 +448,7 @@ async fn detect_inputs() {
                         device,
                     };
                     tokio::spawn(async move {
-                        send_event("OVR_INPUT_EVENT_DIGITAL", event).await;
+                        send_event(event).await;
                     });
                 }
             }

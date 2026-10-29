@@ -535,8 +535,13 @@ async fn app_setup(app_handle: tauri::AppHandle, error_reporting_enabled: bool) 
     }
 }
 
+/// Sent at the start of every minute.
+#[derive(serde::Serialize, Clone, specta::Type)]
+pub struct CronMinuteStartEvent;
+crate::utils::event!(CronMinuteStartEvent, "CRON_MINUTE_START");
+
 fn on_cron_minute_start(_: &str) {
-    futures::executor::block_on(utils::send_event("CRON_MINUTE_START", ()));
+    futures::executor::block_on(utils::send_event(CronMinuteStartEvent));
 }
 
 /// Registers every command and event the UI uses, and describes them for `src-ui/app/bindings.ts`.
@@ -684,6 +689,43 @@ fn specta_builder() -> tauri_specta::Builder<Wry> {
             steam_frame::commands::steam_frame_disconnect_controller,
             steam_frame::commands::steam_frame_fade,
             steam_frame::commands::steam_frame_cancel_fade,
+        ])
+        .events(tauri_specta::collect_events![
+            CronMinuteStartEvent,
+            elevated_sidecar::ElevatedSidecarStartedEvent,
+            elevated_sidecar::ElevatedSidecarStoppedEvent,
+            elevated_sidecar::ElevationPromptShownEvent,
+            grpc::server::AddNotificationEvent,
+            hardware::beyond::BigscreenBeyondConnectedEvent,
+            lighthouse::models::LighthouseConnectsFailingEvent,
+            lighthouse::models::LighthouseConnectsRecoveredEvent,
+            lighthouse::models::LighthouseDeviceDiscoveredEvent,
+            lighthouse::models::LighthouseDevicePowerStateChangedEvent,
+            lighthouse::models::LighthouseScanningStatusChangedEvent,
+            lighthouse::models::LighthouseStatusChangedEvent,
+            openvr::brightness_analog::OvrAnalogGainUpdateEvent,
+            openvr::models::DeviceUpdateEvent,
+            openvr::models::GestureDetected,
+            openvr::models::OpenVRInputEvent,
+            openvr::models::OvrStatusUpdateEvent,
+            openvr::models::SleepDetectorStateReport,
+            openvr::sleeping_pose::SleepingPoseDebugEvent,
+            openvr::sleeping_pose::SleepingPoseUpdateEvent,
+            os::VrchatProcessActiveEvent,
+            os::audio_devices::device::AudioDeviceUpdatedEvent,
+            os::audio_devices::device::AudioDevicesUpdatedEvent,
+            os::audio_devices::device::MicLevelReport,
+            osc::VrcOscAddressChangedEvent,
+            osc::VrcOscQueryAddressChangedEvent,
+            osc::models::OSCMessage,
+            overlay_sidecar::OverlaySidecarStartedEvent,
+            overlay_sidecar::OverlaySidecarStoppedEvent,
+            steam::SteamworksReadyEvent,
+            steam_frame::models::FadeEnded,
+            steam_frame::models::StageEvent,
+            steam_frame::models::SteamFrameConnectionStateEvent,
+            vrc_log_parser::VRCLogEvent,
+            vrc_log_parser::VrcLogCurrentFileEvent,
         ])
 }
 

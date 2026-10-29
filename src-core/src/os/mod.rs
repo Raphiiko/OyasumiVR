@@ -1,4 +1,4 @@
-mod audio_devices;
+pub mod audio_devices;
 pub mod commands;
 pub mod elevation;
 pub mod minimum_window_size;
@@ -29,6 +29,10 @@ use windows::Win32::System::Power::{
 };
 use winreg::enums::HKEY_CURRENT_USER;
 use winreg::RegKey;
+
+#[derive(serde::Serialize, Clone, specta::Type)]
+pub struct VrchatProcessActiveEvent(pub bool);
+crate::utils::event!(VrchatProcessActiveEvent, "VRCHAT_PROCESS_ACTIVE");
 
 type PlaySoundRequest = (String, f32, oneshot::Sender<Result<(), String>>);
 type PlaySoundSender = LazyLock<Mutex<Option<Sender<PlaySoundRequest>>>>;
@@ -64,7 +68,7 @@ async fn watch_processes() {
             let mut vrc_active = VRCHAT_ACTIVE.lock().await;
             if *vrc_active != res {
                 *vrc_active = res;
-                crate::utils::send_event("VRCHAT_PROCESS_ACTIVE", res).await;
+                crate::utils::send_event(VrchatProcessActiveEvent(res)).await;
                 if res {
                     info!("[Core] Detected VRChat process has started");
                 } else {

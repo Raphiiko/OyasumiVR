@@ -8,6 +8,10 @@ use crate::utils::send_event;
 use raphii_openvr_rs as ovr;
 use tokio::sync::Mutex;
 
+#[derive(serde::Serialize, Clone, specta::Type)]
+pub struct OvrAnalogGainUpdateEvent(pub f32);
+crate::utils::event!(OvrAnalogGainUpdateEvent, "OVR_ANALOG_GAIN_UPDATE");
+
 /// The gain OyasumiVR last wrote or reported, so the settings event of its own write is skipped.
 /// Set it only while holding the OpenVR context lock, so it stays in step with SteamVR.
 static KNOWN_ANALOG_GAIN: LazyLock<Mutex<Option<f32>>> = LazyLock::new(|| Mutex::new(None));
@@ -82,7 +86,7 @@ pub async fn on_steamvr_section_changed() {
     }
     *known = Some(analog_gain);
     // emit before a write can take the lock, so the UI gets this report before that write ends
-    send_event("OVR_ANALOG_GAIN_UPDATE", analog_gain).await;
+    send_event(OvrAnalogGainUpdateEvent(analog_gain)).await;
 }
 
 /// Forgets the gain. Call after the context is gone, so the next session reports its first change.

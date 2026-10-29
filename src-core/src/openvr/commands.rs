@@ -8,7 +8,6 @@ use log::error;
 use ovr::input::{InputString, InputValueHandle};
 use raphii_openvr_rs as ovr;
 use std::fmt::Display;
-use substring::Substring;
 
 fn collect_localized_names<I, E>(results: I, label: &str) -> Vec<String>
 where
@@ -113,10 +112,8 @@ pub fn openvr_dashboard_render_mode() -> &'static str {
 
 #[tauri::command]
 #[specta::specta]
-pub async fn openvr_status() -> String {
-    let status = super::OVR_STATUS.lock().await;
-    let status_str = serde_json::to_string(&*status).unwrap();
-    status_str.substring(1, status_str.len() - 1).to_string()
+pub async fn openvr_status() -> super::models::OpenVRStatus {
+    super::OVR_STATUS.lock().await.clone()
 }
 
 #[tauri::command]
