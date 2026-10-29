@@ -24,7 +24,8 @@ import { OVRInputEventAction } from '../../../../models/ovr-input-event';
 import { fade, vshrink } from '../../../../utils/animations';
 import { SystemMicMuteAutomationService } from 'src-ui/app/services/system-mic-mute-automation.service';
 import { SliderSettingComponent } from '../../../../components/slider-setting/slider-setting.component';
-import { listen, UnlistenFn } from '@tauri-apps/api/event';
+import { UnlistenFn } from '@tauri-apps/api/event';
+import { events } from '../../../../bindings';
 
 @Component({
   selector: 'app-system-mic-mute-automations-view',
@@ -227,7 +228,7 @@ export class SystemMicMuteAutomationsViewComponent implements OnInit, OnDestroy 
         this.audioDeviceOption = option ?? undefined;
       });
     // Process mic audio level for visualisation
-    this.micLevelUnlisten = await listen<{ deviceId: string; level: number }>('mic_level', (e) => {
+    this.micLevelUnlisten = await events.micLevelEvent.listen((e) => {
       if (this.voiceActivationThresholdSlider) {
         this.voiceActivationThresholdSlider.audioLevel = e.payload.level;
       }

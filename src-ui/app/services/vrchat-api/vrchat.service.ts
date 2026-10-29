@@ -16,8 +16,7 @@ import { ModalService } from 'src-ui/app/services/modal.service';
 import { AvatarEx, UserStatus, WorldContext } from '../../models/vrchat';
 import { VRChatLogService } from '../vrchat-log.service';
 import { protectSecret, unprotectSecret } from '../../utils/secrets';
-import { invoke } from '@tauri-apps/api/core';
-import { listen } from '@tauri-apps/api/event';
+import { commands, events } from '../../bindings';
 import { VRChatAPI, VRChatTwoFactorMethod } from './vrchat-api';
 import { VRChatAuth, VRChatAuthStatus } from './vrchat-auth';
 import { VRChatSocket } from './vrchat-socket';
@@ -144,10 +143,10 @@ export class VRChatService {
   }
 
   private async watchVRChatProcess(): Promise<void> {
-    await listen<boolean>('VRCHAT_PROCESS_ACTIVE', (event) =>
+    await events.vrchatProcessActiveEvent.listen((event) =>
       this.vrchatProcessActiveSubject.next(event.payload)
     );
-    this.vrchatProcessActiveSubject.next(await invoke<boolean>('is_vrchat_active'));
+    this.vrchatProcessActiveSubject.next(await commands.isVrchatActive());
   }
 
   private subscribeToLogEvents(): void {

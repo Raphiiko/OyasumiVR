@@ -1,11 +1,10 @@
 import { Injectable } from '@angular/core';
-import { invoke } from '@tauri-apps/api/core';
 import { OscParameter, OscScript, OscScriptSleepAction } from '../models/osc-script';
 import { flatten } from 'lodash';
 import { TaskQueue } from '../utils/task-queue';
 import { debug, error, info } from '@tauri-apps/plugin-log';
-import { listen } from '@tauri-apps/api/event';
-import { OSCMessage, OSCMessageRaw, parseOSCMessage } from '../models/osc-message';
+import { OSCMessage, parseOSCMessage } from '../models/osc-message';
+import { commands, events, OSCMethod } from '../bindings';
 import {
   asyncScheduler,
   BehaviorSubject,
@@ -62,7 +61,7 @@ export class OscService {
   ) {}
 
   async init() {
-    await listen<OSCMessageRaw>('OSC_MESSAGE', (data) => {
+    await events.oscMessageReceivedEvent.listen((data) => {
       this.lastMessageAt.next(Date.now());
       this._messages.next(parseOSCMessage(data.payload));
     });
@@ -77,7 +76,7 @@ export class OscService {
             return addresses;
           })
         );
-        await invoke('set_osc_receive_address_whitelist', { whitelist: addresses });
+        await commands.setOscReceiveAddressWhitelist(addresses);
       });
     this.appSettings.settings
       .pipe(
@@ -98,10 +97,10 @@ export class OscService {
         // )
       )
       .subscribe();
-    await listen<string | null>('VRC_OSC_ADDRESS_CHANGED', (event) => {
+    await events.vrcOscAddressChangedEvent.listen((event) => {
       this._vrchatOscAddress.next(event.payload);
     });
-    await listen<string | null>('VRC_OSCQUERY_ADDRESS_CHANGED', (event) => {
+    await events.vrcOscQueryAddressChangedEvent.listen((event) => {
       if (this._vrchatOscQueryAddress.value !== event.payload) {
         this._vrchatOscQueryAddress.next(event.payload);
       }
@@ -113,9 +112,7 @@ export class OscService {
   }
 
   private async startOscServer(): Promise<{ oscAddress: string; oscQueryAddress: string } | null> {
-    let [oscAddress, oscQueryAddress] = (await invoke<[string, string] | null>(
-      'start_osc_server'
-    )) ?? [null, null];
+    let [oscAddress, oscQueryAddress] = (await commands.startOscServer()) ?? [null, null];
     if (oscAddress) {
       oscAddress = oscAddress.replace('0.0.0.0', '127.0.0.1');
       this._oscServerAddress.next(oscAddress);
@@ -124,7 +121,7 @@ export class OscService {
       oscQueryAddress = oscQueryAddress.replace('0.0.0.0', '127.0.0.1');
       this._oscQueryServerAddress.next(oscQueryAddress);
       for (const method of this._oscMethods.value) {
-        await invoke('add_osc_method', { method: this.mapToOscMethod(method) });
+        await commands.addOscMethod(this.mapToOscMethod(method));
       }
     } else error("[OSC] Couldn't start OSCQuery server");
     return oscAddress && oscQueryAddress ? { oscAddress, oscQueryAddress } : null;
@@ -137,21 +134,18 @@ export class OscService {
     methods.push(method);
     this._oscMethods.next(methods);
     if (this._oscQueryServerAddress.value) {
-      await invoke('add_osc_method', { method: this.mapToOscMethod(method) });
+      await commands.addOscMethod(this.mapToOscMethod(method));
     }
   }
 
   public async updateOscMethodValue(method: OscMethod<unknown>) {
-    await invoke('set_osc_method_value', {
-      address: method.options.address,
-      value: method.getValue() + '',
-    });
+    await commands.setOscMethodValue(method.options.address, method.getValue() + '');
   }
 
   private async stopOscServer(): Promise<void> {
     this._oscServerAddress.next(null);
     this._oscQueryServerAddress.next(null);
-    await invoke<string>('stop_osc_server');
+    await commands.stopOscServer();
   }
 
   async send_float(address: string, value: number) {
@@ -214,12 +208,12 @@ export class OscService {
       for (const oscAddr of oscAddresses) {
         info(`[OSC] Sending {${parametersString}} on ${oscAddr} to ${targetAddr}`);
 
-        await invoke('osc_send_command', {
-          addr: targetAddr,
+        await commands.oscSendCommand(
+          targetAddr,
           oscAddr,
-          types: _parameters.map((parameter) => parameter.type),
-          values: _parameters.map((parameter) => parameter.value),
-        });
+          _parameters.map((parameter) => parameter.type),
+          _parameters.map((parameter) => parameter.value)
+        );
       }
     }
   }
@@ -270,26 +264,20 @@ export class OscService {
   }
 
   private async fetchVRChatOSCAddress() {
-    const osc_address = await invoke<string | null>('get_vrchat_osc_address');
+    const osc_address = await commands.getVrchatOscAddress();
     if (osc_address !== this._vrchatOscAddress.value) this._vrchatOscAddress.next(osc_address);
-    const oscquery_address = await invoke<string | null>('get_vrchat_oscquery_address');
+    const oscquery_address = await commands.getVrchatOscqueryAddress();
     if (oscquery_address !== this._vrchatOscQueryAddress.value) {
       this._vrchatOscQueryAddress.next(oscquery_address);
     }
   }
 
-  private mapToOscMethod(method: OscMethod<unknown>): {
-    address: string;
-    adType: 'Write' | 'Read' | 'ReadWrite';
-    valueType: 'Bool' | 'Int' | 'Float' | 'String';
-    value?: string;
-    description?: string;
-  } {
+  private mapToOscMethod(method: OscMethod<unknown>): OSCMethod {
     return {
       address: method.options.address,
       adType: method.options.access,
       valueType: method.options.type,
-      value: method.options.access === 'Write' ? undefined : method.getValue() + '',
+      value: method.options.access === 'Write' ? null : method.getValue() + '',
       description: method.options.description,
     };
   }

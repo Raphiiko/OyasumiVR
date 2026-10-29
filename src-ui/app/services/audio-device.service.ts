@@ -1,8 +1,7 @@
 import { Injectable } from '@angular/core';
-import { invoke } from '@tauri-apps/api/core';
 import { AudioDevice, AudioDeviceParsedName } from '../models/audio-device';
 import { BehaviorSubject } from 'rxjs';
-import { listen } from '@tauri-apps/api/event';
+import { commands, events } from '../bindings';
 import { clamp } from '../utils/number-utils';
 
 const PERSISTENT_ID_LEAD = 'AUDIO_DEVICE_[';
@@ -19,7 +18,7 @@ export class AudioDeviceService {
 
   async init() {
     await this.getAudioDevices();
-    await listen<AudioDevice>('audioDeviceUpdated', (event) => {
+    await events.audioDeviceUpdatedEvent.listen((event) => {
       const devices = this._activeDevices.value;
       // Replace the relevant device
       const index = devices.findIndex((d) => d.id === event.payload.id);
@@ -31,14 +30,14 @@ export class AudioDeviceService {
       }
       this._activeDevices.next(devices);
     });
-    await listen<AudioDevice[]>('audioDevicesUpdated', (event) => {
+    await events.audioDevicesUpdatedEvent.listen((event) => {
       event.payload.forEach((d) => this.hydrateAudioDevice(d));
       this._activeDevices.next(event.payload);
     });
   }
 
   async getAudioDevices(refresh = false) {
-    const devices = await invoke<AudioDevice[]>('get_audio_devices', { refresh });
+    const devices = await commands.getAudioDevices(refresh);
     devices.forEach((d) => this.hydrateAudioDevice(d));
     this._activeDevices.next(devices);
   }
@@ -48,7 +47,7 @@ export class AudioDeviceService {
     if (!this.isActiveDevice(deviceId)) return false;
     volume = clamp(volume, 0, 1);
     this.patchDevice(deviceId, { volume });
-    return invoke('set_audio_device_volume', { deviceId, volume }).then(
+    return commands.setAudioDeviceVolume(deviceId, volume).then(
       () => true,
       () => false
     );
@@ -65,7 +64,7 @@ export class AudioDeviceService {
     const device = this._activeDevices.value.find((d) => d.id === deviceId);
     if (!device) return null;
     this.patchDevice(deviceId, { mute });
-    const applied = await invoke('set_audio_device_mute', { deviceId, mute }).then(
+    const applied = await commands.setAudioDeviceMute(deviceId, mute).then(
       () => true,
       () => false
     );

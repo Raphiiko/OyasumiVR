@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { SleepService } from './sleep.service';
 import { distinctUntilChanged, skip } from 'rxjs';
-import { invoke } from '@tauri-apps/api/core';
+import { commands } from '../bindings';
 import { TranslocoService } from '@jsverse/transloco';
 import { SleepPreparationService } from './sleep-preparation.service';
 import { AppSettingsService } from './app-settings.service';
@@ -50,7 +50,7 @@ export class VRCXService {
 
   private log(type: VRCXEventLogType, msg: string) {
     if (!this.appSettingsService.settingsSync.vrcxLogsEnabled.includes(type)) return;
-    void invoke<boolean>('vrcx_log', { msg });
+    void commands.vrcxLog(msg);
   }
 
   private logEventLogEntry(entry: EventLogEntry) {

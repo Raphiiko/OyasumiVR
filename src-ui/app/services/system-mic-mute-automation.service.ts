@@ -35,7 +35,7 @@ import {
   EventLogFailure,
 } from '../models/event-log-entry';
 import { EventLogService } from './event-log.service';
-import { invoke } from '@tauri-apps/api/core';
+import { commands } from '../bindings';
 import { VRChatService } from './vrchat-api/vrchat.service';
 import { getBuiltInNotificationSound } from '../models/notification-sounds';
 
@@ -109,11 +109,7 @@ export class SystemMicMuteAutomationService {
       .pipe(
         map((configs) => configs.SYSTEM_MIC_MUTE_AUTOMATIONS.voiceActivationMode),
         distinctUntilChanged(),
-        switchMap((mode) =>
-          invoke('set_hardware_mic_activity_enabled', {
-            enabled: mode === 'HARDWARE',
-          })
-        )
+        switchMap((mode) => commands.setHardwareMicActivityEnabled(mode === 'HARDWARE'))
       )
       .subscribe();
     // Update the hardware mic activity threshold based on the config
@@ -121,11 +117,7 @@ export class SystemMicMuteAutomationService {
       .pipe(
         map((configs) => configs.SYSTEM_MIC_MUTE_AUTOMATIONS.hardwareVoiceActivationThreshold),
         distinctUntilChanged(),
-        switchMap((threshold) =>
-          invoke('set_hardware_mic_activivation_threshold', {
-            threshold: threshold / 100,
-          })
-        )
+        switchMap((threshold) => commands.setHardwareMicActivivationThreshold(threshold / 100))
       )
       .subscribe();
   }
@@ -326,7 +318,7 @@ export class SystemMicMuteAutomationService {
       .pipe(
         map((device) => device?.id ?? null),
         distinctUntilChanged(),
-        switchMap((deviceId) => invoke('set_mic_activity_device_id', { deviceId }))
+        switchMap((deviceId) => commands.setMicActivityDeviceId(deviceId))
       )
       .subscribe();
   }

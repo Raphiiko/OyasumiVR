@@ -1,13 +1,8 @@
-export type AudioDeviceType = 'Render' | 'Capture';
+import type { AudioDeviceDto } from '../bindings';
 
-export interface AudioDevice {
-  id: string;
-  name: string;
-  deviceType: AudioDeviceType;
-  volume: number;
-  mute: boolean;
-  default: boolean;
-  defaultCommunications: boolean;
+export type { AudioDeviceType } from '../bindings';
+
+export interface AudioDevice extends AudioDeviceDto {
   parsedName?: AudioDeviceParsedName;
   persistentId?: string;
 }
