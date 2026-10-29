@@ -46,7 +46,12 @@ async function createService(stdout: string) {
   } as unknown as OpenVRService;
   const service = new LighthouseConsoleService(appSettings, openvr, new ToastService());
   // let the constructor's init() settle before the test drives the service
-  await new Promise((resolve) => setTimeout(resolve, 0));
+  const initialized = Promise.withResolvers<void>();
+  const subscription = service.consoleStatus.subscribe((status) => {
+    if (status === 'NOT_FOUND') initialized.resolve();
+  });
+  await initialized.promise;
+  subscription.unsubscribe();
   invoke.mockImplementation(async () => ({ stdout, stderr: '', status: 0 }));
   return service;
 }

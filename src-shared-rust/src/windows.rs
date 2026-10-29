@@ -37,6 +37,18 @@ impl PrivilegedLauncherLock {
         descriptor: &str,
         timeout: std::time::Duration,
     ) -> std::result::Result<Self, Error> {
+        Self::acquire_at_with_retry(path, descriptor, timeout, || {
+            std::thread::sleep(std::time::Duration::from_millis(100));
+            true
+        })
+    }
+
+    fn acquire_at_with_retry(
+        path: &std::path::Path,
+        descriptor: &str,
+        timeout: std::time::Duration,
+        mut retry: impl FnMut() -> bool,
+    ) -> std::result::Result<Self, Error> {
         const ERROR_SHARING_VIOLATION: i32 = 32;
 
         let deadline = std::time::Instant::now() + timeout;
@@ -49,7 +61,12 @@ impl PrivilegedLauncherLock {
                         "timed out waiting for the privileged launcher lock",
                     ))
                 }
-                Err(_) => std::thread::sleep(std::time::Duration::from_millis(100)),
+                Err(_) if retry() => continue,
+                Err(_) => {
+                    return Err(Error::other(
+                        "timed out waiting for the privileged launcher lock",
+                    ))
+                }
             }
         }
     }
@@ -455,7 +472,7 @@ mod tests {
     }
 
     #[test]
-    fn a_second_holder_waits_for_the_first_to_release_the_lock() {
+    fn a_second_holder_times_out_until_the_first_lock_is_released() {
         use super::PrivilegedLauncherLock;
         use std::time::Duration;
 
@@ -465,8 +482,7 @@ mod tests {
 
         let first = PrivilegedLauncherLock::acquire_at(&path, OWNER_DESCRIPTOR, Duration::ZERO)
             .expect("an unheld lock is free");
-        let busy =
-            PrivilegedLauncherLock::acquire_at(&path, OWNER_DESCRIPTOR, Duration::from_millis(300));
+        let busy = PrivilegedLauncherLock::acquire_at(&path, OWNER_DESCRIPTOR, Duration::ZERO);
         assert!(
             busy.as_ref()
                 .is_err_and(|e| e.to_string().contains("timed out")),
@@ -474,13 +490,63 @@ mod tests {
             busy.err()
         );
 
-        let release = std::thread::spawn(move || {
-            std::thread::sleep(Duration::from_millis(300));
-            drop(first);
-        });
-        PrivilegedLauncherLock::acquire_at(&path, OWNER_DESCRIPTOR, Duration::from_secs(10))
+        drop(first);
+        PrivilegedLauncherLock::acquire_at(&path, OWNER_DESCRIPTOR, Duration::ZERO)
             .expect("the lock must be free once the first holder drops it");
-        release.join().unwrap();
+    }
+
+    #[test]
+    fn a_second_holder_retries_after_the_first_lock_is_released() {
+        use super::PrivilegedLauncherLock;
+        use std::time::Duration;
+
+        const OWNER_DESCRIPTOR: &str = "D:P(A;;FA;;;SY)(A;;FA;;;BA)(A;;FA;;;OW)";
+        let path = lock_path("retry");
+        let first = PrivilegedLauncherLock::acquire_at(&path, OWNER_DESCRIPTOR, Duration::ZERO)
+            .expect("an unheld lock is free");
+        let mut first = Some(first);
+
+        PrivilegedLauncherLock::acquire_at_with_retry(
+            &path,
+            OWNER_DESCRIPTOR,
+            Duration::from_secs(30),
+            || {
+                drop(first.take());
+                true
+            },
+        )
+        .expect("the second holder must acquire after the first releases");
+    }
+
+    #[test]
+    fn a_nonzero_timeout_gives_up_after_a_retry() {
+        use super::PrivilegedLauncherLock;
+        use std::time::Duration;
+
+        const OWNER_DESCRIPTOR: &str = "D:P(A;;FA;;;SY)(A;;FA;;;BA)(A;;FA;;;OW)";
+        let path = lock_path("nonzero-timeout");
+        let first = PrivilegedLauncherLock::acquire_at(&path, OWNER_DESCRIPTOR, Duration::ZERO)
+            .expect("an unheld lock is free");
+        let mut retries = 0;
+
+        let busy = PrivilegedLauncherLock::acquire_at_with_retry(
+            &path,
+            OWNER_DESCRIPTOR,
+            Duration::from_secs(30),
+            || {
+                assert!(retries < 2, "acquisition retried after timing out");
+                retries += 1;
+                retries == 1
+            },
+        );
+        assert!(
+            busy.as_ref()
+                .is_err_and(|e| e.to_string().contains("timed out")),
+            "a held lock must give up, got {:?}",
+            busy.err()
+        );
+        assert_eq!(retries, 2);
+        drop(first);
     }
 
     #[test]
@@ -533,9 +599,14 @@ mod tests {
         // an unelevated process standing in for a hostile one must not even open the file
         if !super::is_elevated() {
             drop(lock);
-            let open = std::fs::OpenOptions::new().read(true).open(&path);
+            let read = std::fs::OpenOptions::new().read(true).open(&path);
             assert_eq!(
-                open.err().map(|e| e.kind()),
+                read.err().map(|e| e.kind()),
+                Some(std::io::ErrorKind::PermissionDenied)
+            );
+            let write = std::fs::OpenOptions::new().write(true).open(&path);
+            assert_eq!(
+                write.err().map(|e| e.kind()),
                 Some(std::io::ErrorKind::PermissionDenied)
             );
         }
@@ -544,7 +615,14 @@ mod tests {
     #[test]
     fn current_user_sid_looks_like_a_sid() {
         let sid = super::current_user_sid().expect("the current process always has a user");
-        assert!(sid.starts_with("S-1-"), "unexpected sid: {sid}");
-        assert!(sid.len() > 8, "suspiciously short sid: {sid}");
+        let parts: Vec<_> = sid.split('-').collect();
+        assert!(parts.len() >= 4, "unexpected sid: {sid}");
+        assert_eq!(&parts[..2], &["S", "1"], "unexpected sid: {sid}");
+        assert!(
+            parts[2..]
+                .iter()
+                .all(|part| !part.is_empty() && part.bytes().all(|b| b.is_ascii_digit())),
+            "unexpected sid: {sid}"
+        );
     }
 }

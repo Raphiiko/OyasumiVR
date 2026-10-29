@@ -1,6 +1,6 @@
 import { invoke } from '@tauri-apps/api/core';
 import { BehaviorSubject, firstValueFrom, Subject } from 'rxjs';
-import { describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { APP_SETTINGS_DEFAULT } from '../../models/settings';
 import type { OVRDevice } from '../../models/ovr-device';
 import type {
@@ -30,10 +30,12 @@ const FRAME: Partial<OVRDevice> = {
 };
 const FRAME_B: Partial<OVRDevice> = { ...FRAME, serialNumber: 'FP2' };
 
-/** Waits past the drivers' 100 ms debounce of OpenVR changes. */
-const settle = () => new Promise((resolve) => setTimeout(resolve, 150));
-/** Waits past the service's 500 ms settle before it logs and resets an unclaimed headset. */
-const settleUnclaimed = () => new Promise((resolve) => setTimeout(resolve, 800));
+const DRIVER_DEBOUNCE_MS = 100;
+const SERVICE_DEBOUNCE_MS = 500;
+const TRANSITION_FREQUENCY_HZ = 60;
+
+const settle = () => vi.advanceTimersByTimeAsync(DRIVER_DEBOUNCE_MS);
+const settleUnclaimed = () => vi.advanceTimersByTimeAsync(DRIVER_DEBOUNCE_MS + SERVICE_DEBOUNCE_MS);
 
 function snapshot(kelvin: number, exact = true): SteamFrameCct {
   return { available: true, kelvin, exact };
@@ -43,8 +45,6 @@ async function setup(
   hmd: Partial<OVRDevice> | null,
   { tryUnsupported = false, paired = true }: { tryUnsupported?: boolean; paired?: boolean } = {}
 ) {
-  // a previous test's service can still finish its settle and write
-  await settleUnclaimed();
   const replies: ((cct: SteamFrameCct) => void)[] = [];
   vi.mocked(invoke).mockReset();
   vi.mocked(invoke).mockImplementation(async (command) => {
@@ -119,6 +119,15 @@ async function setup(
   };
 }
 
+beforeEach(() => {
+  vi.useFakeTimers();
+});
+
+afterEach(() => {
+  vi.clearAllTimers();
+  vi.useRealTimers();
+});
+
 describe('CCTControlService driver selection', () => {
   it.each([
     ['an Index', INDEX],
@@ -127,6 +136,7 @@ describe('CCTControlService driver selection', () => {
     const { service, writes } = await setup(hmd);
 
     expect(await firstValueFrom(service.driverIsAvailable)).toBe(true);
+    expect(await firstValueFrom(service.activeDriver)).toBe(service.driverSteamVr);
     expect(writes()).toEqual([6600]);
     await service.setCCT(3000);
     expect(writes()).toEqual([6600, 3000]);
@@ -142,12 +152,15 @@ describe('CCTControlService driver selection', () => {
     await service.setCCT(3000);
     await settleUnclaimed();
     expect(service.cct).toBe(3000);
+    expect(await firstValueFrom(service.driverIsAvailable)).toBe(false);
     expect(writes()).toEqual([6600]);
   });
 
   it('writes nothing while no headset is connected', async () => {
     const { service, writes } = await setup(null);
 
+    expect(await firstValueFrom(service.driverIsAvailable)).toBe(false);
+    expect(await firstValueFrom(service.activeDriver)).toBeNull();
     await service.setCCT(3000);
     await settleUnclaimed();
     expect(writes()).toEqual([]);
@@ -166,6 +179,7 @@ describe('CCTControlService driver selection', () => {
 
     setTryUnsupported(false);
     await settleUnclaimed();
+    expect(await firstValueFrom(service.driverIsAvailable)).toBe(false);
     expect(writes()).toEqual([6600, 3000, 6600]);
     await service.setCCT(4000);
     expect(writes()).toEqual([6600, 3000, 6600]);
@@ -178,6 +192,7 @@ describe('CCTControlService driver selection', () => {
     expect(writes()).toEqual([]);
     activate(INDEX);
     await settle();
+    expect(await firstValueFrom(service.activeDriver)).toBe(service.driverSteamVr);
     expect(writes()).toEqual([4000]);
   });
 
@@ -198,8 +213,13 @@ describe('CCTControlService transitions', () => {
     const task = service.transitionCCT(3000, 100);
     expect(await firstValueFrom(service.activeTransition)).toBe(task);
     await settle();
-    expect(writes().length).toBeGreaterThan(3);
-    expect(writes().at(-1)).toBe(3000);
+    await vi.advanceTimersByTimeAsync(1000 / TRANSITION_FREQUENCY_HZ);
+    const temperatures = writes();
+    expect(temperatures.length).toBeGreaterThan(3);
+    for (let index = 1; index < temperatures.length; index++) {
+      expect(temperatures[index]).toBeLessThanOrEqual(temperatures[index - 1]);
+    }
+    expect(temperatures.at(-1)).toBe(3000);
     expect(await firstValueFrom(service.activeTransition)).toBeUndefined();
   });
 });
@@ -557,6 +577,7 @@ describe('CCTControlService with a Steam Frame', () => {
     await settle();
     h.activate(FRAME);
     await settle();
+    await vi.advanceTimersByTimeAsync(1000 / TRANSITION_FREQUENCY_HZ);
     expect(await firstValueFrom(h.service.activeTransition)).toBe(task);
     expect(h.frameWrites()).toHaveLength(1);
     expect(h.frameWrites()[0]).toBeGreaterThan(3000);

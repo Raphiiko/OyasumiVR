@@ -26,7 +26,13 @@ it('keeps unlocking an achievement after Steam fails to read it', async () => {
   vi.spyOn(steam, 'getAchievement')
     .mockRejectedValueOnce('FAILED_TO_GET_STATUS')
     .mockResolvedValue(false);
-  const unlock = vi.spyOn(steam, 'setAchievement').mockResolvedValue();
+  const warned = Promise.withResolvers<void>();
+  log.warn.mockImplementationOnce(() => warned.resolve());
+  const unlocked = Promise.withResolvers<void>();
+  const unlock = vi.spyOn(steam, 'setAchievement').mockImplementation(() => {
+    unlocked.resolve();
+    return Promise.resolve();
+  });
   await steam['handleAchievement_QUICK_EEPER']();
   const detected = {
     mode: true,
@@ -34,11 +40,14 @@ it('keeps unlocking an achievement after Steam fails to read it', async () => {
   };
 
   changes.next(detected);
-  await vi.waitFor(() => expect(log.warn).toHaveBeenCalledOnce());
+  await warned.promise;
   changes.next(detected);
-  await vi.waitFor(() => expect(unlock).toHaveBeenCalledOnce());
+  await unlocked.promise;
 
+  expect(log.warn).toHaveBeenCalledOnce();
   expect(log.warn.mock.calls[0][0]).toContain('FAILED_TO_GET_STATUS');
+  expect(steam.getAchievement).toHaveBeenCalledTimes(2);
+  expect(unlock).toHaveBeenCalledOnce();
   expect(unlock).toHaveBeenCalledWith(SteamAchievements.QUICK_EEPER, true);
 });
 
@@ -63,6 +72,7 @@ it('retries a one-time achievement on the next trigger after a failed unlock', a
   clientStatus.next('CONNECTED');
   await vi.advanceTimersByTimeAsync(1000);
 
+  expect(steam.getAchievement).toHaveBeenCalledTimes(2);
   expect(unlock).toHaveBeenCalledExactlyOnceWith(SteamAchievements.HASS_CON, true);
   vi.useRealTimers();
 });

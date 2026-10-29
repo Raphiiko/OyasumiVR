@@ -85,6 +85,7 @@ describe('update installation lifecycle', () => {
     } as unknown as ConstructorParameters<typeof UpdateModalComponent>[1]);
     expect(recreated['updateOrCheckInProgress']).toBe(true);
     expect(modal.installing).toBe(true);
+    expect(h.service.installing()).toBe(true);
     await recreated.updateOrCheck();
     await modal.install();
     expect(h.downloadAndInstall).toHaveBeenCalledTimes(1);
@@ -159,7 +160,9 @@ describe('update installation lifecycle', () => {
     );
     settings['updateAvailable'] = { checked: true, update: h.update };
     const installing = settings.updateOrCheck();
-    await vi.advanceTimersByTimeAsync(2000);
+    await vi.advanceTimersByTimeAsync(999);
+    expect(settings['updateOrCheckInProgress']).toBe(true);
+    await vi.advanceTimersByTimeAsync(1);
     expect(settings['updateOrCheckInProgress']).toBe(true);
     await settings.updateOrCheck();
     expect(h.downloadAndInstall).toHaveBeenCalledTimes(1);

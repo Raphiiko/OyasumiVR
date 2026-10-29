@@ -9,10 +9,13 @@ vi.mock('../../utils/app-utils', () => ({ getVersion: async () => 'test' }));
 
 async function createService() {
   let receive!: (topic: string, payload: Buffer) => Promise<void>;
+  const subscribed = Promise.withResolvers<void>();
   const client = {
     connected: true,
     publishAsync: vi.fn(async (_topic: string, _payload: string, _options?: object) => {}),
-    subscribeAsync: vi.fn(async (_topics: string[]) => {}),
+    subscribeAsync: vi.fn(async (_topics: string[]) => {
+      subscribed.resolve();
+    }),
     on: vi.fn((_event: string, handler: typeof receive) => (receive = handler)),
   };
   const clientStatus = new BehaviorSubject<MqttStatus>('CONNECTED');
@@ -21,7 +24,7 @@ async function createService() {
     {} as SleepService
   );
   await service.init();
-  await vi.waitFor(() => expect(client.subscribeAsync).toHaveBeenCalled());
+  await subscribed.promise;
   return {
     service,
     client,
@@ -130,18 +133,25 @@ describe('Home Assistant MQTT recovery', () => {
     await service.initProperty({ ...structuredClone(properties[3]), available: true });
     const rgb = Promise.withResolvers<void>();
     const availability = Promise.withResolvers<void>();
+    const rgbPublished = Promise.withResolvers<void>();
+    const availabilityPublished = Promise.withResolvers<void>();
     client.publishAsync.mockImplementation(async (topic) => {
-      if (topic.endsWith('/rgbState')) await rgb.promise;
-      if (topic.endsWith('/available')) await availability.promise;
+      if (topic.endsWith('/rgbState')) {
+        rgbPublished.resolve();
+        await rgb.promise;
+      }
+      if (topic.endsWith('/available')) {
+        availabilityPublished.resolve();
+        await availability.promise;
+      }
     });
     client.publishAsync.mockClear();
     let finished = false;
     const recovery = receive('homeassistant/status', 'online').then(() => (finished = true));
-    await vi.waitFor(() =>
-      expect(client.publishAsync).toHaveBeenCalledWith('OyasumiVR/device/led/rgbState', '1,2,3', {
-        retain: true,
-      })
-    );
+    await rgbPublished.promise;
+    expect(client.publishAsync).toHaveBeenCalledWith('OyasumiVR/device/led/rgbState', '1,2,3', {
+      retain: true,
+    });
     expect(client.publishAsync).not.toHaveBeenCalledWith(
       'OyasumiVR/device/led/available',
       'online',
@@ -149,11 +159,10 @@ describe('Home Assistant MQTT recovery', () => {
     );
     expect(finished).toBe(false);
     rgb.resolve();
-    await vi.waitFor(() =>
-      expect(client.publishAsync).toHaveBeenCalledWith('OyasumiVR/device/led/available', 'online', {
-        retain: true,
-      })
-    );
+    await availabilityPublished.promise;
+    expect(client.publishAsync).toHaveBeenCalledWith('OyasumiVR/device/led/available', 'online', {
+      retain: true,
+    });
     expect(finished).toBe(false);
     availability.resolve();
     await recovery;

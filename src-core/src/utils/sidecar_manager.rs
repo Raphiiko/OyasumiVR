@@ -573,27 +573,36 @@ mod tests {
         assert!(started.elapsed() < std::time::Duration::from_secs(1));
     }
 
-    #[tokio::test]
+    #[tokio::test(start_paused = true)]
     async fn waiting_on_a_process_that_stays_gives_up() {
+        let started = tokio::time::Instant::now();
         // our own process outlives the grace, which is the sidecar that ignored the stop
         assert!(
             !super::wait_for_exit(std::process::id(), std::time::Duration::from_millis(150)).await
         );
+        assert_eq!(started.elapsed(), std::time::Duration::from_millis(150));
     }
 
     #[test]
-    fn relative_sidecar_paths_become_absolute_with_backslashes() {
+    fn sidecar_paths_resolve_relative_paths_and_preserve_absolute_paths() {
         let resolved = absolute(Path::new("resources/elevated-sidecar/sidecar.exe"));
-        assert!(resolved.is_absolute(), "{}", resolved.display());
+        let expected = std::env::current_exe()
+            .unwrap()
+            .parent()
+            .unwrap()
+            .join(r"resources\elevated-sidecar\sidecar.exe");
+        assert_eq!(resolved, expected);
         let text = resolved.to_string_lossy();
         assert!(!text.contains('/'), "forward slashes left in {text}");
         assert!(
             text.ends_with(r"resources\elevated-sidecar\sidecar.exe"),
             "{text}"
         );
+        let given = Path::new(r"C:\Program Files\OyasumiVR\x.exe");
+        assert_eq!(absolute(given), given);
     }
 
-    #[tokio::test]
+    #[tokio::test(start_paused = true)]
     async fn stopping_clears_the_pid_and_moves_the_generation_on() {
         let (tx, _rx) = tokio::sync::mpsc::channel(4);
         let mut manager = super::SidecarManager::new(
@@ -618,12 +627,13 @@ mod tests {
         assert_eq!(*manager.sidecar_pid.lock().await, None);
         assert!(!*manager.active.lock().await);
         assert!(!*manager.started.lock().await);
-        assert!(
+        assert_eq!(
             manager
                 .generation
-                .load(std::sync::atomic::Ordering::Relaxed)
-                > before
+                .load(std::sync::atomic::Ordering::Relaxed),
+            before + 1
         );
+        assert!(manager.sidecar_child.lock().await.is_none());
     }
 
     fn manager(launch: super::SidecarLaunch, auto_restart: bool) -> super::SidecarManager {
@@ -653,6 +663,8 @@ mod tests {
             "the sidecar this manager asked for must be accepted"
         );
         assert!(*manager.started.lock().await);
+        assert_eq!(*manager.grpc_port.lock().await, Some(1));
+        assert_eq!(*manager.grpc_web_port.lock().await, Some(2));
 
         assert!(
             !manager.handle_start_signal(Some(1), Some(2), 9999).await,
@@ -678,10 +690,16 @@ mod tests {
 
         // a launch from outside does move it, so a stale watcher stops touching the state
         manager._start_internal(false).await;
-        assert!(manager.generation.load(Ordering::Relaxed) > before);
+        assert_eq!(manager.generation.load(Ordering::Relaxed), before + 1);
+
+        manager._start_internal(true).await;
+        assert_eq!(manager.generation.load(Ordering::Relaxed), before + 1);
+
+        manager._start_internal(false).await;
+        assert_eq!(manager.generation.load(Ordering::Relaxed), before + 2);
     }
 
-    #[tokio::test]
+    #[tokio::test(start_paused = true)]
     async fn a_deliberate_stop_is_announced() {
         let (tx, mut rx) = tokio::sync::mpsc::channel(4);
         let mut manager = super::SidecarManager::new(
@@ -740,6 +758,7 @@ mod tests {
         manager.ensure_watcher().await;
 
         assert_eq!(*manager.watching.lock().await, Some(current));
+        assert_eq!(manager.generation.load(Ordering::Relaxed), current);
     }
 
     #[tokio::test]
@@ -747,17 +766,14 @@ mod tests {
         *crate::grpc::SERVER_PORT.lock().await = Some(1234);
         let mut manager = manager(super::SidecarLaunch::ScheduledTask, false);
         *manager.active.lock().await = true;
+        let generation = manager.generation.load(Ordering::Relaxed);
 
         // Not Failed: the caller wanted a sidecar on its way, and one is.
         assert_eq!(manager.start().await, super::StartOutcome::AlreadyRunning);
+        assert_eq!(manager.generation.load(Ordering::Relaxed), generation);
         assert!(super::StartOutcome::AlreadyRunning.is_on_its_way());
         assert!(!super::StartOutcome::Declined.is_on_its_way());
         assert!(!super::StartOutcome::Failed.is_on_its_way());
-    }
-
-    #[test]
-    fn absolute_paths_are_left_alone() {
-        let given = Path::new(r"C:\Program Files\OyasumiVR\x.exe");
-        assert_eq!(absolute(given), given);
+        assert!(manager.sidecar_child.lock().await.is_none());
     }
 }

@@ -432,6 +432,10 @@ mod tests {
             );
             assert!(commands::clean_image_cache(false).await.is_err());
             assert!(entry.exists());
+            assert_eq!(
+                INSTANCE.lock().await.as_ref().unwrap().cache_path_str,
+                directory.path().join("image_cache").into_os_string()
+            );
 
             drop(lock);
             commands::clean_image_cache(false).await.unwrap();
@@ -504,6 +508,32 @@ mod tests {
         drop(lock);
         cache.clean(false).unwrap();
         assert_eq!(std::fs::read_dir(directory.path()).unwrap().count(), 0);
+
+        let directory = tempfile::tempdir().unwrap();
+        let cache = ImageCache::new(directory.path().as_os_str().to_owned());
+        let locked = directory.path().join("locked-corrupt");
+        let manifest = locked.join("manifest.json");
+        std::fs::create_dir_all(&locked).unwrap();
+        std::fs::write(&manifest, b"{").unwrap();
+        let unlocked = directory.path().join("unlocked-corrupt");
+        std::fs::create_dir(&unlocked).unwrap();
+        std::fs::write(unlocked.join("manifest.json"), b"{").unwrap();
+        cache.store_image("fresh", u64::MAX, mime::IMAGE_PNG, &[3]);
+        let lock = std::fs::OpenOptions::new()
+            .read(true)
+            .share_mode(0)
+            .open(manifest)
+            .unwrap();
+
+        assert!(cache.clean(true).is_err());
+        assert!(locked.exists());
+        assert!(!unlocked.exists());
+        assert!(cache.get_image("fresh".into()).is_some());
+
+        drop(lock);
+        cache.clean(true).unwrap();
+        assert!(!locked.exists());
+        assert!(cache.get_image("fresh".into()).is_some());
     }
 
     #[test]
@@ -560,30 +590,5 @@ mod tests {
         let entry_path = directory.path().join(format!("{:x}", md5::compute(url)));
         assert!(cache.get_image(url.to_string()).is_some());
         assert_eq!(std::fs::read_dir(entry_path).unwrap().count(), 2);
-    }
-
-    #[cfg(windows)]
-    #[test]
-    fn cleanup_continues_when_a_corrupt_entry_is_locked() {
-        use std::os::windows::fs::OpenOptionsExt;
-
-        let directory = tempfile::tempdir().unwrap();
-        let cache = ImageCache::new(directory.path().as_os_str().to_owned());
-        let entry_path = directory.path().join("entry");
-        let manifest_path = entry_path.join("manifest.json");
-        std::fs::create_dir_all(&entry_path).unwrap();
-        std::fs::write(&manifest_path, b"{").unwrap();
-        let locked_manifest = std::fs::OpenOptions::new()
-            .read(true)
-            .share_mode(0)
-            .open(manifest_path)
-            .unwrap();
-
-        assert!(cache.clean(true).is_err());
-        assert!(entry_path.exists());
-
-        drop(locked_manifest);
-        cache.clean(true).unwrap();
-        assert!(!entry_path.exists());
     }
 }

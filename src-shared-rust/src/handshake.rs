@@ -151,16 +151,16 @@ mod tests {
 
     #[test]
     fn a_handshake_round_trips_through_json() {
-        let original = at(1_234_567);
-        let raw = serde_json::to_vec(&original).unwrap();
-        let parsed: Handshake = serde_json::from_slice(&raw).unwrap();
-        assert_eq!(parsed.written_at, original.written_at);
-        assert_eq!(parsed.core_grpc_port, original.core_grpc_port);
-        assert_eq!(parsed.core_pid, original.core_pid);
-        assert_eq!(parsed.sidecar_path, original.sidecar_path);
+        let raw = serde_json::to_vec(&at(1_234_567)).unwrap();
         assert_eq!(
-            parsed.error_reporting_enabled,
-            original.error_reporting_enabled
+            raw.as_slice(),
+            br#"{"written_at":1234567,"core_grpc_port":1234,"core_pid":42,"sidecar_path":"C:\\x\\sidecar.exe","error_reporting_enabled":true}"#
         );
+        let parsed: Handshake = serde_json::from_slice(&raw).unwrap();
+        assert_eq!(parsed.written_at, 1_234_567);
+        assert_eq!(parsed.core_grpc_port, 1234);
+        assert_eq!(parsed.core_pid, 42);
+        assert_eq!(parsed.sidecar_path, PathBuf::from(r"C:\x\sidecar.exe"));
+        assert!(parsed.error_reporting_enabled);
     }
 }

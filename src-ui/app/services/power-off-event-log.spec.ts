@@ -307,6 +307,10 @@ describe('power-off event producers', () => {
       });
       await service['handleSleepModeEnable']();
       if (outcome === 'skipped') expect(powerOff).not.toHaveBeenCalled();
+      else
+        expect(powerOff.mock.calls.map(([device]) => device.id)).toEqual(
+          outcome === 'partial' ? ['FAILED', 'OK'] : ['FAILED']
+        );
       const logs = (await firstValueFrom(log.eventLog)).logs;
       const failed = { devices: 'VARIOUS', failure: 'BASE_STATION_NO_RESPONSE' };
       const succeeded = { devices: 'VARIOUS', reason: 'SLEEP_MODE_ENABLED' };
@@ -317,30 +321,39 @@ describe('power-off event producers', () => {
     }
   );
 
-  it.each(['handleSleepModeEnable', 'handleSleepModeDisable', 'handleSleepPreparation'] as const)(
-    '%s keeps a successful base-station-only event',
-    async (method) => {
-      const log = new EventLogService();
-      const service = caller(SleepDevicePowerAutomationsService.prototype, {
-        config: AUTOMATION_CONFIGS_DEFAULT.DEVICE_POWER_AUTOMATIONS,
-        appSettings: { settingsSync: APP_SETTINGS_DEFAULT },
-        deviceManager: {
-          getDevicesForSelection: vi
-            .fn()
-            .mockResolvedValueOnce({
-              ovrDevices: [],
-              lighthouseDevices: [{ id: 'BASE', powerState: 'on' }],
-            })
-            .mockResolvedValue({ ovrDevices: [], lighthouseDevices: [], knownDevices: [] }),
-        },
-        deviceControl: { turnOffDevices: async () => [] },
-        lighthouse: { deviceNeedsIdentifier: () => false, setPowerState: vi.fn(async () => true) },
-        eventLog: log,
-      });
-      await service[method]();
-      expect((await firstValueFrom(log.eventLog)).logs).toMatchObject([{ devices: 'VARIOUS' }]);
-    }
-  );
+  it.each([
+    ['handleSleepModeEnable', 'SLEEP_MODE_ENABLED'],
+    ['handleSleepModeDisable', 'SLEEP_MODE_DISABLED'],
+    ['handleSleepPreparation', 'SLEEP_PREPARATION'],
+  ] as const)('%s keeps a successful base-station-only event', async (method, reason) => {
+    const log = new EventLogService();
+    const service = caller(SleepDevicePowerAutomationsService.prototype, {
+      config: AUTOMATION_CONFIGS_DEFAULT.DEVICE_POWER_AUTOMATIONS,
+      appSettings: { settingsSync: APP_SETTINGS_DEFAULT },
+      deviceManager: {
+        getDevicesForSelection: vi
+          .fn()
+          .mockResolvedValueOnce({
+            ovrDevices: [],
+            lighthouseDevices: [{ id: 'BASE', powerState: 'on' }],
+          })
+          .mockResolvedValue({ ovrDevices: [], lighthouseDevices: [], knownDevices: [] }),
+      },
+      deviceControl: { turnOffDevices: async () => [] },
+      lighthouse: { deviceNeedsIdentifier: () => false, setPowerState: vi.fn(async () => true) },
+      eventLog: log,
+    });
+    await service[method]();
+    expect((await firstValueFrom(log.eventLog)).logs).toEqual([
+      {
+        id: expect.any(String),
+        type: 'turnedOffOpenVRDevices',
+        reason,
+        devices: 'VARIOUS',
+        time: expect.any(Number),
+      },
+    ]);
+  });
 
   it.each([true, false])(
     'sleep mode disable logs a base station turned on only when it reached on (%s)',
@@ -365,8 +378,17 @@ describe('power-off event producers', () => {
       });
       await service['handleSleepModeDisable']();
       const logs = (await firstValueFrom(log.eventLog)).logs;
-      expect(logs).toMatchObject([{ type: 'lighthouseSetPowerState', state: 'on' }]);
-      expect(logs[0].failure).toBe(reached ? undefined : 'BASE_STATION_NO_RESPONSE');
+      expect(logs).toEqual([
+        {
+          id: expect.any(String),
+          type: 'lighthouseSetPowerState',
+          reason: 'SLEEP_MODE_DISABLED',
+          devices: 'SINGLE',
+          state: 'on',
+          ...(reached ? {} : { failure: 'BASE_STATION_NO_RESPONSE' }),
+          time: expect.any(Number),
+        },
+      ]);
     }
   );
 
@@ -401,9 +423,22 @@ describe('power-off event producers', () => {
     expect((await firstValueFrom(log.eventLog)).logs).toEqual([]);
     finish([controller]);
     await pending;
-    expect((await firstValueFrom(log.eventLog)).logs).toMatchObject([
-      { type: 'turnedOffOpenVRDevices', devices: 'VARIOUS', failure: 'BASE_STATION_NO_RESPONSE' },
-      { type: 'turnedOffOpenVRDevices', devices: 'VARIOUS', reason },
+    expect((await firstValueFrom(log.eventLog)).logs).toEqual([
+      {
+        id: expect.any(String),
+        type: 'turnedOffOpenVRDevices',
+        devices: 'VARIOUS',
+        reason,
+        failure: 'BASE_STATION_NO_RESPONSE',
+        time: expect.any(Number),
+      },
+      {
+        id: expect.any(String),
+        type: 'turnedOffOpenVRDevices',
+        devices: 'VARIOUS',
+        reason,
+        time: expect.any(Number),
+      },
     ]);
   });
 
@@ -530,10 +565,22 @@ describe('power-off event producers', () => {
     await vi.advanceTimersByTimeAsync(0);
     if (!source.startsWith('sleep'))
       expect(record.mock.calls[0].slice(0, 2)).toEqual([dispatched, reason]);
-    // the sleep automations also log the tracker that did not turn off
-    expect((await firstValueFrom(log.eventLog)).logs).toMatchObject([
-      ...(source.startsWith('sleep') ? [{ devices: 'VARIOUS', reason, failure: 'UNKNOWN' }] : []),
+    expect((await firstValueFrom(log.eventLog)).logs).toEqual([
+      ...(source.startsWith('sleep')
+        ? [
+            {
+              id: expect.any(String),
+              type: 'turnedOffOpenVRDevices',
+              devices: 'VARIOUS',
+              reason,
+              failure: 'UNKNOWN',
+              time: expect.any(Number),
+            },
+          ]
+        : []),
       {
+        id: expect.any(String),
+        type: 'turnedOffOpenVRDevices',
         devices: source.startsWith('sleep')
           ? 'VARIOUS'
           : source === 'all' || source === 'oscAll'
@@ -542,6 +589,8 @@ describe('power-off event producers', () => {
               ? 'TRACKER'
               : 'CONTROLLER',
         reason,
+        ...(source === 'battery' ? { batteryThreshold: 20 } : {}),
+        time: expect.any(Number),
       },
     ]);
   });

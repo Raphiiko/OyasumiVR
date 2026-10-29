@@ -150,22 +150,29 @@ describe('OpenVR input session reset', () => {
         {} as ConstructorParameters<typeof SystemMicMuteAutomationService>[7]
       );
       mic['config'] = configs.SYSTEM_MIC_MUTE_AUTOMATIONS;
-      const setMute = vi.spyOn(mic, 'setMute').mockResolvedValue(null);
+      let pressMute = Promise.withResolvers<void>();
+      const setMute = vi.spyOn(mic, 'setMute').mockImplementation(async (mute: boolean) => {
+        if (!mute) pressMute.resolve();
+        return null;
+      });
       mic['handleControllerBinding']();
       await Promise.resolve();
       setMute.mockClear();
 
       emit(OVRInputEventAction.MuteMicrophone);
-      await vi.waitFor(() => expect(setMute).toHaveBeenCalledWith(false));
+      await pressMute.promise;
+      expect(setMute).toHaveBeenCalledWith(false);
       setMute.mockClear();
       status.next('INACTIVE');
       await Promise.resolve();
       await Promise.resolve();
       expect(setMute.mock.calls).toEqual(behavior === 'PUSH_TO_TALK' ? [[true]] : []);
       setMute.mockClear();
+      pressMute = Promise.withResolvers<void>();
       status.next('INITIALIZED');
       emit(OVRInputEventAction.MuteMicrophone);
-      await vi.waitFor(() => expect(setMute).toHaveBeenCalledWith(false));
+      await pressMute.promise;
+      expect(setMute.mock.calls).toEqual([[false]]);
     }
   );
 });

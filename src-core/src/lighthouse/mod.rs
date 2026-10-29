@@ -1023,7 +1023,7 @@ async fn reset() {
 mod tests {
     use super::*;
 
-    #[tokio::test]
+    #[tokio::test(start_paused = true)]
     #[ignore = "requires an enabled Bluetooth adapter"]
     async fn scan_windows_reuse_adapter_and_clear_results() {
         *MANAGER.lock().await = Some(Manager::new().await.unwrap());
@@ -1031,13 +1031,12 @@ mod tests {
         let marker = PeripheralId::from(btleplug::api::BDAddr::from([2, 0, 0, 0, 0, 1]));
 
         for _ in 0..3 {
-            let peripheral = adapter.add_peripheral(&marker).await.unwrap();
-            let reused = scan_adapter().await.unwrap();
-            assert!(reused.peripheral(&marker).await.is_ok());
-            scan_for_devices(Duration::from_millis(250)).await;
+            scan_for_devices(Duration::from_millis(1)).await;
             assert!(ADAPTER.lock().await.is_some());
             assert!(adapter.peripheral(&marker).await.is_err());
-            assert_eq!(peripheral.id(), marker);
+            adapter.add_peripheral(&marker).await.unwrap();
+            let cached = scan_adapter().await.unwrap();
+            assert!(cached.peripheral(&marker).await.is_ok());
         }
 
         *ADAPTER.lock().await = None;

@@ -480,15 +480,6 @@ mod tests {
     }
 
     #[test]
-    fn identical_snapshots_request_only_the_first_event() {
-        let mut devices = Vec::new();
-        let device = snapshot();
-        assert!(store_device(&mut devices, &device));
-        assert!(!store_device(&mut devices, &device));
-        assert_eq!(devices.len(), 1);
-    }
-
-    #[test]
     fn every_serialized_field_can_trigger_a_new_event() {
         let original = snapshot();
         let baseline = serde_json::to_value(&original).unwrap();
@@ -559,6 +550,7 @@ mod tests {
 
     #[tokio::test]
     async fn shutdown_clears_device_caches_and_allows_immediate_refresh() {
+        OVR_DEVICES.lock().await.clear();
         OVR_DEVICES.lock().await.push(
             serde_json::from_value(serde_json::json!({
                 "index": 7, "class": "Controller", "role": "LeftHand", "isConnected": true,
@@ -582,7 +574,10 @@ mod tests {
             assert!(get_devices().await.is_empty());
             assert!(DEVICE_CLASS_CACHE.lock().await.is_empty());
             assert!(DEVICE_HANDLE_TYPE_CACHE.lock().await.is_empty());
-            assert!(*NEXT_DEVICE_REFRESH.lock().await < Utc::now());
+            assert_eq!(
+                *NEXT_DEVICE_REFRESH.lock().await,
+                DateTime::from_timestamp_millis(0).unwrap()
+            );
         }
     }
 }

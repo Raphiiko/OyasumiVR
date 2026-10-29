@@ -153,6 +153,10 @@ git = "https://github.com/Raphiiko/oyasumivr_oscquery.git"
 rev = "9fe5ae00331ceb39b359bddef87b9a882de0e8cd"
 # path = "../../oyasumivr_oscquery"
 
+[dev-dependencies]
+filetime_creation = "0.2.0"
+tokio = { version = "1.53.1", features = ["test-util"] }
+
 [dependencies.tauri]
 version = "2.12.4"
 features = ["tray-icon", "image-png"]

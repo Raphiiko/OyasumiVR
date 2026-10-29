@@ -1,6 +1,6 @@
 import { invoke } from '@tauri-apps/api/core';
 import { BehaviorSubject, firstValueFrom, ReplaySubject, Subject } from 'rxjs';
-import { describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { AUTOMATION_CONFIGS_DEFAULT } from '../../models/automations';
 import type { SteamFrameFadeEnded, SteamFrameFadeOutcome } from '../../models/steam-frame';
 import { SteamFrameBrightnessFade } from '../steam-frame/steam-frame-fade-task';
@@ -11,6 +11,11 @@ vi.mock('@tauri-apps/api/core', () => ({ invoke: vi.fn(async () => undefined) })
 vi.mock('@tauri-apps/api/event', () => ({ listen: vi.fn(async () => () => {}) }));
 vi.mock('@tauri-apps/plugin-log', () => ({ info: vi.fn(), warn: vi.fn() }));
 type Dependencies = ConstructorParameters<typeof SimpleBrightnessControlService>;
+
+const settleMicrotasks = async () => {
+  await Promise.resolve();
+  await Promise.resolve();
+};
 
 async function setup(advancedMode = false, pushesBrightnessChanges = false) {
   const configs = new BehaviorSubject({
@@ -65,8 +70,8 @@ describe('simple brightness mode changes', () => {
     await h.software.setBrightness(80);
     h.software.setBrightness.mockClear();
     h.mode(false);
-    await Promise.resolve();
     h.mode(false);
+    await settleMicrotasks();
     expect(h.software.setBrightness).toHaveBeenCalledExactlyOnceWith(40, {
       cancelActiveTransition: true,
       logReason: null,
@@ -105,15 +110,16 @@ describe('simple brightness mode changes', () => {
   it('preserves hardware availability mapping in simple mode', async () => {
     const h = await setup();
     await h.service.setBrightness(40);
+    h.software.setBrightness.mockClear();
     h.index(true);
-    await new Promise((resolve) => setTimeout(resolve, 0));
-    expect(h.software.setBrightness).toHaveBeenLastCalledWith(100, expect.anything());
-    expect(h.hardware.setBrightness).toHaveBeenLastCalledWith(40, expect.anything());
+    await settleMicrotasks();
+    expect(h.software.setBrightness).toHaveBeenCalledExactlyOnceWith(100, expect.anything());
+    expect(h.hardware.setBrightness).toHaveBeenCalledExactlyOnceWith(40, expect.anything());
     h.mode(true);
     h.hardware.setBrightness.mockClear();
     h.software.setBrightness.mockClear();
     h.index(false);
-    await Promise.resolve();
+    await settleMicrotasks();
     expect(h.software.setBrightness).not.toHaveBeenCalled();
     expect(h.hardware.setBrightness).not.toHaveBeenCalled();
   });
@@ -123,7 +129,7 @@ describe('simple brightness mode changes', () => {
     async (returnToSimple) => {
       const h = await setup();
       h.index(true);
-      await new Promise((resolve) => setTimeout(resolve, 0));
+      await settleMicrotasks();
       await h.service.setBrightness(40);
       h.mode(true);
       let finish!: () => void;
@@ -131,24 +137,26 @@ describe('simple brightness mode changes', () => {
         () => new Promise<void>((resolve) => (finish = resolve))
       );
       h.mode(false);
-      await new Promise((resolve) => setTimeout(resolve, 0));
+      await settleMicrotasks();
       h.mode(true);
-      await h.hardware.setBrightness(80);
+      await h.service.setBrightness(80);
       if (returnToSimple) {
         h.mode(false);
-        await new Promise((resolve) => setTimeout(resolve, 0));
+        await settleMicrotasks();
       }
       h.hardware.setBrightness.mockClear();
       finish();
-      await new Promise((resolve) => setTimeout(resolve, 0));
+      await settleMicrotasks();
       expect(h.hardware.setBrightness).not.toHaveBeenCalled();
+      expect(h.service.brightness).toBe(80);
     }
   );
 
   it('discards a restore that was waiting for hardware bounds', async () => {
     const h = await setup();
     h.index(true);
-    await new Promise((resolve) => setTimeout(resolve, 0));
+    await settleMicrotasks();
+    await h.service.setBrightness(40);
     h.mode(true);
     const bounds = new Subject<number[]>();
     h.hardware.brightnessBounds = bounds as BehaviorSubject<number[]>;
@@ -156,15 +164,28 @@ describe('simple brightness mode changes', () => {
     h.hardware.setBrightness.mockClear();
     h.mode(false);
     h.mode(true);
+    h.index(false);
+    await h.service.setBrightness(80);
+    h.software.setBrightness.mockClear();
     bounds.next([20, 100]);
-    await new Promise((resolve) => setTimeout(resolve, 0));
+    await settleMicrotasks();
     expect(h.software.setBrightness).not.toHaveBeenCalled();
     expect(h.hardware.setBrightness).not.toHaveBeenCalled();
+    expect(h.service.brightness).toBe(80);
   });
 });
 
 describe('simple brightness with a device that reports its brightness', () => {
-  const settle = () => new Promise((resolve) => setTimeout(resolve, 0));
+  beforeEach(() => {
+    vi.useFakeTimers();
+  });
+
+  afterEach(() => {
+    vi.clearAllTimers();
+    vi.useRealTimers();
+  });
+
+  const settle = () => vi.advanceTimersByTimeAsync(0);
 
   async function reporting() {
     const h = await setup(false, true);
@@ -248,7 +269,7 @@ describe('simple brightness with a device that reports its brightness', () => {
   it('runs a PC transition for a pushing device that is not a Frame', async () => {
     const h = await reporting();
     h.service.transitionBrightness(50, 200, { logReason: 'AT_SUNSET' });
-    await new Promise((resolve) => setTimeout(resolve, 120));
+    await vi.advanceTimersByTimeAsync(120);
     expect(h.hardware.setBrightness.mock.calls.length).toBeGreaterThan(2);
     expect(invoke).not.toHaveBeenCalledWith('steam_frame_fade', expect.anything());
   });
@@ -265,7 +286,16 @@ describe('simple brightness with a device that reports its brightness', () => {
 });
 
 describe('simple brightness fading a Steam Frame', () => {
-  const wait = (ms = 0) => new Promise((resolve) => setTimeout(resolve, ms));
+  beforeEach(() => {
+    vi.useFakeTimers();
+  });
+
+  afterEach(() => {
+    vi.clearAllTimers();
+    vi.useRealTimers();
+  });
+
+  const wait = (ms = 0) => vi.advanceTimersByTimeAsync(ms);
 
   async function frame() {
     const h = await setup();

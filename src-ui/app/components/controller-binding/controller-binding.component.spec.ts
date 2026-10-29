@@ -72,8 +72,13 @@ describe('ControllerBindingComponent', () => {
     vi.useRealTimers();
   });
 
-  it('keeps polling after a failed query and shows the next valid response', async () => {
-    invoke.mockResolvedValueOnce(null).mockResolvedValue([binding]);
+  it.each([
+    ['a null result', null],
+    ['a rejection', 'OPENVR_NOT_INITIALIZED'],
+  ])('keeps polling after %s and shows the next valid response', async (_failureKind, failure) => {
+    if (failure === null) invoke.mockResolvedValueOnce(null);
+    else invoke.mockRejectedValueOnce(failure);
+    invoke.mockResolvedValue([binding]);
     const component = createComponent();
 
     component.ngOnInit();
@@ -83,20 +88,6 @@ describe('ControllerBindingComponent', () => {
     expect(component['error']).toBe('LOOKUP_FAILED');
 
     await vi.advanceTimersByTimeAsync(1000);
-    expect(invoke).toHaveBeenCalledTimes(2);
-    expect(component.activeBinding).toEqual(binding);
-    expect(component['error']).toBeUndefined();
-  });
-
-  it('keeps polling after a rejected query', async () => {
-    invoke.mockRejectedValueOnce('OPENVR_NOT_INITIALIZED').mockResolvedValue([binding]);
-    const component = createComponent();
-
-    component.ngOnInit();
-    await vi.advanceTimersByTimeAsync(0);
-    expect(component['error']).toBe('LOOKUP_FAILED');
-    await vi.advanceTimersByTimeAsync(1000);
-
     expect(invoke).toHaveBeenCalledTimes(2);
     expect(component.activeBinding).toEqual(binding);
     expect(component['error']).toBeUndefined();

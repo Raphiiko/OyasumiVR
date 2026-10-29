@@ -216,6 +216,22 @@ mod tests {
             }
         }
         assert_eq!(detector.events.len(), 28125);
+        for (window_ms, event_count) in [
+            (900000, 28125),
+            (600000, 18750),
+            (300000, 9375),
+            (60000, 1875),
+            (10000, 313),
+        ] {
+            assert_eq!(
+                detector
+                    .events
+                    .iter()
+                    .filter(|event| event.timestamp >= now - window_ms)
+                    .count(),
+                event_count
+            );
+        }
         detector.recompute_windows();
         let distances = [
             detector.distance_in_last_15_minutes,
@@ -244,6 +260,7 @@ mod tests {
     fn report_gate_keeps_the_strict_one_second_boundary_without_catching_up() {
         let mut detector = SleepDetector::new();
         assert!(detector.take_report_slot(10000));
+        assert_eq!(detector.next_state_report, 11000);
         for now in 10000..=11000 {
             assert!(!detector.take_report_slot(now));
         }
@@ -260,6 +277,15 @@ mod tests {
         let before = get_time();
         detector.next_state_report = u128::MAX;
         detector.distance_in_last_15_minutes = 123.0;
+        detector.distance_in_last_10_minutes = 124.0;
+        detector.distance_in_last_5_minutes = 125.0;
+        detector.distance_in_last_1_minute = 126.0;
+        detector.distance_in_last_10_seconds = 127.0;
+        detector.rotation_in_last_15_minutes = 223.0;
+        detector.rotation_in_last_10_minutes = 224.0;
+        detector.rotation_in_last_5_minutes = 225.0;
+        detector.rotation_in_last_1_minute = 226.0;
+        detector.rotation_in_last_10_seconds = 227.0;
         detector.last_log = before - 60001;
         detector.events.push(PoseEvent {
             x: 99.0,
@@ -283,6 +309,25 @@ mod tests {
         assert_eq!(detector.events.len(), 2);
         assert_eq!(detector.last_log, detector.events[1].timestamp);
         assert_eq!(detector.start_time, start_time);
-        assert_eq!(detector.distance_in_last_15_minutes, 123.0);
+        assert_eq!(
+            [
+                detector.distance_in_last_15_minutes,
+                detector.distance_in_last_10_minutes,
+                detector.distance_in_last_5_minutes,
+                detector.distance_in_last_1_minute,
+                detector.distance_in_last_10_seconds,
+            ],
+            [123.0, 124.0, 125.0, 126.0, 127.0]
+        );
+        assert_eq!(
+            [
+                detector.rotation_in_last_15_minutes,
+                detector.rotation_in_last_10_minutes,
+                detector.rotation_in_last_5_minutes,
+                detector.rotation_in_last_1_minute,
+                detector.rotation_in_last_10_seconds,
+            ],
+            [223.0, 224.0, 225.0, 226.0, 227.0]
+        );
     }
 }
