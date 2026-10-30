@@ -1,10 +1,4 @@
-import {
-  ChangeDetectorRef,
-  Component,
-  DestroyRef,
-  OnInit,
-  ChangeDetectionStrategy,
-} from '@angular/core';
+import { ChangeDetectorRef, Component, DestroyRef, OnInit } from '@angular/core';
 import {
   AUTOMATION_CONFIGS_DEFAULT,
   ShutdownAutomationsConfig,
@@ -18,7 +12,6 @@ import { fade, vshrink } from '../../../../../../utils/animations';
   selector: 'app-shutdown-automations-triggers-tab',
   templateUrl: './shutdown-automations-triggers-tab.component.html',
   animations: [fade(), vshrink()],
-  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false,
 })
 export class ShutdownAutomationsTriggersTabComponent implements OnInit {

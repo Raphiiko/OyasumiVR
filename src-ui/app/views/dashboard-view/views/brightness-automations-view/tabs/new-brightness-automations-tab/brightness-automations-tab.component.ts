@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { BrightnessEvent } from '../../../../../../models/automations';
 import { triggerChildren } from '../../../../../../utils/animations';
 
@@ -14,7 +14,6 @@ export interface BrightnessEventViewModel {
   templateUrl: './brightness-automations-tab.component.html',
   styleUrls: ['./brightness-automations-tab.component.scss'],
   animations: [triggerChildren()],
-  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false,
 })
 export class BrightnessAutomationsTabComponent implements OnInit {

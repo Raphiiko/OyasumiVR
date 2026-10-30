@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, inject, output } from '@angular/core';
+import { Component, computed, inject, output } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
 import {
@@ -36,7 +36,6 @@ const ICONS: Record<AutomationId, string> = {
   imports: [TranslocoPipe],
   templateUrl: './automation-config.html',
   styleUrl: './automation-config.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AutomationConfig {
   private readonly ipc = inject(IpcService);

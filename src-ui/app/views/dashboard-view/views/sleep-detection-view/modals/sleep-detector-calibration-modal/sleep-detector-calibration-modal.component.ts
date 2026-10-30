@@ -1,11 +1,4 @@
-import {
-  ChangeDetectorRef,
-  Component,
-  HostBinding,
-  inject,
-  OnInit,
-  ChangeDetectionStrategy,
-} from '@angular/core';
+import { ChangeDetectorRef, Component, HostBinding, inject, OnInit } from '@angular/core';
 import { BaseModalComponent } from 'src-ui/app/components/base-modal/base-modal.component';
 import { fade, fadeUp, triggerChildren, vshrink } from '../../../../../../utils/animations';
 import { OpenVRService } from '../../../../../../services/openvr.service';
@@ -24,7 +17,6 @@ export interface SleepDetectorCalibrationModalOutputModel {
   templateUrl: './sleep-detector-calibration-modal.component.html',
   styleUrls: ['./sleep-detector-calibration-modal.component.scss'],
   animations: [fadeUp(), fade(), triggerChildren(), vshrink()],
-  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false,
 })
 export class SleepDetectorCalibrationModalComponent

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
+import { Component, computed, input, output } from '@angular/core';
 import { isEqual } from 'lodash';
 
 /** An undo icon that shows while `value` deeply differs from `defaultValue`. */
@@ -6,7 +6,6 @@ import { isEqual } from 'lodash';
   selector: 'app-reset-to-default',
   templateUrl: './reset-to-default.component.html',
   styleUrls: ['./reset-to-default.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false,
 })
 export class ResetToDefaultComponent {

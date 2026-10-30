@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy, input, model } from '@angular/core';
+import { Component, OnInit, input, model } from '@angular/core';
 import { TString } from '../../models/translatable-string';
 import { fadeDown, fadeUp } from '../../utils/animations';
 import { SafeHtml } from '@angular/platform-browser';
@@ -16,7 +16,6 @@ export interface SelectBoxItem<T = string> {
   templateUrl: './select-box.component.html',
   styleUrls: ['./select-box.component.scss'],
   animations: [fadeDown(), fadeUp()],
-  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false,
 })
 export class SelectBoxComponent implements OnInit {

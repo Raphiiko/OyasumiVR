@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 import { TranslocoPipe } from '@jsverse/transloco';
 import { throttle } from 'lodash';
 import { IpcService } from '../../ipc/ipc.service';
@@ -9,7 +9,6 @@ import { BrightnessSlider } from '../brightness-slider/brightness-slider';
   templateUrl: './brightness-sliders.html',
   styleUrl: './brightness-sliders.scss',
   imports: [BrightnessSlider, TranslocoPipe],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BrightnessSliders {
   private readonly ipc = inject(IpcService);

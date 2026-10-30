@@ -7,21 +7,13 @@ import {
 
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { AutomationConfigService } from '../../../../../services/automation-config.service';
-import {
-  ChangeDetectorRef,
-  Component,
-  DestroyRef,
-  inject,
-  OnInit,
-  ChangeDetectionStrategy,
-} from '@angular/core';
+import { ChangeDetectorRef, Component, DestroyRef, inject, OnInit } from '@angular/core';
 import { ModalService } from '../../../../../services/modal.service';
 import { TranslocoService } from '@jsverse/transloco';
 import { OVRDeviceClass } from '../../../../../models/ovr-device';
 
 @Component({
   template: '',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false,
 })
 export abstract class SleepDetectionTabComponent implements OnInit {

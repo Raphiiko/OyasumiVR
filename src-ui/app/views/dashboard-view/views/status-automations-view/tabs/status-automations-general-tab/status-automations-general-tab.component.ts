@@ -1,10 +1,4 @@
-import {
-  ChangeDetectorRef,
-  Component,
-  DestroyRef,
-  OnInit,
-  ChangeDetectionStrategy,
-} from '@angular/core';
+import { ChangeDetectorRef, Component, DestroyRef, OnInit } from '@angular/core';
 import {
   AUTOMATION_CONFIGS_DEFAULT,
   ChangeStatusGeneralEventsAutomationConfig,
@@ -30,7 +24,6 @@ import { vshrink } from 'src-ui/app/utils/animations';
   templateUrl: './status-automations-general-tab.component.html',
   styleUrls: ['./status-automations-general-tab.component.scss'],
   standalone: false,
-  changeDetection: ChangeDetectionStrategy.OnPush,
   animations: [vshrink()],
 })
 export class StatusAutomationsGeneralTabComponent implements OnInit {

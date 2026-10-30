@@ -1,4 +1,4 @@
-import { Component, DestroyRef, ChangeDetectionStrategy } from '@angular/core';
+import { Component } from '@angular/core';
 import { fadeUp, hshrink, vshrink } from '../../utils/animations';
 import { BaseModalComponent } from '../base-modal/base-modal.component';
 import { ModalOptions } from '../../services/modal.service';
@@ -13,7 +13,6 @@ import { CCTControlService } from '../../services/cct-control/cct-control.servic
   templateUrl: './cct-control-modal.component.html',
   styleUrls: ['./cct-control-modal.component.scss'],
   animations: [fadeUp(), vshrink(), hshrink()],
-  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false,
 })
 export class CCTControlModalComponent extends BaseModalComponent<void, void> {
@@ -22,15 +21,14 @@ export class CCTControlModalComponent extends BaseModalComponent<void, void> {
   constructor(
     protected cctControl: CCTControlService,
     protected router: Router,
-    public automationConfigService: AutomationConfigService,
-    private destroyRef: DestroyRef
+    public automationConfigService: AutomationConfigService
   ) {
     super();
     this.setCCT
       .pipe(
         throttleTime(1000 / 30, asyncScheduler, { leading: true, trailing: true }),
         switchMap((cct) => this.cctControl.setCCT(cct)),
-        takeUntilDestroyed(this.destroyRef)
+        takeUntilDestroyed()
       )
       .subscribe();
   }

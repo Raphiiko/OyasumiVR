@@ -1,10 +1,4 @@
-import {
-  ChangeDetectorRef,
-  Component,
-  DestroyRef,
-  OnInit,
-  ChangeDetectionStrategy,
-} from '@angular/core';
+import { ChangeDetectorRef, Component, DestroyRef, OnInit } from '@angular/core';
 import { BaseModalComponent } from '../base-modal/base-modal.component';
 import { MqttService } from '../../services/mqtt/mqtt.service';
 import { AppSettingsService } from '../../services/app-settings.service';
@@ -20,7 +14,6 @@ import { error } from '@tauri-apps/plugin-log';
   templateUrl: './mqtt-config-modal.component.html',
   styleUrls: ['./mqtt-config-modal.component.scss'],
   animations: [fadeUp(), hshrink(), vshrink()],
-  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false,
 })
 export class MqttConfigModalComponent extends BaseModalComponent<void, void> implements OnInit {

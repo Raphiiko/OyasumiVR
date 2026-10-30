@@ -1,10 +1,4 @@
-import {
-  ChangeDetectorRef,
-  Component,
-  DestroyRef,
-  OnInit,
-  ChangeDetectionStrategy,
-} from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { fadeUp, hshrink, vshrink } from '../../utils/animations';
 import { BaseModalComponent } from '../base-modal/base-modal.component';
 import { ModalOptions } from '../../services/modal.service';
@@ -21,7 +15,6 @@ import { Router } from '@angular/router';
   templateUrl: './brightness-control-modal.component.html',
   styleUrls: ['./brightness-control-modal.component.scss'],
   animations: [fadeUp(), vshrink(), hshrink()],
-  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false,
 })
 export class BrightnessControlModalComponent
@@ -43,7 +36,6 @@ export class BrightnessControlModalComponent
     protected simpleBrightnessControl: SimpleBrightnessControlService,
     protected router: Router,
     public automationConfigService: AutomationConfigService,
-    private destroyRef: DestroyRef,
     private cdr: ChangeDetectorRef
   ) {
     super();
@@ -79,21 +71,21 @@ export class BrightnessControlModalComponent
       .pipe(
         throttleTime(1000 / 30, asyncScheduler, { leading: true, trailing: true }),
         switchMap((percentage) => this.hardwareBrightnessControl.setBrightness(percentage)),
-        takeUntilDestroyed(this.destroyRef)
+        takeUntilDestroyed()
       )
       .subscribe();
     this.setSoftwareBrightness
       .pipe(
         throttleTime(1000 / 30, asyncScheduler, { leading: true, trailing: true }),
         switchMap((percentage) => this.softwareBrightnessControl.setBrightness(percentage)),
-        takeUntilDestroyed(this.destroyRef)
+        takeUntilDestroyed()
       )
       .subscribe();
     this.setSimpleBrightness
       .pipe(
         throttleTime(1000 / 30, asyncScheduler, { leading: true, trailing: true }),
         switchMap((percentage) => this.simpleBrightnessControl.setBrightness(percentage)),
-        takeUntilDestroyed(this.destroyRef)
+        takeUntilDestroyed()
       )
       .subscribe();
   }

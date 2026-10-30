@@ -5,7 +5,6 @@ import {
   inject,
   OnInit,
   TrackByFunction,
-  ChangeDetectionStrategy,
 } from '@angular/core';
 import { BaseModalComponent } from 'src-ui/app/components/base-modal/base-modal.component';
 import { fade, fadeUp, vshrink } from 'src-ui/app/utils/animations';
@@ -63,7 +62,6 @@ export interface LighthouseV1IdWizardModalOutputModel {}
       ]),
     ]),
   ],
-  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false,
 })
 export class LighthouseV1IdWizardModalComponent

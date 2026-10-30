@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy, inject } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { BaseModalComponent } from 'src-ui/app/components/base-modal/base-modal.component';
 import { SleepingAnimationPreset } from '../../models/sleeping-animation-presets';
 import { ExternalLinkService } from '../../services/external-link.service';
@@ -13,7 +13,6 @@ interface SleepingAnimationPresetModalInputModel {
   templateUrl: './sleeping-animation-preset-modal.component.html',
   styleUrls: ['./sleeping-animation-preset-modal.component.scss'],
   animations: [fadeUp()],
-  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false,
 })
 export class SleepingAnimationPresetModalComponent

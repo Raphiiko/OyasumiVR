@@ -4,7 +4,6 @@ import {
   DestroyRef,
   OnDestroy,
   OnInit,
-  ChangeDetectionStrategy,
   effect,
   model,
   output,
@@ -42,7 +41,6 @@ interface ValidationError {
   templateUrl: './osc-script-simple-editor.component.html',
   styleUrls: ['./osc-script-simple-editor.component.scss'],
   animations: [vshrink(), noop(), hshrink(), fade()],
-  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false,
 })
 export class OscScriptSimpleEditorComponent implements OnInit, OnDestroy {

@@ -1,11 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  DestroyRef,
-  inject,
-  OnInit,
-  signal,
-} from '@angular/core';
+import { Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
 import { TranslocoPipe } from '@jsverse/transloco';
 
 @Component({
@@ -13,7 +6,6 @@ import { TranslocoPipe } from '@jsverse/transloco';
   imports: [TranslocoPipe],
   templateUrl: './splash-overlay.html',
   styleUrl: './splash-overlay.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SplashOverlay implements OnInit {
   protected readonly ready = signal(false);

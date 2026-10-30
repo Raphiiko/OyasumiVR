@@ -5,7 +5,6 @@ import {
   OnDestroy,
   OnInit,
   SimpleChanges,
-  ChangeDetectionStrategy,
   input,
 } from '@angular/core';
 import { hshrink, noop } from '../../utils/animations';
@@ -19,7 +18,6 @@ import { Subscription } from 'rxjs';
   templateUrl: './hotkey-selector.component.html',
   styleUrls: ['./hotkey-selector.component.scss'],
   animations: [hshrink(), noop()],
-  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false,
 })
 export class HotkeySelectorComponent implements OnChanges, OnDestroy, OnInit {

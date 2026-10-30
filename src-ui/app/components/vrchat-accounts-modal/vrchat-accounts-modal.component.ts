@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
 import { combineLatest, firstValueFrom, map, Observable } from 'rxjs';
 import { TranslocoService } from '@jsverse/transloco';
 import { BaseModalComponent } from '../base-modal/base-modal.component';
@@ -17,7 +17,6 @@ import { fadeUp, hshrink } from '../../utils/animations';
   templateUrl: './vrchat-accounts-modal.component.html',
   styleUrls: ['./vrchat-accounts-modal.component.scss'],
   animations: [fadeUp(), hshrink()],
-  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false,
 })
 export class VRChatAccountsModalComponent extends BaseModalComponent<void, void> {

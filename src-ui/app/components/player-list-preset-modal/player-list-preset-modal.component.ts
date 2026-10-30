@@ -1,10 +1,4 @@
-import {
-  ChangeDetectorRef,
-  Component,
-  DestroyRef,
-  OnInit,
-  ChangeDetectionStrategy,
-} from '@angular/core';
+import { ChangeDetectorRef, Component, DestroyRef, OnInit } from '@angular/core';
 import { fadeUp, vshrink } from '../../utils/animations';
 import { BaseModalComponent } from '../base-modal/base-modal.component';
 import { PlayerListPreset } from '../../models/player-list-preset';
@@ -28,7 +22,6 @@ export interface PlayerListPresetModalOutputModel {
   templateUrl: './player-list-preset-modal.component.html',
   styleUrls: ['./player-list-preset-modal.component.scss'],
   animations: [fadeUp(), vshrink()],
-  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false,
 })
 export class PlayerListPresetModalComponent

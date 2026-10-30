@@ -6,7 +6,6 @@ import {
   ElementRef,
   OnInit,
   ViewChild,
-  ChangeDetectionStrategy,
 } from '@angular/core';
 import { combineLatest, firstValueFrom, interval, map } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -20,7 +19,6 @@ import { AutomationConfigService } from '../../../services/automation-config.ser
   selector: 'app-debug-sleep-detection-debugger',
   templateUrl: './debug-sleep-detection-debugger.component.html',
   styleUrls: ['./debug-sleep-detection-debugger.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false,
 })
 export class DebugSleepDetectionDebuggerComponent implements OnInit, AfterViewInit {

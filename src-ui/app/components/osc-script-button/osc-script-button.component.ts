@@ -1,11 +1,4 @@
-import {
-  ChangeDetectorRef,
-  Component,
-  OnInit,
-  ChangeDetectionStrategy,
-  input,
-  model,
-} from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, input, model } from '@angular/core';
 import { OscScript } from '../../models/osc-script';
 import { filter } from 'rxjs';
 import { ModalService } from 'src-ui/app/services/modal.service';
@@ -15,7 +8,6 @@ import { OscScriptModalComponent } from '../osc-script-modal/osc-script-modal.co
   selector: 'app-osc-script-button',
   templateUrl: './osc-script-button.component.html',
   styleUrls: ['./osc-script-button.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false,
 })
 export class OscScriptButtonComponent implements OnInit {

@@ -1,10 +1,4 @@
-import {
-  ChangeDetectorRef,
-  Component,
-  DestroyRef,
-  OnInit,
-  ChangeDetectionStrategy,
-} from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { fadeUp, hshrink, vshrink } from '../../utils/animations';
 import { BaseModalComponent } from '../base-modal/base-modal.component';
 import { ModalOptions } from '../../services/modal.service';
@@ -19,7 +13,6 @@ import { BigscreenBeyondFanAutomationService } from '../../services/hmd-specific
   templateUrl: './bsb-fan-speed-control-modal.component.html',
   styleUrls: ['./bsb-fan-speed-control-modal.component.scss'],
   animations: [fadeUp(), vshrink(), hshrink()],
-  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false,
 })
 export class BSBFanSpeedControlModalComponent
@@ -34,7 +27,6 @@ export class BSBFanSpeedControlModalComponent
     protected fanControl: BigscreenBeyondFanAutomationService,
     protected router: Router,
     public automationConfigService: AutomationConfigService,
-    private destroyRef: DestroyRef,
     private cdr: ChangeDetectorRef
   ) {
     super();
@@ -45,14 +37,14 @@ export class BSBFanSpeedControlModalComponent
           this.fanSpeedBounds = [config.allowUnsafeFanSpeed ? 0 : 40, 100];
           this.cdr.markForCheck();
         }),
-        takeUntilDestroyed(this.destroyRef)
+        takeUntilDestroyed()
       )
       .subscribe();
     this.setFanSpeed
       .pipe(
         throttleTime(1000 / 30, asyncScheduler, { leading: true, trailing: true }),
         switchMap((percentage) => this.fanControl.setFanSpeed(percentage)),
-        takeUntilDestroyed(this.destroyRef)
+        takeUntilDestroyed()
       )
       .subscribe();
   }

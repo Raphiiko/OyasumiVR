@@ -3,7 +3,6 @@ import {
   Component,
   DestroyRef,
   OnInit,
-  ChangeDetectionStrategy,
   effect,
   input,
   model,
@@ -23,7 +22,6 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
   templateUrl: './device-selector.component.html',
   styleUrls: ['./device-selector.component.scss'],
   animations: [hshrink(), noop()],
-  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false,
 })
 export class DeviceSelectorComponent implements OnInit {

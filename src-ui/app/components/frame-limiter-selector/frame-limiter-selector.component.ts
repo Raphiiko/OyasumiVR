@@ -1,12 +1,4 @@
-import {
-  ChangeDetectorRef,
-  Component,
-  OnInit,
-  DestroyRef,
-  ChangeDetectionStrategy,
-  input,
-  output,
-} from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, DestroyRef, input, output } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { distinctUntilChanged, map } from 'rxjs';
 import { FrameLimitConfigOption, FrameLimitConfigOptions } from 'src-ui/app/models/automations';
@@ -19,7 +11,6 @@ import { vshrink } from 'src-ui/app/utils/animations';
   templateUrl: './frame-limiter-selector.component.html',
   styleUrls: ['./frame-limiter-selector.component.scss'],
   standalone: false,
-  changeDetection: ChangeDetectionStrategy.OnPush,
   animations: [vshrink()],
 })
 export class FrameLimiterSelectorComponent implements OnInit {

@@ -1,13 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  computed,
-  ElementRef,
-  input,
-  model,
-  signal,
-  viewChild,
-} from '@angular/core';
+import { Component, computed, ElementRef, input, model, signal, viewChild } from '@angular/core';
 import { clamp } from 'lodash';
 import { getCSSColorForCCT } from 'src-shared-ts/src/cct-utils';
 
@@ -19,7 +10,6 @@ import { getCSSColorForCCT } from 'src-shared-ts/src/cct-utils';
     '(window:mousemove)': 'onMouseMove($event)',
     '(window:mouseup)': 'stopDragging()',
   },
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ColorTempSlider {
   readonly label = input('');

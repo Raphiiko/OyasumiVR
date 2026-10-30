@@ -1,12 +1,4 @@
-import {
-  ChangeDetectorRef,
-  Component,
-  inject,
-  OnInit,
-  ChangeDetectionStrategy,
-  input,
-  output,
-} from '@angular/core';
+import { ChangeDetectorRef, Component, inject, OnInit, input, output } from '@angular/core';
 import { hshrink } from '../../utils/animations';
 import { LighthouseDevicePowerState, LighthouseDeviceType } from '../../models/lighthouse-device';
 import { DevicePowerAction } from '../device-power-button/device-power-button.component';
@@ -16,7 +8,6 @@ import { DevicePowerAction } from '../device-power-button/device-power-button.co
   templateUrl: './lighthouse-force-state-popover.component.html',
   styleUrls: ['./lighthouse-force-state-popover.component.scss'],
   animations: [hshrink()],
-  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false,
 })
 export class LighthouseForceStatePopoverComponent implements OnInit {

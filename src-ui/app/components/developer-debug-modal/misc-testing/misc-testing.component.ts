@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, input } from '@angular/core';
+import { Component, input } from '@angular/core';
 import { BaseModalComponent } from '../../base-modal/base-modal.component';
 import { SteamService } from 'src-ui/app/services/steam.service';
 
@@ -6,7 +6,6 @@ import { SteamService } from 'src-ui/app/services/steam.service';
   selector: 'app-misc-testing',
   templateUrl: './misc-testing.component.html',
   styleUrls: ['./misc-testing.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false,
 })
 export class MiscTestingComponent {

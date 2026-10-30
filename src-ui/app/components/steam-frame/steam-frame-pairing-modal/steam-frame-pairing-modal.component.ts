@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { openUrl } from '@tauri-apps/plugin-opener';
 import { TranslocoModule } from '@jsverse/transloco';
@@ -66,7 +66,6 @@ const BACK: Partial<Record<SteamFramePage, SteamFramePage>> = {
   imports: [FormsModule, TranslocoModule, IconComponent],
   templateUrl: './steam-frame-pairing-modal.component.html',
   styleUrl: './steam-frame-pairing-modal.component.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SteamFramePairingModalComponent extends BaseModalComponent<void, void> {
   protected readonly enrollment = inject(SteamFrameEnrollmentService);

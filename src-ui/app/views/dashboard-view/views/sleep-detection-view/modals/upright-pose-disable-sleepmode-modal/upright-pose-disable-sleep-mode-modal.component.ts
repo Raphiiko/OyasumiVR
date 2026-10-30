@@ -1,4 +1,4 @@
-import { Component, HostBinding, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, HostBinding, OnInit } from '@angular/core';
 import { AUTOMATION_CONFIGS_DEFAULT } from '../../../../../../models/automations';
 import { BaseModalComponent } from 'src-ui/app/components/base-modal/base-modal.component';
 import { fade, fadeUp, triggerChildren, vshrink } from '../../../../../../utils/animations';
@@ -17,7 +17,6 @@ export interface UprightPoseDisableSleepModeModalOutputModel {
   templateUrl: './upright-pose-disable-sleep-mode-modal.component.html',
   styleUrls: ['./upright-pose-disable-sleep-mode-modal.component.scss'],
   animations: [vshrink(), fadeUp(), fade(), triggerChildren()],
-  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false,
 })
 export class UprightPoseDisableSleepModeModalComponent
