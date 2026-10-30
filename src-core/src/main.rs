@@ -543,6 +543,12 @@ fn on_cron_minute_start(_: &str) {
 fn specta_builder() -> tauri_specta::Builder<Wry> {
     tauri_specta::Builder::<Wry>::new()
         .error_handling(tauri_specta::ErrorHandlingMode::Throw)
+        // JSON.parse turns every integer into a number, whatever its Rust width
+        .dangerously_cast_bigints_to_number()
+        // serde_json sends NaN and infinite floats as null, which the bindings type as number
+        .semantic_types(
+            specta_typescript::semantic::Configuration::empty().enable_lossless_floats(),
+        )
         .commands(tauri_specta::collect_commands![
             openvr::commands::openvr_get_devices,
             openvr::commands::openvr_status,
@@ -687,11 +693,8 @@ mod bindings_tests {
     const BINDINGS: &str = concat!(env!("CARGO_MANIFEST_DIR"), "/../src-ui/app/bindings.ts");
 
     fn export(path: &std::path::Path) {
-        // JSON.parse turns every integer into a number, whatever its Rust width
-        let language = specta_typescript::Typescript::default()
-            .bigint(specta_typescript::BigIntExportBehavior::Number);
         super::specta_builder()
-            .export(language, path)
+            .export(specta_typescript::Typescript::default(), path)
             .expect("export the TypeScript bindings");
     }
 

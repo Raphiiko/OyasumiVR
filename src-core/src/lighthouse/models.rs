@@ -53,8 +53,8 @@ pub struct SerializedLighthouseError {
 }
 
 impl specta::Type for LighthouseError {
-    fn inline(types: &mut specta::TypeCollection, generics: specta::Generics) -> specta::DataType {
-        SerializedLighthouseError::inline(types, generics)
+    fn definition(types: &mut specta::Types) -> specta::datatype::DataType {
+        SerializedLighthouseError::definition(types)
     }
 }
 
