@@ -13,7 +13,6 @@ import {
 } from 'rxjs';
 import { isEqual, omit } from 'lodash';
 import { commands, OVRFrameLimits } from 'src-ui/app/bindings';
-import { warn } from '@tauri-apps/plugin-log';
 import { OpenVRService } from './openvr.service';
 
 export interface FrameLimiterAppPreset {
@@ -118,11 +117,10 @@ export class FrameLimiterService {
     }
   }
 
+  /** Rejects with the core's error, which the frame limit automations log as a failure. */
   private async applyFrameLimit(appId: number, limits: OVRFrameLimits | null) {
     const result = await commands.openvrSetAppFramelimit(appId, limits);
-    if (result.status === 'error') {
-      warn(`[FrameLimiter] Could not set the frame limit of app ${appId}: ${result.error}`);
-    }
+    if (result.status === 'error') throw result.error;
   }
 
   private async getActiveFrameLimitForAppId(appId: number): Promise<FrameLimitConfigOption | null> {
