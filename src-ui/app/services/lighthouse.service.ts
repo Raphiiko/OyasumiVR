@@ -1,6 +1,4 @@
 import { Injectable } from '@angular/core';
-import { invoke } from '@tauri-apps/api/core';
-import { listen } from '@tauri-apps/api/event';
 import {
   BehaviorSubject,
   combineLatest,
@@ -22,27 +20,18 @@ import { AppSettingsService } from './app-settings.service';
 import { pRetry } from '../utils/promise-utils';
 import { ToastService } from './toast.service';
 import { warn } from '@tauri-apps/plugin-log';
+import {
+  commands,
+  events,
+  LighthouseDeviceDiscoveredEvent_Serialize,
+  LighthouseDevicePowerStateChangedEvent_Serialize,
+  LighthouseScanningStatusChangedEvent,
+  LighthouseStatus,
+  LighthouseStatusChangedEvent,
+} from 'src-ui/app/bindings';
 
 const DEFAULT_SCAN_DURATION = 8;
-export type LighthouseStatus = 'uninitialized' | 'noAdapter' | 'adapterError' | 'ready';
-
-interface LighthouseScanningStatusChangedEvent {
-  scanning: boolean;
-}
-
-interface LighthouseStatusChangedEvent {
-  status: LighthouseStatus;
-}
-
-interface LighthouseDeviceDiscoveredEvent {
-  device: LighthouseDevice;
-}
-
-interface LighthouseDevicePowerStateChangedEvent {
-  deviceId: string;
-  powerState: LighthouseDevicePowerState;
-  v1Timeout: number | null;
-}
+export type { LighthouseStatus };
 
 @Injectable({
   providedIn: 'root',
@@ -67,18 +56,15 @@ export class LighthouseService {
   ) {}
 
   async init() {
-    listen<LighthouseStatusChangedEvent>('LIGHTHOUSE_STATUS_CHANGED', (event) =>
-      this.handleStatusChange(event.payload)
-    );
-    listen<LighthouseScanningStatusChangedEvent>('LIGHTHOUSE_SCANNING_STATUS_CHANGED', (event) =>
+    events.lighthouseStatusChangedEvent.listen((event) => this.handleStatusChange(event.payload));
+    events.lighthouseScanningStatusChangedEvent.listen((event) =>
       this.handleScanningStatusChange(event.payload)
     );
-    listen<LighthouseDeviceDiscoveredEvent>('LIGHTHOUSE_DEVICE_DISCOVERED', (event) =>
+    events.lighthouseDeviceDiscoveredEvent.listen((event) =>
       this.handleDeviceDiscovered(event.payload)
     );
-    listen<LighthouseDevicePowerStateChangedEvent>(
-      'LIGHTHOUSE_DEVICE_POWER_STATE_CHANGED',
-      (event) => this.handleDevicePowerStateChange(event.payload)
+    events.lighthouseDevicePowerStateChangedEvent.listen((event) =>
+      this.handleDevicePowerStateChange(event.payload)
     );
     this.appSettings.settings.subscribe((settings) => {
       this.v1Identifiers = settings.v1LighthouseIdentifiers;
@@ -92,12 +78,12 @@ export class LighthouseService {
       )
       .subscribe(async (lighthousePowerControl) => {
         if (lighthousePowerControl) {
-          const status = await invoke<LighthouseStatus>('lighthouse_get_status');
+          const status = await commands.lighthouseGetStatus();
           this._status.next(status);
-          this._devices.next(await invoke<LighthouseDevice[]>('lighthouse_get_devices'));
+          this._devices.next(await commands.lighthouseGetDevices());
         } else {
           this._devices.next([]);
-          await invoke('lighthouse_reset');
+          await commands.lighthouseReset();
         }
       });
     // Continuously scan for new lighthouses
@@ -119,7 +105,7 @@ export class LighthouseService {
         filter(Boolean)
       )
       .subscribe(() => {
-        invoke('lighthouse_start_scan', { duration: DEFAULT_SCAN_DURATION });
+        commands.lighthouseStartScan(DEFAULT_SCAN_DURATION);
       });
   }
 
@@ -150,7 +136,7 @@ export class LighthouseService {
     force = false
   ): Promise<boolean> {
     // If the device is a V1 and we don't have the identifier, don't send the command
-    let v1Identifier = undefined;
+    let v1Identifier: number | null = null;
     if (device.deviceType === 'lighthouseV1') {
       if (!this.v1Identifiers[device.id]) {
         return false;
@@ -171,12 +157,15 @@ export class LighthouseService {
       // set the power state
       try {
         await pRetry(
-          () =>
-            invoke('lighthouse_set_device_power_state', {
-              deviceId: device.id,
+          async () => {
+            const result = await commands.lighthouseSetDevicePowerState(
+              device.id,
               powerState,
-              v1Identifier,
-            }),
+              null,
+              v1Identifier
+            );
+            if (result.status === 'error') throw result.error;
+          },
           3,
           500
         );
@@ -227,7 +216,7 @@ export class LighthouseService {
     if (this._scanning.value !== event.scanning) this._scanning.next(event.scanning);
   }
 
-  private async handleDeviceDiscovered(event: LighthouseDeviceDiscoveredEvent) {
+  private async handleDeviceDiscovered(event: LighthouseDeviceDiscoveredEvent_Serialize) {
     const device = event.device;
     const devices = this._devices.value;
     if (!devices.some((d) => d.id === device.id)) {
@@ -240,7 +229,9 @@ export class LighthouseService {
     }
   }
 
-  private async handleDevicePowerStateChange(event: LighthouseDevicePowerStateChangedEvent) {
+  private async handleDevicePowerStateChange(
+    event: LighthouseDevicePowerStateChangedEvent_Serialize
+  ) {
     let devices = this._devices.value;
     let index = devices.findIndex((d) => d.id === event.deviceId);
     if (index === -1) {
@@ -255,7 +246,7 @@ export class LighthouseService {
 
   private async updateDevices() {
     const devices = this._devices.value;
-    (await invoke<LighthouseDevice[]>('lighthouse_get_devices')).forEach((d) => {
+    (await commands.lighthouseGetDevices()).forEach((d) => {
       if (!devices.some((d2) => d2.id === d.id)) devices.push(d);
       else {
         const index = devices.findIndex((d2) => d2.id === d.id);
@@ -275,13 +266,15 @@ export class LighthouseService {
       (async () => {
         const writeTimeoutValue = (timeout: number, retries = 2, retryDelay = 1000) => {
           return pRetry(
-            () =>
-              invoke('lighthouse_set_device_power_state', {
-                deviceId: device.id,
-                v1Identifier: timeout === 0 ? undefined : parseInt(identifier, 16),
-                v1Timeout: timeout,
-                powerState: timeout === 0 ? 'on' : 'sleep',
-              }),
+            async () => {
+              const result = await commands.lighthouseSetDevicePowerState(
+                device.id,
+                timeout === 0 ? 'on' : 'sleep',
+                timeout,
+                timeout === 0 ? null : parseInt(identifier, 16)
+              );
+              if (result.status === 'error') throw result.error;
+            },
             retries,
             retryDelay
           );

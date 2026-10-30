@@ -1,6 +1,5 @@
 import { MessageMonitor } from './message-monitor';
-import { listen } from '@tauri-apps/api/event';
-import { invoke } from '@tauri-apps/api/core';
+import { commands, events } from 'src-ui/app/bindings';
 import { error } from '@tauri-apps/plugin-log';
 
 const MESSAGE_ID = 'lighthouseConnectsFailing';
@@ -13,11 +12,11 @@ export class LighthouseConnectsFailingMessageMonitor extends MessageMonitor {
   private restarted = false;
 
   public override async init(): Promise<void> {
-    await listen('LIGHTHOUSE_CONNECTS_FAILING', () => {
+    await events.lighthouseConnectsFailingEvent.listen(() => {
       this.failing = true;
       if (!this.restarting && !this.restarted) this.showMessage(false);
     });
-    await listen('LIGHTHOUSE_CONNECTS_RECOVERED', () => {
+    await events.lighthouseConnectsRecoveredEvent.listen(() => {
       this.failing = false;
       this.messageCenter.removeMessage(MESSAGE_ID);
     });
@@ -45,14 +44,13 @@ export class LighthouseConnectsFailingMessageMonitor extends MessageMonitor {
     if (this.restarting) return;
     this.restarting = true;
     this.messageCenter.removeMessage(MESSAGE_ID);
-    try {
-      await invoke('lighthouse_restart_bluetooth_radio');
+    const result = await commands.lighthouseRestartBluetoothRadio();
+    this.restarting = false;
+    if (result.status === 'ok') {
       this.restarted = true;
-    } catch (e) {
-      error(`[LighthouseConnectsFailing] Could not restart the bluetooth radio: ${e}`);
-      if (this.failing) this.showMessage(true);
-    } finally {
-      this.restarting = false;
+      return;
     }
+    error(`[LighthouseConnectsFailing] Could not restart the bluetooth radio: ${result.error}`);
+    if (this.failing) this.showMessage(true);
   }
 }

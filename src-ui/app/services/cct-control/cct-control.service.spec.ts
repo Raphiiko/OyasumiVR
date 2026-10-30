@@ -344,7 +344,7 @@ describe('CCTControlService with a Steam Frame', () => {
     await settle();
     const [[, args]] = h.calls('steam_frame_fade');
     const { operation, ...request } = (args as { request: { operation: string } }).request;
-    expect(request).toEqual({ control: 'cct', target: 3000, durationMs: 10000 });
+    expect(request).toEqual({ control: 'cct', target: 3000, durationMs: 10000, simple: null });
     h.report(snapshot(5000));
     await settle();
     expect(h.service.cct).toBe(5000);

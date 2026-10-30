@@ -1,4 +1,3 @@
-import { invoke } from '@tauri-apps/api/core';
 import { warn } from '@tauri-apps/plugin-log';
 import { isEqual } from 'lodash';
 import {
@@ -12,8 +11,8 @@ import {
   shareReplay,
 } from 'rxjs';
 import { OVRDevice } from '../../../models/ovr-device';
+import { Cct, commands } from 'src-ui/app/bindings';
 import {
-  SteamFrameCct,
   SteamFrameConnectionState,
   SteamFramePairing,
   STEAM_FRAME_WAITING_SET_MS,
@@ -24,7 +23,7 @@ import type { SteamFrameService } from '../../steam-frame/steam-frame.service';
 import { CctControlDriver, CctFadeOptions } from './cct-control-driver';
 
 /** A Frame report that carries a value. */
-type FrameCct = SteamFrameCct & { kelvin: number };
+type FrameCct = Cct & { kelvin: number };
 
 /**
  * The active HMD, `none` for no HMD and for a headset of another model without a pairing. A Frame
@@ -61,11 +60,7 @@ export class SteamFrameCctControlDriver extends CctControlDriver {
     >
   ) {
     super();
-    const frameModels = from(
-      invoke<{ manufacturer: string; model: string }[]>('steam_frame_get_supported_models').catch(
-        () => []
-      )
-    );
+    const frameModels = from(commands.steamFrameGetSupportedModels().catch(() => []));
     const openvrHmd = combineLatest([openvr.status, openvr.devices]).pipe(debounceTime(100));
     this.hmd = combineLatest([
       openvrHmd,
@@ -115,7 +110,7 @@ export class SteamFrameCctControlDriver extends CctControlDriver {
     this.sending = true;
 
     // send the newest value until none waits
-    let applied: SteamFrameCct | null = null;
+    let applied: Cct | null = null;
     let sentTo: string | null = null;
     while (this.pending !== null) {
       // a value queued for a Frame that stopped being active is dropped
@@ -124,13 +119,13 @@ export class SteamFrameCctControlDriver extends CctControlDriver {
       if (target.kind !== 'frame' || !target.cct || target.pairingId !== next.pairingId) break;
       this.pending = null;
       sentTo = next.pairingId;
-      applied = await invoke<SteamFrameCct>('steam_frame_set_cct', {
-        pairingId: sentTo,
-        kelvin: next.kelvin,
-      }).catch((e) => {
-        warn(`[CCTControl] Could not set the Steam Frame color temperature: ${e}`);
-        return null;
-      });
+      const result = await commands.steamFrameSetCct(sentTo, next.kelvin);
+      if (result.status === 'error') {
+        warn(
+          `[CCTControl] Could not set the Steam Frame color temperature: ${JSON.stringify(result.error)}`
+        );
+      }
+      applied = result.status === 'ok' ? result.data : null;
     }
     this.sending = false;
 

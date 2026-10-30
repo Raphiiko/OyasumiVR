@@ -104,16 +104,18 @@ describe('ElevatedSidecarService', () => {
 
   it('shows the desktop prompt notice in the dashboard until the enable resolves', async () => {
     const h = setup({ result: 'ok' }, true);
-    const handlers = new Map<string, () => Promise<void>>();
-    listen.mockImplementation(async (event: string, handler: () => Promise<void>) => {
-      handlers.set(event, handler);
-    });
+    const handlers = new Map<string, (event: { payload: null }) => Promise<void>>();
+    listen.mockImplementation(
+      async (event: string, handler: (event: { payload: null }) => Promise<void>) => {
+        handlers.set(event, handler);
+      }
+    );
     await h.service.init();
-    const prompt = handlers.get('ELEVATION_PROMPT_SHOWN')!;
+    const prompt = handlers.get('elevation-prompt-shown-event')!;
 
     // a prompt during the startup enable stays without a notice
     invoke.mockImplementation(async (command: string) => {
-      if (command === 'elevated_features_enable') await prompt();
+      if (command === 'elevated_features_enable') await prompt({ payload: null });
       return command === 'elevated_sidecar_started' ? false : { result: 'ok' };
     });
     await h.service.enable(false);
@@ -134,14 +136,16 @@ describe('ElevatedSidecarService', () => {
         })
     );
     h.modals.closeModal.mockImplementation(() => (noticeOpen = false));
-    const handlers = new Map<string, () => Promise<void>>();
-    listen.mockImplementation(async (event: string, handler: () => Promise<void>) => {
-      handlers.set(event, handler);
-    });
+    const handlers = new Map<string, (event: { payload: null }) => Promise<void>>();
+    listen.mockImplementation(
+      async (event: string, handler: (event: { payload: null }) => Promise<void>) => {
+        handlers.set(event, handler);
+      }
+    );
     await h.service.init();
-    const prompt = handlers.get('ELEVATION_PROMPT_SHOWN')!;
+    const prompt = handlers.get('elevation-prompt-shown-event')!;
     invoke.mockImplementation(async (command: string) => {
-      if (command === 'elevated_features_enable') await prompt();
+      if (command === 'elevated_features_enable') await prompt({ payload: null });
       return command === 'elevated_sidecar_started' ? false : { result: 'promptDeclined' };
     });
 

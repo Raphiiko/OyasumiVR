@@ -23,10 +23,9 @@ import {
 
 import { GPUDevice, GPUPowerLimit } from '../models/gpu-device';
 import { NVML_ERROR_STATUSES, NvmlService } from './nvml.service';
-import { NvmlDevice } from '../models/nvml-device';
+import { commands, NvmlDevice } from 'src-ui/app/bindings';
 import { SleepService } from './sleep.service';
 import { error, info, warn } from '@tauri-apps/plugin-log';
-import { invoke } from '@tauri-apps/api/core';
 import { ExecutableReferenceStatus } from '../models/settings';
 import { ElevatedSidecarService } from './elevated-sidecar.service';
 import { EventLogService } from './event-log.service';
@@ -418,31 +417,22 @@ export class GpuAutomationsService {
       await logFailure();
       return;
     }
-    try {
-      await invoke<boolean>('msi_afterburner_set_profile', {
-        executablePath: path,
-        profile: index,
-      });
-      this.eventLog.logEvent({
-        type: 'msiAfterburnerProfileSet',
-        profile: index,
-        reason,
-      } as EventLogMsiAfterburnerProfileSet);
-    } catch (e) {
+    const result = await commands.msiAfterburnerSetProfile(path, index);
+    if (result.status === 'error') {
       if (
         generation !== this.msiValidationGeneration ||
         path !== this.currentMSIAfterburnerConfig.msiAfterburnerPath
       )
         return;
-      if (typeof e === 'string') {
-        this.handleMSIAfterburnerError(e);
-      } else {
-        error('[GpuAutomations] Failed to set MSI Afterburner profile: ' + e);
-        this._msiAfterburnerStatus.next('UNKNOWN_ERROR');
-      }
+      this.handleMSIAfterburnerError(result.error);
       await logFailure();
       return;
     }
+    this.eventLog.logEvent({
+      type: 'msiAfterburnerProfileSet',
+      profile: index,
+      reason,
+    } as EventLogMsiAfterburnerProfileSet);
   }
 
   /** Whether the Message Centre explains why MSI Afterburner is not usable. */
@@ -466,19 +456,11 @@ export class GpuAutomationsService {
       this._msiAfterburnerStatus.next('NOT_FOUND');
       return;
     }
-    try {
-      await invoke<boolean>('msi_afterburner_set_profile', {
-        executablePath: path,
-        profile: 0, // Profile 0 for testing without actually setting a profile
-      });
-    } catch (e) {
+    // profile 0 tests the executable without setting a profile
+    const result = await commands.msiAfterburnerSetProfile(path, 0);
+    if (result.status === 'error') {
       if (generation !== this.msiValidationGeneration) return;
-      if (typeof e === 'string') {
-        this.handleMSIAfterburnerError(e);
-      } else {
-        error('[GpuAutomations] Failed to set MSI Afterburner path: ' + e);
-        this._msiAfterburnerStatus.next('UNKNOWN_ERROR');
-      }
+      this.handleMSIAfterburnerError(result.error);
       return;
     }
     if (generation !== this.msiValidationGeneration) return;

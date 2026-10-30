@@ -22,8 +22,7 @@ import {
 import { AutomationConfigService } from '../automation-config.service';
 import { SleepService } from '../sleep.service';
 import { SleepPreparationService } from '../sleep-preparation.service';
-import { listen } from '@tauri-apps/api/event';
-import { invoke } from '@tauri-apps/api/core';
+import { commands, events } from 'src-ui/app/bindings';
 import { clamp } from '../../utils/number-utils';
 import { APP_SETTINGS_DEFAULT, AppSettings } from '../../models/settings';
 import { AppSettingsService } from '../app-settings.service';
@@ -68,14 +67,14 @@ export class BigscreenBeyondFanAutomationService {
       .pipe(map((c) => c.BIGSCREEN_BEYOND_FAN_CONTROL))
       .subscribe((config) => (this.config = config));
     // Listen for the connection state of the Bigscreen Beyond
-    listen<boolean>('BIGSCREEN_BEYOND_CONNECTED', (event) => {
+    events.bigscreenBeyondConnectedEvent.listen((event) => {
       this._connected.next(event.payload);
     });
     interval(10000)
       .pipe(
         startWith(0),
         switchMap(async () => {
-          const connected = await invoke<boolean>('bigscreen_beyond_is_connected');
+          const connected = await commands.bigscreenBeyondIsConnected();
           this._connected.next(connected);
         })
       )
@@ -172,21 +171,24 @@ export class BigscreenBeyondFanAutomationService {
       speed = 100;
     // Set the fan speed
     this._fanSpeed.next(speed);
-    return invoke('bigscreen_beyond_set_fan_speed', { speed }).then(
-      () => speed,
-      (e) => {
-        warn(`[BigscreenBeyondFanAutomation] Could not set the fan speed: ${e}`);
-        return null;
-      }
-    );
+    const result = await commands.bigscreenBeyondSetFanSpeed(speed);
+    if (result.status === 'ok') return speed;
+    warn(`[BigscreenBeyondFanAutomation] Could not set the fan speed: ${result.error}`);
+    return null;
   }
 
   private getBeyondDriverSavedFanSpeed(): Promise<number | null> {
-    return invoke<string>('bigscreen_beyond_get_saved_preferences').then((result) => {
-      if (!result) return null;
+    return commands.bigscreenBeyondGetSavedPreferences().then((result) => {
+      if (result.status === 'error') {
+        warn(
+          `[BigscreenBeyondFanAutomationService] Could not read the Bigscreen Beyond driver utility preferences: ${result.error}`
+        );
+        return null;
+      }
+      if (!result.data) return null;
       let preferences: { fan_speed: number } | undefined;
       try {
-        preferences = JSON.parse(result);
+        preferences = JSON.parse(result.data);
       } catch (e) {
         warn(
           '[BigscreenBeyondFanAutomationService] Failed to parse saved preferences from Bigscreen Beyond driver utility: ' +

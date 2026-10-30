@@ -1,13 +1,10 @@
-export interface LighthouseDevice {
-  id: string;
-  deviceName: string;
-  deviceType: LighthouseDeviceType;
-  powerState: LighthouseDevicePowerState;
-  v1Timeout: number | null;
+import { LighthouseDeviceModel_Serialize, LighthousePowerState } from 'src-ui/app/bindings';
+
+export interface LighthouseDevice extends LighthouseDeviceModel_Serialize {
   // For UI purposes only
-  transitioningToPowerState: LighthouseDevicePowerState | undefined;
+  transitioningToPowerState?: LighthousePowerState;
 }
 
-export type LighthouseDeviceType = 'lighthouseV1' | 'lighthouseV2';
+export type { LighthouseDeviceType } from 'src-ui/app/bindings';
 
-export type LighthouseDevicePowerState = 'on' | 'unknown' | 'sleep' | 'standby' | 'booting';
+export type LighthouseDevicePowerState = LighthousePowerState;

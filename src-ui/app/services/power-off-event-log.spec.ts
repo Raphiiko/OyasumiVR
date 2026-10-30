@@ -126,7 +126,7 @@ describe('power-off command results and actual event log', () => {
     'records no success when a single-device command is %s',
     async (failure) => {
       const { service } = await createConsole([controller]);
-      if (failure === 'rejected') invoke.mockRejectedValueOnce(new Error('unreachable dongle'));
+      if (failure === 'rejected') invoke.mockRejectedValueOnce('unreachable dongle');
       else invoke.mockResolvedValueOnce({ status: 1 });
       const log = new EventLogService();
       const item = caller(DeviceListItemComponent.prototype, {
@@ -146,7 +146,7 @@ describe('power-off command results and actual event log', () => {
     const nextController = { ...controller, index: 4, serialNumber: 'NEXT-C', dongleId: 'NEXT-D' };
     const { service } = await createConsole([controller, tracker, failedTracker, nextController]);
     invoke
-      .mockRejectedValueOnce(new Error('unreachable dongle'))
+      .mockRejectedValueOnce('unreachable dongle')
       .mockResolvedValueOnce({ status: 0 })
       .mockResolvedValueOnce({ status: 1 })
       .mockResolvedValueOnce({ status: 0 });

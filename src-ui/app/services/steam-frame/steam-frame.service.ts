@@ -1,6 +1,4 @@
 import { Injectable, signal } from '@angular/core';
-import { invoke } from '@tauri-apps/api/core';
-import { listen } from '@tauri-apps/api/event';
 import { error, info } from '@tauri-apps/plugin-log';
 import {
   asapScheduler,
@@ -20,11 +18,10 @@ import { OVRDevice } from '../../models/ovr-device';
 import {
   SteamFrameConnectionState,
   SteamFrameFadeEnded,
-  SteamFrameIdentity,
   SteamFramePairing,
   SteamFramePairingData,
-  SteamFrameSetupResult,
 } from '../../models/steam-frame';
+import { Access, commands, events, Identity, Pairing, SupportedModel } from 'src-ui/app/bindings';
 import { protectSecret, unprotectSecret } from '../../utils/secrets';
 import { OpenVRService } from '../openvr.service';
 import { ToastService } from '../toast.service';
@@ -37,7 +34,7 @@ import { ToastService } from '../toast.service';
   providedIn: 'root',
 })
 export class SteamFrameService {
-  private readonly supportedModels = signal<{ manufacturer: string; model: string }[]>([]);
+  private readonly supportedModels = signal<SupportedModel[]>([]);
   private readonly _pairings = signal<SteamFramePairing[]>([]);
   private readonly _connections = signal<Record<string, SteamFrameConnectionState>>({});
   private readonly _reinstalls = signal<Record<string, 'running'>>({});
@@ -61,21 +58,17 @@ export class SteamFrameService {
 
   /** Loads saved pairings, subscribes to core events, and starts their connections. */
   async init() {
-    this.supportedModels.set(await invoke('steam_frame_get_supported_models'));
+    this.supportedModels.set(await commands.steamFrameGetSupportedModels());
     await this.load();
 
     // follow connection states and fades
-    await listen<SteamFrameConnectionState>('STEAM_FRAME_CONNECTION_STATE', (event) =>
+    await events.steamFrameConnectionStateEvent.listen((event) =>
       this.onConnectionState(event.payload)
     );
-    await listen<SteamFrameFadeEnded>('STEAM_FRAME_FADE_ENDED', (event) =>
-      this.fadeEnded$.next(event.payload)
-    );
+    await events.steamFrameFadeEndedEvent.listen((event) => this.fadeEnded$.next(event.payload));
 
     // catch up on states sent before we listened
-    for (const state of await invoke<SteamFrameConnectionState[]>(
-      'steam_frame_get_connection_states'
-    )) {
+    for (const state of await commands.steamFrameGetConnectionStates()) {
       this.onConnectionState(state);
     }
 
@@ -98,7 +91,7 @@ export class SteamFrameService {
   }
 
   /** The pairing identity of a supported headset, or null for any other device. */
-  identityOf(device: DMKnownDevice): SteamFrameIdentity | null {
+  identityOf(device: DMKnownDevice): Identity | null {
     if (
       !device.id.startsWith('OVR_HMD_') ||
       !this.isSupported(device.manufacturer, device.typeName)
@@ -117,7 +110,7 @@ export class SteamFrameService {
 
   /** Starts a helper update. Progress and the result arrive as connection states. */
   async updateHelper(pairing: SteamFramePairing) {
-    await invoke('steam_frame_update_helper', { pairingId: pairing.id });
+    await commands.steamFrameUpdateHelper(pairing.id);
   }
 
   /**
@@ -139,14 +132,15 @@ export class SteamFrameService {
   }
 
   private async disconnectControllerOn(pairingId: string, serial: string): Promise<boolean> {
-    try {
-      await invoke('steam_frame_disconnect_controller', { pairingId, serial });
-      info(`[SteamFrame] Disconnected the headset controller ${serial}`);
-      return true;
-    } catch (e) {
-      error(`[SteamFrame] Could not disconnect the headset controller: ${JSON.stringify(e)}`);
+    const result = await commands.steamFrameDisconnectController(pairingId, serial);
+    if (result.status === 'error') {
+      error(
+        `[SteamFrame] Could not disconnect the headset controller: ${JSON.stringify(result.error)}`
+      );
       return false;
     }
+    info(`[SteamFrame] Disconnected the headset controller ${serial}`);
+    return true;
   }
 
   /** Turns off the Frame controllers among these devices, and ignores the rest. */
@@ -239,27 +233,20 @@ export class SteamFrameService {
   }
 
   /** Installs or reuses the helper on the headset. `repair` replaces any installed helper. */
-  setUpHelper(
-    pairing: SteamFramePairing,
-    identity: SteamFrameIdentity,
-    attemptId: string,
-    repair = false
-  ) {
-    return invoke<SteamFrameSetupResult>('steam_frame_set_up_helper', {
-      request: {
-        attemptId,
-        access: this.accessOf(pairing),
-        pcId: pairing.id,
-        token: pairing.token,
-        publicKey: pairing.publicKey,
-        identity,
-        repair,
-      },
+  setUpHelper(pairing: SteamFramePairing, identity: Identity, attemptId: string, repair = false) {
+    return commands.steamFrameSetUpHelper({
+      attemptId,
+      access: this.accessOf(pairing),
+      pcId: pairing.id,
+      token: pairing.token,
+      publicKey: pairing.publicKey,
+      identity,
+      repair,
     });
   }
 
   /** The SSH access the core commands need for a pairing. */
-  accessOf(pairing: SteamFramePairing) {
+  accessOf(pairing: SteamFramePairing): Access {
     return {
       address: pairing.address,
       user: pairing.user,
@@ -334,18 +321,22 @@ export class SteamFrameService {
 
   /** Sends the complete pairings to the core, which keeps one connection per pairing. */
   async pushPairings() {
-    const pairings = this._pairings()
-      .filter((p) => p.complete && p.hostKeyPin && p.certPin && p.port)
-      .map((p) => ({
-        id: p.id,
-        access: this.accessOf(p),
-        port: p.port,
-        certPin: p.certPin,
-        token: p.token,
-        publicKey: p.publicKey,
-        identity: p.identity,
-      }));
-    await invoke('steam_frame_sync_connections', { pairings });
+    const pairings = this._pairings().flatMap((p): Pairing[] =>
+      p.complete && p.hostKeyPin && p.certPin && p.port
+        ? [
+            {
+              id: p.id,
+              access: this.accessOf(p),
+              port: p.port,
+              certPin: p.certPin,
+              token: p.token,
+              publicKey: p.publicKey,
+              identity: p.identity,
+            },
+          ]
+        : []
+    );
+    await commands.steamFrameSyncConnections(pairings);
   }
 
   /** Reads saved pairings, skipping any whose secrets cannot be decrypted. */

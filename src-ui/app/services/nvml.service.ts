@@ -1,19 +1,10 @@
 import { Injectable } from '@angular/core';
-import { invoke } from '@tauri-apps/api/core';
-import { NvmlDevice as NvmlDevice } from '../models/nvml-device';
+import { commands, NvmlDevice, NvmlStatus } from 'src-ui/app/bindings';
 import { BehaviorSubject, delay, filter, interval, Observable, startWith, switchMap } from 'rxjs';
 import { ElevatedSidecarService } from './elevated-sidecar.service';
 import { info } from '@tauri-apps/plugin-log';
 
-export type NvmlStatus =
-  | 'Initializing'
-  | 'InitComplete'
-  | 'DriverNotLoaded'
-  | 'LibLoadingError'
-  | 'NoPermission'
-  | 'NvmlUnknownError'
-  | 'SidecarUnavailable'
-  | 'UnknownError';
+export type { NvmlStatus };
 
 /** Statuses the Message Centre posts a warning for; GpuAutomationMessageMonitor lists them too. */
 export const NVML_ERROR_STATUSES: NvmlStatus[] = [
@@ -55,18 +46,19 @@ export class NvmlService {
   }
 
   private getDevices(): Promise<Array<NvmlDevice>> {
-    return invoke<NvmlDevice[]>('nvml_get_devices');
+    return commands.nvmlGetDevices();
   }
 
   /** Rejects with the sidecar's error name when NVML refuses the limit. */
   public async setPowerLimit(uuid: string, powerLimit: number): Promise<void> {
     powerLimit = Math.floor(powerLimit);
-    await invoke<void>('nvml_set_power_management_limit', { uuid, powerLimit });
+    const result = await commands.nvmlSetPowerManagementLimit(uuid, powerLimit);
+    if (result.status === 'error') throw result.error;
     this._devices.next(await this.getDevices());
     info(`[Nvml] Set gpu power limit (uuid=${uuid}, powerLimit:${powerLimit})`);
   }
 
   private getNvmlStatus(): Promise<NvmlStatus> {
-    return invoke<NvmlStatus>('nvml_status');
+    return commands.nvmlStatus();
   }
 }

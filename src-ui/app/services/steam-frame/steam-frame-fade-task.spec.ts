@@ -1,11 +1,8 @@
 import { invoke } from '@tauri-apps/api/core';
 import { Subject } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import type {
-  SteamFrameFadeEnded,
-  SteamFrameFadeError,
-  SteamFrameFadeOutcome,
-} from '../../models/steam-frame';
+import type { FadeError } from 'src-ui/app/bindings';
+import type { SteamFrameFadeEnded, SteamFrameFadeOutcome } from '../../models/steam-frame';
 import { SteamFrameFadeTask } from './steam-frame-fade-task';
 
 vi.mock('@tauri-apps/api/core', () => ({ invoke: vi.fn() }));
@@ -15,7 +12,7 @@ const wait = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 type FadeArgs = { pairingId: string; request: { operation: string; durationMs: number } };
 
 function setup(durationMs = 60_000) {
-  const replies: ((error: SteamFrameFadeError | null) => void)[] = [];
+  const replies: ((error: FadeError | null) => void)[] = [];
   vi.mocked(invoke).mockReset();
   vi.mocked(invoke).mockImplementation(async (command) => {
     if (command !== 'steam_frame_fade') return undefined;
@@ -32,7 +29,7 @@ function setup(durationMs = 60_000) {
   );
   const end = (outcome: SteamFrameFadeOutcome, operation = task.operation) =>
     fadeEnded.next({ pairingId: 'p', control: 'brightness', operation, outcome });
-  const reply = async (error: SteamFrameFadeError | null = null) => {
+  const reply = async (error: FadeError | null = null) => {
     while (!replies.length) await wait(1);
     replies.shift()!(error);
     await wait(0);
@@ -58,7 +55,13 @@ describe('SteamFrameFadeTask', () => {
     const done = h.task.start();
     await h.reply();
     expect(h.fades()).toEqual([
-      { control: 'brightness', target: 30, durationMs: 60_000, operation: h.task.operation },
+      {
+        control: 'brightness',
+        target: 30,
+        durationMs: 60_000,
+        simple: null,
+        operation: h.task.operation,
+      },
     ]);
     expect(h.onAccept).toHaveBeenCalledOnce();
     h.end('completed', 'another-operation');

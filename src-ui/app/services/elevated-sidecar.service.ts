@@ -1,7 +1,5 @@
 import { Injectable } from '@angular/core';
-import { invoke } from '@tauri-apps/api/core';
 import { BehaviorSubject, firstValueFrom, Observable } from 'rxjs';
-import { listen } from '@tauri-apps/api/event';
 import { AppSettingsService } from './app-settings.service';
 import { info } from '@tauri-apps/plugin-log';
 import { ModalService } from './modal.service';
@@ -13,15 +11,9 @@ import {
 import { TelemetryService } from './telemetry/telemetry.service';
 import { OpenVRService } from './openvr.service';
 import { ElevationPromptSceneModalComponent } from '../components/elevation-prompt-scene-modal/elevation-prompt-scene-modal.component';
+import { commands, DisableResult, EnableResult, events } from 'src-ui/app/bindings';
 
-export type EnableResult =
-  | { result: 'ok' }
-  | { result: 'promptDeclined' }
-  | { result: 'installFailed' }
-  | { result: 'taskFailed'; reason: string; code: string }
-  | { result: 'notSupported' };
-
-export type DisableResult = { result: 'ok' } | { result: 'cleanupFailed'; reason: string };
+export type { DisableResult, EnableResult };
 export type ElevatedFeaturesOperation = 'idle' | 'enabling' | 'disabling';
 export type ElevatedFeaturesFailure =
   | { operation: 'enable'; result: Exclude<EnableResult, { result: 'ok' }> }
@@ -53,15 +45,15 @@ export class ElevatedSidecarService {
   async init() {
     this._sidecarStarted.next(await this.checkIfStarted());
     await Promise.all([
-      listen<boolean>('ELEVATED_SIDECAR_STARTED', () => {
+      events.elevatedSidecarStartedEvent.listen(() => {
         info('[ElevatedSidecar] Elevated sidecar has started');
         this._sidecarStarted.next(true);
       }),
-      listen<boolean>('ELEVATED_SIDECAR_STOPPED', () => {
+      events.elevatedSidecarStoppedEvent.listen(() => {
         info('[ElevatedSidecar] Elevated sidecar has stopped');
         this._sidecarStarted.next(false);
       }),
-      listen('ELEVATION_PROMPT_SHOWN', () => this.showPromptNotice()),
+      events.elevationPromptShownEvent.listen(() => this.showPromptNotice()),
     ]);
     if (
       !this._sidecarStarted.value &&
@@ -119,7 +111,7 @@ export class ElevatedSidecarService {
   private async tryEnable(): Promise<EnableResult> {
     let result: EnableResult;
     try {
-      result = await invoke<EnableResult>('elevated_features_enable');
+      result = await commands.elevatedFeaturesEnable();
     } catch (e) {
       info(`[ElevatedSidecar] Could not enable elevated features: ${e}`);
       return { result: 'installFailed' };
@@ -151,7 +143,7 @@ export class ElevatedSidecarService {
   private async tryDisable(): Promise<DisableResult> {
     let result: DisableResult;
     try {
-      result = await invoke<DisableResult>('elevated_features_disable');
+      result = await commands.elevatedFeaturesDisable();
     } catch (e) {
       result = { result: 'cleanupFailed', reason: String(e) };
     }
@@ -217,6 +209,6 @@ export class ElevatedSidecarService {
   }
 
   async checkIfStarted(): Promise<boolean> {
-    return await invoke('elevated_sidecar_started');
+    return await commands.elevatedSidecarStarted();
   }
 }
