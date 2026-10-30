@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { getVersion } from '../utils/app-utils';
-import { invoke } from '@tauri-apps/api/core';
+import { commands, events } from 'src-ui/app/bindings';
 import * as DesktopNotifications from '@tauri-apps/plugin-notification';
 import { AppSettingsService } from './app-settings.service';
 import { debounceTime, distinctUntilChanged, firstValueFrom, interval, map } from 'rxjs';
@@ -8,8 +8,6 @@ import { APP_ICON_ARR, APP_ICON_B64 } from '../globals';
 import { NotificationProvider, NotificationType } from '../models/settings';
 import { error, info, warn } from '@tauri-apps/plugin-log';
 import { IPCService } from './ipc.service';
-import { AddNotificationRequest } from '../../../src-grpc-web-client/oyasumi-core_pb';
-import { listen } from '@tauri-apps/api/event';
 import { NotificationSound } from '../models/notification-sounds';
 import { SoundEffectConfig } from '../models/automations';
 import { ToastService } from './toast.service';
@@ -42,7 +40,7 @@ export class NotificationService {
   ) {}
 
   public async init() {
-    await listen<AddNotificationRequest>('addNotification', async (request) => {
+    await events.addNotificationEvent.listen(async (request) => {
       /*const notificationId = */
       await this.send(request.payload.message, request.payload.duration);
       // TODO: SEND BACK NOTIFICATION ID TO CORE
@@ -63,16 +61,13 @@ export class NotificationService {
     }
     if (volume > 0) {
       switch (sound.type) {
-        case 'BUILT_IN':
-          try {
-            await invoke('play_sound', {
-              name: sound.id,
-              volume,
-            });
-          } catch (e) {
-            error(`[Notification] Could not play sound "${sound.id}": ${e}`);
+        case 'BUILT_IN': {
+          const result = await commands.playSound(sound.id, volume);
+          if (result.status === 'error') {
+            error(`[Notification] Could not play sound "${sound.id}": ${result.error}`);
           }
           break;
+        }
         default:
           error(`[Notification] Unknown sound type: ${sound.type}`);
       }
@@ -227,9 +222,9 @@ export class NotificationService {
       useBase64Icon: true,
       sourceApp: 'OyasumiVR/' + (await getVersion()),
     };
-    await invoke('xsoverlay_send_message', {
-      message: Array.from(new TextEncoder().encode(JSON.stringify(message))),
-    });
+    await commands.xsoverlaySendMessage(
+      Array.from(new TextEncoder().encode(JSON.stringify(message)))
+    );
     return null;
   }
 

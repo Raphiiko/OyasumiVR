@@ -1,16 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { VRChatLogEvent } from '../models/vrchat-log-event';
-import { listen } from '@tauri-apps/api/event';
-import { invoke } from '@tauri-apps/api/core';
-
-interface RawLogEvent {
-  /** Epoch milliseconds from the native log parser. */
-  time: number;
-  event: string;
-  data: string;
-  initialLoad: boolean;
-}
+import { commands, events, VRCLogEvent } from 'src-ui/app/bindings';
 
 @Injectable({
   providedIn: 'root',
@@ -29,14 +20,12 @@ export class VRChatLogService {
   constructor() {}
 
   async init() {
-    await listen<RawLogEvent>('VRC_LOG_EVENT', (event) => this.handleLogEvent(event.payload));
-    await listen<string | null>('VRC_LOG_CURRENT_FILE', (event) =>
-      this._logPath.next(event.payload)
-    );
-    await invoke('init_vrc_log_watcher');
+    await events.vrcLogEvent.listen((event) => this.handleLogEvent(event.payload));
+    await events.vrcLogCurrentFileEvent.listen((event) => this._logPath.next(event.payload));
+    await commands.initVrcLogWatcher();
   }
 
-  private handleLogEvent(event: RawLogEvent) {
+  private handleLogEvent(event: VRCLogEvent) {
     switch (event.event) {
       case 'InitialLoadComplete':
         this._initialLoadComplete.next(true);

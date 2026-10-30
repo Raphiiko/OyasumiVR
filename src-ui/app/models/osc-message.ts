@@ -1,14 +1,6 @@
+import type { OSCMessage as CoreOSCMessage, OSCValue as CoreOSCValue } from 'src-ui/app/bindings';
+
 export type OSCValueType = 'int' | 'float' | 'string' | 'bool' | 'unsupported';
-
-export interface OSCValueRaw {
-  kind: OSCValueType;
-  value: string;
-}
-
-export interface OSCMessageRaw {
-  address: string;
-  values: OSCValueRaw[];
-}
 
 export interface OSCValue {
   kind: OSCValueType;
@@ -43,21 +35,21 @@ export interface OSCMessage {
   values: OSCValue[];
 }
 
-export function parseOSCMessage(message: OSCMessageRaw): OSCMessage {
+export function parseOSCMessage(message: CoreOSCMessage): OSCMessage {
   return {
     address: message.address,
     values: message.values.map(parseOSCValue),
   };
 }
 
-export function parseOSCValue(value: OSCValueRaw): OSCValue {
+export function parseOSCValue(value: CoreOSCValue): OSCValue {
   let parsedValue: unknown;
   switch (value.kind) {
     case 'int':
-      parsedValue = parseInt(value.value);
+      parsedValue = parseInt(value.value ?? '');
       break;
     case 'float':
-      parsedValue = parseFloat(value.value);
+      parsedValue = parseFloat(value.value ?? '');
       break;
     case 'string':
       parsedValue = value.value;

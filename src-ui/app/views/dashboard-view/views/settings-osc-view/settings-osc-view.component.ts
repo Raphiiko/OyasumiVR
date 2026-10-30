@@ -16,7 +16,7 @@ import {
 import { OscService } from '../../../../services/osc.service';
 import { flushOnDestroy } from '../../../../utils/rxjs-utils';
 import { isEqual, pick } from 'lodash';
-import { invoke } from '@tauri-apps/api/core';
+import { commands } from 'src-ui/app/bindings';
 
 @Component({
   selector: 'app-settings-osc-view',
@@ -83,9 +83,7 @@ export class SettingsOscViewComponent implements OnInit {
         const generation = SettingsOscViewComponent.hostValidationGeneration;
         host = host.trim();
         // resolve the host independently of the port field
-        const valid =
-          !!host &&
-          (await invoke<boolean>('osc_valid_addr', { addr: `${host}:1` }).catch(() => false));
+        const valid = !!host && (await commands.oscValidAddr(`${host}:1`).catch(() => false));
         if (generation !== SettingsOscViewComponent.hostValidationGeneration) return;
 
         // save only the latest accepted host, including navigation flushes
