@@ -1,5 +1,5 @@
 import { MessageMonitor } from './message-monitor';
-import { commands, events } from '../../../bindings';
+import { commands, events } from 'src-ui/app/bindings';
 import { error } from '@tauri-apps/plugin-log';
 
 const MESSAGE_ID = 'lighthouseConnectsFailing';
@@ -44,14 +44,13 @@ export class LighthouseConnectsFailingMessageMonitor extends MessageMonitor {
     if (this.restarting) return;
     this.restarting = true;
     this.messageCenter.removeMessage(MESSAGE_ID);
-    try {
-      await commands.lighthouseRestartBluetoothRadio();
+    const result = await commands.lighthouseRestartBluetoothRadio();
+    this.restarting = false;
+    if (result.status === 'ok') {
       this.restarted = true;
-    } catch (e) {
-      error(`[LighthouseConnectsFailing] Could not restart the bluetooth radio: ${e}`);
-      if (this.failing) this.showMessage(true);
-    } finally {
-      this.restarting = false;
+      return;
     }
+    error(`[LighthouseConnectsFailing] Could not restart the bluetooth radio: ${result.error}`);
+    if (this.failing) this.showMessage(true);
   }
 }

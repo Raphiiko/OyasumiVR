@@ -28,7 +28,7 @@ import {
   LighthouseScanningStatusChangedEvent,
   LighthouseStatus,
   LighthouseStatusChangedEvent,
-} from '../bindings';
+} from 'src-ui/app/bindings';
 
 const DEFAULT_SCAN_DURATION = 8;
 export type { LighthouseStatus };
@@ -157,7 +157,15 @@ export class LighthouseService {
       // set the power state
       try {
         await pRetry(
-          () => commands.lighthouseSetDevicePowerState(device.id, powerState, null, v1Identifier),
+          async () => {
+            const result = await commands.lighthouseSetDevicePowerState(
+              device.id,
+              powerState,
+              null,
+              v1Identifier
+            );
+            if (result.status === 'error') throw result.error;
+          },
           3,
           500
         );
@@ -258,13 +266,15 @@ export class LighthouseService {
       (async () => {
         const writeTimeoutValue = (timeout: number, retries = 2, retryDelay = 1000) => {
           return pRetry(
-            () =>
-              commands.lighthouseSetDevicePowerState(
+            async () => {
+              const result = await commands.lighthouseSetDevicePowerState(
                 device.id,
                 timeout === 0 ? 'on' : 'sleep',
                 timeout,
                 timeout === 0 ? null : parseInt(identifier, 16)
-              ),
+              );
+              if (result.status === 'error') throw result.error;
+            },
             retries,
             retryDelay
           );

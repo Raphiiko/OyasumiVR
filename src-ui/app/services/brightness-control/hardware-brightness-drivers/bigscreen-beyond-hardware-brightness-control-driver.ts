@@ -13,7 +13,7 @@ import {
   startWith,
   switchMap,
 } from 'rxjs';
-import { commands, events } from '../../../bindings';
+import { commands, events } from 'src-ui/app/bindings';
 import { AppSettings } from '../../../models/settings';
 import { warn } from '@tauri-apps/plugin-log';
 
@@ -74,9 +74,10 @@ export class BigscreenBeyondHardwareBrightnessControlDriver extends HardwareBrig
     const hwPercentage = this.softwarePercentageToHardwarePercentage(percentage);
     this.lastSetBrightnessPercentage = percentage;
     const hwValue = this.swValueToHWValue(hwPercentage);
-    commands
-      .bigscreenBeyondSetBrightness(hwValue)
-      .catch((e) => warn(`[BSBHardwareBrightnessControlDriver] Could not set brightness: ${e}`));
+    const result = await commands.bigscreenBeyondSetBrightness(hwValue);
+    if (result.status === 'error') {
+      warn(`[BSBHardwareBrightnessControlDriver] Could not set brightness: ${result.error}`);
+    }
   }
 
   isAvailable(): Observable<boolean> {
@@ -93,11 +94,17 @@ export class BigscreenBeyondHardwareBrightnessControlDriver extends HardwareBrig
 
   private getBeyondDriverSavedBrightness(): Promise<number | null> {
     return commands.bigscreenBeyondGetSavedPreferences().then((result) => {
-      if (!result) return null;
+      if (result.status === 'error') {
+        warn(
+          `[BigscreenBeyondHardwareBrightnessControlDriver] Could not read the Bigscreen Beyond driver utility preferences: ${result.error}`
+        );
+        return null;
+      }
+      if (!result.data) return null;
       let preferences:
         { brightness: number; overdrive: boolean; overdrive_brightness: number } | undefined;
       try {
-        preferences = JSON.parse(result);
+        preferences = JSON.parse(result.data);
       } catch (e) {
         warn(
           '[BigscreenBeyondHardwareBrightnessControlDriver] Failed to parse saved preferences from Bigscreen Beyond driver utility: ' +

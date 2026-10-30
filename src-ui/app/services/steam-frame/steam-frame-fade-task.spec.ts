@@ -1,7 +1,7 @@
 import { invoke } from '@tauri-apps/api/core';
 import { Subject } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import type { FadeError } from '../../bindings';
+import type { FadeError } from 'src-ui/app/bindings';
 import type { SteamFrameFadeEnded, SteamFrameFadeOutcome } from '../../models/steam-frame';
 import { SteamFrameFadeTask } from './steam-frame-fade-task';
 

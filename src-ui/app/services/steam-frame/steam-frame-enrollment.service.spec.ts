@@ -253,7 +253,7 @@ describe('Steam Frame pairing flow', () => {
   });
 
   it('offers a working retry when the pairing key cannot be created', async () => {
-    handlers['steam_frame_create_pairing_keys'] = () => Promise.reject(new Error('no entropy'));
+    handlers['steam_frame_create_pairing_keys'] = () => Promise.reject('no entropy');
     handlers['steam_frame_request_approval'] = () => 'declined';
     const service = await start();
     await service.pair();

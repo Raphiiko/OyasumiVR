@@ -2,7 +2,7 @@ import { filter, firstValueFrom, map, Observable, race, ReplaySubject, timer } f
 import { v4 as uuidv4 } from 'uuid';
 import { DeviceFade, DeviceFadeEnd } from '../../utils/device-fade';
 import { SteamFrameFadeEnded, SteamFrameFadeOutcome } from '../../models/steam-frame';
-import { commands, Control, FadeError, SimpleCurve } from '../../bindings';
+import { commands, Control, FadeError, SimpleCurve } from 'src-ui/app/bindings';
 
 /** The longest fade the helper accepts; it sends no reply to a longer one. */
 export const STEAM_FRAME_MAX_FADE_MS = 24 * 60 * 60 * 1000;
@@ -89,18 +89,14 @@ export class SteamFrameFadeTask extends DeviceFade {
     if (outcome !== 'completed') this.cancel();
   }
 
-  private send(): Promise<FadeError | null> {
+  private async send(): Promise<FadeError | null> {
     const { pairingId, ...fade } = this.request;
-    return commands
-      .steamFrameFade(pairingId, {
-        ...fade,
-        simple: fade.simple ?? null,
-        operation: this.operation,
-      })
-      .then(
-        () => null,
-        (error: FadeError) => error
-      );
+    const result = await commands.steamFrameFade(pairingId, {
+      ...fade,
+      simple: fade.simple ?? null,
+      operation: this.operation,
+    });
+    return result.status === 'error' ? result.error : null;
   }
 
   private cancelOnHelper() {

@@ -11,7 +11,7 @@ import {
   startWith,
   switchMap,
 } from 'rxjs';
-import { commands, events } from '../../bindings';
+import { commands, events } from 'src-ui/app/bindings';
 import { AutomationConfigService } from '../automation-config.service';
 import {
   AUTOMATION_CONFIGS_DEFAULT,
@@ -138,13 +138,13 @@ export class BigscreenBeyondLedAutomationService {
           ];
           // Set the intermediary color
           if (this.connected.value) {
-            commands.bigscreenBeyondSetLedColor(color[0], color[1], color[2]);
+            void this.sendLedColor(color);
             this.lastSetColor = [...color];
           }
         }
         // Set the final target color
         if (this.connected.value) {
-          commands.bigscreenBeyondSetLedColor(targetColor[0], targetColor[1], targetColor[2]);
+          void this.sendLedColor(targetColor);
           this.lastSetColor = [...targetColor];
           this._lastSetColorExt.next(this.lastSetColor);
         }
@@ -152,17 +152,18 @@ export class BigscreenBeyondLedAutomationService {
       await this.transitionTask.start();
       return true;
     }
-    const applied = await commands
-      .bigscreenBeyondSetLedColor(targetColor[0], targetColor[1], targetColor[2])
-      .then(
-        () => true,
-        (e) => {
-          warn(`[BigscreenBeyondLedAutomation] Could not set the LED colour: ${e}`);
-          return false;
-        }
-      );
+    const applied = await this.sendLedColor(targetColor);
     this.lastSetColor = [...targetColor];
     this._lastSetColorExt.next(this.lastSetColor);
     return applied;
+  }
+
+  /** Resolves whether the headset took the colour; a failure is logged. */
+  private async sendLedColor([r, g, b]: [number, number, number]): Promise<boolean> {
+    const result = await commands.bigscreenBeyondSetLedColor(r, g, b);
+    if (result.status === 'error') {
+      warn(`[BigscreenBeyondLedAutomation] Could not set the LED colour: ${result.error}`);
+    }
+    return result.status === 'ok';
   }
 }

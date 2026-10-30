@@ -21,7 +21,7 @@ import {
   SteamFramePairing,
   SteamFramePairingData,
 } from '../../models/steam-frame';
-import { Access, commands, events, Identity, Pairing, SupportedModel } from '../../bindings';
+import { Access, commands, events, Identity, Pairing, SupportedModel } from 'src-ui/app/bindings';
 import { protectSecret, unprotectSecret } from '../../utils/secrets';
 import { OpenVRService } from '../openvr.service';
 import { ToastService } from '../toast.service';
@@ -132,14 +132,15 @@ export class SteamFrameService {
   }
 
   private async disconnectControllerOn(pairingId: string, serial: string): Promise<boolean> {
-    try {
-      await commands.steamFrameDisconnectController(pairingId, serial);
-      info(`[SteamFrame] Disconnected the headset controller ${serial}`);
-      return true;
-    } catch (e) {
-      error(`[SteamFrame] Could not disconnect the headset controller: ${JSON.stringify(e)}`);
+    const result = await commands.steamFrameDisconnectController(pairingId, serial);
+    if (result.status === 'error') {
+      error(
+        `[SteamFrame] Could not disconnect the headset controller: ${JSON.stringify(result.error)}`
+      );
       return false;
     }
+    info(`[SteamFrame] Disconnected the headset controller ${serial}`);
+    return true;
   }
 
   /** Turns off the Frame controllers among these devices, and ignores the rest. */

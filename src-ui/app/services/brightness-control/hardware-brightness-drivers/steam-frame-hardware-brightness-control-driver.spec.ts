@@ -3,7 +3,7 @@ import { BehaviorSubject, firstValueFrom, Subject } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { APP_SETTINGS_DEFAULT } from '../../../models/settings';
 import type { OVRDevice } from '../../../models/ovr-device';
-import type { Brightness } from '../../../bindings';
+import type { Brightness } from 'src-ui/app/bindings';
 import type {
   SteamFrameConnectionState,
   SteamFrameFadeEnded,

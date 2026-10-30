@@ -11,7 +11,7 @@ import {
   shareReplay,
 } from 'rxjs';
 import { OVRDevice } from '../../../models/ovr-device';
-import { Cct, commands } from '../../../bindings';
+import { Cct, commands } from 'src-ui/app/bindings';
 import {
   SteamFrameConnectionState,
   SteamFramePairing,
@@ -119,10 +119,13 @@ export class SteamFrameCctControlDriver extends CctControlDriver {
       if (target.kind !== 'frame' || !target.cct || target.pairingId !== next.pairingId) break;
       this.pending = null;
       sentTo = next.pairingId;
-      applied = await commands.steamFrameSetCct(sentTo, next.kelvin).catch((e) => {
-        warn(`[CCTControl] Could not set the Steam Frame color temperature: ${e}`);
-        return null;
-      });
+      const result = await commands.steamFrameSetCct(sentTo, next.kelvin);
+      if (result.status === 'error') {
+        warn(
+          `[CCTControl] Could not set the Steam Frame color temperature: ${JSON.stringify(result.error)}`
+        );
+      }
+      applied = result.status === 'ok' ? result.data : null;
     }
     this.sending = false;
 

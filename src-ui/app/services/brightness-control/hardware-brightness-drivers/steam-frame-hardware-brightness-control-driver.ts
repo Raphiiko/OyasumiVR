@@ -11,7 +11,7 @@ import {
 import { AppSettings } from '../../../models/settings';
 import { OVRDevice } from '../../../models/ovr-device';
 import type { OpenVRService, OpenVRStatus } from '../../openvr.service';
-import { Brightness, commands } from '../../../bindings';
+import { Brightness, commands } from 'src-ui/app/bindings';
 import {
   SteamFrameConnectionState,
   SteamFrameFadeEnded,
@@ -114,12 +114,16 @@ export class SteamFrameHardwareBrightnessControlDriver extends HardwareBrightnes
       const { percentage } = this.pending;
       this.pending = null;
       sentTo = this.frame.pairingId;
-      applied = await commands
-        .steamFrameSetBrightness(sentTo, this.softwarePercentageToHardwarePercentage(percentage))
-        .catch((e) => {
-          warn(`[SteamFrameHardwareBrightnessControlDriver] Could not set brightness: ${e}`);
-          return null;
-        });
+      const result = await commands.steamFrameSetBrightness(
+        sentTo,
+        this.softwarePercentageToHardwarePercentage(percentage)
+      );
+      if (result.status === 'error') {
+        warn(
+          `[SteamFrameHardwareBrightnessControlDriver] Could not set brightness: ${JSON.stringify(result.error)}`
+        );
+      }
+      applied = result.status === 'ok' ? result.data : null;
     }
     this.sending = false;
 

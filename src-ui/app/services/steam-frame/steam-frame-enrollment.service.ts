@@ -16,7 +16,7 @@ import {
   ProbeOutcome,
   RegisterOutcome,
   SteamFrameSetupStageEvent,
-} from '../../bindings';
+} from 'src-ui/app/bindings';
 import { ModalService } from '../modal.service';
 import { DeviceManagerService } from '../device-manager.service';
 import { SteamFrameService } from './steam-frame.service';
@@ -502,14 +502,13 @@ export class SteamFrameEnrollmentService {
     }
 
     // create a new key and token
-    let credentials: PairingKeys;
-    try {
-      credentials = await commands.steamFrameCreatePairingKeys();
-    } catch (e) {
-      error(`[SteamFramePairing] Could not create the pairing key: ${e}`);
+    const keys = await commands.steamFrameCreatePairingKeys();
+    if (keys.status === 'error') {
+      error(`[SteamFramePairing] Could not create the pairing key: ${keys.error}`);
       this.patchFlow({ page: 'found', busy: false, error: 'keys' });
       return undefined;
     }
+    const credentials: PairingKeys = keys.data;
 
     // replace any older pairing for this headset, and save
     const pairing: SteamFramePairing = {

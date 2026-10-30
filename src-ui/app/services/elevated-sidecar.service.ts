@@ -11,7 +11,7 @@ import {
 import { TelemetryService } from './telemetry/telemetry.service';
 import { OpenVRService } from './openvr.service';
 import { ElevationPromptSceneModalComponent } from '../components/elevation-prompt-scene-modal/elevation-prompt-scene-modal.component';
-import { commands, DisableResult, EnableResult, events } from '../bindings';
+import { commands, DisableResult, EnableResult, events } from 'src-ui/app/bindings';
 
 export type { DisableResult, EnableResult };
 export type ElevatedFeaturesOperation = 'idle' | 'enabling' | 'disabling';

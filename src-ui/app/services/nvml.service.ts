@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { commands, NvmlDevice, NvmlStatus } from '../bindings';
+import { commands, NvmlDevice, NvmlStatus } from 'src-ui/app/bindings';
 import { BehaviorSubject, delay, filter, interval, Observable, startWith, switchMap } from 'rxjs';
 import { ElevatedSidecarService } from './elevated-sidecar.service';
 import { info } from '@tauri-apps/plugin-log';
@@ -52,7 +52,8 @@ export class NvmlService {
   /** Rejects with the sidecar's error name when NVML refuses the limit. */
   public async setPowerLimit(uuid: string, powerLimit: number): Promise<void> {
     powerLimit = Math.floor(powerLimit);
-    await commands.nvmlSetPowerManagementLimit(uuid, powerLimit);
+    const result = await commands.nvmlSetPowerManagementLimit(uuid, powerLimit);
+    if (result.status === 'error') throw result.error;
     this._devices.next(await this.getDevices());
     info(`[Nvml] Set gpu power limit (uuid=${uuid}, powerLimit:${powerLimit})`);
   }

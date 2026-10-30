@@ -7,7 +7,7 @@ import {
   Stage,
   State,
   Status,
-} from '../bindings';
+} from 'src-ui/app/bindings';
 
 /** Removes the helper and every recorded PC key line, run on the headset itself. */
 export const STEAM_FRAME_UNINSTALL_COMMAND = 'bash ~/.local/share/oyasumivr_helper/uninstall';

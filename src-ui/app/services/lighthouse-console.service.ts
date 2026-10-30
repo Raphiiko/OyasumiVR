@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, firstValueFrom, Observable, pairwise, startWith } from 'rxjs';
 import { OpenVRService } from './openvr.service';
 import { AppSettingsService } from './app-settings.service';
-import { commands } from '../bindings';
+import { commands } from 'src-ui/app/bindings';
 import { OVRDevice } from '../models/ovr-device';
 import { error, info } from '@tauri-apps/plugin-log';
 import { ExecutableReferenceStatus } from '../models/settings';
@@ -59,29 +59,20 @@ export class LighthouseConsoleService {
       this._consoleStatus.next('NOT_FOUND');
       return;
     }
-    let stdout;
-    try {
-      stdout = (
-        await commands.runCommand(path, [
-          '/serial',
-          'bogus_device_id_that_absolutely_does_not_exist',
-          'bogus_command_that_absolutely_does_not_exist',
-        ])
-      ).stdout;
-    } catch (e) {
-      if (generation !== this.validationGeneration) return;
-      if (
-        typeof e === 'string' &&
-        ['NOT_FOUND', 'PERMISSION_DENIED', 'INVALID_FILENAME'].includes(e)
-      ) {
-        this._consoleStatus.next(e as ExecutableReferenceStatus);
-        return;
-      }
-      this._consoleStatus.next('UNKNOWN_ERROR');
+    const result = await commands.runCommand(path, [
+      '/serial',
+      'bogus_device_id_that_absolutely_does_not_exist',
+      'bogus_command_that_absolutely_does_not_exist',
+    ]);
+    if (generation !== this.validationGeneration) return;
+    if (result.status === 'error') {
+      const status = ['NOT_FOUND', 'PERMISSION_DENIED', 'INVALID_FILENAME'].includes(result.error)
+        ? (result.error as ExecutableReferenceStatus)
+        : 'UNKNOWN_ERROR';
+      this._consoleStatus.next(status);
       return;
     }
-    if (generation !== this.validationGeneration) return;
-    const stdoutLines = stdout.split('\n');
+    const stdoutLines = result.data.stdout.split('\n');
     if (
       !stdoutLines.length ||
       !stdoutLines[0].trim().startsWith('Version:  lighthouse_console.exe')
@@ -178,19 +169,21 @@ export class LighthouseConsoleService {
     if (!dongleId) return false;
     this.openvr.setTurningOff(device.index, true);
     info(`[Lighthouse] Turning off device ${device.class}:${device.serialNumber}`);
-    try {
-      const output = await commands.runCommand(lighthouseConsolePath, [
-        '/serial',
-        dongleId,
-        'poweroff',
-      ]);
-      if (output.status === 0) return true;
+    const result = await commands.runCommand(lighthouseConsolePath, [
+      '/serial',
+      dongleId,
+      'poweroff',
+    ]);
+    if (result.status === 'error') {
       error(
-        `[Lighthouse] Power-off command failed for ${device.serialNumber}: exit ${output.status}`
+        `[Lighthouse] Could not turn off device ${device.class}:${device.serialNumber}: ${result.error}`
       );
-    } catch (e) {
-      error(`[Lighthouse] Could not turn off device ${device.class}:${device.serialNumber}: ${e}`);
+      return false;
     }
+    if (result.data.status === 0) return true;
+    error(
+      `[Lighthouse] Power-off command failed for ${device.serialNumber}: exit ${result.data.status}`
+    );
     return false;
   }
 }
