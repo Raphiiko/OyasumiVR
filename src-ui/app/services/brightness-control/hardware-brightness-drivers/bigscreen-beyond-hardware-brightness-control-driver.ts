@@ -74,10 +74,11 @@ export class BigscreenBeyondHardwareBrightnessControlDriver extends HardwareBrig
     const hwPercentage = this.softwarePercentageToHardwarePercentage(percentage);
     this.lastSetBrightnessPercentage = percentage;
     const hwValue = this.swValueToHWValue(hwPercentage);
-    const result = await commands.bigscreenBeyondSetBrightness(hwValue);
-    if (result.status === 'error') {
-      warn(`[BSBHardwareBrightnessControlDriver] Could not set brightness: ${result.error}`);
-    }
+    void commands.bigscreenBeyondSetBrightness(hwValue).then((result) => {
+      if (result.status === 'error') {
+        warn(`[BSBHardwareBrightnessControlDriver] Could not set brightness: ${result.error}`);
+      }
+    });
   }
 
   isAvailable(): Observable<boolean> {
@@ -93,13 +94,9 @@ export class BigscreenBeyondHardwareBrightnessControlDriver extends HardwareBrig
   }
 
   private getBeyondDriverSavedBrightness(): Promise<number | null> {
+    // a failed read rejects, so the connect handler writes no brightness
     return commands.bigscreenBeyondGetSavedPreferences().then((result) => {
-      if (result.status === 'error') {
-        warn(
-          `[BigscreenBeyondHardwareBrightnessControlDriver] Could not read the Bigscreen Beyond driver utility preferences: ${result.error}`
-        );
-        return null;
-      }
+      if (result.status === 'error') throw result.error;
       if (!result.data) return null;
       let preferences:
         { brightness: number; overdrive: boolean; overdrive_brightness: number } | undefined;
