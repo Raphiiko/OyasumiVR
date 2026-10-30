@@ -143,7 +143,7 @@ export class KnownDeviceViewService {
     else await this.powerOn(device);
   }
 
-  /** The base station's settled power state, or null while it changes or is unknown. */
+  /** The base station's power state, or null while it changes or is out of range. */
   settledLighthouseStateOf(device: DMKnownDevice): LighthouseDevicePowerState | null {
     const lighthouseDevice = this.lighthouseFor(device);
     if (!lighthouseDevice || lighthouseDevice.transitioningToPowerState) return null;
