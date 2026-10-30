@@ -1406,11 +1406,9 @@
         "powerOffMode": {
           "description": "Anders als der Energiesparmodus, schaltet der Schlafmodus alle Motoren ab",
           "sleep": {
-            "description": "Laser und Motoren ausschalten",
             "title": "Schlafen"
           },
           "standby": {
-            "description": "Laser ausschalten",
             "title": "Stand-by"
           },
           "title": "Bevorzugter Status (An/Aus)"

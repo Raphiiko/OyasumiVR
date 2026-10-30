@@ -1011,16 +1011,10 @@
         "title": "Apparaat uitschakelen",
         "tooltip": "Dit apparaat is uitgeschakeld"
       },
-      "nickname": {
-        "description": "Geef dit apparaat een eigen naam zodat je het makkelijker herkent",
-        "title": "Bijnaam Apparaat"
-      },
       "tags": {
         "description": "Wijs tags toe om je apparaten te ordenen en te filteren",
-        "noTags": "Geen tags beschikbaar. Maak ze aan op het tabblad Tags.",
         "title": "Apparaattags"
       },
-      "title": "{deviceName} Configureren",
       "v1Identifier": {
         "change": "ID Wijzigen",
         "description": "OyasumiVR moet het ID van een V1 base station weten om het te kunnen besturen",
@@ -1032,6 +1026,36 @@
       "confirm": "Tag Verwijderen",
       "message": "Weet je zeker dat je deze tag wilt verwijderen? Hij wordt van alle apparaten verwijderd.",
       "title": "Tag Verwijderen"
+    },
+    "detail": {
+      "createTags": "Tags aanmaken",
+      "facts": {
+        "address": "Netwerkadres",
+        "bluetoothAddress": "Bluetooth-adres",
+        "dongleId": "Dongle-ID",
+        "hardwareRevision": "Hardwarerevisie",
+        "lastSeen": "Laatst gezien",
+        "manufacturer": "Fabrikant",
+        "model": "Model",
+        "now": "Nu",
+        "serialNumber": "Serienummer"
+      },
+      "helperUpdateAvailable": "Er is een nieuwe versie van de OyasumiVR-helper beschikbaar.",
+      "noTags": "Nog geen tags.",
+      "notConnected": "Niet verbonden",
+      "pairNeedsSteamVR": "Verbind de headset met SteamVR om hem te koppelen.",
+      "powerOffState": {
+        "description": "Geldt voor al je base stations."
+      },
+      "sections": {
+        "baseStation": "Base station",
+        "details": "Details",
+        "settings": "Instellingen"
+      },
+      "tabs": {
+        "general": "Algemeen",
+        "steamFrame": "Steam Frame"
+      }
     },
     "deviceSelector": {
       "deselectAll": "Alles Deselecteren",
@@ -1967,11 +1991,9 @@
         "powerOffMode": {
           "description": "In tegenstelling tot standbymodus schakelt slaapmodus ook de motoren uit, waardoor het langer kan duren om weer aan te gaan.",
           "sleep": {
-            "description": "Lasers & motoren\nuitschakelen",
             "title": "Slaap"
           },
           "standby": {
-            "description": "Lasers\nuitschakelen",
             "title": "Standby"
           },
           "title": "Gewenste uit-stand"

@@ -1011,16 +1011,10 @@
         "title": "デバイスを無効化",
         "tooltip": "無効化されたデバイス"
       },
-      "nickname": {
-        "description": "識別用のカスタム名を設定",
-        "title": "デバイス名"
-      },
       "tags": {
         "description": "整理、フィルタリングするためにタグを割り当てます",
-        "noTags": "利用可能なタグがありません。タグを作成してください",
         "title": "デバイスタグ"
       },
-      "title": "{deviceName}の設定",
       "v1Identifier": {
         "change": "IDを変更",
         "description": "V1ベースステーションを制御するためにはそのIDを認識する必要があります",
@@ -1032,6 +1026,36 @@
       "confirm": "削除",
       "message": "このタグを全デバイスから削除します。よろしいですか？",
       "title": "タグを削除"
+    },
+    "detail": {
+      "createTags": "タグを作成",
+      "facts": {
+        "address": "ネットワークアドレス",
+        "bluetoothAddress": "Bluetoothアドレス",
+        "dongleId": "ドングルID",
+        "hardwareRevision": "ハードウェアリビジョン",
+        "lastSeen": "最終確認日時",
+        "manufacturer": "メーカー",
+        "model": "モデル",
+        "now": "現在",
+        "serialNumber": "シリアル番号"
+      },
+      "helperUpdateAvailable": "OyasumiVRヘルパーの新しいバージョンがあります。",
+      "noTags": "タグはまだありません。",
+      "notConnected": "未接続",
+      "pairNeedsSteamVR": "ペアリングするには、HMDをSteamVRに接続してください。",
+      "powerOffState": {
+        "description": "すべてのベースステーションに適用されます。"
+      },
+      "sections": {
+        "baseStation": "ベースステーション",
+        "details": "詳細",
+        "settings": "設定"
+      },
+      "tabs": {
+        "general": "一般",
+        "steamFrame": "Steam Frame"
+      }
     },
     "deviceSelector": {
       "deselectAll": "全解除",
@@ -1978,11 +2002,9 @@
         "powerOffMode": {
           "description": "スリープモードはスタンバイモードと異なり、モーターもオフになるため復帰に時間がかかる場合があります",
           "sleep": {
-            "description": "電源オフ\nレーザー・モーター",
             "title": "スリープ"
           },
           "standby": {
-            "description": "電源オフ\nレーザー",
             "title": "スタンバイ"
           },
           "title": "優先する電源オフ状態"

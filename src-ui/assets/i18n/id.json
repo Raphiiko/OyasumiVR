@@ -764,11 +764,9 @@
         "powerOffMode": {
           "description": "Tidak seperti mode Siaga, mode Tidur juga mematikan motor, yang mungkin memerlukan waktu lebih lama untuk menghidupkannya kembali.",
           "sleep": {
-            "description": "Matikan daya\nlaser & motor",
             "title": "Tidur"
           },
           "standby": {
-            "description": "Matikan\nlaser",
             "title": "Siaga"
           },
           "title": "Status daya mati yang diinginkan"

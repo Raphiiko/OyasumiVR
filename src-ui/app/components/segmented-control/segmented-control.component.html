@@ -1,0 +1,7 @@
+<div class="segmented-control">
+  @for (item of items(); track item.id) {
+    <button [class.active]="item.id === selected()" (click)="selected.set(item.id)">
+      {{ item.label | transloco }}
+    </button>
+  }
+</div>

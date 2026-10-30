@@ -1011,16 +1011,10 @@
         "title": "禁用设备",
         "tooltip": "此设备已被禁用"
       },
-      "nickname": {
-        "description": "为此设备设置一个自定义名称，方便识别",
-        "title": "设备昵称"
-      },
       "tags": {
         "description": "为设备分配标签以便分类和筛选",
-        "noTags": "暂无可用标签，请在“标签”选项卡中创建",
         "title": "设备标签"
       },
-      "title": "配置 {deviceName}",
       "v1Identifier": {
         "change": "更改 ID",
         "description": "OyasumiVR 需要知道 V1 基站的 ID 才能控制它",
@@ -1032,6 +1026,36 @@
       "confirm": "删除标签",
       "message": "确定要删除该标签吗？它将从所有设备中移除。",
       "title": "删除标签"
+    },
+    "detail": {
+      "createTags": "创建标签",
+      "facts": {
+        "address": "网络地址",
+        "bluetoothAddress": "蓝牙地址",
+        "dongleId": "接收器 ID",
+        "hardwareRevision": "硬件版本",
+        "lastSeen": "上次识别时间",
+        "manufacturer": "制造商",
+        "model": "型号",
+        "now": "现在",
+        "serialNumber": "序列号"
+      },
+      "helperUpdateAvailable": "OyasumiVR 辅助程序有新版本可用。",
+      "noTags": "暂无标签。",
+      "notConnected": "未连接",
+      "pairNeedsSteamVR": "请将头显连接到 SteamVR 以进行配对。",
+      "powerOffState": {
+        "description": "适用于你所有的基站。"
+      },
+      "sections": {
+        "baseStation": "基站",
+        "details": "详细信息",
+        "settings": "设置"
+      },
+      "tabs": {
+        "general": "常规",
+        "steamFrame": "Steam Frame"
+      }
     },
     "deviceSelector": {
       "deselectAll": "取消全选",
@@ -1978,11 +2002,9 @@
         "powerOffMode": {
           "description": "与待机模式不同的是，睡眠模式会关闭电机，重新开启可能需要更长时间。",
           "sleep": {
-            "description": "关闭电源：\n激光和马达",
             "title": "睡眠"
           },
           "standby": {
-            "description": "关闭电源：\n激光",
             "title": "待机"
           },
           "title": "首选的断电状态"

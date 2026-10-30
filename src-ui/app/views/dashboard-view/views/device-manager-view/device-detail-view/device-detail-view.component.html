@@ -1,0 +1,228 @@
+@if (device; as device) {
+  <div class="pane fill">
+    <div class="pane-title breadcrumb">
+      <button class="crumb-back" (click)="back()">{{ 'device-manager.title' | transloco }}</button>
+      <span class="crumb-sep">/</span>
+      <span class="crumb-current">{{ displayName }}</span>
+    </div>
+
+    <div class="device-header">
+      <div class="icon-ring">
+        <app-icon
+          [name]="devices.typeIcon(device.deviceType)"
+          [mirrored]="
+            device.deviceType === 'CONTROLLER' && devices.ovrFor(device)?.role === 'RightHand'
+          "
+        />
+      </div>
+      <div class="header-text">
+        @if (nameDraft !== null) {
+          <input
+            #nameInput
+            class="header-name-input"
+            type="text"
+            [placeholder]="device.defaultName"
+            [(ngModel)]="nameDraft"
+            [maxlength]="32"
+            (keydown.enter)="saveName()"
+            (keydown.escape)="cancelRename()"
+            (blur)="saveName()"
+          />
+        } @else {
+          <button class="header-name" (click)="startRename()">
+            <span>{{ displayName }}</span>
+            <app-icon name="edit" class="rename-icon" />
+          </button>
+        }
+        <div class="header-sub">
+          @if (device.nickname) {
+            <span class="original-name">{{ device.defaultName }}</span>
+            ·
+          }
+          {{ device.typeName }}
+          @if (devices.roleKeyOf(device); as role) {
+            · {{ role | transloco }}
+          }
+        </div>
+        @if (headerPill() || assignedTags().length) {
+          <div class="header-chips">
+            @if (headerPill(); as pill) {
+              @if (pill.framePill; as framePill) {
+                <button
+                  [class]="'status-pill clickable tone-' + pill.tone"
+                  (click)="onHeaderPill(framePill)"
+                >
+                  <i></i>{{ pill.key | transloco: pill.params }}
+                </button>
+              } @else {
+                <span [class]="'status-pill tone-' + pill.tone">
+                  <i></i>{{ pill.key | transloco: pill.params }}
+                </span>
+              }
+            }
+            @for (tag of assignedTags(); track tag.id) {
+              <span class="tag-chip"><i [style.background]="tag.color"></i>{{ tag.name }}</span>
+            }
+          </div>
+        }
+      </div>
+      <div class="header-actions">
+        @if (devices.batteryOf(device); as battery) {
+          <div class="battery" [class.low]="battery.level < 20">
+            <span>{{ battery.level }}%</span>
+            <app-icon [name]="battery.isCharging ? 'battery' : 'battery-level'" />
+          </div>
+        }
+        @if (devices.lighthouseFor(device); as lighthouseDevice) {
+          @if (v1IdentifierMode() !== 'NEEDS_ID') {
+            <div class="force-group">
+              @for (force of forceStates; track force.state) {
+                @if (force.state !== 'standby' || lighthouseDevice.deviceType === 'lighthouseV2') {
+                  <button
+                    class="force-btn"
+                    [class.current]="lighthouseState() === force.state"
+                    [tooltip]="force.label | transloco"
+                    [tooltipMode]="'bottom'"
+                    (click)="devices.forceLighthouseState(device, force.state)"
+                  >
+                    <app-icon [name]="force.icon" />
+                  </button>
+                }
+              }
+            </div>
+          }
+        }
+        @if (devices.canShowPowerButton(device)) {
+          <app-device-power-button
+            [powerState]="devices.powerStateOf(device)"
+            (powerAction)="devices.handlePowerAction(device, $event)"
+          />
+        }
+      </div>
+    </div>
+
+    @if (frames.isSupported(device)) {
+      <div class="tab-bar">
+        <div class="tab" [class.active]="tab === 'general'" (click)="tab = 'general'">
+          <div class="tab-label">{{ 'device-manager.detail.tabs.general' | transloco }}</div>
+        </div>
+        <div class="tab" [class.active]="tab === 'frame'" (click)="tab = 'frame'">
+          <div class="tab-label">{{ 'device-manager.detail.tabs.steamFrame' | transloco }}</div>
+        </div>
+      </div>
+    }
+
+    <div class="pane-content scroll" [class.under-header]="!frames.isSupported(device)">
+      <div class="setting-view-container">
+        @if (tab === 'general' || !frames.isSupported(device)) {
+          <ng-container *ngTemplateOutlet="general; context: { $implicit: device }" />
+        } @else {
+          <app-steam-frame-device-tab [device]="device" />
+        }
+      </div>
+    </div>
+  </div>
+
+  <ng-template #general let-device>
+    @if (device.deviceType === 'LIGHTHOUSE') {
+      <div class="setting-category">
+        <h2>{{ 'device-manager.detail.sections.baseStation' | transloco }}</h2>
+        <div class="settings">
+          @if (v1IdentifierMode() !== 'NONE') {
+            <app-setting-row
+              label="device-manager.config.v1Identifier.title"
+              description="device-manager.config.v1Identifier.description"
+            >
+              <button
+                class="btn"
+                [class.btn-primary]="v1IdentifierMode() === 'NEEDS_ID'"
+                [class.btn-secondary]="v1IdentifierMode() === 'HAS_ID'"
+                (click)="openV1IdWizard()"
+              >
+                {{
+                  (v1IdentifierMode() === 'NEEDS_ID'
+                    ? 'device-manager.config.v1Identifier.set'
+                    : 'device-manager.config.v1Identifier.change'
+                  ) | transloco
+                }}
+              </button>
+            </app-setting-row>
+          }
+          <app-setting-row
+            label="settings.general.lighthousePowerControl.powerOffMode.title"
+            description="device-manager.detail.powerOffState.description"
+          >
+            <app-segmented-control
+              [items]="powerOffStates"
+              [selected]="lighthousePowerOffState"
+              (selectedChange)="setPowerOffState($event)"
+            />
+          </app-setting-row>
+        </div>
+      </div>
+    }
+
+    <div class="setting-category">
+      <h2>{{ 'device-manager.detail.sections.settings' | transloco }}</h2>
+      <div class="settings">
+        <app-setting-row
+          label="device-manager.config.tags.title"
+          description="device-manager.config.tags.description"
+        >
+          @if (tags.length) {
+            <div class="tag-picker">
+              @for (tag of tags; track tag.id) {
+                <button
+                  class="tag-chip"
+                  [class.selected]="isTagAssigned(tag)"
+                  (click)="toggleTag(tag)"
+                >
+                  <i [style.background]="tag.color"></i>{{ tag.name }}
+                  @if (isTagAssigned(tag)) {
+                    <app-icon name="check" />
+                  }
+                </button>
+              }
+            </div>
+          } @else {
+            <div class="no-tags">
+              <span>{{ 'device-manager.detail.noTags' | transloco }}</span>
+              <button class="btn btn-secondary" (click)="openTags()">
+                {{ 'device-manager.detail.createTags' | transloco }}
+              </button>
+            </div>
+          }
+        </app-setting-row>
+        <app-setting-row
+          label="device-manager.config.disabled.title"
+          description="device-manager.config.disabled.description"
+        >
+          <label class="switch-toggle">
+            <input type="checkbox" [checked]="device.disabled" (change)="toggleDisabled()" />
+            <span class="switch-toggle-slider"></span>
+          </label>
+        </app-setting-row>
+      </div>
+    </div>
+
+    <div class="setting-category">
+      <h2>{{ 'device-manager.detail.sections.details' | transloco }}</h2>
+      <div class="settings">
+        @for (fact of facts(); track fact.label) {
+          <app-setting-row [label]="fact.label">
+            <span class="fact-value">{{ fact.value }}</span>
+          </app-setting-row>
+        }
+        <app-setting-row label="device-manager.detail.facts.lastSeen">
+          <span class="fact-value">
+            @if (devices.isObserved(device)) {
+              {{ 'device-manager.detail.facts.now' | transloco }}
+            } @else {
+              {{ device.lastSeen | localizedDate: 'medium' }}
+            }
+          </span>
+        </app-setting-row>
+      </div>
+    </div>
+  </ng-template>
+}

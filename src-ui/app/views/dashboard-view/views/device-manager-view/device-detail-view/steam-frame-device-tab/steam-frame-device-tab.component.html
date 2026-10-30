@@ -1,0 +1,90 @@
+@if (frames.details(device()); as frame) {
+  @if (!frame.paired) {
+    <div class="pair-card">
+      <app-icon name="link" class="pair-icon" />
+      <div class="pair-text">
+        <h2>{{ 'steamFrame.invitation.title' | transloco }}</h2>
+        <p>{{ 'steamFrame.invitation.body' | transloco }}</p>
+        @if (!frame.canPair) {
+          <p class="pair-hint">{{ 'device-manager.detail.pairNeedsSteamVR' | transloco }}</p>
+        }
+      </div>
+      @if (frame.canPair) {
+        <button class="btn btn-primary" (click)="frames.onAction(device(), 'pair')">
+          {{ 'steamFrame.actions.pairThis' | transloco }}
+        </button>
+      }
+    </div>
+  } @else {
+    <div class="setting-category">
+      <h2>{{ 'steamFrame.details.helper' | transloco }}</h2>
+      @if (frame.canUpdate || frame.updating) {
+        <app-alert severity="info" contentClass="with-action" class="helper-update">
+          <span>{{ 'device-manager.detail.helperUpdateAvailable' | transloco }}</span>
+          <button
+            class="btn btn-secondary"
+            [disabled]="frame.updating || frame.repairing"
+            (click)="frames.updateHelper(device())"
+          >
+            {{
+              (frame.updating ? 'steamFrame.details.updating' : 'steamFrame.actions.update')
+                | transloco
+            }}
+          </button>
+        </app-alert>
+      }
+      <div class="settings">
+        <app-setting-row
+          [labelText]="
+            frame.version
+              ? ('steamFrame.details.version' | transloco: { version: frame.version })
+              : ('steamFrame.details.versionUnknown' | transloco)
+          "
+        >
+          @if (frame.upToDate) {
+            <span class="fact-value">{{ 'steamFrame.details.upToDate' | transloco }}</span>
+          }
+        </app-setting-row>
+        @if (frame.pairAgain) {
+          <app-setting-row
+            label="steamFrame.statusDetail.notRecognized.title"
+            description="steamFrame.statusDetail.notRecognized.body"
+          >
+            <button class="btn btn-primary" (click)="frames.onAction(device(), 'pair')">
+              {{ 'steamFrame.actions.pairAgain' | transloco }}
+            </button>
+          </app-setting-row>
+        } @else if (frame.canRepair) {
+          <app-setting-row
+            label="steamFrame.details.repair"
+            description="steamFrame.details.repairDescription"
+          >
+            <button
+              class="btn btn-secondary"
+              [disabled]="frame.repairing || frame.updating"
+              (click)="frames.repairHelper(device())"
+            >
+              {{
+                (frame.repairing ? 'steamFrame.details.repairing' : 'steamFrame.actions.repair')
+                  | transloco
+              }}
+            </button>
+          </app-setting-row>
+        }
+      </div>
+    </div>
+    <div class="setting-category">
+      <h2>{{ 'steamFrame.details.pairing' | transloco }}</h2>
+      <div class="settings">
+        <app-setting-row
+          label="steamFrame.details.pairing"
+          description="steamFrame.details.pairingDescription"
+        >
+          <button class="btn btn-caution" (click)="frames.unpair(device())">
+            {{ 'steamFrame.actions.' + (frame.removedOnHeadset ? 'forget' : 'unpair') | transloco }}
+          </button>
+        </app-setting-row>
+      </div>
+    </div>
+  }
+}

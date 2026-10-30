@@ -901,12 +901,8 @@
       "disabled": {
         "tooltip": "Este dispositivo está desactivado"
       },
-      "nickname": {
-        "description": "Establece un nombre personalizado para este dispositivo para facilitar su identificación"
-      },
       "tags": {
-        "description": "Asigna etiquetas para organizar y filtrar tus dispositivos",
-        "noTags": "No hay etiquetas disponibles. Crea algunas en la pestaña Etiquetas."
+        "description": "Asigna etiquetas para organizar y filtrar tus dispositivos"
       },
       "v1Identifier": {
         "change": "Cambiar ID",
@@ -1644,12 +1640,6 @@
         },
         "powerOffMode": {
           "description": "A diferencia del modo Standby, el modo Sleep también apaga los motores, que pueden tardar más en volver a encenderse.",
-          "sleep": {
-            "description": "Apagar\nláseres y motores"
-          },
-          "standby": {
-            "description": "Apagar\nláseres"
-          },
           "title": "Estado de apagado preferido"
         },
         "title": "Control de energía de las estaciones base SteamVR"

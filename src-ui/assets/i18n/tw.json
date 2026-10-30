@@ -1011,16 +1011,10 @@
         "title": "停用裝置",
         "tooltip": "此裝置已停用"
       },
-      "nickname": {
-        "description": "設定此裝置的自訂名稱，使其更容易識別",
-        "title": "裝置暱稱"
-      },
       "tags": {
         "description": "使用標籤來整理與篩選你的裝置",
-        "noTags": "無標籤可用。 請在標籤索引標籤中建立一些標籤。",
         "title": "裝置標籤"
       },
-      "title": "設定 {deviceName}",
       "v1Identifier": {
         "change": "更改 ID",
         "description": "OyasumiVR 需要知道 V1 定位器的 ID 才能控制它",
@@ -1032,6 +1026,36 @@
       "confirm": "刪除標籤",
       "message": "你確定要刪除此標籤嗎？它將從所有裝置中移除。",
       "title": "刪除標籤"
+    },
+    "detail": {
+      "createTags": "建立標籤",
+      "facts": {
+        "address": "網路位址",
+        "bluetoothAddress": "藍牙位址",
+        "dongleId": "接收器 ID",
+        "hardwareRevision": "硬體版本",
+        "lastSeen": "最後偵測時間",
+        "manufacturer": "製造商",
+        "model": "型號",
+        "now": "現在",
+        "serialNumber": "序號"
+      },
+      "helperUpdateAvailable": "OyasumiVR 輔助程式有新版本可用。",
+      "noTags": "尚無標籤。",
+      "notConnected": "未連線",
+      "pairNeedsSteamVR": "請將頭戴顯示器連線到 SteamVR 以進行配對。",
+      "powerOffState": {
+        "description": "套用於你所有的定位器。"
+      },
+      "sections": {
+        "baseStation": "定位器",
+        "details": "詳細資訊",
+        "settings": "設定"
+      },
+      "tabs": {
+        "general": "一般",
+        "steamFrame": "Steam Frame"
+      }
     },
     "deviceSelector": {
       "deselectAll": "全部取消選取",
@@ -1967,11 +1991,9 @@
         "powerOffMode": {
           "description": "與待機模式不同的是，睡眠模式會關閉馬達，重新開啟可能需要更長時間。",
           "sleep": {
-            "description": "關閉電源：\n雷射和馬達",
             "title": "睡眠"
           },
           "standby": {
-            "description": "關閉電源：\n雷射",
             "title": "待機"
           },
           "title": "首選的斷電狀態"

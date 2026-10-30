@@ -1,107 +1,26 @@
-import {
-  ChangeDetectorRef,
-  Component,
-  OnInit,
-  AfterViewInit,
-  DestroyRef,
-  ChangeDetectionStrategy,
-} from '@angular/core';
+import { Router } from '@angular/router';
+import { ChangeDetectorRef, Component, OnInit, AfterViewInit, DestroyRef } from '@angular/core';
 import { DeviceManagerService } from '../../../../../../services/device-manager.service';
 import { OpenVRService } from '../../../../../../services/openvr.service';
 import { LighthouseService } from '../../../../../../services/lighthouse.service';
-import { DeviceControlService } from '../../../../../../services/device-control.service';
 import { ModalService } from '../../../../../../services/modal.service';
-import { EventLogService } from '../../../../../../services/event-log.service';
-import { AppSettingsService } from '../../../../../../services/app-settings.service';
-import { EventLogLighthouseSetPowerState } from '../../../../../../models/event-log-entry';
-import {
-  DeviceManagerConfigModalComponent,
-  DeviceManagerConfigModalInputModel,
-  DeviceManagerConfigModalOutputModel,
-} from '../../../../../../components/device-manager-config-modal/device-manager-config-modal.component';
 import {
   ConfirmModalComponent,
   ConfirmModalInputModel,
   ConfirmModalOutputModel,
 } from '../../../../../../components/confirm-modal/confirm-modal.component';
 import { DMKnownDevice, DMDeviceType, DMDeviceTag } from '../../../../../../models/device-manager';
-import { OVRDevice } from '../../../../../../models/ovr-device';
-import {
-  LighthouseDevice,
-  LighthouseDevicePowerState,
-} from '../../../../../../models/lighthouse-device';
-import { combineLatest, firstValueFrom } from 'rxjs';
+import { LighthouseDevicePowerState } from '../../../../../../models/lighthouse-device';
+import { combineLatest } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import {
-  DevicePowerState,
-  DevicePowerAction,
-} from '../../../../../../components/device-power-button/device-power-button.component';
+import { DevicePowerAction } from '../../../../../../components/device-power-button/device-power-button.component';
 import { fade, vshrink } from '../../../../../../utils/animations';
 import { SelectBoxItem } from '../../../../../../components/select-box/select-box.component';
 import { DomSanitizer } from '@angular/platform-browser';
 import Fuse, { IFuseOptions } from 'fuse.js';
-import {
-  LighthouseV1IdWizardModalComponent,
-  LighthouseV1IdWizardModalOutputModel,
-} from 'src-ui/app/components/lighthouse-v1-id-wizard-modal/lighthouse-v1-id-wizard-modal.component';
-import { LighthouseV1IdWizardModalInputModel } from 'src-ui/app/components/lighthouse-v1-id-wizard-modal/lighthouse-v1-id-wizard-modal.component';
 import { SteamFrameService } from 'src-ui/app/services/steam-frame/steam-frame.service';
-import { SteamFrameEnrollmentService } from 'src-ui/app/services/steam-frame/steam-frame-enrollment.service';
-import { FLAVOUR } from 'src-ui/build';
-import {
-  SteamFrameConnectionState,
-  SteamFrameConnectionStatus,
-} from 'src-ui/app/models/steam-frame';
-
-interface FramePill {
-  key: string;
-  icon: string;
-  tone: 'neutral' | 'warn' | 'bad';
-  params?: Record<string, string>;
-  /** A key under `steamFrame.statusDetail` whose title and body explain the pill when clicked. */
-  detail?: string;
-  /** Clicking the pill starts a helper update instead of explaining it. */
-  startsUpdate?: boolean;
-}
-
-type FrameAction = 'pair' | 'pairAgain' | 'retryUpdate' | 'reinstall';
-
-/** A healthy Frame gets only a badge on its icon; any other state gets only a pill. */
-interface FrameRow {
-  badge?: 'connected' | 'connecting';
-  pill?: FramePill;
-  action?: FrameAction;
-}
-
-/** Statuses that outrank helper maintenance, with their pill and action. */
-const FRAME_STATUS_ROWS: Partial<Record<SteamFrameConnectionStatus, FrameRow>> = {
-  hostKeyChanged: {
-    pill: {
-      key: 'notRecognized',
-      icon: 'exclamation-circle',
-      tone: 'bad',
-      detail: 'notRecognized',
-    },
-    action: 'pairAgain',
-  },
-  helperMissing: {
-    pill: {
-      key: 'helperMissing',
-      icon: 'exclamation-circle',
-      tone: 'bad',
-      detail: 'helperMissing',
-    },
-    action: 'reinstall',
-  },
-  needsAppUpdate: {
-    pill: {
-      key: 'updateApp',
-      icon: 'update',
-      tone: 'warn',
-      detail: FLAVOUR === 'STEAM' ? 'needsAppUpdateSteam' : 'needsAppUpdate',
-    },
-  },
-};
+import { KnownDeviceViewService } from 'src-ui/app/views/dashboard-view/views/device-manager-view/known-device-view.service';
+import { SteamFrameDeviceViewService } from 'src-ui/app/views/dashboard-view/views/device-manager-view/steam-frame-device-view.service';
 
 type DeviceGroupType = DMDeviceType | 'PREVIOUSLY_SEEN';
 
@@ -117,15 +36,12 @@ interface DeviceGroup {
   templateUrl: './device-manager-devices-tab.component.html',
   styleUrls: ['./device-manager-devices-tab.component.scss'],
   animations: [fade(), vshrink()],
-  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false,
 })
 export class DeviceManagerDevicesTabComponent implements OnInit, AfterViewInit {
   knownDevices: DMKnownDevice[] = [];
   observedDeviceIds: string[] = [];
   tags: DMDeviceTag[] = [];
-  ovrDevices: OVRDevice[] = [];
-  lighthouseDevices: LighthouseDevice[] = [];
 
   // Device filtering
   searchQuery = '';
@@ -143,15 +59,14 @@ export class DeviceManagerDevicesTabComponent implements OnInit, AfterViewInit {
     private deviceManager: DeviceManagerService,
     private openvr: OpenVRService,
     private lighthouse: LighthouseService,
-    private deviceControl: DeviceControlService,
     private modalService: ModalService,
-    private eventLog: EventLogService,
-    private appSettings: AppSettingsService,
     private destroyRef: DestroyRef,
     private domSanitizer: DomSanitizer,
     private cdr: ChangeDetectorRef,
-    protected steamFrame: SteamFrameService,
-    private frameEnrollment: SteamFrameEnrollmentService
+    private steamFrame: SteamFrameService,
+    private router: Router,
+    protected devices: KnownDeviceViewService,
+    protected frames: SteamFrameDeviceViewService
   ) {}
 
   ngOnInit() {
@@ -164,12 +79,10 @@ export class DeviceManagerDevicesTabComponent implements OnInit, AfterViewInit {
       this.lighthouse.devices,
     ])
       .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(([knownDevices, observedDeviceIds, tags, ovrDevices, lighthouseDevices]) => {
+      .subscribe(([knownDevices, observedDeviceIds, tags]) => {
         this.knownDevices = knownDevices;
         this.observedDeviceIds = observedDeviceIds;
         this.tags = tags;
-        this.ovrDevices = ovrDevices;
-        this.lighthouseDevices = lighthouseDevices;
 
         // Initialize Fuse.js with updated devices
         this.initializeFuse();
@@ -336,21 +249,6 @@ export class DeviceManagerDevicesTabComponent implements OnInit, AfterViewInit {
     }
   }
 
-  getDeviceTypeIconForDevice(type: DMDeviceType): string {
-    switch (type) {
-      case 'HMD':
-        return 'headset';
-      case 'CONTROLLER':
-        return 'controller';
-      case 'TRACKER':
-        return 'tracker';
-      case 'LIGHTHOUSE':
-        return 'base-station';
-      default:
-        return 'device';
-    }
-  }
-
   getDeviceTypeLabel(type: DeviceGroupType): string {
     return `device-manager.deviceType.${type}`;
   }
@@ -363,322 +261,18 @@ export class DeviceManagerDevicesTabComponent implements OnInit, AfterViewInit {
     return this.observedDeviceIds.includes(deviceId);
   }
 
-  getDeviceOVR(device: DMKnownDevice): OVRDevice | undefined {
-    if (!device.id.startsWith('OVR_')) return undefined;
-    return this.ovrDevices.find((d) => this.deviceManager['getIdForOpenVRDevice'](d) === device.id);
-  }
-
-  getDeviceLighthouse(device: DMKnownDevice): LighthouseDevice | undefined {
-    if (!device.id.startsWith('LH_')) return undefined;
-    return this.lighthouseDevices.find(
-      (d) => this.deviceManager['getIdForLighthouseDevice'](d) === device.id
-    );
-  }
-
   getDeviceTags(device: DMKnownDevice): DMDeviceTag[] {
     return this.deviceManager.getTagsForKnownDevice(device);
   }
 
-  getDeviceBatteryInfo(device: DMKnownDevice): { level: number; isCharging: boolean } | null {
-    const ovrDevice = this.getDeviceOVR(device);
-    if (ovrDevice && ovrDevice.providesBatteryStatus) {
-      return {
-        level: Math.round(ovrDevice.battery * 100),
-        isCharging: ovrDevice.isCharging || false,
-      };
-    }
-    return null;
-  }
-
-  getDeviceRole(device: DMKnownDevice): string | null {
-    const ovrDevice = this.getDeviceOVR(device);
-    if (ovrDevice && ovrDevice.handleType) {
-      return `comp.device-list.deviceRole.${ovrDevice.handleType}`;
-    }
-    return null;
-  }
-
-  getDeviceSerialNumber(device: DMKnownDevice): string | null {
-    const ovrDevice = this.getDeviceOVR(device);
-    if (ovrDevice && ovrDevice.serialNumber) {
-      return ovrDevice.serialNumber;
-    }
-    const lighthouseDevice = this.getDeviceLighthouse(device);
-    if (lighthouseDevice && lighthouseDevice.deviceName) {
-      return lighthouseDevice.deviceName;
-    }
-    return null;
-  }
-
-  async powerOffDevice(device: DMKnownDevice) {
-    const ovrDevice = this.getDeviceOVR(device);
-    const lighthouseDevice = this.getDeviceLighthouse(device);
-
-    const deviceName = device.nickname ?? device.defaultName;
-    if (ovrDevice && ovrDevice.canPowerOff) {
-      const dispatched = await this.deviceControl.turnOffDeviceForUser(ovrDevice, deviceName);
-      this.eventLog.logTurnedOffOpenVRDevices(dispatched, 'MANUAL');
-    } else if (lighthouseDevice) {
-      const state = this.appSettings.settingsSync.lighthousePowerOffState;
-      this.logLighthousePowerState(state);
-      await this.lighthouse.setPowerStateForUser(lighthouseDevice, state, deviceName);
-    }
-  }
-
-  async powerOnDevice(device: DMKnownDevice) {
-    const lighthouseDevice = this.getDeviceLighthouse(device);
-    if (lighthouseDevice) {
-      this.logLighthousePowerState('on');
-      await this.lighthouse.setPowerStateForUser(
-        lighthouseDevice,
-        'on',
-        device.nickname ?? device.defaultName
-      );
-    }
-  }
-
-  private logLighthousePowerState(state: EventLogLighthouseSetPowerState['state']) {
-    this.eventLog.logEvent({
-      type: 'lighthouseSetPowerState',
-      reason: 'MANUAL',
-      state,
-      devices: 'SINGLE',
-    } as EventLogLighthouseSetPowerState);
-  }
-
-  getDevicePowerState(device: DMKnownDevice): DevicePowerState {
-    const ovrDevice = this.getDeviceOVR(device);
-    const lighthouseDevice = this.getDeviceLighthouse(device);
-
-    // Handle OVR devices (controllers, trackers, HMDs)
-    if (ovrDevice) {
-      if (ovrDevice.isTurningOff) return 'turning-off';
-      if (ovrDevice.canPowerOff) return 'on';
-      // If device can't be powered off, its power state is unknown/uncontrollable
-      return 'unknown';
-    }
-
-    // Handle lighthouse devices
-    if (lighthouseDevice) {
-      if (this.lighthouse.deviceNeedsIdentifier(lighthouseDevice)) return 'attention';
-
-      if (lighthouseDevice.transitioningToPowerState) {
-        switch (lighthouseDevice.transitioningToPowerState) {
-          case 'on':
-            return 'turning-on';
-          case 'sleep':
-          case 'standby':
-            return 'turning-off';
-          case 'booting':
-            return 'turning-on';
-          case 'unknown':
-          default:
-            return 'unknown';
-        }
-      } else {
-        switch (lighthouseDevice.powerState) {
-          case 'on':
-            return 'on';
-          case 'sleep':
-          case 'standby':
-            return 'off';
-          case 'booting':
-            return 'turning-on';
-          default:
-            return 'unknown';
-        }
-      }
-    }
-
-    return 'unknown';
-  }
-
-  getDevicePowerTitle(device: DMKnownDevice): string {
-    const powerState = this.getDevicePowerState(device);
-    switch (powerState) {
-      case 'on':
-        return 'device-manager.actions.powerOff';
-      case 'off':
-        return 'device-manager.actions.powerOn';
-      case 'turning-off':
-        return 'device-manager.status.turningOff';
-      case 'turning-on':
-        return 'device-manager.status.turningOn';
-      default:
-        return '';
-    }
-  }
-
-  canShowPowerButton(device: DMKnownDevice): boolean {
-    const ovrDevice = this.getDeviceOVR(device);
-    const lighthouseDevice = this.getDeviceLighthouse(device);
-
-    // Handle OVR devices
-    if (ovrDevice) {
-      // HMDs never show power button
-      if (ovrDevice.class === 'HMD') {
-        return false;
-      }
-
-      // Controllers and Trackers only show power button if they can be powered off or are turning off
-      if (ovrDevice.class === 'Controller' || ovrDevice.class === 'GenericTracker') {
-        return ovrDevice.canPowerOff || ovrDevice.isTurningOff;
-      }
-
-      // For any other OVR device types, don't show power button
-      return false;
-    }
-
-    // Handle lighthouse devices - they can always show power buttons
-    if (lighthouseDevice) {
-      return true;
-    }
-
-    // Unknown device type
-    return false;
-  }
-
   async handleDevicePowerAction(device: DMKnownDevice, action: DevicePowerAction) {
-    const lighthouseDevice = this.getDeviceLighthouse(device);
-
-    if (lighthouseDevice) {
-      if (this.lighthouse.deviceNeedsIdentifier(lighthouseDevice)) {
-        this.modalService
-          .addModal<LighthouseV1IdWizardModalInputModel, LighthouseV1IdWizardModalOutputModel>(
-            LighthouseV1IdWizardModalComponent,
-            { device: lighthouseDevice },
-            { closeOnEscape: false }
-          )
-          .subscribe();
-        return;
-      }
-
-      // For lighthouse devices with unknown state, open the force state popover
-      if (lighthouseDevice && lighthouseDevice.powerState === 'unknown') {
-        this.rightClickDevicePowerButton(device);
-        return;
-      }
-    }
-
-    if (action === 'power-off') {
-      await this.powerOffDevice(device);
-    } else if (action === 'power-on') {
-      await this.powerOnDevice(device);
+    if ((await this.devices.handlePowerAction(device, action)) === 'chooseState') {
+      this.rightClickDevicePowerButton(device);
     }
   }
 
-  /** Pairing status and action for a supported Steam Frame, or null for any other device. */
-  frameRow(device: DMKnownDevice): FrameRow | null {
-    if (!this.steamFrame.identityOf(device)) return null;
-    const active = this.isDeviceObserved(device.id);
-    const pairing = this.steamFrame.pairingFor(device.id);
-
-    // unpaired, or the headset removed the pairing: offer pairing while SteamVR uses it
-    const state = pairing?.complete ? this.steamFrame.connections()[pairing.id] : undefined;
-    const status = state?.status ?? 'connecting';
-    if (!pairing?.complete || status === 'pairingRemoved')
-      return active ? { action: 'pair' } : null;
-
-    // a reinstall from this row
-    if (this.steamFrame.reinstalls()[pairing.id]) {
-      return { pill: { key: 'reinstalling', icon: 'refresh', tone: 'neutral' } };
-    }
-
-    // a problem: its pill, and Pair again only while SteamVR uses it
-    const statusRow = FRAME_STATUS_ROWS[status];
-    if (statusRow) {
-      return statusRow.action === 'pairAgain' && !active ? { pill: statusRow.pill } : statusRow;
-    }
-
-    // a helper update in progress or just finished
-    const maintenanceRow = this.frameMaintenanceRow(state);
-    if (maintenanceRow) return maintenanceRow;
-
-    // healthy: a badge only
-    if (status === 'connected' || status === 'connecting') return { badge: status };
-
-    if (status === 'offline') {
-      return { pill: { key: 'offline', icon: 'plug', tone: 'neutral' } };
-    }
-
-    // an outdated helper: the pill starts the update
-    return { pill: { key: 'updateHelper', icon: 'update', tone: 'warn', startsUpdate: true } };
-  }
-
-  private frameMaintenanceRow(state?: SteamFrameConnectionState): FrameRow | null {
-    const maintenance = state?.maintenance;
-    switch (maintenance?.kind) {
-      case 'updating':
-        return { pill: { key: 'updatingHelper', icon: 'refresh', tone: 'neutral' } };
-      case 'updated':
-        return {
-          pill: {
-            key: 'helperUpdated',
-            icon: 'check-circle',
-            tone: 'neutral',
-            params: { version: maintenance.version },
-          },
-        };
-      case 'failed':
-        return {
-          pill: {
-            key: 'updateFailed',
-            icon: 'exclamation-circle',
-            tone: 'bad',
-            detail: 'updateFailed',
-          },
-          action: 'retryUpdate',
-        };
-      default:
-        return null;
-    }
-  }
-
-  /**
-   * Starts the update from an Update helper pill, and opens the explanation for any other.
-   * The explanation offers the row's action as its main button.
-   */
-  onFramePill(device: DMKnownDevice, pill: FramePill, action?: FrameAction) {
-    const pairing = this.steamFrame.pairingFor(device.id);
-    if (pill.startsUpdate) {
-      if (pairing) void this.steamFrame.updateHelper(pairing);
-      return;
-    }
-    this.modalService
-      .addModal<ConfirmModalInputModel, ConfirmModalOutputModel>(ConfirmModalComponent, {
-        title: `steamFrame.statusDetail.${pill.detail}.title`,
-        message: `steamFrame.statusDetail.${pill.detail}.body`,
-        confirmButtonText: action ? `steamFrame.actions.${action}` : 'shared.modals.close',
-        cancelButtonText: 'shared.modals.close',
-        showCancel: !!action,
-      })
-      .subscribe((result) => {
-        // the row can change while the explanation is open
-        if (!action || !result?.confirmed || this.frameRow(device)?.action !== action) return;
-        void this.onFrameAction(device, action);
-      });
-  }
-
-  onFrameAction(device: DMKnownDevice, action: FrameAction) {
-    const pairing = this.steamFrame.pairingFor(device.id);
-    switch (action) {
-      case 'pair':
-      case 'pairAgain':
-        return this.frameEnrollment.openWizard(device);
-      case 'retryUpdate':
-        return pairing && this.steamFrame.updateHelper(pairing);
-      case 'reinstall':
-        return pairing && this.steamFrame.reinstallHelper(pairing);
-    }
-  }
-
-  async configureDevice(device: DMKnownDevice) {
-    this.modalService
-      .addModal<DeviceManagerConfigModalInputModel, DeviceManagerConfigModalOutputModel>(
-        DeviceManagerConfigModalComponent,
-        { device }
-      )
-      .subscribe();
+  openDevice(device: DMKnownDevice) {
+    void this.router.navigate(['/dashboard/deviceManager/device', device.id]);
   }
 
   async forgetDevice(device: DMKnownDevice) {
@@ -758,7 +352,7 @@ export class DeviceManagerDevicesTabComponent implements OnInit, AfterViewInit {
   }
 
   rightClickDevicePowerButton(device: DMKnownDevice) {
-    const lighthouseDevice = this.getDeviceLighthouse(device);
+    const lighthouseDevice = this.devices.lighthouseFor(device);
     if (lighthouseDevice && !this.lighthouse.deviceNeedsIdentifier(lighthouseDevice)) {
       this.selectedPopoverDevice = device;
       this.showLHStatePopover = !this.showLHStatePopover;
@@ -778,30 +372,6 @@ export class DeviceManagerDevicesTabComponent implements OnInit, AfterViewInit {
   async onForceLHState(device: DMKnownDevice, state: LighthouseDevicePowerState) {
     this.showLHStatePopover = false;
     this.selectedPopoverDevice = null;
-
-    const lighthouseDevice = this.getDeviceLighthouse(device);
-    if (!lighthouseDevice) return;
-
-    if (state === 'on' && lighthouseDevice.powerState === 'on') {
-      const result = await firstValueFrom(
-        this.modalService.addModal<ConfirmModalInputModel, ConfirmModalOutputModel>(
-          ConfirmModalComponent,
-          {
-            title: 'comp.device-list.forceOnBootingWarning.title',
-            message: 'comp.device-list.forceOnBootingWarning.message',
-            confirmButtonText: 'comp.device-list.lhForceState.on',
-          }
-        )
-      );
-      if (!result || !result.confirmed) return;
-    }
-
-    this.logLighthousePowerState(state);
-    await this.lighthouse.setPowerStateForUser(
-      lighthouseDevice,
-      state,
-      device.nickname ?? device.defaultName,
-      true
-    );
+    await this.devices.forceLighthouseState(device, state);
   }
 }
