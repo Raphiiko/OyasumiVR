@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { invoke } from '@tauri-apps/api/core';
+import { CheckpointMetadata, commands, SnapshotData } from 'src-ui/app/bindings';
 import { LazyStore } from '@tauri-apps/plugin-store';
 import { appDataDir, join } from '@tauri-apps/api/path';
 import { exists, readTextFile } from '@tauri-apps/plugin-fs';
@@ -15,30 +15,11 @@ import {
 import { getVersion } from '../utils/app-utils';
 import { serializeStoreContents, StoreProtector } from '../utils/store-protector';
 
-export interface StoreCheckpoint {
-  formatVersion: number;
-  id: string;
-  storeName: string;
-  appVersion: string;
-  reason: string;
-  createdAt: string;
-  createdAtMillis: number;
-  sequence: number;
-  schemaVersions: Record<string, number>;
-  contentChecksum: string;
-  contentSizeBytes: number;
-  contentFile: string;
-  contentFileExists: boolean;
-}
+export type { CheckpointMetadata as StoreCheckpoint } from 'src-ui/app/bindings';
 
 export interface LiveStoreRead {
   exists: boolean;
   contents: string | null;
-}
-
-export interface StoreSnapshot {
-  contents: string;
-  modifiedAtMillis: number;
 }
 
 const PROTECTED_STORES: Record<string, { file: string; store: LazyStore }> = {
@@ -46,6 +27,14 @@ const PROTECTED_STORES: Record<string, { file: string; store: LazyStore }> = {
   cache: { file: CACHE_FILE, store: CACHE_STORE },
   event_log: { file: EVENT_LOG_FILE, store: EVENT_LOG_STORE },
 };
+
+/** Migration recovery handles a failed store command as a rejection, with the core's error. */
+function unwrapCommand<T>(
+  result: { status: 'ok'; data: T } | { status: 'error'; error: string }
+): T {
+  if (result.status === 'error') throw result.error;
+  return result.data;
+}
 
 @Injectable({
   providedIn: 'root',
@@ -85,8 +74,8 @@ export class StoreSnapshotService {
     }
   }
 
-  public readSnapshot(storeName: string): Promise<StoreSnapshot | null> {
-    return invoke<StoreSnapshot | null>('store_safety_read_snapshot', { storeName });
+  public async readSnapshot(storeName: string): Promise<SnapshotData | null> {
+    return unwrapCommand(await commands.storeSafetyReadSnapshot(storeName));
   }
 
   public async createCheckpoint(
@@ -94,38 +83,35 @@ export class StoreSnapshotService {
     reason: string,
     schemaVersions: Record<string, number>,
     contents?: string
-  ): Promise<StoreCheckpoint> {
+  ): Promise<CheckpointMetadata> {
     const store = this.getStoreEntry(storeName).store;
-    return invoke<StoreCheckpoint>('store_safety_create_checkpoint', {
-      storeName,
-      contents: contents ?? (await serializeStoreContents(store)),
-      reason,
-      appVersion: await getVersion(),
-      schemaVersions,
-    });
+    return unwrapCommand(
+      await commands.storeSafetyCreateCheckpoint(
+        storeName,
+        contents ?? (await serializeStoreContents(store)),
+        reason,
+        await getVersion(),
+        schemaVersions
+      )
+    );
   }
 
-  public listCheckpoints(storeName: string): Promise<StoreCheckpoint[]> {
-    return invoke<StoreCheckpoint[]>('store_safety_list_checkpoints', { storeName });
+  public async listCheckpoints(storeName: string): Promise<CheckpointMetadata[]> {
+    return unwrapCommand(await commands.storeSafetyListCheckpoints(storeName));
   }
 
-  public readCheckpoint(storeName: string, checkpointId: string): Promise<string> {
-    return invoke<string>('store_safety_read_checkpoint', { storeName, checkpointId });
+  public async readCheckpoint(storeName: string, checkpointId: string): Promise<string> {
+    return unwrapCommand(await commands.storeSafetyReadCheckpoint(storeName, checkpointId));
   }
 
-  public quarantineStore(storeName: string): Promise<string | null> {
-    return invoke<string | null>('store_safety_quarantine_store', {
-      storeName,
-      storeFileName: this.getStoreEntry(storeName).file,
-    });
+  public async quarantineStore(storeName: string): Promise<string | null> {
+    const file = this.getStoreEntry(storeName).file;
+    return unwrapCommand(await commands.storeSafetyQuarantineStore(storeName, file));
   }
 
   public async replaceStore(storeName: string, contents: string): Promise<void> {
     const entry = this.getStoreEntry(storeName);
-    await invoke('store_safety_replace_store', {
-      storeFileName: entry.file,
-      contents,
-    });
+    unwrapCommand(await commands.storeSafetyReplaceStore(entry.file, contents));
     await entry.store.reload({ ignoreDefaults: true });
   }
 

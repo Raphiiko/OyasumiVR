@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { invoke } from '@tauri-apps/api/core';
+import { commands } from 'src-ui/app/bindings';
 import * as Sentry from '@sentry/angular';
 import { distinctUntilChanged, map } from 'rxjs';
 import { FLAVOUR } from '../../../build';
@@ -54,7 +54,7 @@ export class ErrorReportingService {
     const enabled = consented && environment.production && FLAVOUR !== 'DEV';
     if (enabled === this.active) return;
     this.active = enabled;
-    await invoke('set_error_reporting_enabled', { enabled }).catch(() => {});
+    await commands.setErrorReportingEnabled(enabled).catch(() => {});
     if (!enabled) {
       await Sentry.close(0).catch(() => false);
       return;
@@ -83,9 +83,7 @@ export class ErrorReportingService {
           if (!this.active || isExpected(event)) return null;
           sanitize(event, version);
           const issue = issueKey(event);
-          return (await invoke<boolean>('allow_ui_event', { issue }).catch(() => false))
-            ? event
-            : null;
+          return (await commands.allowUiEvent(issue).catch(() => false)) ? event : null;
         },
       });
     } catch {

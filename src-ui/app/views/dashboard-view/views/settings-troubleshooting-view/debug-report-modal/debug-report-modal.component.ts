@@ -7,7 +7,7 @@ import {
   OnDestroy,
   ViewChild,
 } from '@angular/core';
-import { invoke } from '@tauri-apps/api/core';
+import { commands, Value } from 'src-ui/app/bindings';
 import { writeText } from '@tauri-apps/plugin-clipboard-manager';
 import { error } from '@tauri-apps/plugin-log';
 import { BaseModalComponent } from '../../../../../components/base-modal/base-modal.component';
@@ -71,21 +71,28 @@ export class DebugReportModalComponent
     this.setStep('uploading');
     try {
       if (!this.reportCreated) {
-        await invoke('debug_report_create', { uiState: await this.collectUiState() });
+        const created = await commands.debugReportCreate((await this.collectUiState()) as Value);
+        if (created.status === 'error') return this.uploadFailed(created.error);
         this.reportCreated = true;
       }
-      this.reportCode = await invoke<string>('debug_report_upload');
+      const uploaded = await commands.debugReportUpload();
+      if (uploaded.status === 'error') return this.uploadFailed(uploaded.error);
+      this.reportCode = uploaded.data;
       this.debugReports.setRecentCode(this.reportCode);
       this.setStep('done');
       await this.discardReport();
     } catch (e) {
-      if (e === 'REPORT_TOO_LARGE') {
-        this.setStep('tooLarge');
-        return;
-      }
-      error(`[DebugReport] Could not upload the debug report: ${JSON.stringify(e)}`);
-      this.setStep('failed');
+      this.uploadFailed(e);
     }
+  }
+
+  private uploadFailed(e: unknown) {
+    if (e === 'REPORT_TOO_LARGE') {
+      this.setStep('tooLarge');
+      return;
+    }
+    error(`[DebugReport] Could not upload the debug report: ${JSON.stringify(e)}`);
+    this.setStep('failed');
   }
 
   async saveToFile() {
@@ -100,10 +107,9 @@ export class DebugReportModalComponent
     if (!path) return;
     this.saveFallbackStep = this.step;
     this.setStep('saving');
-    try {
-      await invoke('debug_report_save', { path });
-    } catch (e) {
-      error(`[DebugReport] Could not save the debug report: ${JSON.stringify(e)}`);
+    const saved = await commands.debugReportSave(path);
+    if (saved.status === 'error') {
+      error(`[DebugReport] Could not save the debug report: ${JSON.stringify(saved.error)}`);
       this.toasts.show({ type: 'error', title: 'settings.troubleshooting.debugReport.saveFailed' });
       this.setStep(this.saveFallbackStep);
       return;
@@ -131,7 +137,7 @@ export class DebugReportModalComponent
   /** Drops the zip from the core's memory; only Retry and Save to file need it. */
   private async discardReport() {
     this.reportCreated = false;
-    await invoke('debug_report_discard').catch((e) => {
+    await commands.debugReportDiscard().catch((e) => {
       error(`[DebugReport] Could not discard the debug report: ${JSON.stringify(e)}`);
     });
   }

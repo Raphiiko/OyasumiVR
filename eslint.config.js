@@ -96,6 +96,26 @@ export default [
     },
   },
 
+  // Core commands go through the typed bindings; specs still mock invoke
+  {
+    files: ['src-ui/**/*.ts'],
+    ignores: ['src-ui/**/*.spec.ts'],
+    rules: {
+      'no-restricted-imports': [
+        'error',
+        {
+          paths: [
+            {
+              name: '@tauri-apps/api/core',
+              importNames: ['invoke'],
+              message: 'Call core commands through commands in src-ui/app/bindings.ts.',
+            },
+          ],
+        },
+      ],
+    },
+  },
+
   // Angular template files configuration
   {
     files: ['**/*.html'],

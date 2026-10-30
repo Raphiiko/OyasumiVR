@@ -75,7 +75,7 @@ import { ImageCachePipe } from './pipes/image-cache.pipe';
 import { InviteAutomationsService } from './services/invite-automations.service';
 import { GpuPowerlimitingPaneComponent } from './views/dashboard-view/views/gpu-automations-view/gpu-powerlimiting-pane/gpu-powerlimiting-pane.component';
 import { MsiAfterburnerPaneComponent } from './views/dashboard-view/views/gpu-automations-view/msi-afterburner-pane/msi-afterburner-pane.component';
-import { invoke } from '@tauri-apps/api/core';
+import { commands } from 'src-ui/app/bindings';
 import { SleepModeChangeOnSteamVRStatusAutomationService } from './services/sleep-detection-automations/sleep-mode-change-on-steamvr-status-automation.service';
 import { ImageFallbackDirective } from './directives/image-fallback.directive';
 import { SleepModeForSleepDetectorAutomationService } from './services/sleep-detection-automations/sleep-mode-for-sleep-detector-automation.service';
@@ -944,7 +944,7 @@ export class AppModule {
       throw e;
     }
     // Close the splash screen after initialization
-    await invoke('close_splashscreen');
+    await commands.closeSplashscreen();
     // Show the main window
     if (
       !this.appSettingsService.settingsSync.startInSystemTray ||
@@ -1034,10 +1034,7 @@ export class AppModule {
   }
 
   private async elevationCheck(): Promise<boolean> {
-    if (
-      (await invoke('windows_is_elevated')) &&
-      !(await invoke('is_elevation_security_disabled'))
-    ) {
+    if ((await commands.windowsIsElevated()) && !(await commands.isElevationSecurityDisabled())) {
       const result = await ask(
         'OyasumiVR was launched with administrative permissions. For security reasons, OyasumiVR does not support running with administrative permissions.\n\nPlease restart OyasumiVR without administrative permissions in order to proceed.',
         {

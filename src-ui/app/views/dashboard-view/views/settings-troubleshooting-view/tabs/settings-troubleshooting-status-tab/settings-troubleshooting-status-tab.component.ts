@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { invoke } from '@tauri-apps/api/core';
+import { commands } from 'src-ui/app/bindings';
 import {
   combineLatest,
   distinctUntilChanged,
@@ -190,7 +190,7 @@ export class SettingsTroubleshootingStatusTabComponent {
   /** The state only the UI knows, for the report.json of a debug report. */
   private async collectUiState(): Promise<Record<string, unknown>> {
     const first = <T>(source: Observable<T>) => firstValueFrom(source);
-    const port = (command: string) => invoke<number | null>(command).catch(() => null);
+    const port = (command: () => Promise<number | null>) => command().catch(() => null);
     const settings = await first(this.appSettings.settings);
     return {
       app: { version: await this.version, flavour: FLAVOUR, buildId: BUILD_ID },
@@ -227,10 +227,10 @@ export class SettingsTroubleshootingStatusTabComponent {
       },
       ports: {
         coreHttp: this.fontLoader.httpServerPort,
-        coreGrpc: await port('get_core_grpc_port'),
-        coreGrpcWeb: await port('get_core_grpc_web_port'),
-        elevatedSidecarGrpc: await port('elevated_sidecar_get_grpc_port'),
-        overlaySidecarGrpc: await port('overlay_sidecar_get_grpc_port'),
+        coreGrpc: await port(commands.getCoreGrpcPort),
+        coreGrpcWeb: await port(commands.getCoreGrpcWebPort),
+        elevatedSidecarGrpc: await port(commands.elevatedSidecarGetGrpcPort),
+        overlaySidecarGrpc: await port(commands.overlaySidecarGetGrpcPort),
       },
     };
   }
@@ -247,7 +247,7 @@ export class SettingsTroubleshootingStatusTabComponent {
   private dashboardRenderMode(): Observable<string> {
     return interval(2000).pipe(
       startWith(0),
-      switchMap(() => invoke<string>('openvr_dashboard_render_mode')),
+      switchMap(() => commands.openvrDashboardRenderMode()),
       distinctUntilChanged()
     );
   }

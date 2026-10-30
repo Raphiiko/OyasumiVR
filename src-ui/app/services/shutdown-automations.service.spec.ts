@@ -78,7 +78,7 @@ describe('ShutdownAutomationsService sequence completion', () => {
     expect(invoke).not.toHaveBeenCalled();
     await vi.advanceTimersByTimeAsync(1);
     await sequence;
-    expect(invoke).toHaveBeenCalledWith(command, undefined);
+    expect(invoke).toHaveBeenCalledWith(command);
     await expect(firstValueFrom(service.stage.pipe(take(1)))).resolves.toBe('IDLE');
   });
 

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { invoke } from '@tauri-apps/api/core';
+import { commands } from 'src-ui/app/bindings';
 import { fontLoader } from 'src-shared-ts/src/font-loader';
 import { TranslocoService } from '@jsverse/transloco';
 
@@ -16,7 +16,7 @@ export class FontLoaderService {
 
   async init() {
     while (!this._httpServerPort) {
-      this._httpServerPort = (await invoke<number>('get_http_server_port')) || 0;
+      this._httpServerPort = (await commands.getHttpServerPort()) || 0;
       if (!this._httpServerPort) await new Promise((resolve) => setTimeout(resolve, 50));
     }
     fontLoader.init(this._httpServerPort, this.translate.getActiveLang()!).then(() => {

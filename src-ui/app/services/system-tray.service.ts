@@ -16,10 +16,8 @@ import {
 import { SleepService } from './sleep.service';
 import { TranslocoService } from '@jsverse/transloco';
 import { error } from '@tauri-apps/plugin-log';
-import { invoke } from '@tauri-apps/api/core';
+import { commands } from 'src-ui/app/bindings';
 import { SleepPreparationService } from './sleep-preparation.service';
-
-const CLOSE_TO_SYSTEM_TRAY_COMMAND = 'set_close_to_system_tray';
 
 @Injectable({
   providedIn: 'root',
@@ -56,7 +54,7 @@ export class SystemTrayService {
         debounceTime(100)
       )
       .subscribe(async (enabled) => {
-        await invoke(CLOSE_TO_SYSTEM_TRAY_COMMAND, { enabled });
+        await commands.setCloseToSystemTray(enabled);
       });
   }
 
