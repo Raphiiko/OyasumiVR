@@ -73,6 +73,8 @@ static LAST_ADVERTISEMENTS: LazyLock<std::sync::Mutex<HashMap<PeripheralId, Inst
 static RADIO_RECOVERY_LOCK: LazyLock<Mutex<()>> = LazyLock::new(|| Mutex::new(()));
 
 const CONNECT_TIMEOUT: Duration = Duration::from_secs(15);
+// A GATT call holds the device's op_lock, so it must not wait forever
+const GATT_TIMEOUT: Duration = Duration::from_secs(10);
 const CONNECT_RETRY_COOLDOWN: Duration = Duration::from_secs(10);
 const CONNECT_BACKOFF_MAX: Duration = Duration::from_secs(300);
 // Failing connects to every device at once is the signature of a wedged stack
@@ -253,7 +255,7 @@ pub async fn get_device_power_state(
         if !characteristic.properties.contains(CharPropFlags::READ) {
             return Err(LighthouseError::CharacteristicDoesNotSupportRead);
         }
-        match peripheral.read(&characteristic).await {
+        match with_gatt_timeout(peripheral.read(&characteristic)).await {
             Ok(value) => value,
             Err(err) => {
                 // Drop the stale session so the next attempt rediscovers the services
@@ -362,9 +364,12 @@ pub async fn set_device_power_state(
                         0x00, 0x00,
                     ];
                     // Write command
-                    let result = peripheral
-                        .write(&characteristic, &payload, WriteType::WithResponse)
-                        .await;
+                    let result = with_gatt_timeout(peripheral.write(
+                        &characteristic,
+                        &payload,
+                        WriteType::WithResponse,
+                    ))
+                    .await;
                     if let Err(e) = result {
                         error!(
                             "[Core] Failed to power on lighthouse device ({}) : {}",
@@ -393,9 +398,12 @@ pub async fn set_device_power_state(
                     // Set timeout
                     payload[2..4].copy_from_slice(&timeout.to_be_bytes());
                     // Write command
-                    let result = peripheral
-                        .write(&characteristic, &payload, WriteType::WithResponse)
-                        .await;
+                    let result = with_gatt_timeout(peripheral.write(
+                        &characteristic,
+                        &payload,
+                        WriteType::WithResponse,
+                    ))
+                    .await;
                     if let Err(e) = result {
                         error!(
                             "[Core] Failed to power off lighthouse device ({}) : {}",
@@ -485,7 +493,9 @@ async fn identify_discovered_device(device: &Peripheral, device_id: &PeripheralI
     // Connect and enumerate the device's services
     let services = {
         if let Err(err) = ensure_connected(device, &device_name).await {
-            warn!("[Core] Failed to connect to discovered device ({device_name}): {err:?}");
+            if !matches!(err, LighthouseError::ConnectBackoff) {
+                warn!("[Core] Failed to connect to discovered device ({device_name}): {err:?}");
+            }
             let _ = device.disconnect().await;
             return false;
         }
@@ -576,9 +586,15 @@ async fn write_v2_power(
     characteristic: &Characteristic,
     value: u8,
 ) -> Result<(), btleplug::Error> {
-    peripheral
-        .write(characteristic, &[value], WriteType::WithoutResponse)
+    with_gatt_timeout(peripheral.write(characteristic, &[value], WriteType::WithoutResponse)).await
+}
+
+async fn with_gatt_timeout<T>(
+    operation: impl std::future::Future<Output = btleplug::Result<T>>,
+) -> btleplug::Result<T> {
+    tokio::time::timeout(GATT_TIMEOUT, operation)
         .await
+        .unwrap_or(Err(btleplug::Error::TimedOut(GATT_TIMEOUT)))
 }
 
 async fn ensure_connected(device: &Peripheral, device_name: &str) -> Result<(), LighthouseError> {
@@ -1045,6 +1061,12 @@ mod tests {
         assert!(replacement.peripheral(&marker).await.is_err());
         *ADAPTER.lock().await = None;
         *MANAGER.lock().await = None;
+    }
+
+    #[tokio::test(start_paused = true)]
+    async fn gatt_operation_that_never_completes_times_out() {
+        let result = with_gatt_timeout(std::future::pending::<btleplug::Result<()>>()).await;
+        assert!(matches!(result, Err(btleplug::Error::TimedOut(t)) if t == GATT_TIMEOUT));
     }
 
     #[test]
