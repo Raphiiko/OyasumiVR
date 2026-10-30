@@ -4,7 +4,7 @@ import { flatten } from 'lodash';
 import { TaskQueue } from '../utils/task-queue';
 import { debug, error, info } from '@tauri-apps/plugin-log';
 import { OSCMessage, parseOSCMessage } from '../models/osc-message';
-import { commands, events, OSCMethod } from '../bindings';
+import { commands, events, OSCMethod } from 'src-ui/app/bindings';
 import {
   asyncScheduler,
   BehaviorSubject,
@@ -208,12 +208,15 @@ export class OscService {
       for (const oscAddr of oscAddresses) {
         info(`[OSC] Sending {${parametersString}} on ${oscAddr} to ${targetAddr}`);
 
-        await commands.oscSendCommand(
+        const result = await commands.oscSendCommand(
           targetAddr,
           oscAddr,
           _parameters.map((parameter) => parameter.type),
           _parameters.map((parameter) => parameter.value)
         );
+        if (result.status === 'error') {
+          error(`[OSC] Could not send on ${oscAddr} to ${targetAddr}: ${result.error}`);
+        }
       }
     }
   }

@@ -35,7 +35,7 @@ import {
   EventLogFailure,
 } from '../models/event-log-entry';
 import { EventLogService } from './event-log.service';
-import { commands } from '../bindings';
+import { commands } from 'src-ui/app/bindings';
 import { VRChatService } from './vrchat-api/vrchat.service';
 import { getBuiltInNotificationSound } from '../models/notification-sounds';
 

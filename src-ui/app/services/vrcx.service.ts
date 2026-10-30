@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { SleepService } from './sleep.service';
 import { distinctUntilChanged, skip } from 'rxjs';
-import { commands } from '../bindings';
+import { commands } from 'src-ui/app/bindings';
 import { TranslocoService } from '@jsverse/transloco';
 import { SleepPreparationService } from './sleep-preparation.service';
 import { AppSettingsService } from './app-settings.service';

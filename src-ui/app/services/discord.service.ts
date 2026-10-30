@@ -8,7 +8,7 @@ import {
   map,
   throttleTime,
 } from 'rxjs';
-import { commands } from '../bindings';
+import { commands } from 'src-ui/app/bindings';
 import { TranslocoService } from '@jsverse/transloco';
 import { VRChatService } from './vrchat-api/vrchat.service';
 import { AppSettingsService } from './app-settings.service';

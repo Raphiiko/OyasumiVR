@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { getVersion } from '../utils/app-utils';
-import { commands, events } from '../bindings';
+import { commands, events } from 'src-ui/app/bindings';
 import * as DesktopNotifications from '@tauri-apps/plugin-notification';
 import { AppSettingsService } from './app-settings.service';
 import { debounceTime, distinctUntilChanged, firstValueFrom, interval, map } from 'rxjs';
@@ -61,13 +61,13 @@ export class NotificationService {
     }
     if (volume > 0) {
       switch (sound.type) {
-        case 'BUILT_IN':
-          try {
-            await commands.playSound(sound.id, volume);
-          } catch (e) {
-            error(`[Notification] Could not play sound "${sound.id}": ${e}`);
+        case 'BUILT_IN': {
+          const result = await commands.playSound(sound.id, volume);
+          if (result.status === 'error') {
+            error(`[Notification] Could not play sound "${sound.id}": ${result.error}`);
           }
           break;
+        }
         default:
           error(`[Notification] Unknown sound type: ${sound.type}`);
       }

@@ -16,7 +16,7 @@ import {
 import { OscService } from '../../../../services/osc.service';
 import { flushOnDestroy } from '../../../../utils/rxjs-utils';
 import { isEqual, pick } from 'lodash';
-import { commands } from '../../../../bindings';
+import { commands } from 'src-ui/app/bindings';
 
 @Component({
   selector: 'app-settings-osc-view',

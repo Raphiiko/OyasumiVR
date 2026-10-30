@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { AudioDevice, AudioDeviceParsedName } from '../models/audio-device';
 import { BehaviorSubject } from 'rxjs';
-import { commands, events } from '../bindings';
+import { commands, events } from 'src-ui/app/bindings';
 import { clamp } from '../utils/number-utils';
 
 const PERSISTENT_ID_LEAD = 'AUDIO_DEVICE_[';
@@ -47,10 +47,8 @@ export class AudioDeviceService {
     if (!this.isActiveDevice(deviceId)) return false;
     volume = clamp(volume, 0, 1);
     this.patchDevice(deviceId, { volume });
-    return commands.setAudioDeviceVolume(deviceId, volume).then(
-      () => true,
-      () => false
-    );
+    const result = await commands.setAudioDeviceVolume(deviceId, volume);
+    return result.status === 'ok';
   }
 
   /** Resolves null when the device is not active or Windows rejected the change. */
@@ -64,11 +62,8 @@ export class AudioDeviceService {
     const device = this._activeDevices.value.find((d) => d.id === deviceId);
     if (!device) return null;
     this.patchDevice(deviceId, { mute });
-    const applied = await commands.setAudioDeviceMute(deviceId, mute).then(
-      () => true,
-      () => false
-    );
-    return applied ? { muted: mute, device } : null;
+    const result = await commands.setAudioDeviceMute(deviceId, mute);
+    return result.status === 'ok' ? { muted: mute, device } : null;
   }
 
   isActiveDevice(deviceId: string) {

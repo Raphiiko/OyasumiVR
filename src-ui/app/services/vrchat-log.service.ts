@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { VRChatLogEvent } from '../models/vrchat-log-event';
-import { commands, events, VRCLogEvent } from '../bindings';
+import { commands, events, VRCLogEvent } from 'src-ui/app/bindings';
 
 @Injectable({
   providedIn: 'root',

@@ -1,4 +1,4 @@
-import type { OSCMessage as CoreOSCMessage, OSCValue as CoreOSCValue } from '../bindings';
+import type { OSCMessage as CoreOSCMessage, OSCValue as CoreOSCValue } from 'src-ui/app/bindings';
 
 export type OSCValueType = 'int' | 'float' | 'string' | 'bool' | 'unsupported';
 

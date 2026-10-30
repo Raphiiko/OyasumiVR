@@ -16,7 +16,7 @@ import { ModalService } from 'src-ui/app/services/modal.service';
 import { AvatarEx, UserStatus, WorldContext } from '../../models/vrchat';
 import { VRChatLogService } from '../vrchat-log.service';
 import { protectSecret, unprotectSecret } from '../../utils/secrets';
-import { commands, events } from '../../bindings';
+import { commands, events } from 'src-ui/app/bindings';
 import { VRChatAPI, VRChatTwoFactorMethod } from './vrchat-api';
 import { VRChatAuth, VRChatAuthStatus } from './vrchat-auth';
 import { VRChatSocket } from './vrchat-socket';

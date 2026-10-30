@@ -25,7 +25,7 @@ import { fade, vshrink } from '../../../../utils/animations';
 import { SystemMicMuteAutomationService } from 'src-ui/app/services/system-mic-mute-automation.service';
 import { SliderSettingComponent } from '../../../../components/slider-setting/slider-setting.component';
 import { UnlistenFn } from '@tauri-apps/api/event';
-import { events } from '../../../../bindings';
+import { events } from 'src-ui/app/bindings';
 
 @Component({
   selector: 'app-system-mic-mute-automations-view',
