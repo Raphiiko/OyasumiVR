@@ -35,6 +35,13 @@ measurements. They never describe who the user is.
 - NG-2: `takeUntilDestroyed()` is the last operator in its `pipe()`, and no `.pipe()` follows it.
   An operator after it, such as `switchMap`, can keep a subscription alive after the component is
   destroyed.
+- NG-3: Omit `changeDetection: ChangeDetectionStrategy.OnPush`. Angular uses OnPush by default, so
+  the explicit setting is redundant. Keep an explicit `ChangeDetectionStrategy.Eager`: it is a
+  deliberate choice.
+- NG-4: Call `takeUntilDestroyed()` without a `DestroyRef` inside an injection context, such as a
+  constructor body or a field initializer. Pass the `DestroyRef` only outside one, such as in
+  `ngOnInit`, an event handler, or another method. Remove an injected `DestroyRef` that nothing
+  else uses.
 
 ## Accessibility
 
