@@ -1,12 +1,10 @@
 use serde::Serialize;
-
-use crate::utils::event;
+use specta::Type;
+use tauri_specta::Event;
 
 /// Carries the sidecar's gRPC-web port.
-#[derive(Serialize, Clone, specta::Type)]
+#[derive(Serialize, Clone, Type, Event)]
 pub struct OverlaySidecarStartedEvent(pub u32);
-event!(OverlaySidecarStartedEvent, "OVERLAY_SIDECAR_STARTED");
 
-#[derive(Serialize, Clone, specta::Type)]
+#[derive(Serialize, Clone, Type, Event)]
 pub struct OverlaySidecarStoppedEvent;
-event!(OverlaySidecarStoppedEvent, "OVERLAY_SIDECAR_STOPPED");

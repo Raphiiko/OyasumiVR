@@ -17,7 +17,7 @@ pub async fn sleeping_pose_force(pose: SleepingPose) {
     }
 }
 
-/// Starts or stops the `SLEEPING_POSE_DEBUG` event with the geometry of every classification.
+/// Starts or stops `SleepingPoseDebugEvent` with the geometry of every classification.
 #[tauri::command]
 #[specta::specta]
 pub fn sleeping_pose_set_debug(enabled: bool) {

@@ -2,7 +2,7 @@ use std::time::Duration;
 
 use super::{
     connection, devkit, discovery,
-    events::StageEvent,
+    events::SteamFrameSetupStageEvent,
     hex,
     models::{
         Access, Candidate, Cct, CleanupOutcome, CleanupRequest, DisconnectControllerError,
@@ -101,7 +101,7 @@ pub async fn steam_frame_check_ssh_access(access: Access) -> ProbeOutcome {
 pub async fn steam_frame_set_up_helper(request: SetupRequest) -> SetupOutcome {
     let attempt_id = request.attempt_id.clone();
     setup::setup(request, move |stage| {
-        let event = StageEvent {
+        let event = SteamFrameSetupStageEvent {
             attempt_id: attempt_id.clone(),
             stage,
         };
@@ -158,7 +158,7 @@ pub async fn steam_frame_set_cct(pairing_id: String, kelvin: u32) -> Result<Cct,
     connection::set_cct(&pairing_id, kelvin).await
 }
 
-/// Starts a fade on the helper. The outcome arrives as a `STEAM_FRAME_FADE_ENDED` event.
+/// Starts a fade on the helper. The outcome arrives as a `SteamFrameFadeEndedEvent`.
 #[tauri::command]
 #[specta::specta]
 pub async fn steam_frame_fade(pairing_id: String, request: FadeRequest) -> Result<(), FadeError> {

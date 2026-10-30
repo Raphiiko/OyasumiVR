@@ -170,17 +170,6 @@ pub async fn send_raw_event<S: Serialize + Clone>(event: &str, payload: S) {
     }
 }
 
-/// Implements [`tauri_specta::Event`] for `$event` under `$name`, the name the UI listens for.
-/// Register the event in `specta_builder()` too.
-macro_rules! event {
-    ($event:ty, $name:literal) => {
-        impl tauri_specta::Event for $event {
-            const NAME: &'static str = $name;
-        }
-    };
-}
-pub(crate) use event;
-
 pub async fn cli_core_mode() -> models::CoreMode {
     let default = "release";
     let match_guard = TAURI_CLI_MATCHES.lock().await;

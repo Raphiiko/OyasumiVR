@@ -1,23 +1,14 @@
-use serde::{Deserialize, Serialize};
+use serde::Serialize;
+use specta::Type;
+use tauri_specta::Event;
 
-use super::models::OSCValue;
-use crate::utils::event;
+use super::models::OSCMessage;
 
-#[derive(Serialize, Clone, specta::Type)]
+#[derive(Serialize, Clone, Type, Event)]
 pub struct VrcOscAddressChangedEvent(pub Option<String>);
-event!(VrcOscAddressChangedEvent, "VRC_OSC_ADDRESS_CHANGED");
 
-#[derive(Serialize, Clone, specta::Type)]
+#[derive(Serialize, Clone, Type, Event)]
 pub struct VrcOscQueryAddressChangedEvent(pub Option<String>);
-event!(
-    VrcOscQueryAddressChangedEvent,
-    "VRC_OSCQUERY_ADDRESS_CHANGED"
-);
 
-#[derive(Clone, Serialize, Deserialize, Debug, specta::Type)]
-#[serde(rename_all = "camelCase")]
-pub struct OSCMessage {
-    pub address: String,
-    pub values: Vec<OSCValue>,
-}
-event!(OSCMessage, "OSC_MESSAGE");
+#[derive(Serialize, Clone, Type, Event)]
+pub struct OscMessageReceivedEvent(pub OSCMessage);

@@ -1,7 +1,6 @@
 use serde::Serialize;
+use specta::Type;
+use tauri_specta::Event;
 
-use crate::utils::event;
-
-#[derive(Serialize, Clone, specta::Type)]
+#[derive(Serialize, Clone, Type, Event)]
 pub struct SteamworksReadyEvent(pub bool);
-event!(SteamworksReadyEvent, "STEAMWORKS_READY");

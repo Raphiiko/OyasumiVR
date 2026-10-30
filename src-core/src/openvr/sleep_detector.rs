@@ -1,6 +1,7 @@
 use crate::utils::{get_time, send_event};
 
-use super::events::SleepDetectorStateReport;
+use super::events::SleepDetectorStateReportEvent;
+use super::models::SleepDetectorStateReport;
 
 const MAX_EVENT_AGE_MS: u128 = 900000; // 15 minutes
 
@@ -159,7 +160,7 @@ impl SleepDetector {
     }
 
     async fn send_state_report(&self) {
-        send_event(SleepDetectorStateReport {
+        send_event(SleepDetectorStateReportEvent(SleepDetectorStateReport {
             distance_in_last_15_minutes: self.distance_in_last_15_minutes,
             distance_in_last_10_minutes: self.distance_in_last_10_minutes,
             distance_in_last_5_minutes: self.distance_in_last_5_minutes,
@@ -172,7 +173,7 @@ impl SleepDetector {
             rotation_in_last_10_seconds: self.rotation_in_last_10_seconds,
             start_time: self.start_time,
             last_log: self.last_log,
-        })
+        }))
         .await;
     }
 }

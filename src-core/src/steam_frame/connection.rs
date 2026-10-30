@@ -15,12 +15,12 @@ use tokio_tungstenite::tungstenite::Message;
 
 use super::{
     discovery,
-    events::{FadeEnded, SteamFrameConnectionStateEvent},
+    events::{SteamFrameConnectionStateEvent, SteamFrameFadeEndedEvent},
     maintenance::{self, Recovery, UpdateOutcome},
     models::{
-        Brightness, Cct, Control, Controller, DisconnectControllerError, FadeError, FadeOutcome,
-        FadeRequest, LastSeen, Maintenance, Pairing, Seen, SetBrightnessError, SetCctError, State,
-        Status,
+        Brightness, Cct, Control, Controller, DisconnectControllerError, FadeEnded, FadeError,
+        FadeOutcome, FadeRequest, LastSeen, Maintenance, Pairing, Seen, SetBrightnessError,
+        SetCctError, State, Status,
     },
     setup::{
         self, bundled_digest, install_decision, InstallDecision, ProvisionError, Replace,
@@ -194,7 +194,7 @@ pub async fn set_cct(pairing_id: &str, kelvin: u32) -> Result<Cct, SetCctError> 
 }
 
 /// Starts a fade on the helper. `Ok` means the helper accepted it; the outcome arrives as a
-/// `STEAM_FRAME_FADE_ENDED` event.
+/// `SteamFrameFadeEndedEvent`.
 pub async fn fade(pairing_id: &str, request: FadeRequest) -> Result<(), FadeError> {
     let command = |reply| Command::Fade(request, reply);
     send(pairing_id, command, FadeError::Offline).await
@@ -605,7 +605,7 @@ async fn receive(text: &str, relay: &mut Relay, state: &mut State) {
                 operation,
                 outcome,
             };
-            send_event(ended).await;
+            send_event(SteamFrameFadeEndedEvent(ended)).await;
         }
         Ok(HelperMessage::Controllers { controllers }) => {
             state.controllers = Some(controllers);

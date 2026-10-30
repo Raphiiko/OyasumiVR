@@ -1,12 +1,11 @@
 use serde::Serialize;
+use specta::Type;
+use tauri_specta::Event;
 
 use super::{DebugSnapshot, SleepingPose};
-use crate::utils::event;
 
-#[derive(Serialize, Clone, specta::Type)]
+#[derive(Serialize, Clone, Type, Event)]
 pub struct SleepingPoseUpdateEvent(pub SleepingPose);
-event!(SleepingPoseUpdateEvent, "SLEEPING_POSE_UPDATE");
 
-#[derive(Serialize, Clone, specta::Type)]
+#[derive(Serialize, Clone, Type, Event)]
 pub struct SleepingPoseDebugEvent(pub DebugSnapshot);
-event!(SleepingPoseDebugEvent, "SLEEPING_POSE_DEBUG");

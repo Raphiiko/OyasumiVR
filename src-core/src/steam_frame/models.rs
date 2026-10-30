@@ -157,6 +157,16 @@ pub enum Control {
     Cct,
 }
 
+/// The helper ended a fade.
+#[derive(Serialize, Clone, Debug, PartialEq, specta::Type)]
+#[serde(rename_all = "camelCase")]
+pub struct FadeEnded {
+    pub pairing_id: String,
+    pub control: Control,
+    pub operation: String,
+    pub outcome: FadeOutcome,
+}
+
 #[derive(Serialize, Deserialize, Clone, Copy, Debug, PartialEq, specta::Type)]
 #[serde(rename_all = "camelCase")]
 pub enum FadeOutcome {

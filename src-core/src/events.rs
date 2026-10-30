@@ -1,8 +1,7 @@
 use serde::Serialize;
-
-use crate::utils::event;
+use specta::Type;
+use tauri_specta::Event;
 
 /// Sent at the start of every minute.
-#[derive(Serialize, Clone, specta::Type)]
+#[derive(Serialize, Clone, Type, Event)]
 pub struct CronMinuteStartEvent;
-event!(CronMinuteStartEvent, "CRON_MINUTE_START");

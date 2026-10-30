@@ -27,7 +27,7 @@ use super::wrappers::{
     AudioDeviceIAudioEndpointVolume, AudioDeviceIAudioEndpointVolumeCallback,
     AudioDeviceIAudioMeterInformation, AudioDeviceIMMDevice,
 };
-use crate::os::events::{AudioDeviceUpdatedEvent, MicLevelReport};
+use crate::os::events::{AudioDeviceUpdatedEvent, MicLevelEvent};
 
 #[derive(Serialize, Clone, specta::Type)]
 #[serde(rename_all = "camelCase")]
@@ -39,6 +39,14 @@ pub struct AudioDeviceDto {
     pub mute: bool,
     pub default: bool,
     pub default_communications: bool,
+}
+
+#[derive(Serialize, Clone, specta::Type)]
+#[serde(rename_all = "camelCase")]
+pub struct MicLevelReport {
+    pub device_id: String,
+    pub level: f32,
+    pub active: bool,
 }
 
 impl AudioDeviceDto {
@@ -345,11 +353,11 @@ impl AudioDevice {
                     .await;
                 }
                 // Report the peak value
-                send_event(MicLevelReport {
+                send_event(MicLevelEvent(MicLevelReport {
                     device_id: state.id.clone(),
                     level: value,
                     active: currently_active,
-                })
+                }))
                 .await;
                 tokio::time::sleep(SAMPLE_INTERVAL).await;
             }

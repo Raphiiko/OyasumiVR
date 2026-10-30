@@ -2,7 +2,8 @@ use nalgebra::{Quaternion, UnitQuaternion};
 
 use crate::utils::{get_time, send_event};
 
-use super::events::GestureDetected;
+use super::events::GestureDetectedEvent;
+use super::models::GestureDetected;
 
 const MAX_EVENT_AGE_MS: u128 = 5000; // 5 seconds
 
@@ -68,9 +69,9 @@ impl GestureDetector {
         // Detect head shake
         if get_time() - self.last_detection >= 5000 && self.detect_head_shake(movements) {
             self.last_detection = get_time();
-            send_event(GestureDetected {
+            send_event(GestureDetectedEvent(GestureDetected {
                 gesture: "head_shake".to_string(),
-            })
+            }))
             .await;
         }
     }

@@ -9,9 +9,9 @@ use std::{
     sync::LazyLock,
 };
 
-use events::{OSCMessage, VrcOscAddressChangedEvent, VrcOscQueryAddressChangedEvent};
+use events::{OscMessageReceivedEvent, VrcOscAddressChangedEvent, VrcOscQueryAddressChangedEvent};
 use log::{error, info, warn};
-use models::OSCValue;
+use models::{OSCMessage, OSCValue};
 use rosc::{OscPacket, OscType};
 use tokio::sync::Mutex;
 use tokio_util::sync::CancellationToken;
@@ -94,7 +94,7 @@ async fn spawn_receiver_task() -> CancellationToken {
                             let address_whitelist = address_whitelist_guard.clone();
                             drop(address_whitelist_guard);
                             if address_whitelist.contains(&msg.addr) {
-                                send_event(OSCMessage {
+                                send_event(OscMessageReceivedEvent(OSCMessage {
                                     address: msg.addr,
                                     values: msg
                                         .args
@@ -122,7 +122,7 @@ async fn spawn_receiver_task() -> CancellationToken {
                                             },
                                         })
                                         .collect(),
-                                })
+                                }))
                                 .await;
                             }
                         }

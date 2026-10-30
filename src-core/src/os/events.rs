@@ -1,25 +1,17 @@
 use serde::Serialize;
+use specta::Type;
+use tauri_specta::Event;
 
-use super::audio_devices::device::AudioDeviceDto;
-use crate::utils::event;
+use super::audio_devices::device::{AudioDeviceDto, MicLevelReport};
 
-#[derive(Serialize, Clone, specta::Type)]
+#[derive(Serialize, Clone, Type, Event)]
 pub struct VrchatProcessActiveEvent(pub bool);
-event!(VrchatProcessActiveEvent, "VRCHAT_PROCESS_ACTIVE");
 
-#[derive(Serialize, Clone, specta::Type)]
-#[serde(rename_all = "camelCase")]
-pub struct MicLevelReport {
-    pub device_id: String,
-    pub level: f32,
-    pub active: bool,
-}
-event!(MicLevelReport, "mic_level");
+#[derive(Serialize, Clone, Type, Event)]
+pub struct MicLevelEvent(pub MicLevelReport);
 
-#[derive(Serialize, Clone, specta::Type)]
+#[derive(Serialize, Clone, Type, Event)]
 pub struct AudioDeviceUpdatedEvent(pub AudioDeviceDto);
-event!(AudioDeviceUpdatedEvent, "audioDeviceUpdated");
 
-#[derive(Serialize, Clone, specta::Type)]
+#[derive(Serialize, Clone, Type, Event)]
 pub struct AudioDevicesUpdatedEvent(pub Vec<AudioDeviceDto>);
-event!(AudioDevicesUpdatedEvent, "audioDevicesUpdated");

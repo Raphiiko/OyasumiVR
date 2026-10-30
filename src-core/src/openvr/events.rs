@@ -1,9 +1,10 @@
-use serde::{Deserialize, Serialize};
+use serde::Serialize;
+use specta::Type;
+use tauri_specta::Event;
 
-use super::models::{OVRDevice, OpenVRStatus};
-use crate::utils::event;
+use super::models::{GestureDetected, OVRDevice, OpenVRStatus, SleepDetectorStateReport};
 
-#[derive(Clone, Serialize, Deserialize, specta::Type)]
+#[derive(Serialize, Clone, Type, Event)]
 #[serde(rename_all = "camelCase")]
 pub struct OpenVRInputEvent {
     pub action: String,
@@ -11,43 +12,20 @@ pub struct OpenVRInputEvent {
     pub time_ago: f32,
     pub device: Option<OVRDevice>,
 }
-event!(OpenVRInputEvent, "OVR_INPUT_EVENT_DIGITAL");
 
-#[derive(Serialize, Clone, specta::Type)]
+#[derive(Serialize, Clone, Type, Event)]
 pub struct OvrStatusUpdateEvent(pub OpenVRStatus);
-event!(OvrStatusUpdateEvent, "OVR_STATUS_UPDATE");
 
-#[derive(Clone, Serialize, Deserialize, specta::Type)]
-pub struct DeviceUpdateEvent {
+#[derive(Serialize, Clone, Type, Event)]
+pub struct OvrDeviceUpdateEvent {
     pub device: OVRDevice,
 }
-event!(DeviceUpdateEvent, "OVR_DEVICE_UPDATE");
 
-#[derive(Clone, Serialize, Deserialize, specta::Type)]
-#[serde(rename_all = "camelCase")]
-pub struct SleepDetectorStateReport {
-    pub distance_in_last_15_minutes: f64,
-    pub distance_in_last_10_minutes: f64,
-    pub distance_in_last_5_minutes: f64,
-    pub distance_in_last_1_minute: f64,
-    pub distance_in_last_10_seconds: f64,
-    pub rotation_in_last_15_minutes: f64,
-    pub rotation_in_last_10_minutes: f64,
-    pub rotation_in_last_5_minutes: f64,
-    pub rotation_in_last_1_minute: f64,
-    pub rotation_in_last_10_seconds: f64,
-    pub start_time: u128,
-    pub last_log: u128,
-}
-event!(SleepDetectorStateReport, "SLEEP_DETECTOR_STATE_REPORT");
+#[derive(Serialize, Clone, Type, Event)]
+pub struct SleepDetectorStateReportEvent(pub SleepDetectorStateReport);
 
-#[derive(Clone, Serialize, Deserialize, specta::Type)]
-#[serde(rename_all = "camelCase")]
-pub struct GestureDetected {
-    pub gesture: String,
-}
-event!(GestureDetected, "GESTURE_DETECTED");
+#[derive(Serialize, Clone, Type, Event)]
+pub struct GestureDetectedEvent(pub GestureDetected);
 
-#[derive(Serialize, Clone, specta::Type)]
+#[derive(Serialize, Clone, Type, Event)]
 pub struct OvrAnalogGainUpdateEvent(pub f32);
-event!(OvrAnalogGainUpdateEvent, "OVR_ANALOG_GAIN_UPDATE");

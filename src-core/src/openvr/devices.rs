@@ -1,6 +1,6 @@
 use std::collections::HashMap;
 
-use super::events::{DeviceUpdateEvent, OpenVRInputEvent};
+use super::events::{OpenVRInputEvent, OvrDeviceUpdateEvent};
 use super::models::{OVRDevice, OVRHandleType, PowerMethod, TrackedDeviceClass};
 use super::{sleeping_pose, GestureDetector, SleepDetector, OVR_CONTEXT};
 use crate::utils::send_event;
@@ -315,7 +315,7 @@ async fn update_device(device_index: ovr::TrackedDeviceIndex, emit: bool) {
         store_device(&mut devices, &device)
     };
     if emit && changed {
-        let event = DeviceUpdateEvent { device };
+        let event = OvrDeviceUpdateEvent { device };
         send_event(event).await;
     }
 }
