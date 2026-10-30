@@ -1,12 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  ChangeDetectorRef,
-  Component,
-  DestroyRef,
-  ElementRef,
-  OnDestroy,
-  viewChild,
-} from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, OnDestroy, viewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { combineLatest, map } from 'rxjs';
@@ -40,7 +32,6 @@ interface Fact {
   selector: 'app-device-detail-view',
   templateUrl: './device-detail-view.component.html',
   styleUrls: ['./device-detail-view.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false,
 })
 export class DeviceDetailViewComponent implements OnDestroy {
@@ -72,7 +63,6 @@ export class DeviceDetailViewComponent implements OnDestroy {
     private appSettings: AppSettingsService,
     protected frames: SteamFrameDeviceViewService,
     private cdr: ChangeDetectorRef,
-    destroyRef: DestroyRef,
     protected devices: KnownDeviceViewService
   ) {
     combineLatest([
@@ -84,7 +74,7 @@ export class DeviceDetailViewComponent implements OnDestroy {
       lighthouse.devices,
       appSettings.settings,
     ])
-      .pipe(takeUntilDestroyed(destroyRef))
+      .pipe(takeUntilDestroyed())
       .subscribe(([id, knownDevices, , tags, , , settings]) =>
         this.onData(id, knownDevices, tags, settings.lighthousePowerOffState)
       );

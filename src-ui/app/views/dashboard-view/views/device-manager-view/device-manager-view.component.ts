@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { fade, vshrink } from '../../../../utils/animations';
 
@@ -7,7 +7,6 @@ import { fade, vshrink } from '../../../../utils/animations';
   templateUrl: './device-manager-view.component.html',
   styleUrls: ['./device-manager-view.component.scss'],
   animations: [fade(), vshrink()],
-  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false,
 })
 export class DeviceManagerViewComponent {

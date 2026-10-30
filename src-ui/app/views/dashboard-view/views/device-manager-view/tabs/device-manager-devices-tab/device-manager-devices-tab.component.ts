@@ -1,12 +1,5 @@
 import { Router } from '@angular/router';
-import {
-  ChangeDetectorRef,
-  Component,
-  OnInit,
-  AfterViewInit,
-  DestroyRef,
-  ChangeDetectionStrategy,
-} from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, AfterViewInit, DestroyRef } from '@angular/core';
 import { DeviceManagerService } from '../../../../../../services/device-manager.service';
 import { OpenVRService } from '../../../../../../services/openvr.service';
 import { LighthouseService } from '../../../../../../services/lighthouse.service';
@@ -43,7 +36,6 @@ interface DeviceGroup {
   templateUrl: './device-manager-devices-tab.component.html',
   styleUrls: ['./device-manager-devices-tab.component.scss'],
   animations: [fade(), vshrink()],
-  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false,
 })
 export class DeviceManagerDevicesTabComponent implements OnInit, AfterViewInit {
