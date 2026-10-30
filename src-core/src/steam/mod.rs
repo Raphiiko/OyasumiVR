@@ -1,13 +1,11 @@
+use events::SteamworksReadyEvent;
 use log::error;
 use std::sync::LazyLock;
 use steamworks::{AppId, CallbackHandle, Client, UserStatsReceived};
 use tokio::sync::Mutex;
 
-#[derive(serde::Serialize, Clone, specta::Type)]
-pub struct SteamworksReadyEvent(pub bool);
-crate::utils::event!(SteamworksReadyEvent, "STEAMWORKS_READY");
-
 pub mod commands;
+pub mod events;
 
 pub const STEAM_APP_ID: AppId = AppId(2538150);
 

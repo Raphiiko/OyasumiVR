@@ -1,9 +1,10 @@
 pub mod commands;
+pub mod events;
 
 use crate::utils::send_event;
 use chrono::{Local, NaiveDateTime, TimeZone};
+use events::{VRCLogEvent, VrcLogCurrentFileEvent};
 use log::{debug, info, trace, warn};
-use serde::{Deserialize, Serialize};
 use std::sync::atomic::{AtomicBool, Ordering};
 use std::{
     collections::HashMap,
@@ -15,21 +16,6 @@ use std::{
     time::{Duration, Instant, SystemTime, UNIX_EPOCH},
 };
 use tokio_util::sync::CancellationToken;
-
-#[derive(Clone, Serialize, Deserialize, Debug, specta::Type)]
-#[serde(rename_all = "camelCase")]
-pub struct VRCLogEvent {
-    time: u64,
-    event: String,
-    data: String,
-    initial_load: bool,
-}
-crate::utils::event!(VRCLogEvent, "VRC_LOG_EVENT");
-
-/// The VRChat log file the parser reads, if any.
-#[derive(serde::Serialize, Clone, specta::Type)]
-pub struct VrcLogCurrentFileEvent(pub Option<String>);
-crate::utils::event!(VrcLogCurrentFileEvent, "VRC_LOG_CURRENT_FILE");
 
 static MUTE_LOG_DIR_NO_EXIST_WARNINGS: AtomicBool = AtomicBool::new(false);
 
@@ -391,8 +377,9 @@ pub fn start_log_locator_task() -> CancellationToken {
 mod tests {
     use super::{
         is_current_enough, parse_datetime_from_line, parse_on_player_joined, parse_on_player_left,
-        pick_log_path, read_complete_line, VRCLogEvent,
+        pick_log_path, read_complete_line,
     };
+    use crate::vrc_log_parser::events::VRCLogEvent;
     use chrono::{Local, TimeZone, Utc};
     use std::{
         fs,

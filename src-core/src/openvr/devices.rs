@@ -1,8 +1,7 @@
 use std::collections::HashMap;
 
-use super::models::{
-    DeviceUpdateEvent, OVRDevice, OVRHandleType, OpenVRInputEvent, PowerMethod, TrackedDeviceClass,
-};
+use super::events::{DeviceUpdateEvent, OpenVRInputEvent};
+use super::models::{OVRDevice, OVRHandleType, PowerMethod, TrackedDeviceClass};
 use super::{sleeping_pose, GestureDetector, SleepDetector, OVR_CONTEXT};
 use crate::utils::send_event;
 use chrono::{DateTime, Duration, Utc};

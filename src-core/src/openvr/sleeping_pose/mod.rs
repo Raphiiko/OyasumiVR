@@ -1,4 +1,5 @@
 pub mod commands;
+pub mod events;
 mod geometry;
 #[cfg(test)]
 mod tests;
@@ -6,6 +7,7 @@ mod tests;
 pub use geometry::{PoseGeometry, SleepingPose};
 
 use crate::utils::send_event;
+use events::{SleepingPoseDebugEvent, SleepingPoseUpdateEvent};
 use serde::Serialize;
 use std::sync::{
     atomic::{AtomicBool, Ordering},
@@ -13,14 +15,6 @@ use std::sync::{
 };
 use std::time::Instant;
 use tokio::sync::Mutex;
-
-#[derive(serde::Serialize, Clone, specta::Type)]
-pub struct SleepingPoseUpdateEvent(pub SleepingPose);
-crate::utils::event!(SleepingPoseUpdateEvent, "SLEEPING_POSE_UPDATE");
-
-#[derive(serde::Serialize, Clone, specta::Type)]
-pub struct SleepingPoseDebugEvent(pub DebugSnapshot);
-crate::utils::event!(SleepingPoseDebugEvent, "SLEEPING_POSE_DEBUG");
 
 /// The shortest time between two classified headset poses.
 const SAMPLE_INTERVAL_MS: u64 = 250;

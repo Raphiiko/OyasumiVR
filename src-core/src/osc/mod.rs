@@ -1,5 +1,6 @@
 pub mod commands;
-pub mod models;
+pub mod events;
+mod models;
 mod vrchat;
 
 use std::{
@@ -8,24 +9,14 @@ use std::{
     sync::LazyLock,
 };
 
+use events::{OSCMessage, VrcOscAddressChangedEvent, VrcOscQueryAddressChangedEvent};
 use log::{error, info, warn};
-use models::{OSCMessage, OSCValue};
+use models::OSCValue;
 use rosc::{OscPacket, OscType};
 use tokio::sync::Mutex;
 use tokio_util::sync::CancellationToken;
 
 use crate::utils::send_event;
-
-#[derive(serde::Serialize, Clone, specta::Type)]
-pub struct VrcOscAddressChangedEvent(pub Option<String>);
-crate::utils::event!(VrcOscAddressChangedEvent, "VRC_OSC_ADDRESS_CHANGED");
-
-#[derive(serde::Serialize, Clone, specta::Type)]
-pub struct VrcOscQueryAddressChangedEvent(pub Option<String>);
-crate::utils::event!(
-    VrcOscQueryAddressChangedEvent,
-    "VRC_OSCQUERY_ADDRESS_CHANGED"
-);
 
 pub static OSC_SEND_SOCKET: LazyLock<Mutex<Option<UdpSocket>>> = LazyLock::new(Default::default);
 pub static OSC_RECEIVE_SOCKET: LazyLock<Mutex<Option<UdpSocket>>> = LazyLock::new(Default::default);

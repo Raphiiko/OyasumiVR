@@ -1,12 +1,14 @@
 use std::time::Duration;
 
 use super::{
-    connection, devkit, discovery, hex,
+    connection, devkit, discovery,
+    events::StageEvent,
+    hex,
     models::{
         Access, Candidate, Cct, CleanupOutcome, CleanupRequest, DisconnectControllerError,
         FadeError, FadeRequest, OtherPcsOutcome, Pairing, PairingKeys, ProbeOutcome,
-        RegisterOutcome, SetBrightnessError, SetCctError, SetupOutcome, SetupRequest, StageEvent,
-        State, SupportedModel,
+        RegisterOutcome, SetBrightnessError, SetCctError, SetupOutcome, SetupRequest, State,
+        SupportedModel,
     },
     setup,
     ssh::{self, SshError},

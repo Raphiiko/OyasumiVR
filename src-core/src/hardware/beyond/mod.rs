@@ -8,13 +8,11 @@ use log::{error, info, warn};
 use tokio::sync::Mutex;
 
 use crate::utils::send_event;
-
-#[derive(serde::Serialize, Clone, specta::Type)]
-pub struct BigscreenBeyondConnectedEvent(pub bool);
-crate::utils::event!(BigscreenBeyondConnectedEvent, "BIGSCREEN_BEYOND_CONNECTED");
+use events::BigscreenBeyondConnectedEvent;
 
 pub mod commands;
 mod detector;
+pub mod events;
 
 const BIGSCREEN_VID: u16 = 0x35bd;
 const BEYOND_PID: u16 = 0x0101;

@@ -1,5 +1,6 @@
 pub mod commands;
 pub mod elevate;
+pub mod events;
 pub mod launcher;
 
 use crate::utils::sidecar_manager::{SidecarLaunch, SidecarManager};
@@ -8,6 +9,7 @@ use crate::{
     Models::elevated_sidecar::oyasumi_elevated_sidecar_client::OyasumiElevatedSidecarClient,
     Models::oyasumi_core::ElevatedSidecarStartArgs,
 };
+use events::{ElevatedSidecarStartedEvent, ElevatedSidecarStoppedEvent};
 use log::{info, warn};
 use std::sync::{
     atomic::{AtomicBool, Ordering},
@@ -16,19 +18,6 @@ use std::sync::{
 use std::time::Duration;
 use tokio::sync::Mutex;
 use tonic::transport::Channel;
-
-/// Carries the sidecar's gRPC-web port.
-#[derive(serde::Serialize, Clone, specta::Type)]
-pub struct ElevatedSidecarStartedEvent(pub u32);
-crate::utils::event!(ElevatedSidecarStartedEvent, "ELEVATED_SIDECAR_STARTED");
-
-#[derive(serde::Serialize, Clone, specta::Type)]
-pub struct ElevatedSidecarStoppedEvent;
-crate::utils::event!(ElevatedSidecarStoppedEvent, "ELEVATED_SIDECAR_STOPPED");
-
-#[derive(serde::Serialize, Clone, specta::Type)]
-pub struct ElevationPromptShownEvent;
-crate::utils::event!(ElevationPromptShownEvent, "ELEVATION_PROMPT_SHOWN");
 
 pub static SIDECAR_GRPC_CLIENT: LazyLock<Mutex<Option<OyasumiElevatedSidecarClient<Channel>>>> =
     LazyLock::new(Default::default);

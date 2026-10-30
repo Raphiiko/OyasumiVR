@@ -1,3 +1,4 @@
+use super::events::AddNotificationEvent;
 use super::models::oyasumi_core::{
     event_params::EventData, oyasumi_core_server::OyasumiCore, AddNotificationRequest,
     AddNotificationResponse, ElevatedSidecarStartArgs, Empty, EventParams, HttpServerPort,
@@ -5,11 +6,6 @@ use super::models::oyasumi_core::{
 };
 use log::error;
 use tonic::{Request, Response, Status};
-
-/// A notification the overlay sidecar asks the UI to show.
-#[derive(serde::Serialize, Clone, specta::Type)]
-pub struct AddNotificationEvent(pub AddNotificationRequest);
-crate::utils::event!(AddNotificationEvent, "addNotification");
 
 #[derive(Debug, Default)]
 pub struct OyasumiCoreServerImpl {}

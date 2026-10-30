@@ -1,4 +1,5 @@
 pub mod commands;
+pub mod events;
 
 use crate::utils::sidecar_manager::{SidecarLaunch, SidecarManager};
 use crate::Models::overlay_sidecar::MicrophoneActivityMode;
@@ -7,6 +8,7 @@ use crate::{
     Models::overlay_sidecar::oyasumi_overlay_sidecar_client::OyasumiOverlaySidecarClient,
     Models::oyasumi_core::OverlaySidecarStartArgs,
 };
+use events::{OverlaySidecarStartedEvent, OverlaySidecarStoppedEvent};
 use log::warn;
 use std::{
     sync::{
@@ -17,15 +19,6 @@ use std::{
 };
 use tokio::sync::Mutex;
 use tonic::transport::Channel;
-
-/// Carries the sidecar's gRPC-web port.
-#[derive(serde::Serialize, Clone, specta::Type)]
-pub struct OverlaySidecarStartedEvent(pub u32);
-crate::utils::event!(OverlaySidecarStartedEvent, "OVERLAY_SIDECAR_STARTED");
-
-#[derive(serde::Serialize, Clone, specta::Type)]
-pub struct OverlaySidecarStoppedEvent;
-crate::utils::event!(OverlaySidecarStoppedEvent, "OVERLAY_SIDECAR_STOPPED");
 
 pub static SIDECAR_GRPC_CLIENT: LazyLock<Mutex<Option<OyasumiOverlaySidecarClient<Channel>>>> =
     LazyLock::new(Default::default);

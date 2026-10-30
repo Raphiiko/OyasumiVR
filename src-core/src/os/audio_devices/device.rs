@@ -27,6 +27,7 @@ use super::wrappers::{
     AudioDeviceIAudioEndpointVolume, AudioDeviceIAudioEndpointVolumeCallback,
     AudioDeviceIAudioMeterInformation, AudioDeviceIMMDevice,
 };
+use crate::os::events::{AudioDeviceUpdatedEvent, MicLevelReport};
 
 #[derive(Serialize, Clone, specta::Type)]
 #[serde(rename_all = "camelCase")]
@@ -39,23 +40,6 @@ pub struct AudioDeviceDto {
     pub default: bool,
     pub default_communications: bool,
 }
-
-#[derive(Serialize, Clone, specta::Type)]
-#[serde(rename_all = "camelCase")]
-pub struct MicLevelReport {
-    pub device_id: String,
-    pub level: f32,
-    pub active: bool,
-}
-crate::utils::event!(MicLevelReport, "mic_level");
-
-#[derive(serde::Serialize, Clone, specta::Type)]
-pub struct AudioDeviceUpdatedEvent(pub AudioDeviceDto);
-crate::utils::event!(AudioDeviceUpdatedEvent, "audioDeviceUpdated");
-
-#[derive(serde::Serialize, Clone, specta::Type)]
-pub struct AudioDevicesUpdatedEvent(pub Vec<AudioDeviceDto>);
-crate::utils::event!(AudioDevicesUpdatedEvent, "audioDevicesUpdated");
 
 impl AudioDeviceDto {
     pub async fn from(value: &AudioDevice) -> Self {

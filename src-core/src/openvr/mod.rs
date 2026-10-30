@@ -1,14 +1,15 @@
-pub mod brightness_analog;
+mod brightness_analog;
 mod brightness_overlay;
 mod chaperone;
 mod colortemp_analog;
 pub mod commands;
 mod dashboard;
+pub mod events;
 pub(crate) use dashboard::interface_table;
 pub mod devices;
 mod framelimiter;
 mod gesture_detector;
-pub mod models;
+mod models;
 mod sleep_detector;
 pub mod sleeping_pose;
 mod supersampling;
@@ -369,5 +370,5 @@ pub fn settings_interface_available(context: &ovr::Context) -> bool {
 async fn update_status(new_status: OpenVRStatus) {
     let mut status = OVR_STATUS.lock().await;
     *status = new_status.clone();
-    send_event(models::OvrStatusUpdateEvent(new_status)).await;
+    send_event(events::OvrStatusUpdateEvent(new_status)).await;
 }

@@ -168,17 +168,6 @@ pub enum FadeOutcome {
     RuntimeUnavailable,
 }
 
-/// The helper ended a fade, sent to the UI as `STEAM_FRAME_FADE_ENDED`.
-#[derive(Serialize, Clone, Debug, PartialEq, specta::Type)]
-#[serde(rename_all = "camelCase")]
-pub struct FadeEnded {
-    pub pairing_id: String,
-    pub control: Control,
-    pub operation: String,
-    pub outcome: FadeOutcome,
-}
-crate::utils::event!(FadeEnded, "STEAM_FRAME_FADE_ENDED");
-
 #[derive(Serialize, Deserialize, Clone, Copy, Debug, PartialEq, specta::Type)]
 #[serde(rename_all = "camelCase")]
 pub enum FadeError {
@@ -345,21 +334,6 @@ pub enum ProbeOutcome {
         message: String,
     },
 }
-
-#[derive(Serialize, Clone, specta::Type)]
-#[serde(rename_all = "camelCase")]
-pub struct StageEvent {
-    pub attempt_id: String,
-    pub stage: Stage,
-}
-crate::utils::event!(StageEvent, "STEAM_FRAME_SETUP_STAGE");
-
-#[derive(serde::Serialize, Clone, specta::Type)]
-pub struct SteamFrameConnectionStateEvent(pub State);
-crate::utils::event!(
-    SteamFrameConnectionStateEvent,
-    "STEAM_FRAME_CONNECTION_STATE"
-);
 
 #[cfg(test)]
 mod tests {

@@ -1,6 +1,6 @@
 use crate::utils::{get_time, send_event};
 
-use super::models::SleepDetectorStateReport;
+use super::events::SleepDetectorStateReport;
 
 const MAX_EVENT_AGE_MS: u128 = 900000; // 15 minutes
 

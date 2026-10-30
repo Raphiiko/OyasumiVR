@@ -1,4 +1,5 @@
 pub mod commands;
+pub mod events;
 pub mod models;
 
 use std::{
@@ -25,11 +26,14 @@ use uuid::Uuid;
 
 use crate::utils::send_event;
 
-use self::models::{
+use self::events::{
     LighthouseConnectsFailingEvent, LighthouseConnectsRecoveredEvent,
-    LighthouseDeviceDiscoveredEvent, LighthouseDeviceModel, LighthouseDevicePowerStateChangedEvent,
-    LighthouseDeviceType, LighthouseError, LighthousePowerState,
-    LighthouseScanningStatusChangedEvent, LighthouseStatus, LighthouseStatusChangedEvent,
+    LighthouseDeviceDiscoveredEvent, LighthouseDevicePowerStateChangedEvent,
+    LighthouseScanningStatusChangedEvent, LighthouseStatusChangedEvent,
+};
+use self::models::{
+    LighthouseDeviceModel, LighthouseDeviceType, LighthouseError, LighthousePowerState,
+    LighthouseStatus,
 };
 
 const LIGHTHOUSE_V1_PWR_SERVICE: Uuid = Uuid::from_u128(0x0000CB00_0000_1000_8000_00805F9B34FB);

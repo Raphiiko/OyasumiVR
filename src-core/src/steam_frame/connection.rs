@@ -15,11 +15,12 @@ use tokio_tungstenite::tungstenite::Message;
 
 use super::{
     discovery,
+    events::{FadeEnded, SteamFrameConnectionStateEvent},
     maintenance::{self, Recovery, UpdateOutcome},
     models::{
-        Brightness, Cct, Control, Controller, DisconnectControllerError, FadeEnded, FadeError,
-        FadeOutcome, FadeRequest, LastSeen, Maintenance, Pairing, Seen, SetBrightnessError,
-        SetCctError, State, Status, SteamFrameConnectionStateEvent,
+        Brightness, Cct, Control, Controller, DisconnectControllerError, FadeError, FadeOutcome,
+        FadeRequest, LastSeen, Maintenance, Pairing, Seen, SetBrightnessError, SetCctError, State,
+        Status,
     },
     setup::{
         self, bundled_digest, install_decision, InstallDecision, ProvisionError, Replace,

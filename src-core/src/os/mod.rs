@@ -1,11 +1,13 @@
-pub mod audio_devices;
+mod audio_devices;
 pub mod commands;
 pub mod elevation;
+pub mod events;
 pub mod minimum_window_size;
 mod models;
 mod sounds_gen;
 
 use self::audio_devices::manager::AudioDeviceManager;
+use events::VrchatProcessActiveEvent;
 use log::{error, info, warn};
 use rodio::buffer::SamplesBuffer;
 use rodio::source::Source;
@@ -29,10 +31,6 @@ use windows::Win32::System::Power::{
 };
 use winreg::enums::HKEY_CURRENT_USER;
 use winreg::RegKey;
-
-#[derive(serde::Serialize, Clone, specta::Type)]
-pub struct VrchatProcessActiveEvent(pub bool);
-crate::utils::event!(VrchatProcessActiveEvent, "VRCHAT_PROCESS_ACTIVE");
 
 type PlaySoundRequest = (String, f32, oneshot::Sender<Result<(), String>>);
 type PlaySoundSender = LazyLock<Mutex<Option<Sender<PlaySoundRequest>>>>;

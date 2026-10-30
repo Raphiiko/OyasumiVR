@@ -47,16 +47,6 @@ pub struct BindingOriginData {
     pub input_source_type: String,
 }
 
-#[derive(Clone, Serialize, Deserialize, specta::Type)]
-#[serde(rename_all = "camelCase")]
-pub struct OpenVRInputEvent {
-    pub action: String,
-    pub pressed: bool,
-    pub time_ago: f32,
-    pub device: Option<OVRDevice>,
-}
-crate::utils::event!(OpenVRInputEvent, "OVR_INPUT_EVENT_DIGITAL");
-
 #[derive(Serialize, Clone, specta::Type)]
 #[serde(rename_all = "UPPERCASE")]
 pub enum OpenVRStatus {
@@ -64,10 +54,6 @@ pub enum OpenVRStatus {
     Initializing,
     Initialized,
 }
-
-#[derive(serde::Serialize, Clone, specta::Type)]
-pub struct OvrStatusUpdateEvent(pub OpenVRStatus);
-crate::utils::event!(OvrStatusUpdateEvent, "OVR_STATUS_UPDATE");
 
 #[derive(Clone, Serialize, Deserialize, PartialEq, specta::Type)]
 pub enum TrackedControllerRole {
@@ -233,37 +219,6 @@ impl OVRHandleType {
 }
 
 // EVENTS
-
-#[derive(Clone, Serialize, Deserialize, specta::Type)]
-pub struct DeviceUpdateEvent {
-    pub device: OVRDevice,
-}
-crate::utils::event!(DeviceUpdateEvent, "OVR_DEVICE_UPDATE");
-
-#[derive(Clone, Serialize, Deserialize, specta::Type)]
-#[serde(rename_all = "camelCase")]
-pub struct SleepDetectorStateReport {
-    pub distance_in_last_15_minutes: f64,
-    pub distance_in_last_10_minutes: f64,
-    pub distance_in_last_5_minutes: f64,
-    pub distance_in_last_1_minute: f64,
-    pub distance_in_last_10_seconds: f64,
-    pub rotation_in_last_15_minutes: f64,
-    pub rotation_in_last_10_minutes: f64,
-    pub rotation_in_last_5_minutes: f64,
-    pub rotation_in_last_1_minute: f64,
-    pub rotation_in_last_10_seconds: f64,
-    pub start_time: u128,
-    pub last_log: u128,
-}
-crate::utils::event!(SleepDetectorStateReport, "SLEEP_DETECTOR_STATE_REPORT");
-
-#[derive(Clone, Serialize, Deserialize, specta::Type)]
-#[serde(rename_all = "camelCase")]
-pub struct GestureDetected {
-    pub gesture: String,
-}
-crate::utils::event!(GestureDetected, "GESTURE_DETECTED");
 
 #[derive(Clone, Serialize, Deserialize, specta::Type)]
 #[serde(rename_all = "camelCase")]
