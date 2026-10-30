@@ -1,5 +1,5 @@
 import { ApplicationRef, Injectable } from '@angular/core';
-import { commands, events, type OpenVRStatus } from '../bindings';
+import { commands, events, type OpenVRStatus } from 'src-ui/app/bindings';
 import { fromCoreDevice, OVRDevice } from '../models/ovr-device';
 import {
   BehaviorSubject,
@@ -144,33 +144,24 @@ export class OpenVRService {
   /** Logs a failure instead of rejecting, as SteamVR or the headset can go away mid-transition. */
   public async setAnalogGain(analogGain: number): Promise<void> {
     if (typeof analogGain === 'number' && isFinite(analogGain)) {
-      await commands
-        .openvrSetAnalogGain(analogGain)
-        .catch((e) => warn(`[OpenVR] Could not set analog gain: ${e}`));
+      const result = await commands.openvrSetAnalogGain(analogGain);
+      if (result.status === 'error') warn(`[OpenVR] Could not set analog gain: ${result.error}`);
     } else {
       console.error('[OpenVR] Attempted to set analogGain to invalid value', analogGain);
       error('[OpenVR] Attempted to set analogGain to invalid value: ' + analogGain);
     }
   }
 
-  public getAnalogGain(): Promise<number> {
+  public getAnalogGain() {
     return commands.openvrGetAnalogGain();
   }
 
-  public async setSupersampleScale(supersampleScale: number | null): Promise<void> {
-    await commands.openvrSetSupersampleScale(supersampleScale);
+  public setSupersampleScale(supersampleScale: number | null) {
+    return commands.openvrSetSupersampleScale(supersampleScale);
   }
 
-  public getSupersampleScale(): Promise<number | null> {
-    return commands.openvrGetSupersampleScale();
-  }
-
-  public async setFadeDistance(fadeDistance: number): Promise<void> {
-    await commands.openvrSetFadeDistance(fadeDistance);
-  }
-
-  public getFadeDistance(): Promise<number> {
-    return commands.openvrGetFadeDistance();
+  public setFadeDistance(fadeDistance: number) {
+    return commands.openvrSetFadeDistance(fadeDistance);
   }
 
   public setStartWithSteamVR(enabled: boolean): Promise<void> {
@@ -206,13 +197,12 @@ export class OpenVRService {
     const run = async () => {
       if (session !== this.autoLaunchSession || this._status.value !== 'INITIALIZED') return;
       if (!this.appSettings.settingsSync.startWithSteamVRPending) {
-        let enabled: boolean;
-        try {
-          enabled = await commands.openvrGetApplicationAutoLaunch();
-        } catch (cause) {
-          error(`[OpenVR] Could not read application auto-launch: ${cause}`);
+        const result = await commands.openvrGetApplicationAutoLaunch();
+        if (result.status === 'error') {
+          error(`[OpenVR] Could not read application auto-launch: ${result.error}`);
           return;
         }
+        const enabled = result.data;
         if (session !== this.autoLaunchSession || this._status.value !== 'INITIALIZED') return;
         if (
           !this.appSettings.settingsSync.startWithSteamVRPending &&
@@ -223,12 +213,9 @@ export class OpenVRService {
         return;
       }
       const enabled = this.appSettings.settingsSync.startWithSteamVR;
-      try {
-        await commands.openvrSetApplicationAutoLaunch(enabled);
-        const confirmed = await commands.openvrGetApplicationAutoLaunch();
-        if (confirmed !== enabled) throw new Error('AUTO_LAUNCH_WRITE_NOT_CONFIRMED');
-      } catch (cause) {
-        error(`[OpenVR] Could not set application auto-launch: ${cause}`);
+      const failure = await this.writeAutoLaunch(enabled);
+      if (failure) {
+        error(`[OpenVR] Could not set application auto-launch: ${failure}`);
         return;
       }
       if (session !== this.autoLaunchSession || this._status.value !== 'INITIALIZED') return;
@@ -238,6 +225,15 @@ export class OpenVRService {
     };
     this.autoLaunchQueue = this.autoLaunchQueue.then(run, run);
     return this.autoLaunchQueue;
+  }
+
+  /** Resolves the failure reason, or null once SteamVR reads back the written setting. */
+  private async writeAutoLaunch(enabled: boolean): Promise<string | null> {
+    const written = await commands.openvrSetApplicationAutoLaunch(enabled);
+    if (written.status === 'error') return written.error;
+    const confirmed = await commands.openvrGetApplicationAutoLaunch();
+    if (confirmed.status === 'error') return confirmed.error;
+    return confirmed.data === enabled ? null : 'AUTO_LAUNCH_WRITE_NOT_CONFIRMED';
   }
 
   private async applyOpenVrInitDelayFix(enabled: boolean) {

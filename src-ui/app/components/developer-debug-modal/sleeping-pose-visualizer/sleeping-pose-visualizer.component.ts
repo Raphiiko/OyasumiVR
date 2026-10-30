@@ -18,7 +18,7 @@ import {
   type DebugSnapshot,
   type Obb,
   type SleepingPose,
-} from '../../../bindings';
+} from 'src-ui/app/bindings';
 
 interface Viewer {
   three: typeof Three;

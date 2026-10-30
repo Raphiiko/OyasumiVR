@@ -207,7 +207,7 @@ describe('Start with SteamVR synchronization', () => {
       if (command === 'openvr_status') return 'INACTIVE';
       if (command === 'openvr_get_devices') return [];
       if (command === 'openvr_get_application_auto_launch') return false;
-      if (command === 'openvr_set_application_auto_launch') throw new Error('write failed');
+      if (command === 'openvr_set_application_auto_launch') throw 'write failed';
       return undefined;
     });
     const service = createService(appSettings);
@@ -249,7 +249,7 @@ describe('Start with SteamVR synchronization', () => {
     expect(appSettings.settingsSync.startWithSteamVR).toBe(false);
     const write = service.setStartWithSteamVR(true);
     await firstWriteStarted.promise;
-    firstWrite.reject(new Error('write failed'));
+    firstWrite.reject('write failed');
     await write;
     expect(appSettings.settingsSync).toMatchObject({
       startWithSteamVR: true,

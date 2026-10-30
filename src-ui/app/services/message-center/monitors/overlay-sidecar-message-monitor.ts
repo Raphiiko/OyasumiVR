@@ -12,7 +12,7 @@ import {
 import { isEqual } from 'lodash';
 import { ExternalLinkService } from '../../external-link.service';
 import { ShowInFolderService } from '../../show-in-folder.service';
-import { events } from '../../../bindings';
+import { events } from 'src-ui/app/bindings';
 
 // the sidecar reports its start before it builds any overlays, so a crash loop reads as start then stop
 const FAILED_STARTS_BEFORE_WARNING = 3;

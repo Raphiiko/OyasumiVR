@@ -12,7 +12,7 @@ import { AppSettingsService } from '../app-settings.service';
 import { APP_SETTINGS_DEFAULT, AppSettings } from '../../models/settings';
 
 import { OVRInputEventAction } from '../../models/ovr-input-event';
-import { commands } from '../../bindings';
+import { commands } from 'src-ui/app/bindings';
 import { VRChatService } from '../vrchat-api/vrchat.service';
 
 @Injectable({

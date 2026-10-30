@@ -3,7 +3,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { info } from '@tauri-apps/plugin-log';
 import { CancellableTask } from '../../utils/cancellable-task';
 import { BrightnessTransitionTask } from './brightness-transition';
-import { commands } from '../../bindings';
+import { commands } from 'src-ui/app/bindings';
 import {
   SET_BRIGHTNESS_OR_CCT_OPTIONS_DEFAULTS,
   SetBrightnessOrCCTOptions,

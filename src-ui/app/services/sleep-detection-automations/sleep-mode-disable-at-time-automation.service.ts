@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { AutomationConfigService } from '../automation-config.service';
-import { events } from '../../bindings';
+import { events } from 'src-ui/app/bindings';
 import {
   AUTOMATION_CONFIGS_DEFAULT,
   SleepModeDisableAtTimeAutomationConfig,

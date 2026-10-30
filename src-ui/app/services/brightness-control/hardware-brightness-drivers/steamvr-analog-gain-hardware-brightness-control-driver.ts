@@ -114,7 +114,8 @@ export class SteamVRAnalogGainHardwareBrightnessControlDriver extends HardwareBr
     // SteamVR can stop during the read and clear this.range, so keep the range it started with
     const range = this.range;
     if (!range) return 100;
-    const storedGain = await this.openvr.getAnalogGain().catch(() => DEFAULT_ANALOG_GAIN);
+    const read = await this.openvr.getAnalogGain();
+    const storedGain = read.status === 'ok' ? read.data : DEFAULT_ANALOG_GAIN;
     return Math.round(this.gainToSoftwarePercentage(storedGain, range));
   }
 

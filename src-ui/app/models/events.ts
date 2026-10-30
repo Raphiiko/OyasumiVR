@@ -1,1 +1,1 @@
-export type { SleepDetectorStateReport } from '../bindings';
+export type { SleepDetectorStateReport } from 'src-ui/app/bindings';

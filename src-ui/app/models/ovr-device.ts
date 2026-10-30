@@ -4,7 +4,7 @@ import type {
   PowerMethod,
   TrackedControllerRole,
   TrackedDeviceClass,
-} from '../bindings';
+} from 'src-ui/app/bindings';
 
 export type { OVRHandleType };
 export type OVRDeviceClass = TrackedDeviceClass;

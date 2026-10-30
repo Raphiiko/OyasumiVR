@@ -61,10 +61,9 @@ export class ChaperoneFadeDistanceAutomationService {
       return;
     }
     let failure: EventLogFailure | undefined;
-    try {
-      await this.openvr.setFadeDistance(config.fadeDistance);
-    } catch (e) {
-      warn(`[FadeDistanceAutomation] Could not set fade distance: ${e}`);
+    const result = await this.openvr.setFadeDistance(config.fadeDistance);
+    if (result.status === 'error') {
+      warn(`[FadeDistanceAutomation] Could not set fade distance: ${result.error}`);
       failure = 'UNKNOWN';
     }
     if (logging) {

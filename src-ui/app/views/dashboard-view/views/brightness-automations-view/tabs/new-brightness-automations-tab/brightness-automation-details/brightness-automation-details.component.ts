@@ -22,7 +22,7 @@ import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { HardwareBrightnessControlService } from '../../../../../../../services/brightness-control/hardware-brightness-control.service';
 import { SimpleBrightnessControlService } from '../../../../../../../services/brightness-control/simple-brightness-control.service';
 import { SoftwareBrightnessControlService } from '../../../../../../../services/brightness-control/software-brightness-control.service';
-import { commands } from '../../../../../../../bindings';
+import { commands } from 'src-ui/app/bindings';
 import { error } from '@tauri-apps/plugin-log';
 import { ToastService } from 'src-ui/app/services/toast.service';
 
@@ -201,7 +201,9 @@ export class BrightnessAutomationDetailsComponent implements OnInit {
 
   protected async autoDetermineActivationTime() {
     try {
-      const [sunrise, sunset] = await commands.getSunriseSunsetTime();
+      const times = await commands.getSunriseSunsetTime();
+      if (times.status === 'error') throw times.error;
+      const [sunrise, sunset] = times.data;
       switch (this.sunMode()) {
         case 'SUNSET':
           await this.updateActivationTime(sunset);

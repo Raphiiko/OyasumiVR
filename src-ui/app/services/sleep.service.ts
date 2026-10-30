@@ -18,7 +18,7 @@ import { EventLogService } from './event-log.service';
 import { EventLogSleepModeDisabled, EventLogSleepModeEnabled } from '../models/event-log-entry';
 import { AppSettingsService } from './app-settings.service';
 import { listen } from '@tauri-apps/api/event';
-import { commands, events } from '../bindings';
+import { commands, events } from 'src-ui/app/bindings';
 
 @Injectable({
   providedIn: 'root',

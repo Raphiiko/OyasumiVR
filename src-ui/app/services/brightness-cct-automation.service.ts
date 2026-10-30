@@ -39,7 +39,7 @@ import { CCTControlService } from './cct-control/cct-control.service';
 import { SetBrightnessOrCCTReason } from './brightness-control/brightness-control-models';
 import { error } from '@tauri-apps/plugin-log';
 import { OpenVRService } from './openvr.service';
-import { commands, events } from '../bindings';
+import { commands, events } from 'src-ui/app/bindings';
 
 @Injectable({
   providedIn: 'root',
@@ -621,9 +621,10 @@ export class BrightnessCctAutomationService {
     return (this.sunriseSunsetLookup ??= firstValueFrom(
       from(commands.getSunriseSunsetTime()).pipe(timeout(30000))
     )
-      .then((times) => {
-        [this.autoSunriseTime, this.autoSunsetTime] = times;
-        return times;
+      .then((result) => {
+        if (result.status === 'error') throw result.error;
+        [this.autoSunriseTime, this.autoSunsetTime] = result.data;
+        return result.data;
       })
       .finally(() => (this.sunriseSunsetLookup = undefined)));
   }

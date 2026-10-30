@@ -1,1 +1,1 @@
-export type { SleepingPose } from '../bindings';
+export type { SleepingPose } from 'src-ui/app/bindings';

@@ -3,7 +3,7 @@ import { GrpcWebFetchTransport } from '@protobuf-ts/grpcweb-transport';
 import { BehaviorSubject } from 'rxjs';
 import { OyasumiElevatedSidecarClient } from 'src-grpc-web-client/elevated-sidecar_pb.client';
 import { OyasumiOverlaySidecarClient } from 'src-grpc-web-client/overlay-sidecar_pb.client';
-import { commands, events } from '../bindings';
+import { commands, events } from 'src-ui/app/bindings';
 
 @Injectable({
   providedIn: 'root',

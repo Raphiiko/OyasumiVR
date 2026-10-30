@@ -1,1 +1,1 @@
-export type { BindingOriginData as OVRActionBinding } from '../bindings';
+export type { BindingOriginData as OVRActionBinding } from 'src-ui/app/bindings';

@@ -7,7 +7,7 @@ import {
 import { BehaviorSubject, firstValueFrom, Subject, withLatestFrom } from 'rxjs';
 import { isEqual } from 'lodash';
 import { fromCoreDevice, OVRDevice } from '../models/ovr-device';
-import { commands, events } from '../bindings';
+import { commands, events } from 'src-ui/app/bindings';
 import { OpenVRService } from './openvr.service';
 
 @Injectable({
@@ -72,7 +72,8 @@ export class OpenVRInputService {
   async getActionBindings(actionSet: OVRInputEventActionSet, action: OVRInputEventAction) {
     const status = await firstValueFrom(this.openvr.status);
     if (status !== 'INITIALIZED') return [];
-    const bindings = await commands.openvrGetBindingOrigins(actionSet, action);
-    return bindings.filter((b) => b.slotName && b.slotName.trim() && b.slotName !== 'null');
+    const result = await commands.openvrGetBindingOrigins(actionSet, action);
+    if (result.status === 'error') throw result.error;
+    return result.data.filter((b) => b.slotName && b.slotName.trim() && b.slotName !== 'null');
   }
 }

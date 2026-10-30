@@ -12,7 +12,8 @@ import {
   firstValueFrom,
 } from 'rxjs';
 import { isEqual, omit } from 'lodash';
-import { commands } from '../bindings';
+import { commands, OVRFrameLimits } from 'src-ui/app/bindings';
+import { warn } from '@tauri-apps/plugin-log';
 import { OpenVRService } from './openvr.service';
 
 export interface FrameLimiterAppPreset {
@@ -101,7 +102,7 @@ export class FrameLimiterService {
             appId
           )
         );
-        await commands.openvrSetAppFramelimit(appId, null);
+        await this.applyFrameLimit(appId, null);
         return;
       default:
         if (typeof value !== 'number') throw new Error('Invalid frame limit value');
@@ -109,7 +110,7 @@ export class FrameLimiterService {
           ...this._activeFrameLimits.value,
           [appId]: value,
         });
-        await commands.openvrSetAppFramelimit(appId, {
+        await this.applyFrameLimit(appId, {
           additionalFramesToPredict: value,
           framesToThrottle: value,
         });
@@ -117,15 +118,19 @@ export class FrameLimiterService {
     }
   }
 
+  private async applyFrameLimit(appId: number, limits: OVRFrameLimits | null) {
+    const result = await commands.openvrSetAppFramelimit(appId, limits);
+    if (result.status === 'error') {
+      warn(`[FrameLimiter] Could not set the frame limit of app ${appId}: ${result.error}`);
+    }
+  }
+
   private async getActiveFrameLimitForAppId(appId: number): Promise<FrameLimitConfigOption | null> {
     const status = await firstValueFrom(this.openvr.status);
     if (status !== 'INITIALIZED') return null;
-    try {
-      const result = await commands.openvrGetAppFramelimit(appId);
-      if (result === null) return 'AUTO';
-      return Math.max(result.framesToThrottle, result.additionalFramesToPredict);
-    } catch {
-      return null;
-    }
+    const result = await commands.openvrGetAppFramelimit(appId);
+    if (result.status === 'error') return null;
+    if (result.data === null) return 'AUTO';
+    return Math.max(result.data.framesToThrottle, result.data.additionalFramesToPredict);
   }
 }

@@ -5,12 +5,15 @@ import { OVRDevice } from '../../../models/ovr-device';
 import { OpenVRService } from '../../openvr.service';
 import { PSVR2HardwareBrightnessControlDriver } from './psvr2-hardware-brightness-control-driver';
 
+/** A successful command result, as the generated bindings return it. */
+const ok = <T>(data: T) => ({ status: 'ok' as const, data });
+
 function createDriver(hmd: Partial<OVRDevice>) {
   let analogGain = 1;
   const openvr = {
     status: new BehaviorSubject('INITIALIZED'),
     devices: new BehaviorSubject([{ index: 0, class: 'HMD', isConnected: true, ...hmd }]),
-    getAnalogGain: async () => analogGain,
+    getAnalogGain: async () => ok(analogGain),
     setAnalogGain: async (value: number) => {
       analogGain = value;
     },

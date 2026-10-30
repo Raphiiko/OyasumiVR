@@ -54,10 +54,11 @@ export class RenderResolutionAutomationService {
     const openvrStatus = await firstValueFrom(this.openvr.status);
     if (openvrStatus !== 'INITIALIZED') return;
     let failure: EventLogFailure | undefined;
-    try {
-      await this.openvr.setSupersampleScale(config.resolution ? config.resolution / 100 : null);
-    } catch (e) {
-      warn(`[RenderResolutionAutomation] Could not set render resolution: ${e}`);
+    const result = await this.openvr.setSupersampleScale(
+      config.resolution ? config.resolution / 100 : null
+    );
+    if (result.status === 'error') {
+      warn(`[RenderResolutionAutomation] Could not set render resolution: ${result.error}`);
       failure = 'UNKNOWN';
     }
     if (logging) {

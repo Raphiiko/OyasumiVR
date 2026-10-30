@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { AutomationConfigService } from '../automation-config.service';
-import { events, type SleepDetectorStateReport } from '../../bindings';
+import { events, type SleepDetectorStateReport } from 'src-ui/app/bindings';
 import {
   AUTOMATION_CONFIGS_DEFAULT,
   SleepModeEnableForSleepDetectorAutomationConfig,

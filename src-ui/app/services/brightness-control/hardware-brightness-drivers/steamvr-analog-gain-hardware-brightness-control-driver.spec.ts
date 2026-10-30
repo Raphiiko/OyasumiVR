@@ -5,6 +5,9 @@ import { OVRDevice } from '../../../models/ovr-device';
 import { OpenVRService } from '../../openvr.service';
 import { SteamVRAnalogGainHardwareBrightnessControlDriver } from './steamvr-analog-gain-hardware-brightness-control-driver';
 
+/** A successful command result, as the generated bindings return it. */
+const ok = <T>(data: T) => ({ status: 'ok' as const, data });
+
 const ANALOG_GAIN_HMD = {
   manufacturerName: 'Example',
   modelNumber: 'Headset',
@@ -20,7 +23,7 @@ function createDriver(hmd: Partial<OVRDevice> | null, enabled = true) {
     devices: new BehaviorSubject(
       hmd ? [{ index: 0, class: 'HMD', isConnected: true, ...hmd }] : []
     ),
-    getAnalogGain: async () => analogGain,
+    getAnalogGain: async () => ok(analogGain),
     setAnalogGain: async (value: number) => {
       analogGain = value;
     },
@@ -78,7 +81,8 @@ describe('SteamVRAnalogGainHardwareBrightnessControlDriver', () => {
       devices: new BehaviorSubject([
         { index: 0, class: 'HMD', isConnected: true, ...ANALOG_GAIN_HMD },
       ]),
-      getAnalogGain: () => new Promise<number>((resolve) => (resolveGain = resolve)),
+      getAnalogGain: () =>
+        new Promise((resolve) => (resolveGain = (gain: number) => resolve(ok(gain)))),
       setAnalogGain: async () => {},
     } as unknown as OpenVRService;
     const settings = new BehaviorSubject({
