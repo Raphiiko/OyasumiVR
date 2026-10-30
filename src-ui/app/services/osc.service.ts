@@ -214,9 +214,8 @@ export class OscService {
           _parameters.map((parameter) => parameter.type),
           _parameters.map((parameter) => parameter.value)
         );
-        if (result.status === 'error') {
-          error(`[OSC] Could not send on ${oscAddr} to ${targetAddr}: ${result.error}`);
-        }
+        // a failed send rejects, which stops a running OSC script at that step
+        if (result.status === 'error') throw result.error;
       }
     }
   }
