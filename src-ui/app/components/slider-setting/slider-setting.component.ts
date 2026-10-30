@@ -8,7 +8,6 @@ import {
   OnInit,
   SimpleChanges,
   ViewChild,
-  ChangeDetectionStrategy,
   input,
   model,
 } from '@angular/core';
@@ -23,7 +22,6 @@ import { clamp, ensurePrecision, floatPrecision } from '../../utils/number-utils
   templateUrl: './slider-setting.component.html',
   styleUrls: ['./slider-setting.component.scss'],
   animations: [fade()],
-  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false,
 })
 export class SliderSettingComponent implements OnInit, OnChanges, OnDestroy {

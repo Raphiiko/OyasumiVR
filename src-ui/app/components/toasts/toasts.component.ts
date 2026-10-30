@@ -1,5 +1,5 @@
 import { animate, group, sequence, style, transition, trigger } from '@angular/animations';
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { Component } from '@angular/core';
 import {
   Toast,
   ToastAction,
@@ -22,7 +22,6 @@ const ICONS: Record<Exclude<ToastType, 'pending'>, string> = {
   templateUrl: './toasts.component.html',
   styleUrls: ['./toasts.component.scss'],
   standalone: false,
-  changeDetection: ChangeDetectionStrategy.OnPush,
   animations: [
     trigger('toastSlot', [
       transition(':enter', [

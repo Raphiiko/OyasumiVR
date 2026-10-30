@@ -3,7 +3,6 @@ import {
   Component,
   DestroyRef,
   OnInit,
-  ChangeDetectionStrategy,
   effect,
   input,
   untracked,
@@ -47,7 +46,6 @@ const LOW_BATTERY_PERCENTAGE = 15;
   templateUrl: './device-list-item.component.html',
   styleUrls: ['./device-list-item.component.scss'],
   animations: [fade(), vshrink(), hshrink()],
-  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false,
 })
 export class DeviceListItemComponent implements OnInit {

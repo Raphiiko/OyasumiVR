@@ -1,11 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  computed,
-  inject,
-  OnInit,
-  signal,
-} from '@angular/core';
+import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { TranslocoModule } from '@jsverse/transloco';
 import { BaseModalComponent } from '../../base-modal/base-modal.component';
 import { IconComponent } from '../../icon/icon.component';
@@ -48,7 +41,6 @@ const UNPAIR_FAILURES: Record<SteamFrameUnpairFailure, UnpairFailure> = {
   templateUrl: './steam-frame-unpair-modal.component.html',
   styleUrl: './steam-frame-unpair-modal.component.scss',
   animations: [fadeUp()],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SteamFrameUnpairModalComponent
   extends BaseModalComponent<SteamFrameUnpairModalInputModel, void>

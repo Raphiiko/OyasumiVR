@@ -7,7 +7,6 @@ import {
   OnDestroy,
   OnInit,
   ViewChild,
-  ChangeDetectionStrategy,
   effect,
   input,
   model,
@@ -27,7 +26,6 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
   templateUrl: './osc-script-code-editor.component.html',
   styleUrls: ['./osc-script-code-editor.component.scss'],
   animations: [fade(), hshrink(), noop()],
-  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false,
 })
 export class OscScriptCodeEditorComponent implements OnInit, OnDestroy, AfterViewInit {

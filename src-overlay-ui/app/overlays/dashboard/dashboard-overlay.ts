@@ -1,5 +1,4 @@
 import {
-  ChangeDetectionStrategy,
   Component,
   computed,
   inject,
@@ -22,7 +21,6 @@ export type DashboardMode = 'OVERVIEW' | 'AUTOMATIONS' | 'DEVICE_CONTROL';
   imports: [AutomationConfig, DeviceControl, Dialog, Overview, TranslocoPipe],
   templateUrl: './dashboard-overlay.html',
   styleUrl: './dashboard-overlay.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DashboardOverlay implements OnInit, OnDestroy {
   private readonly ipc = inject(IpcService);

@@ -1,10 +1,9 @@
-import { Component, input, ChangeDetectionStrategy } from '@angular/core';
+import { Component, input } from '@angular/core';
 
 @Component({
   selector: 'app-progressive-scroll-blur',
   standalone: false,
   templateUrl: './progressive-scroll-blur.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrl: './progressive-scroll-blur.component.scss',
 })
 export class ProgressiveScrollBlurComponent {

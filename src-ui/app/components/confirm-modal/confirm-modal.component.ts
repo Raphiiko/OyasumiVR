@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { BaseModalComponent } from 'src-ui/app/components/base-modal/base-modal.component';
 import { fadeUp } from 'src-ui/app/utils/animations';
 import { TString } from '../../models/translatable-string';
@@ -20,7 +20,6 @@ export interface ConfirmModalOutputModel {
   templateUrl: './confirm-modal.component.html',
   styleUrls: ['./confirm-modal.component.scss'],
   animations: [fadeUp()],
-  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false,
 })
 export class ConfirmModalComponent

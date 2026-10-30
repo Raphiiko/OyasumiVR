@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
+import { Component, input, output } from '@angular/core';
 
 /**
  * `label` and `description` accept translation keys; their Text variants accept rendered text.
@@ -8,7 +8,6 @@ import { ChangeDetectionStrategy, Component, input, output } from '@angular/core
   selector: 'app-setting-row',
   templateUrl: './setting-row.component.html',
   host: { class: 'setting-row' },
-  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false,
 })
 export class SettingRowComponent {

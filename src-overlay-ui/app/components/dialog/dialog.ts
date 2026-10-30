@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
+import { Component, computed, input, output } from '@angular/core';
 import { TranslocoPipe } from '@jsverse/transloco';
 
 @Component({
@@ -6,7 +6,6 @@ import { TranslocoPipe } from '@jsverse/transloco';
   imports: [TranslocoPipe],
   templateUrl: './dialog.html',
   styleUrl: './dialog.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Dialog {
   readonly title = input('shared.modals.confirm');

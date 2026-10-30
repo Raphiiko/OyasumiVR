@@ -1,11 +1,4 @@
-import {
-  ChangeDetectorRef,
-  Component,
-  DestroyRef,
-  inject,
-  OnInit,
-  ChangeDetectionStrategy,
-} from '@angular/core';
+import { ChangeDetectorRef, Component, DestroyRef, inject, OnInit } from '@angular/core';
 import { BaseModalComponent } from 'src-ui/app/components/base-modal/base-modal.component';
 import { fadeUp, hshrink, vshrink } from 'src-ui/app/utils/animations';
 import { BehaviorSubject, debounceTime, distinctUntilChanged, skip } from 'rxjs';
@@ -25,7 +18,6 @@ interface VRChatLoginTFAModalOutputModel {
   templateUrl: './vrchat-login-tfa-modal.component.html',
   styleUrls: ['./vrchat-login-tfa-modal.component.scss'],
   animations: [fadeUp(), vshrink(), hshrink()],
-  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false,
 })
 export class VRChatLoginTFAModalComponent

@@ -1,4 +1,4 @@
-import { Component, HostBinding, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, HostBinding, OnInit } from '@angular/core';
 import { AUTOMATION_CONFIGS_DEFAULT } from '../../../../../../models/automations';
 import { BaseModalComponent } from 'src-ui/app/components/base-modal/base-modal.component';
 import { fade, fadeUp, triggerChildren, vshrink } from '../../../../../../utils/animations';
@@ -17,7 +17,6 @@ export interface DurationDisableSleepModeModalOutputModel {
   selector: 'app-duration-disable-sleepmode-modal',
   templateUrl: './duration-disable-sleep-mode-modal.component.html',
   animations: [fadeUp(), fade(), triggerChildren(), vshrink()],
-  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false,
 })
 export class DurationDisableSleepModeModalComponent

@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { SleepDetectionTabComponent } from '../sleep-detection-tab.component';
 import { TimeDisableSleepModeModalComponent } from '../../modals/time-disable-sleepmode-modal/time-disable-sleep-mode-modal.component';
 import { filter } from 'rxjs';
@@ -17,7 +17,6 @@ import { PlayerJoinLeaveDisableSleepModeModalComponent } from '../../modals/play
 @Component({
   selector: 'app-sleep-detection-sleep-disable-tab',
   templateUrl: './sleep-detection-sleep-disable-tab.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false,
 })
 export class SleepDetectionSleepDisableTabComponent

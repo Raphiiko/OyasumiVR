@@ -1,12 +1,4 @@
-import {
-  ChangeDetectorRef,
-  Component,
-  computed,
-  inject,
-  model,
-  ChangeDetectionStrategy,
-  input,
-} from '@angular/core';
+import { ChangeDetectorRef, Component, computed, inject, model, input } from '@angular/core';
 import { getCSSColorForCCT } from 'src-shared-ts/src/cct-utils';
 import { fade } from '../../utils/animations';
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
@@ -16,7 +8,6 @@ import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
   templateUrl: './cct-input-setting.component.html',
   styleUrl: './cct-input-setting.component.scss',
   animations: [fade()],
-  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false,
 })
 export class CCTInputSettingComponent {

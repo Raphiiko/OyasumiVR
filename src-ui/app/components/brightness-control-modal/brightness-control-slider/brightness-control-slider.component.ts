@@ -6,7 +6,6 @@ import {
   OnInit,
   SimpleChanges,
   ViewChild,
-  ChangeDetectionStrategy,
   input,
   model,
 } from '@angular/core';
@@ -17,7 +16,6 @@ import { getCSSColorForCCT } from 'src-shared-ts/src/cct-utils';
   selector: 'app-brightness-control-slider',
   templateUrl: './brightness-control-slider.component.html',
   styleUrls: ['./brightness-control-slider.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false,
 })
 export class BrightnessControlSliderComponent implements OnInit, OnChanges {

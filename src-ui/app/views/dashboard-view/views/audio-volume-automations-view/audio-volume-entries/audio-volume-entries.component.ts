@@ -1,12 +1,4 @@
-import {
-  ChangeDetectorRef,
-  Component,
-  DestroyRef,
-  OnInit,
-  ChangeDetectionStrategy,
-  input,
-  model,
-} from '@angular/core';
+import { ChangeDetectorRef, Component, DestroyRef, OnInit, input, model } from '@angular/core';
 import { SelectBoxItem } from '../../../../../components/select-box/select-box.component';
 import { DomSanitizer } from '@angular/platform-browser';
 import { ModalService } from '../../../../../services/modal.service';
@@ -29,7 +21,6 @@ import {
   templateUrl: './audio-volume-entries.component.html',
   styleUrls: ['./audio-volume-entries.component.scss'],
   animations: [vshrink()],
-  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false,
 })
 export class AudioVolumeEntriesComponent implements OnInit {

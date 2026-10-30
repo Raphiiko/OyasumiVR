@@ -1,13 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  computed,
-  DestroyRef,
-  effect,
-  inject,
-  input,
-  signal,
-} from '@angular/core';
+import { Component, computed, DestroyRef, effect, inject, input, signal } from '@angular/core';
 
 /** The progress bar only starts filling once the notification has finished animating in. */
 const PROGRESS_DELAY = 800;
@@ -20,7 +11,6 @@ const PROGRESS_DELAY = 800;
     'animate.enter': 'anim-fade-in',
     'animate.leave': 'anim-blur-out',
   },
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Notification {
   readonly message = input('');

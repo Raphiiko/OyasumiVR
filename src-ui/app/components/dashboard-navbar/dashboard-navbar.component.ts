@@ -1,10 +1,4 @@
-import {
-  Component,
-  DestroyRef,
-  OnInit,
-  ChangeDetectionStrategy,
-  ChangeDetectorRef,
-} from '@angular/core';
+import { Component, DestroyRef, OnInit, ChangeDetectorRef } from '@angular/core';
 import { filter, map, Observable, startWith } from 'rxjs';
 import { fade } from '../../utils/animations';
 import { NavigationEnd, NavigationSkipped, Router } from '@angular/router';
@@ -169,7 +163,6 @@ const SUBMENU_ROUTES: Record<Exclude<SubMenu, 'GENERAL'>, string[]> = {
     blurMenu('rootMenu', '.2s ease'),
     slideMenu('subMenu', '.2s ease', false),
   ],
-  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false,
 })
 export class DashboardNavbarComponent implements OnInit {

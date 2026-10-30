@@ -1,5 +1,4 @@
 import {
-  ChangeDetectionStrategy,
   Component,
   computed,
   effect,
@@ -28,7 +27,6 @@ import { SettingRowLift } from '../setting-row/setting-row-lift';
       transition(':leave', [animate('.15s ease', style({ opacity: 0 }))]),
     ]),
   ],
-  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false,
 })
 export class TimeInputComponent {

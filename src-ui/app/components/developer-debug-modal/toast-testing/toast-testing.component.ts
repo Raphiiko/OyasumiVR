@@ -1,11 +1,10 @@
-import { ChangeDetectionStrategy, Component, OnDestroy } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { ToastRef, ToastService, ToastType } from 'src-ui/app/services/toast.service';
 
 @Component({
   selector: 'app-toast-testing',
   templateUrl: './toast-testing.component.html',
   styleUrls: ['./toast-testing.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false,
 })
 export class ToastTestingComponent implements OnDestroy {

@@ -1,12 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  computed,
-  DestroyRef,
-  inject,
-  OnInit,
-  signal,
-} from '@angular/core';
+import { Component, computed, DestroyRef, inject, OnInit, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Notification } from '../../components/notification/notification';
 import { IpcService } from '../../ipc/ipc.service';
@@ -19,7 +11,6 @@ const MAX_NOTIFICATIONS = 32;
   imports: [Notification],
   templateUrl: './notifications-overlay.html',
   styleUrl: './notifications-overlay.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NotificationsOverlay implements OnInit {
   private readonly ipc = inject(IpcService);

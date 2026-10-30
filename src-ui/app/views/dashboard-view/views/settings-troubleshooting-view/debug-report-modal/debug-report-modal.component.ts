@@ -1,6 +1,5 @@
 import {
   AfterViewInit,
-  ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   ElementRef,
@@ -28,7 +27,6 @@ type Step = 'confirm' | 'uploading' | 'done' | 'failed' | 'tooLarge' | 'saving';
   templateUrl: './debug-report-modal.component.html',
   styleUrls: ['./debug-report-modal.component.scss'],
   animations: [fadeUp()],
-  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false,
 })
 export class DebugReportModalComponent

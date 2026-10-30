@@ -1,10 +1,4 @@
-import {
-  ChangeDetectorRef,
-  Component,
-  DestroyRef,
-  OnInit,
-  ChangeDetectionStrategy,
-} from '@angular/core';
+import { ChangeDetectorRef, Component, DestroyRef, OnInit } from '@angular/core';
 import { BehaviorSubject, debounceTime, distinctUntilChanged, filter, switchMap, tap } from 'rxjs';
 import {
   AUTOMATION_CONFIGS_DEFAULT,
@@ -33,7 +27,6 @@ import { flushOnDestroy } from '../../../../../../utils/rxjs-utils';
   templateUrl: './status-automations-player-limit-tab.component.html',
   styleUrls: ['./status-automations-player-limit-tab.component.scss'],
   animations: [vshrink(), noop(), hshrink()],
-  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false,
 })
 export class StatusAutomationsPlayerLimitTabComponent implements OnInit {

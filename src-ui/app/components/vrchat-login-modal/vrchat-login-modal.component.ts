@@ -1,10 +1,4 @@
-import {
-  ChangeDetectorRef,
-  Component,
-  DestroyRef,
-  OnInit,
-  ChangeDetectionStrategy,
-} from '@angular/core';
+import { ChangeDetectorRef, Component, DestroyRef, OnInit } from '@angular/core';
 import { fadeUp, hshrink, vshrink } from '../../utils/animations';
 import { VRChatService } from '../../services/vrchat-api/vrchat.service';
 import { firstValueFrom, map, take } from 'rxjs';
@@ -33,7 +27,6 @@ interface VRChatLoginModalOutputModel {}
   templateUrl: './vrchat-login-modal.component.html',
   styleUrls: ['./vrchat-login-modal.component.scss'],
   animations: [fadeUp(), vshrink(), hshrink()],
-  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false,
 })
 export class VRChatLoginModalComponent

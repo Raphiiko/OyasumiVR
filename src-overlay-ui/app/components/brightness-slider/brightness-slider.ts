@@ -1,13 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  computed,
-  ElementRef,
-  input,
-  model,
-  signal,
-  viewChild,
-} from '@angular/core';
+import { Component, computed, ElementRef, input, model, signal, viewChild } from '@angular/core';
 import { clamp } from 'lodash';
 
 @Component({
@@ -18,7 +9,6 @@ import { clamp } from 'lodash';
     '(window:mousemove)': 'onMouseMove($event)',
     '(window:mouseup)': 'stopDragging()',
   },
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BrightnessSlider {
   readonly label = input('');

@@ -1,11 +1,4 @@
-import {
-  AfterViewInit,
-  ChangeDetectorRef,
-  Component,
-  inject,
-  OnInit,
-  ChangeDetectionStrategy,
-} from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, inject, OnInit } from '@angular/core';
 import { BaseModalComponent } from '../base-modal/base-modal.component';
 import { VRChatService } from '../../services/vrchat-api/vrchat.service';
 import { firstValueFrom } from 'rxjs';
@@ -27,7 +20,6 @@ export interface VrcAvatarSelectModalOutput {
   templateUrl: './vrc-avatar-select-modal.component.html',
   styleUrls: ['./vrc-avatar-select-modal.component.scss'],
   animations: [fadeUp(), vshrink()],
-  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false,
 })
 export class VrcAvatarSelectModalComponent

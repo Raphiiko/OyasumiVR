@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, ChangeDetectionStrategy, model } from '@angular/core';
+import { ChangeDetectorRef, Component, model } from '@angular/core';
 import { ModalService } from 'src-ui/app/services/modal.service';
 import {
   VrcAvatarSelectModalComponent,
@@ -13,7 +13,6 @@ import { PersistedAvatar } from '../../models/vrchat';
   templateUrl: './vrc-avatar-select-button.component.html',
   styleUrls: ['./vrc-avatar-select-button.component.scss'],
   animations: [noop(), hshrink()],
-  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false,
 })
 export class VrcAvatarSelectButtonComponent {

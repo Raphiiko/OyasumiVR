@@ -1,18 +1,10 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  computed,
-  inject,
-  linkedSignal,
-  OnInit,
-} from '@angular/core';
+import { Component, computed, inject, linkedSignal, OnInit } from '@angular/core';
 import { IpcService } from '../../ipc/ipc.service';
 
 @Component({
   selector: 'app-tooltip-overlay',
   templateUrl: './tooltip-overlay.html',
   styleUrl: './tooltip-overlay.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TooltipOverlay implements OnInit {
   private readonly ipc = inject(IpcService);

@@ -1,5 +1,4 @@
 import {
-  ChangeDetectionStrategy,
   Component,
   computed,
   inject,
@@ -19,7 +18,6 @@ const PRESS_COOLDOWN = 400;
   imports: [Tooltip, TranslocoPipe],
   templateUrl: './device-control.html',
   styleUrl: './device-control.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DeviceControl implements OnDestroy {
   private readonly ipc = inject(IpcService);

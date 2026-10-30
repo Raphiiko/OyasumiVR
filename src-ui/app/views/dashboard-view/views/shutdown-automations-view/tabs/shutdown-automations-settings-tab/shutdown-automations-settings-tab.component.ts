@@ -1,10 +1,4 @@
-import {
-  ChangeDetectorRef,
-  Component,
-  DestroyRef,
-  OnInit,
-  ChangeDetectionStrategy,
-} from '@angular/core';
+import { ChangeDetectorRef, Component, DestroyRef, OnInit } from '@angular/core';
 import {
   ConfirmModalComponent,
   ConfirmModalInputModel,
@@ -31,7 +25,6 @@ import { DeviceSelection } from 'src-ui/app/models/device-manager';
   templateUrl: './shutdown-automations-settings-tab.component.html',
   styleUrls: ['./shutdown-automations-settings-tab.component.scss'],
   animations: [fade(), vshrink()],
-  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false,
 })
 export class ShutdownAutomationsSettingsTabComponent implements OnInit {

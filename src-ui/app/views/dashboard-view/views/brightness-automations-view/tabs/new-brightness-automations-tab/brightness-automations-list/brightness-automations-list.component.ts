@@ -1,12 +1,4 @@
-import {
-  ChangeDetectorRef,
-  Component,
-  DestroyRef,
-  OnInit,
-  ChangeDetectionStrategy,
-  input,
-  output,
-} from '@angular/core';
+import { ChangeDetectorRef, Component, DestroyRef, OnInit, input, output } from '@angular/core';
 import {
   AUTOMATION_CONFIGS_DEFAULT,
   BrightnessAutomationsConfig,
@@ -28,7 +20,6 @@ import { omit, uniq } from 'lodash';
   templateUrl: './brightness-automations-list.component.html',
   styleUrls: ['./brightness-automations-list.component.scss'],
   animations: [fade()],
-  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false,
 })
 export class BrightnessAutomationsListComponent implements OnInit {

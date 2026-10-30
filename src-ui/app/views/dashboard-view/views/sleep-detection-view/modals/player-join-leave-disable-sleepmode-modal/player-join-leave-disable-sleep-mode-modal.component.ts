@@ -1,4 +1,4 @@
-import { Component, HostBinding, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, HostBinding, OnInit } from '@angular/core';
 import { BaseModalComponent } from 'src-ui/app/components/base-modal/base-modal.component';
 import { fade, fadeUp, triggerChildren, vshrink } from '../../../../../../utils/animations';
 import { TranslocoService } from '@jsverse/transloco';
@@ -23,7 +23,6 @@ export interface PlayerJoinLeaveDisableSleepModeModalOutputModel {
   templateUrl: './player-join-leave-disable-sleep-mode-modal.component.html',
   styleUrls: ['./player-join-leave-disable-sleep-mode-modal.component.scss'],
   animations: [vshrink(), fadeUp(), fade(), triggerChildren()],
-  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false,
 })
 export class PlayerJoinLeaveDisableSleepModeModalComponent

@@ -7,7 +7,6 @@ import {
   OnInit,
   SimpleChanges,
   ViewChild,
-  ChangeDetectionStrategy,
   input,
   model,
   output,
@@ -35,7 +34,6 @@ export interface OscAddressSelection {
   templateUrl: './osc-address-autocomplete.component.html',
   styleUrls: ['./osc-address-autocomplete.component.scss'],
   animations: [vshrink(), fade()],
-  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false,
 })
 export class OscAddressAutocompleteComponent implements OnInit, OnChanges {

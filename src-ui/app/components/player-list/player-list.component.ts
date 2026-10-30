@@ -3,7 +3,6 @@ import {
   Component,
   DestroyRef,
   OnInit,
-  ChangeDetectionStrategy,
   effect,
   input,
   model,
@@ -32,7 +31,6 @@ import { noop, vshrink } from '../../utils/animations';
   templateUrl: './player-list.component.html',
   styleUrls: ['./player-list.component.scss'],
   animations: [vshrink(), noop()],
-  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false,
 })
 export class PlayerListComponent implements OnInit {

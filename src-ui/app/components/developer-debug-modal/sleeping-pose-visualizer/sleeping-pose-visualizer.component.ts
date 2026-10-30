@@ -1,6 +1,5 @@
 import {
   AfterViewInit,
-  ChangeDetectionStrategy,
   Component,
   effect,
   ElementRef,
@@ -56,7 +55,6 @@ const POSE_COLORS: Record<SleepingPose, string> = {
   selector: 'app-sleeping-pose-visualizer',
   templateUrl: './sleeping-pose-visualizer.component.html',
   styleUrls: ['./sleeping-pose-visualizer.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false,
 })
 export class SleepingPoseVisualizerComponent implements OnInit, AfterViewInit, OnDestroy {

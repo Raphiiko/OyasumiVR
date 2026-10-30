@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { Component } from '@angular/core';
 import { noop } from '../../../../utils/animations';
 
 @Component({
@@ -6,7 +6,6 @@ import { noop } from '../../../../utils/animations';
   templateUrl: './status-automations-view.component.html',
   styleUrls: ['./status-automations-view.component.scss'],
   animations: [noop()],
-  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false,
 })
 export class StatusAutomationsViewComponent {

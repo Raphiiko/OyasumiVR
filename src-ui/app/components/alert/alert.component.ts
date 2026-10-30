@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, input } from '@angular/core';
+import { Component, input } from '@angular/core';
 
 export type AlertSeverity = 'info' | 'success' | 'warning' | 'error';
 
@@ -13,7 +13,6 @@ const SEVERITY_ICONS: Record<AlertSeverity, string> = {
   selector: 'app-alert',
   templateUrl: './alert.component.html',
   host: { class: 'alert', '[class]': 'severity()' },
-  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false,
 })
 export class AlertComponent {

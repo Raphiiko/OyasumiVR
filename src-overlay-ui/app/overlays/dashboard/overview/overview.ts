@@ -1,5 +1,4 @@
 import {
-  ChangeDetectionStrategy,
   Component,
   computed,
   effect,
@@ -23,7 +22,6 @@ type SliderMode = 'BRIGHTNESS' | 'COLOR_TEMP';
   imports: [BrightnessSliders, ColorTempSlider, Tooltip, TranslocoPipe],
   templateUrl: './overview.html',
   styleUrl: './overview.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Overview implements OnDestroy {
   private readonly ipc = inject(IpcService);
