@@ -51,6 +51,8 @@ with [SemVer](https://semver.org/) prerelease suffixes:
 - Fixed the player count status automation setting the same VRChat status message again every 11 minutes when the message contained punctuation
 - Fixed OyasumiVR not finding VRChat's OSC services on PCs with several network adapters, which showed the "VRChat OSC(Query) services unavailable" warning while OSC was enabled
 - Fixed invite request automations ignoring every request when OyasumiVR started shortly after VRChat, until you changed worlds
+- Fixed OyasumiVR failing to connect to base stations on some Bluetooth adapters
+- Fixed a base station staying stuck on turning on or off when it stopped responding to a command
 
 ## [26.10.3]
 
