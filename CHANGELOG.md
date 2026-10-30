@@ -38,6 +38,8 @@ with [SemVer](https://semver.org/) prerelease suffixes:
 - Debug reports now hide public IP addresses
 - VRChat status changes in the event log now show the old and new status side by side, on one line
 - Replaced the event log filter window with a smaller menu under the filter button, with categories grouped like the sidebar, and changes that apply right away
+- Devices in the Device Manager now open on their own page instead of a popup, where you can rename the device, set its tags and see its details
+- Base stations now show buttons to force them on, into standby or to sleep, in the Device Manager and on their page, instead of behind a right click
 
 ### Fixed
 
