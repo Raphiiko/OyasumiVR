@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { commands, events } from '../bindings';
+import { commands, events } from 'src-ui/app/bindings';
 import { FLAVOUR } from '../../build';
 import {
   asyncScheduler,
@@ -85,12 +85,15 @@ export class SteamService {
     if (!this._active.value) throw 'STEAMWORKS_INACTIVE';
     if (unlocked) info('[Steam] Unlocking achievement: ' + achievementId);
     else info('[Steam] Locking achievement: ' + achievementId);
-    await commands.steamAchievementSet(achievementId, unlocked);
+    const result = await commands.steamAchievementSet(achievementId, unlocked);
+    if (result.status === 'error') throw result.error;
   }
 
   public async getAchievement(achievementId: string): Promise<boolean> {
     if (!this._active.value) throw 'STEAMWORKS_INACTIVE';
-    return commands.steamAchievementGet(achievementId);
+    const result = await commands.steamAchievementGet(achievementId);
+    if (result.status === 'error') throw result.error;
+    return result.data;
   }
 
   /** Unlocks the achievement if it is still locked. Resolves false and logs instead of rejecting. */

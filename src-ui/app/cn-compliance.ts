@@ -1,4 +1,4 @@
-import { commands, events } from './bindings';
+import { commands, events } from 'src-ui/app/bindings';
 import { LANGUAGES } from './globals';
 import translationContributorData from '../../docs/translation_contributors.json';
 

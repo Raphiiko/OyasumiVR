@@ -1,5 +1,5 @@
 import { inject, Injectable } from '@angular/core';
-import { commands } from '../bindings';
+import { commands } from 'src-ui/app/bindings';
 import { appLogDir } from '@tauri-apps/api/path';
 import { ToastService } from './toast.service';
 

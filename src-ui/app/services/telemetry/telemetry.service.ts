@@ -13,7 +13,7 @@ import {
 } from 'rxjs';
 import { TELEMETRY_SETTINGS_DEFAULT, TelemetrySettings } from '../../models/telemetry-settings';
 
-import { commands } from '../../bindings';
+import { commands } from 'src-ui/app/bindings';
 import { isEqual } from 'lodash';
 import { FeatureSnapshotService } from './feature-snapshot.service';
 
@@ -87,12 +87,8 @@ export class TelemetryService {
 
   /** Resolves to whether the core sent the event. Never rejects. */
   private async send(event: string, props: { [key: string]: string | number }): Promise<boolean> {
-    try {
-      await commands.trackEvent(event, props);
-      return true;
-    } catch {
-      return false;
-    }
+    const result = await commands.trackEvent(event, props);
+    return result.status === 'ok';
   }
 
   async trackThrottledEvent(

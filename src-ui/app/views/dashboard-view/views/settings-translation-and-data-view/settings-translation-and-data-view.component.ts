@@ -17,7 +17,7 @@ import { TranslocoService } from '@jsverse/transloco';
 import { error, info } from '@tauri-apps/plugin-log';
 import { ConfirmModalComponent } from '../../../../components/confirm-modal/confirm-modal.component';
 import { ModalService } from 'src-ui/app/services/modal.service';
-import { commands } from '../../../../bindings';
+import { commands } from 'src-ui/app/bindings';
 import { relaunch } from '@tauri-apps/plugin-process';
 import { EventLogService } from '../../../../services/event-log.service';
 import { IPCService } from '../../../../services/ipc.service';
@@ -199,10 +199,12 @@ export class SettingsTranslationAndDataViewComponent {
                 askForRelaunch = true;
                 await CACHE_STORE.clear();
                 break;
-              case 'imageCache':
+              case 'imageCache': {
                 info('[Settings] Clearing image cache');
-                await commands.cleanImageCache(false);
+                const cleaned = await commands.cleanImageCache(false);
+                if (cleaned.status === 'error') throw cleaned.error;
                 break;
+              }
               case 'miscData':
                 info('[Settings] Clearing misc data');
                 askForRelaunch = true;

@@ -17,7 +17,7 @@ import {
 import { fade } from './utils/animations';
 import { TelemetryService } from './services/telemetry/telemetry.service';
 import { isHolidaysEventActive } from './utils/event-utils';
-import { commands } from './bindings';
+import { commands } from 'src-ui/app/bindings';
 
 @Component({
   selector: 'app-root',

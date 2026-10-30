@@ -16,7 +16,7 @@ import {
 import { SleepService } from './sleep.service';
 import { TranslocoService } from '@jsverse/transloco';
 import { error } from '@tauri-apps/plugin-log';
-import { commands } from '../bindings';
+import { commands } from 'src-ui/app/bindings';
 import { SleepPreparationService } from './sleep-preparation.service';
 
 @Injectable({

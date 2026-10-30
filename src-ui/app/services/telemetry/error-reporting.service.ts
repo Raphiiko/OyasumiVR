@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { commands } from '../../bindings';
+import { commands } from 'src-ui/app/bindings';
 import * as Sentry from '@sentry/angular';
 import { distinctUntilChanged, map } from 'rxjs';
 import { FLAVOUR } from '../../../build';

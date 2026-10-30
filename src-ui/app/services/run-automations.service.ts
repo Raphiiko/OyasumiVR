@@ -4,7 +4,7 @@ import { AUTOMATION_CONFIGS_DEFAULT, RunAutomationsConfig } from '../models/auto
 import { debounceTime, distinctUntilChanged, skip, take } from 'rxjs';
 import { firstValueFrom } from 'rxjs';
 import { debug, warn } from '@tauri-apps/plugin-log';
-import { commands as coreCommands } from '../bindings';
+import { commands as coreCommands } from 'src-ui/app/bindings';
 import { SleepService } from './sleep.service';
 import { SleepPreparationService } from './sleep-preparation.service';
 import { EventLogService } from './event-log.service';
@@ -56,9 +56,10 @@ export class RunAutomationsService {
 
   public async testCommands(commands: string): Promise<void> {
     debug(`[RunAutomationsService] Testing commands:\n${commands}`);
-    await coreCommands
-      .runCmdCommands(commands)
-      .catch((e) => warn(`[RunAutomationsService] Failed to test commands: ${e}`));
+    const result = await coreCommands.runCmdCommands(commands);
+    if (result.status === 'error') {
+      warn(`[RunAutomationsService] Failed to test commands: ${result.error}`);
+    }
   }
 
   private async onSleepModeChange(sleepMode: boolean) {
@@ -80,10 +81,9 @@ export class RunAutomationsService {
     const commands = (await this.getCommands(automationName)).trim();
     if (!commands) return;
     let failure: EventLogFailure | undefined;
-    try {
-      await coreCommands.runCmdCommands(commands);
-    } catch (error) {
-      warn(`[RunAutomationsService] Failed to execute ${automationName} commands: ${error}`);
+    const result = await coreCommands.runCmdCommands(commands);
+    if (result.status === 'error') {
+      warn(`[RunAutomationsService] Failed to execute ${automationName} commands: ${result.error}`);
       failure = 'UNKNOWN';
     }
     this.eventLogService.logEvent({

@@ -34,7 +34,7 @@ import { OpenVRService } from './openvr.service';
 import { DeviceControlService } from './device-control.service';
 import { LighthouseService } from './lighthouse.service';
 import { OVRDevice } from '../models/ovr-device';
-import { commands } from '../bindings';
+import { commands } from 'src-ui/app/bindings';
 import { warn } from '@tauri-apps/plugin-log';
 import {
   EventLogShutdownSequenceCancelled,
@@ -57,6 +57,8 @@ export const ShutdownSequenceStageOrder = [
   'QUITTING_STEAMVR',
   'POWERING_DOWN',
 ];
+
+type PowerCommandResult = Awaited<ReturnType<typeof commands.windowsSleep>>;
 
 @Injectable({
   providedIn: 'root',
@@ -192,7 +194,10 @@ export class ShutdownAutomationsService {
       reason,
     } as EventLogShutdownSequenceCancelled);
     // Cancel any pending shutdown
-    await commands.runCommand('shutdown', ['/a']);
+    const result = await commands.runCommand('shutdown', ['/a']);
+    if (result.status === 'error') {
+      warn(`[ShutdownAutomations] Could not abort the pending shutdown: ${result.error}`);
+    }
   }
 
   async runSequence(reason: EventLogShutdownSequenceStartedReason) {
@@ -433,7 +438,7 @@ export class ShutdownAutomationsService {
 
   private async dispatchDelayedPowerCommand(
     mode: PowerDownWindowsMode,
-    command: () => Promise<unknown>
+    command: () => Promise<PowerCommandResult>
   ): Promise<boolean> {
     await firstValueFrom(merge(of(null).pipe(delay(500)), this.cancelEvent));
     if (this.cancelFlag) return false;
@@ -443,17 +448,14 @@ export class ShutdownAutomationsService {
   }
 
   /** Resolves false, and logs a failed step, when Windows refused the command. */
-  private runPowerCommand(
+  private async runPowerCommand(
     mode: PowerDownWindowsMode,
-    command: () => Promise<unknown>
+    command: () => Promise<PowerCommandResult>
   ): Promise<boolean> {
-    return command().then(
-      () => true,
-      (e) => {
-        warn(`[ShutdownAutomations] Windows refused ${mode}: ${e}`);
-        this.logStepFailed(mode, 'UNKNOWN');
-        return false;
-      }
-    );
+    const result = await command();
+    if (result.status === 'ok') return true;
+    warn(`[ShutdownAutomations] Windows refused ${mode}: ${result.error}`);
+    this.logStepFailed(mode, 'UNKNOWN');
+    return false;
   }
 }

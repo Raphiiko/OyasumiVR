@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { commands } from '../../../../../../bindings';
+import { commands } from 'src-ui/app/bindings';
 import {
   combineLatest,
   distinctUntilChanged,

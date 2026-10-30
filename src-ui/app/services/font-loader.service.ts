@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { commands } from '../bindings';
+import { commands } from 'src-ui/app/bindings';
 import { fontLoader } from 'src-shared-ts/src/font-loader';
 import { TranslocoService } from '@jsverse/transloco';
 

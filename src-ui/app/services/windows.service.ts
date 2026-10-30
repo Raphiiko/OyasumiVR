@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { commands, WindowsPowerPolicy } from '../bindings';
+import { commands, WindowsPowerPolicy } from 'src-ui/app/bindings';
 import { EventLogService } from './event-log.service';
 import { error } from '@tauri-apps/plugin-log';
 import { BehaviorSubject } from 'rxjs';
