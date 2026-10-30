@@ -1,3 +1,4 @@
+use super::events::AddNotificationEvent;
 use super::models::oyasumi_core::{
     event_params::EventData, oyasumi_core_server::OyasumiCore, AddNotificationRequest,
     AddNotificationResponse, ElevatedSidecarStartArgs, Empty, EventParams, HttpServerPort,
@@ -47,23 +48,23 @@ impl OyasumiCore for OyasumiCoreServerImpl {
         if let Some(data) = &request.event_data {
             match data {
                 EventData::StringData(d) => {
-                    crate::utils::send_event(request.event_name.as_str(), d.clone()).await;
+                    crate::utils::send_raw_event(request.event_name.as_str(), d.clone()).await;
                 }
                 EventData::BoolData(d) => {
-                    crate::utils::send_event(request.event_name.as_str(), *d).await;
+                    crate::utils::send_raw_event(request.event_name.as_str(), *d).await;
                 }
                 EventData::JsonData(d) => {
-                    crate::utils::send_event(request.event_name.as_str(), d.clone()).await;
+                    crate::utils::send_raw_event(request.event_name.as_str(), d.clone()).await;
                 }
                 EventData::IntData(d) => {
-                    crate::utils::send_event(request.event_name.as_str(), *d as f64).await;
+                    crate::utils::send_raw_event(request.event_name.as_str(), *d as f64).await;
                 }
                 EventData::DoubleData(d) => {
-                    crate::utils::send_event(request.event_name.as_str(), *d).await;
+                    crate::utils::send_raw_event(request.event_name.as_str(), *d).await;
                 }
             }
         } else {
-            crate::utils::send_event(request.event_name.as_str(), ()).await;
+            crate::utils::send_raw_event(request.event_name.as_str(), ()).await;
         }
 
         Ok(Response::new(Empty {}))
@@ -82,7 +83,7 @@ impl OyasumiCore for OyasumiCoreServerImpl {
         &self,
         request: Request<AddNotificationRequest>,
     ) -> Result<Response<AddNotificationResponse>, Status> {
-        crate::utils::send_event("addNotification", request.get_ref().clone()).await;
+        crate::utils::send_event(AddNotificationEvent(request.get_ref().clone())).await;
         Ok(Response::new(AddNotificationResponse {
             notification_id: None, // TODO: IMPLEMENT METHOD TO RETRIEVE NOTIFICATION ID FROM FRONTEND
         }))

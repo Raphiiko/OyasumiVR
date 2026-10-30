@@ -6,6 +6,7 @@ mod debug_report;
 mod discord;
 mod elevated_sidecar;
 mod error_reporting;
+mod events;
 mod flavour;
 mod globals;
 mod grpc;
@@ -536,7 +537,7 @@ async fn app_setup(app_handle: tauri::AppHandle, error_reporting_enabled: bool) 
 }
 
 fn on_cron_minute_start(_: &str) {
-    futures::executor::block_on(utils::send_event("CRON_MINUTE_START", ()));
+    futures::executor::block_on(utils::send_event(events::CronMinuteStartEvent));
 }
 
 /// Registers every command and event the UI uses, and describes them for `src-ui/app/bindings.ts`.
@@ -684,6 +685,43 @@ fn specta_builder() -> tauri_specta::Builder<Wry> {
             steam_frame::commands::steam_frame_disconnect_controller,
             steam_frame::commands::steam_frame_fade,
             steam_frame::commands::steam_frame_cancel_fade,
+        ])
+        .events(tauri_specta::collect_events![
+            events::CronMinuteStartEvent,
+            elevated_sidecar::events::ElevatedSidecarStartedEvent,
+            elevated_sidecar::events::ElevatedSidecarStoppedEvent,
+            elevated_sidecar::events::ElevationPromptShownEvent,
+            grpc::events::AddNotificationEvent,
+            hardware::beyond::events::BigscreenBeyondConnectedEvent,
+            lighthouse::events::LighthouseConnectsFailingEvent,
+            lighthouse::events::LighthouseConnectsRecoveredEvent,
+            lighthouse::events::LighthouseDeviceDiscoveredEvent,
+            lighthouse::events::LighthouseDevicePowerStateChangedEvent,
+            lighthouse::events::LighthouseScanningStatusChangedEvent,
+            lighthouse::events::LighthouseStatusChangedEvent,
+            openvr::events::OvrAnalogGainUpdateEvent,
+            openvr::events::OvrDeviceUpdateEvent,
+            openvr::events::GestureDetectedEvent,
+            openvr::events::OpenVRInputEvent,
+            openvr::events::OvrStatusUpdateEvent,
+            openvr::events::SleepDetectorStateReportEvent,
+            openvr::sleeping_pose::events::SleepingPoseDebugEvent,
+            openvr::sleeping_pose::events::SleepingPoseUpdateEvent,
+            os::events::VrchatProcessActiveEvent,
+            os::events::AudioDeviceUpdatedEvent,
+            os::events::AudioDevicesUpdatedEvent,
+            os::events::MicLevelEvent,
+            osc::events::VrcOscAddressChangedEvent,
+            osc::events::VrcOscQueryAddressChangedEvent,
+            osc::events::OscMessageReceivedEvent,
+            overlay_sidecar::events::OverlaySidecarStartedEvent,
+            overlay_sidecar::events::OverlaySidecarStoppedEvent,
+            steam::events::SteamworksReadyEvent,
+            steam_frame::events::SteamFrameFadeEndedEvent,
+            steam_frame::events::SteamFrameSetupStageEvent,
+            steam_frame::events::SteamFrameConnectionStateEvent,
+            vrc_log_parser::events::VRCLogEvent,
+            vrc_log_parser::events::VrcLogCurrentFileEvent,
         ])
 }
 

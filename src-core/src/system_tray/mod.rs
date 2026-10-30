@@ -7,7 +7,7 @@ use tokio::sync::Mutex;
 
 pub mod commands;
 
-use crate::{globals::TAURI_APP_HANDLE, utils::send_event};
+use crate::globals::TAURI_APP_HANDLE;
 
 pub static SYSTEMTRAY_MANAGER: LazyLock<Mutex<Option<SystemTrayManager>>> =
     LazyLock::new(Default::default);
@@ -55,40 +55,24 @@ fn close_to_tray_applies(label: &str, close_to_tray: bool) -> bool {
 }
 
 async fn on_tray_icon_event(_icon: &tauri::tray::TrayIcon, event: tauri::tray::TrayIconEvent) {
-    match event {
-        tauri::tray::TrayIconEvent::Click {
-            id: _,
-            position: _,
-            rect: _,
-            button,
-            button_state,
-        } => {
-            if button_state == MouseButtonState::Up {
-                let _ = send_event("system_tray_click", button).await;
-                if button == MouseButton::Left {
-                    let app_guard = TAURI_APP_HANDLE.lock().await;
-                    let app = app_guard.as_ref().unwrap();
-                    let Some(window) = app.get_webview_window("main") else {
-                        return;
-                    };
-                    // a click queued before the main window closed arrives after the runtime dropped it
-                    if window.is_visible().is_ok_and(|visible| !visible) {
-                        let _ = window.show();
-                    }
-                    let _ = window.set_focus();
-                }
-            }
-        }
-        tauri::tray::TrayIconEvent::DoubleClick {
-            id: _,
-            position: _,
-            rect: _,
-            button,
-        } => {
-            let _ = send_event("system_tray_double_click", button).await;
-        }
-        _ => {}
+    let tauri::tray::TrayIconEvent::Click {
+        button: MouseButton::Left,
+        button_state: MouseButtonState::Up,
+        ..
+    } = event
+    else {
+        return;
+    };
+    let app_guard = TAURI_APP_HANDLE.lock().await;
+    let app = app_guard.as_ref().unwrap();
+    let Some(window) = app.get_webview_window("main") else {
+        return;
+    };
+    // a click queued before the main window closed arrives after the runtime dropped it
+    if window.is_visible().is_ok_and(|visible| !visible) {
+        let _ = window.show();
     }
+    let _ = window.set_focus();
 }
 
 fn handle_window_close_request<R: Runtime>(

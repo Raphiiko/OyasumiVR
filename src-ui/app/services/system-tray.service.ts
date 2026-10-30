@@ -49,8 +49,6 @@ export class SystemTrayService {
     ])
       .pipe(debounceTime(50))
       .subscribe(() => this.rebuildMenu());
-    // await listen<'Left' | 'Right' | string>('system_tray_click', (event) => {});
-    // await listen<'Left' | 'Right' | string>('system_tray_double_click', (event) => {});
     this.appSettingsService.settings
       .pipe(
         map((settings) => settings.exitInSystemTray),

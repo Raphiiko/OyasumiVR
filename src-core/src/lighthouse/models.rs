@@ -129,32 +129,3 @@ pub struct LighthouseDevice {
     /// Reconnecting closes the GATT handles, so operations on one device must not overlap
     pub op_lock: Arc<Mutex<()>>,
 }
-
-//
-// Events
-//
-#[derive(Debug, Serialize, Clone)]
-#[serde(rename_all = "camelCase")]
-pub struct LighthouseScanningStatusChangedEvent {
-    pub scanning: bool,
-}
-
-#[derive(Debug, Serialize, Clone)]
-#[serde(rename_all = "camelCase")]
-pub struct LighthouseStatusChangedEvent {
-    pub status: LighthouseStatus,
-}
-
-#[derive(Debug, Serialize, Clone)]
-#[serde(rename_all = "camelCase")]
-pub struct LighthouseDeviceDiscoveredEvent {
-    pub device: LighthouseDeviceModel,
-}
-
-#[derive(Debug, Serialize, Clone)]
-#[serde(rename_all = "camelCase")]
-pub struct LighthouseDevicePowerStateChangedEvent {
-    pub device_id: String,
-    pub power_state: LighthousePowerState,
-    pub v1_timeout: Option<u16>,
-}

@@ -1,4 +1,5 @@
 pub mod commands;
+pub mod events;
 
 use crate::utils::sidecar_manager::{SidecarLaunch, SidecarManager};
 use crate::Models::overlay_sidecar::MicrophoneActivityMode;
@@ -7,6 +8,7 @@ use crate::{
     Models::overlay_sidecar::oyasumi_overlay_sidecar_client::OyasumiOverlaySidecarClient,
     Models::oyasumi_core::OverlaySidecarStartArgs,
 };
+use events::{OverlaySidecarStartedEvent, OverlaySidecarStoppedEvent};
 use log::warn;
 use std::{
     sync::{
@@ -41,7 +43,7 @@ pub async fn init() {
     tokio::spawn(async move {
         while rx.recv().await.is_some() {
             *SIDECAR_GRPC_CLIENT.lock().await = None;
-            send_event("OVERLAY_SIDECAR_STOPPED", ()).await;
+            send_event(OverlaySidecarStoppedEvent).await;
         }
     });
 }
@@ -121,7 +123,7 @@ pub async fn handle_overlay_sidecar_start(
     }
     *client_guard = Some(grpc_client);
     drop(client_guard);
-    send_event("OVERLAY_SIDECAR_STARTED", args.grpc_web_port).await;
+    send_event(OverlaySidecarStartedEvent(args.grpc_web_port)).await;
     Ok(())
 }
 

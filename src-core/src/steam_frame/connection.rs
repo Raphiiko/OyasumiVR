@@ -15,6 +15,7 @@ use tokio_tungstenite::tungstenite::Message;
 
 use super::{
     discovery,
+    events::{SteamFrameConnectionStateEvent, SteamFrameFadeEndedEvent},
     maintenance::{self, Recovery, UpdateOutcome},
     models::{
         Brightness, Cct, Control, Controller, DisconnectControllerError, FadeEnded, FadeError,
@@ -32,8 +33,6 @@ use super::{
 };
 use crate::utils::send_event;
 
-const EVENT: &str = "STEAM_FRAME_CONNECTION_STATE";
-const FADE_ENDED_EVENT: &str = "STEAM_FRAME_FADE_ENDED";
 const PING_INTERVAL: Duration = Duration::from_secs(15);
 const SILENCE_LIMIT: Duration = Duration::from_secs(40);
 const MAX_BACKOFF: Duration = Duration::from_secs(60);
@@ -195,7 +194,7 @@ pub async fn set_cct(pairing_id: &str, kelvin: u32) -> Result<Cct, SetCctError> 
 }
 
 /// Starts a fade on the helper. `Ok` means the helper accepted it; the outcome arrives as a
-/// `STEAM_FRAME_FADE_ENDED` event.
+/// `SteamFrameFadeEndedEvent`.
 pub async fn fade(pairing_id: &str, request: FadeRequest) -> Result<(), FadeError> {
     let command = |reply| Command::Fade(request, reply);
     send(pairing_id, command, FadeError::Offline).await
@@ -274,7 +273,7 @@ async fn publish(state: &State) {
         .lock()
         .await
         .insert(state.pairing_id.clone(), state.clone());
-    send_event(EVENT, state.clone()).await;
+    send_event(SteamFrameConnectionStateEvent(state.clone())).await;
 }
 
 /// Keeps the values the state holds as last seen now, and returns this pairing's last seen values.
@@ -606,7 +605,7 @@ async fn receive(text: &str, relay: &mut Relay, state: &mut State) {
                 operation,
                 outcome,
             };
-            send_event(FADE_ENDED_EVENT, ended).await;
+            send_event(SteamFrameFadeEndedEvent(ended)).await;
         }
         Ok(HelperMessage::Controllers { controllers }) => {
             state.controllers = Some(controllers);

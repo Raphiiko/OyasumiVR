@@ -2,6 +2,7 @@ use std::ffi::CStr;
 use std::sync::LazyLock;
 
 use super::devices::get_devices;
+use super::events::OvrAnalogGainUpdateEvent;
 use super::models::TrackedDeviceClass;
 use super::{settings_interface_available, OVR_CONTEXT};
 use crate::utils::send_event;
@@ -82,7 +83,7 @@ pub async fn on_steamvr_section_changed() {
     }
     *known = Some(analog_gain);
     // emit before a write can take the lock, so the UI gets this report before that write ends
-    send_event("OVR_ANALOG_GAIN_UPDATE", analog_gain).await;
+    send_event(OvrAnalogGainUpdateEvent(analog_gain)).await;
 }
 
 /// Forgets the gain. Call after the context is gone, so the next session reports its first change.

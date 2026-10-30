@@ -1,8 +1,7 @@
 use std::collections::HashMap;
 
-use super::models::{
-    DeviceUpdateEvent, OVRDevice, OVRHandleType, OpenVRInputEvent, PowerMethod, TrackedDeviceClass,
-};
+use super::events::{OpenVRInputEvent, OvrDeviceUpdateEvent};
+use super::models::{OVRDevice, OVRHandleType, PowerMethod, TrackedDeviceClass};
 use super::{sleeping_pose, GestureDetector, SleepDetector, OVR_CONTEXT};
 use crate::utils::send_event;
 use chrono::{DateTime, Duration, Utc};
@@ -316,8 +315,8 @@ async fn update_device(device_index: ovr::TrackedDeviceIndex, emit: bool) {
         store_device(&mut devices, &device)
     };
     if emit && changed {
-        let event = DeviceUpdateEvent { device };
-        send_event("OVR_DEVICE_UPDATE", event).await;
+        let event = OvrDeviceUpdateEvent { device };
+        send_event(event).await;
     }
 }
 
@@ -448,7 +447,7 @@ async fn detect_inputs() {
                         device,
                     };
                     tokio::spawn(async move {
-                        send_event("OVR_INPUT_EVENT_DIGITAL", event).await;
+                        send_event(event).await;
                     });
                 }
             }

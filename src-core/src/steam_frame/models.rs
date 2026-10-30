@@ -157,7 +157,17 @@ pub enum Control {
     Cct,
 }
 
-#[derive(Serialize, Deserialize, Clone, Copy, Debug, PartialEq)]
+/// The helper ended a fade.
+#[derive(Serialize, Clone, Debug, PartialEq, specta::Type)]
+#[serde(rename_all = "camelCase")]
+pub struct FadeEnded {
+    pub pairing_id: String,
+    pub control: Control,
+    pub operation: String,
+    pub outcome: FadeOutcome,
+}
+
+#[derive(Serialize, Deserialize, Clone, Copy, Debug, PartialEq, specta::Type)]
 #[serde(rename_all = "camelCase")]
 pub enum FadeOutcome {
     Completed,
@@ -166,16 +176,6 @@ pub enum FadeOutcome {
     ExternalChange,
     Standby,
     RuntimeUnavailable,
-}
-
-/// The helper ended a fade, sent to the UI as `STEAM_FRAME_FADE_ENDED`.
-#[derive(Serialize, Clone, Debug, PartialEq)]
-#[serde(rename_all = "camelCase")]
-pub struct FadeEnded {
-    pub pairing_id: String,
-    pub control: Control,
-    pub operation: String,
-    pub outcome: FadeOutcome,
 }
 
 #[derive(Serialize, Deserialize, Clone, Copy, Debug, PartialEq, specta::Type)]
@@ -259,7 +259,7 @@ pub struct SetupRequest {
     pub repair: bool,
 }
 
-#[derive(Serialize, Clone, Copy, Debug, PartialEq)]
+#[derive(Serialize, Clone, Copy, Debug, PartialEq, specta::Type)]
 #[serde(rename_all = "camelCase")]
 pub enum Stage {
     Verify,
@@ -343,13 +343,6 @@ pub enum ProbeOutcome {
     Failed {
         message: String,
     },
-}
-
-#[derive(Serialize, Clone)]
-#[serde(rename_all = "camelCase")]
-pub struct StageEvent {
-    pub attempt_id: String,
-    pub stage: Stage,
 }
 
 #[cfg(test)]

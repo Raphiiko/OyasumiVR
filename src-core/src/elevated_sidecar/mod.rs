@@ -1,5 +1,6 @@
 pub mod commands;
 pub mod elevate;
+pub mod events;
 pub mod launcher;
 
 use crate::utils::sidecar_manager::{SidecarLaunch, SidecarManager};
@@ -8,6 +9,7 @@ use crate::{
     Models::elevated_sidecar::oyasumi_elevated_sidecar_client::OyasumiElevatedSidecarClient,
     Models::oyasumi_core::ElevatedSidecarStartArgs,
 };
+use events::{ElevatedSidecarStartedEvent, ElevatedSidecarStoppedEvent};
 use log::{info, warn};
 use std::sync::{
     atomic::{AtomicBool, Ordering},
@@ -44,7 +46,7 @@ pub async fn init() {
     tokio::spawn(async move {
         while (rx.recv().await).is_some() {
             *SIDECAR_GRPC_CLIENT.lock().await = None;
-            send_event("ELEVATED_SIDECAR_STOPPED", ()).await;
+            send_event(ElevatedSidecarStoppedEvent).await;
         }
     });
 }
@@ -407,6 +409,6 @@ pub async fn handle_elevated_sidecar_start(
     }
     *client_guard = Some(grpc_client);
     drop(client_guard);
-    send_event("ELEVATED_SIDECAR_STARTED", args.grpc_web_port).await;
+    send_event(ElevatedSidecarStartedEvent(args.grpc_web_port)).await;
     Ok(())
 }

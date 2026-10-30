@@ -13,11 +13,11 @@ pub async fn sleeping_pose_get() -> SleepingPose {
 pub async fn sleeping_pose_force(pose: SleepingPose) {
     let mut tracker = TRACKER.lock().await;
     for pose in tracker.force(now_ms(), pose) {
-        send_event("SLEEPING_POSE_UPDATE", pose).await;
+        send_event(super::events::SleepingPoseUpdateEvent(pose)).await;
     }
 }
 
-/// Starts or stops the `SLEEPING_POSE_DEBUG` event with the geometry of every classification.
+/// Starts or stops `SleepingPoseDebugEvent` with the geometry of every classification.
 #[tauri::command]
 #[specta::specta]
 pub fn sleeping_pose_set_debug(enabled: bool) {

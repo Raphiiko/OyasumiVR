@@ -47,16 +47,7 @@ pub struct BindingOriginData {
     pub input_source_type: String,
 }
 
-#[derive(Clone, Serialize, Deserialize)]
-#[serde(rename_all = "camelCase")]
-pub struct OpenVRInputEvent {
-    pub action: String,
-    pub pressed: bool,
-    pub time_ago: f32,
-    pub device: Option<OVRDevice>,
-}
-
-#[derive(Serialize, Clone)]
+#[derive(Serialize, Clone, specta::Type)]
 #[serde(rename_all = "UPPERCASE")]
 pub enum OpenVRStatus {
     Inactive,
@@ -229,12 +220,7 @@ impl OVRHandleType {
 
 // EVENTS
 
-#[derive(Clone, Serialize, Deserialize)]
-pub struct DeviceUpdateEvent {
-    pub device: OVRDevice,
-}
-
-#[derive(Clone, Serialize, Deserialize)]
+#[derive(Clone, Serialize, Deserialize, specta::Type)]
 #[serde(rename_all = "camelCase")]
 pub struct SleepDetectorStateReport {
     pub distance_in_last_15_minutes: f64,
@@ -251,7 +237,7 @@ pub struct SleepDetectorStateReport {
     pub last_log: u128,
 }
 
-#[derive(Clone, Serialize, Deserialize)]
+#[derive(Clone, Serialize, Deserialize, specta::Type)]
 #[serde(rename_all = "camelCase")]
 pub struct GestureDetected {
     pub gesture: String,

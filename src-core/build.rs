@@ -36,7 +36,7 @@ fn configure_tonic_build() {
         )
         .type_attribute(
             "AddNotificationRequest",
-            "#[derive(serde::Serialize)] #[serde(rename_all = \"camelCase\")]",
+            "#[derive(serde::Serialize, specta::Type)] #[serde(rename_all = \"camelCase\")]",
         )
         .type_attribute(
             "AddNotificationResponse",

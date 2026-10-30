@@ -58,9 +58,11 @@ Change the source, then run the generator.
 
 - `README.md` and `docs/readmes/generated`: edit `docs/readmes/src`, run `npm run generate:readmes`.
 - `src-grpc-web-client`: edit `proto`, run `npm run generate:grpc-web-client`.
-- `src-ui/app/bindings.ts`: edit the Tauri commands in `src-core`, run `npm run generate:bindings`.
-  A new command also needs `#[specta::specta]` and an entry in `specta_builder()` in
-  `src-core/src/main.rs`. `cargo test` fails while the file is out of date.
+- `src-ui/app/bindings.ts`: edit the Tauri commands or events in `src-core`, run
+  `npm run generate:bindings`. A new command needs `#[specta::specta]`. A new event goes in its
+  module's `events.rs` and derives `tauri_specta::Event`, which names it after the struct. List
+  both in `specta_builder()` in `src-core/src/main.rs`. `cargo test` fails while the file is out
+  of date.
 
 ## Translations
 

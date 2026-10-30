@@ -3,6 +3,7 @@ mod connection;
 mod devkit;
 pub mod diagnostics;
 mod discovery;
+pub mod events;
 mod maintenance;
 mod models;
 mod setup;

@@ -1,4 +1,5 @@
 pub mod commands;
+pub mod events;
 mod geometry;
 #[cfg(test)]
 mod tests;
@@ -6,6 +7,7 @@ mod tests;
 pub use geometry::{PoseGeometry, SleepingPose};
 
 use crate::utils::send_event;
+use events::{SleepingPoseDebugEvent, SleepingPoseUpdateEvent};
 use serde::Serialize;
 use std::sync::{
     atomic::{AtomicBool, Ordering},
@@ -120,7 +122,7 @@ fn now_ms() -> u64 {
 /// Call with the tracker locked, so a forced pose cannot overtake the update.
 async fn publish_closed_windows(tracker: &mut PoseTracker, now: u64) {
     if let Some(pose) = tracker.advance(now) {
-        send_event("SLEEPING_POSE_UPDATE", pose).await;
+        send_event(SleepingPoseUpdateEvent(pose)).await;
     }
 }
 
@@ -150,6 +152,6 @@ pub async fn on_ovr_tick(hmd_quaternion: Option<[f64; 4]>) {
     drop(tracker);
 
     if let Some(snapshot) = snapshot {
-        send_event("SLEEPING_POSE_DEBUG", snapshot).await;
+        send_event(SleepingPoseDebugEvent(snapshot)).await;
     }
 }

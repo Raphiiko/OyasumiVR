@@ -55,8 +55,8 @@ screens, the core's commands, and the stored settings still say pairing.
 
 On screen, Unpair unenrolls, and Forget only forgets.
 
-The core emits three events: `STEAM_FRAME_SETUP_STAGE`, `STEAM_FRAME_CONNECTION_STATE`, and
-`STEAM_FRAME_FADE_ENDED`.
+The core emits three events: `SteamFrameSetupStageEvent`, `SteamFrameConnectionStateEvent`, and
+`SteamFrameFadeEndedEvent`.
 
 `SteamFrameService` stores the pairings in `settings.dat` under `STEAM_FRAME_PAIRING`. Every save
 encrypts the private key and the helper token with `protectSecret`. `load` skips a pairing whose
