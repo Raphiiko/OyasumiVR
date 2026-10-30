@@ -7,7 +7,7 @@ import {
   OnDestroy,
   ViewChild,
 } from '@angular/core';
-import { commands, JsonValue } from '../../../../../bindings';
+import { commands, Value } from '../../../../../bindings';
 import { writeText } from '@tauri-apps/plugin-clipboard-manager';
 import { error } from '@tauri-apps/plugin-log';
 import { BaseModalComponent } from '../../../../../components/base-modal/base-modal.component';
@@ -71,7 +71,7 @@ export class DebugReportModalComponent
     this.setStep('uploading');
     try {
       if (!this.reportCreated) {
-        await commands.debugReportCreate((await this.collectUiState()) as JsonValue);
+        await commands.debugReportCreate((await this.collectUiState()) as Value);
         this.reportCreated = true;
       }
       this.reportCode = await commands.debugReportUpload();
