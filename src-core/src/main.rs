@@ -542,7 +542,6 @@ fn on_cron_minute_start(_: &str) {
 /// Registers every command and event the UI uses, and describes them for `src-ui/app/bindings.ts`.
 fn specta_builder() -> tauri_specta::Builder<Wry> {
     tauri_specta::Builder::<Wry>::new()
-        .error_handling(tauri_specta::ErrorHandlingMode::Throw)
         // JSON.parse turns every integer into a number, whatever its Rust width
         .dangerously_cast_bigints_to_number()
         // serde_json sends NaN and infinite floats as null, which the bindings type as number
