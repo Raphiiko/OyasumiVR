@@ -140,31 +140,21 @@
                     </button>
                   }
                 }
+                @if (devices.lighthouseFor(device); as lighthouseDevice) {
+                  @if (!lighthouse.deviceNeedsIdentifier(lighthouseDevice)) {
+                    <app-lighthouse-force-state-buttons
+                      [type]="lighthouseDevice.deviceType"
+                      [state]="devices.settledLighthouseStateOf(device)"
+                      (forceState)="devices.forceLighthouseState(device, $event)"
+                    />
+                  }
+                }
                 <!-- Power Button -->
                 @if (devices.canShowPowerButton(device)) {
                   <app-device-power-button
-                    [id]="'btn-power-dm-' + sanitizeIdForCSS(device.id)"
                     [powerState]="devices.powerStateOf(device)"
-                    [anchorName]="getPowerButtonAnchorId(device)"
-                    [allowUnknownClick]="!!devices.lighthouseFor(device)"
-                    (powerAction)="handleDevicePowerAction(device, $event)"
-                    (rightClick)="rightClickDevicePowerButton(device)"
+                    (powerAction)="devices.handlePowerAction(device, $event)"
                   ></app-device-power-button>
-                }
-                <!-- Lighthouse Force State Popover -->
-                @if (showLHStatePopover && selectedPopoverDevice?.id === device.id) {
-                  <div
-                    (clickOutside)="onClickOutsideLHStatePopover($event)"
-                    @fade
-                    class="lh-popover-container"
-                  >
-                    <app-lighthouse-force-state-popover
-                      (action)="onForceLHState(device, $event)"
-                      [style.position-anchor]="getPowerButtonAnchorId(device)"
-                      [type]="$safeNavigationMigration(devices.lighthouseFor(device)?.deviceType)"
-                    >
-                    </app-lighthouse-force-state-popover>
-                  </div>
                 }
                 <!-- Forget Button -->
                 @if (!isDeviceObserved(device.id)) {

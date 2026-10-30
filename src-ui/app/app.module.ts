@@ -286,6 +286,7 @@ import { DevicePowerButtonComponent } from './components/device-power-button/dev
 import { DeviceManagerDevicesTabComponent } from './views/dashboard-view/views/device-manager-view/tabs/device-manager-devices-tab/device-manager-devices-tab.component';
 import { DeviceManagerTagsTabComponent } from './views/dashboard-view/views/device-manager-view/tabs/device-manager-tags-tab/device-manager-tags-tab.component';
 import { LighthouseForceStatePopoverComponent } from './components/lighthouse-force-state-popover/lighthouse-force-state-popover.component';
+import { LighthouseForceStateButtonsComponent } from './components/lighthouse-force-state-buttons/lighthouse-force-state-buttons.component';
 import { OyasumiVRSteamVRDevicePowerAutomationsService } from './services/power-automations/oyasumivr-steamvr-device-power-automations.service';
 import { SleepDevicePowerAutomationsService } from './services/power-automations/sleep-device-power-automations.service';
 import { TurnOffDevicesWhenChargingAutomationService } from './services/power-automations/turn-off-devices-when-charging-automation.service';
@@ -472,6 +473,7 @@ import { MigrationCoordinatorService } from './services/migration-coordinator.se
     DeviceManagerDevicesTabComponent,
     DeviceManagerTagsTabComponent,
     LighthouseForceStatePopoverComponent,
+    LighthouseForceStateButtonsComponent,
   ],
   exports: [SelectBoxComponent],
   imports: [

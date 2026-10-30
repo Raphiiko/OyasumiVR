@@ -385,17 +385,6 @@
   }
 }
 
-// Lighthouse Force State Popover Container
-.lh-popover-container {
-  // Use display: contents to make container transparent to layout
-  // This allows the popover's CSS anchor positioning to work correctly
-  display: contents;
-
-  app-lighthouse-force-state-popover {
-    // The popover itself handles its own positioning via CSS anchors
-  }
-}
-
 // Empty State
 .empty-state {
   display: flex;
