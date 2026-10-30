@@ -255,3 +255,19 @@ Leave the scope out when no work item covers the pull request. The area scopes s
 
 Write `Closes #123` when the pull request closes a GitHub issue. A bot adds the Plane link after
 the pull request opens, so leave the Plane work item out of the body.
+
+## Public writing
+
+Everything you push is public: pull request titles and bodies, commit messages, code comments,
+test data, and replies on GitHub. Write it from what the code shows, so any contributor can follow
+it without your session.
+
+Anything that reaches you outside GitHub is private context: debug reports and their codes,
+Discord messages and screenshots, what a user told Raphii, and your chat with Raphii. Use it to
+find and fix the bug. In public text, describe the bug in general terms: the condition that
+triggers it, what any user sees, and what the change does. Write "a status that ends in an emoji",
+not the status a user sent. Build test data from made-up values that hit the same condition.
+
+Keep the reporter, the report code, and any value copied from private context out of public text:
+names, status text, file paths, device names, and log lines. Text that a user posted on GitHub,
+in an issue or a pull request, is public already, so you may quote it.
