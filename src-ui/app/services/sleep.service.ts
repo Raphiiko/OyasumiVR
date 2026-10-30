@@ -18,7 +18,7 @@ import { EventLogService } from './event-log.service';
 import { EventLogSleepModeDisabled, EventLogSleepModeEnabled } from '../models/event-log-entry';
 import { AppSettingsService } from './app-settings.service';
 import { listen } from '@tauri-apps/api/event';
-import { invoke } from '@tauri-apps/api/core';
+import { commands, events } from 'src-ui/app/bindings';
 
 @Injectable({
   providedIn: 'root',
@@ -69,11 +69,11 @@ export class SleepService {
     // follow the core's pose, then catch up on a change sent before the listener
     let updated = false;
     // Tauri runs event callbacks outside Angular's zone, so views would not refresh
-    await listen<SleepingPose>('SLEEPING_POSE_UPDATE', (e) => {
+    await events.sleepingPoseUpdateEvent.listen((e) => {
       updated = true;
       this.zone.run(() => this._pose.next(e.payload));
     });
-    const pose = await invoke<SleepingPose>('sleeping_pose_get');
+    const pose = await commands.sleepingPoseGet();
     // events and command results arrive on separate channels, so an event can be newer
     if (!updated) this._pose.next(pose);
     // Handle events
@@ -87,7 +87,7 @@ export class SleepService {
   }
 
   async forcePose(pose: SleepingPose) {
-    await invoke('sleeping_pose_force', { pose });
+    await commands.sleepingPoseForce(pose);
   }
 
   async enableSleepMode(reason: SleepModeStatusChangeReason) {

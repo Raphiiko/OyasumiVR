@@ -38,9 +38,8 @@ import { SoftwareBrightnessControlService } from './brightness-control/software-
 import { CCTControlService } from './cct-control/cct-control.service';
 import { SetBrightnessOrCCTReason } from './brightness-control/brightness-control-models';
 import { error } from '@tauri-apps/plugin-log';
-import { listen } from '@tauri-apps/api/event';
 import { OpenVRService } from './openvr.service';
-import { invoke } from '@tauri-apps/api/core';
+import { commands, events } from 'src-ui/app/bindings';
 
 @Injectable({
   providedIn: 'root',
@@ -145,7 +144,7 @@ export class BrightnessCctAutomationService {
       )
       .subscribe();
     // Listen for minute starts
-    await listen<void>('CRON_MINUTE_START', () => this.onMinuteTick());
+    await events.cronMinuteStartEvent.listen(() => this.onMinuteTick());
 
     // Update sunrise/sunset times on startup and every 12 hours
     interval(1000 * 60 * 60 * 12) // Every 12 hours
@@ -620,11 +619,12 @@ export class BrightnessCctAutomationService {
   // callers share one in-flight request; the next call after it settles starts a new one
   private fetchSunriseSunsetTimes(): Promise<[string, string]> {
     return (this.sunriseSunsetLookup ??= firstValueFrom(
-      from(invoke<[string, string]>('get_sunrise_sunset_time')).pipe(timeout(30000))
+      from(commands.getSunriseSunsetTime()).pipe(timeout(30000))
     )
-      .then((times) => {
-        [this.autoSunriseTime, this.autoSunsetTime] = times;
-        return times;
+      .then((result) => {
+        if (result.status === 'error') throw result.error;
+        [this.autoSunriseTime, this.autoSunsetTime] = result.data;
+        return result.data;
       })
       .finally(() => (this.sunriseSunsetLookup = undefined)));
   }

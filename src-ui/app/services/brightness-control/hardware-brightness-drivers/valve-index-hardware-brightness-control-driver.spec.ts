@@ -5,6 +5,9 @@ import type { OVRDevice } from '../../../models/ovr-device';
 import type { OpenVRService, OpenVRStatus } from '../../openvr.service';
 import { ValveIndexHardwareBrightnessControlDriver } from './valve-index-hardware-brightness-control-driver';
 
+/** A successful command result, as the generated bindings return it. */
+const ok = <T>(data: T) => ({ status: 'ok' as const, data });
+
 vi.mock('@tauri-apps/plugin-log', () => ({ warn: vi.fn() }));
 
 const INDEX = {
@@ -34,7 +37,7 @@ function setup(initialGain = 1) {
         })
       )
   );
-  const getAnalogGain = vi.fn(async () => gain);
+  const getAnalogGain = vi.fn(async () => ok(gain));
   const settings = structuredClone(APP_SETTINGS_DEFAULT);
   settings.valveIndexMaxBrightness = 150;
   const openvr = { status, devices, analogGainUpdates, getAnalogGain, setAnalogGain };
@@ -82,7 +85,9 @@ describe('ValveIndexHardwareBrightnessControlDriver', () => {
   it('keeps a SteamVR report that arrives during the initial read', async () => {
     const h = setup(gainFor(60));
     let answer = (_: number) => {};
-    h.getAnalogGain.mockImplementationOnce(() => new Promise((resolve) => (answer = resolve)));
+    h.getAnalogGain.mockImplementationOnce(
+      () => new Promise((resolve) => (answer = (gain: number) => resolve(ok(gain))))
+    );
     await vi.advanceTimersByTimeAsync(500);
     h.outsideChange(gainFor(80));
     answer(gainFor(60));
@@ -93,7 +98,9 @@ describe('ValveIndexHardwareBrightnessControlDriver', () => {
   it('keeps its own write that finishes during the initial read', async () => {
     const h = setup(gainFor(60));
     let answer = (_: number) => {};
-    h.getAnalogGain.mockImplementationOnce(() => new Promise((resolve) => (answer = resolve)));
+    h.getAnalogGain.mockImplementationOnce(
+      () => new Promise((resolve) => (answer = (gain: number) => resolve(ok(gain))))
+    );
     await vi.advanceTimersByTimeAsync(500);
     const set = h.driver.setBrightnessPercentage(80);
     await h.release();
@@ -106,7 +113,9 @@ describe('ValveIndexHardwareBrightnessControlDriver', () => {
   it('drops an initial read from before the Index was last unavailable', async () => {
     const h = setup(gainFor(60));
     let answer = (_: number) => {};
-    h.getAnalogGain.mockImplementationOnce(() => new Promise((resolve) => (answer = resolve)));
+    h.getAnalogGain.mockImplementationOnce(
+      () => new Promise((resolve) => (answer = (gain: number) => resolve(ok(gain))))
+    );
     await vi.advanceTimersByTimeAsync(500);
     h.status.next('INACTIVE');
     await vi.advanceTimersByTimeAsync(0);
@@ -169,7 +178,7 @@ describe('ValveIndexHardwareBrightnessControlDriver', () => {
     h.getAnalogGain.mockImplementationOnce(async () => {
       const sampled = 1;
       h.outsideChange(1.2);
-      return sampled;
+      return ok(sampled);
     });
     await h.driver.setBrightnessPercentage(80);
     expect(h.updates).toEqual([100, 120]);
@@ -209,10 +218,10 @@ function createDriver(hmd: Partial<OVRDevice>, analogGain: number | null = 1, ma
     status: new BehaviorSubject('INITIALIZED'),
     analogGainUpdates: new Subject<number>(),
     devices: new BehaviorSubject([{ index: 0, class: 'HMD', isConnected: true, ...hmd }]),
-    getAnalogGain: async () => {
-      if (analogGain === null) throw new Error('no analogGain value');
-      return analogGain;
-    },
+    getAnalogGain: async () =>
+      analogGain === null
+        ? { status: 'error' as const, error: 'ANALOG_GAIN_NOT_FOUND' }
+        : ok(analogGain),
     setAnalogGain: async (value: number) => {
       analogGain = value;
     },

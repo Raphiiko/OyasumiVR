@@ -5,11 +5,10 @@ import { AppSettings } from '../../../models/settings';
 import { OVRDevice } from '../../../models/ovr-device';
 import type { OpenVRService } from '../../openvr.service';
 import {
-  catchError,
   distinctUntilChanged,
   EMPTY,
-  from,
   merge,
+  mergeMap,
   Observable,
   ReplaySubject,
   Subject,
@@ -120,8 +119,8 @@ export class ValveIndexHardwareBrightnessControlDriver extends SteamVRAnalogGain
       // the analog gain belongs to SteamVR, so a write after the Index left reaches the next HMD
       if (!this.isAvailableNow) break;
       if (target !== null) written = await this.write(target);
-      const held = await this.openvr.getAnalogGain().catch(() => null);
-      current = held === null ? null : this.heldPercentage(held, written);
+      const held = await this.openvr.getAnalogGain();
+      current = held.status === 'ok' ? this.heldPercentage(held.data, written) : null;
     }
     this.sending = false;
 
@@ -154,7 +153,8 @@ export class ValveIndexHardwareBrightnessControlDriver extends SteamVRAnalogGain
    */
   private initialGain(): Observable<number> {
     return timer(INITIAL_READ_DELAY_MS).pipe(
-      switchMap(() => from(this.openvr.getAnalogGain()).pipe(catchError(() => EMPTY))),
+      switchMap(() => this.openvr.getAnalogGain()),
+      mergeMap((read) => (read.status === 'ok' ? [read.data] : [])),
       takeUntil(merge(this.openvr.analogGainUpdates, this.writeRequests))
     );
   }

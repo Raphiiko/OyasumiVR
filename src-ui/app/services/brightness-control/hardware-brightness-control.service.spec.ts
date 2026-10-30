@@ -14,6 +14,9 @@ import { HardwareBrightnessControlService } from './hardware-brightness-control.
 import { SimpleBrightnessControlService } from './simple-brightness-control.service';
 import { VALVE_INDEX_HARDWARE_BRIGHTNESS_CONTROL_DRIVER_BOUNDS } from './hardware-brightness-drivers/valve-index-hardware-brightness-control-driver';
 
+/** A successful command result, as the generated bindings return it. */
+const ok = <T>(data: T) => ({ status: 'ok' as const, data });
+
 vi.mock('@tauri-apps/api/core', () => ({ invoke: vi.fn(async () => false) }));
 vi.mock('@tauri-apps/api/event', () => ({ listen: vi.fn(async () => () => {}) }));
 vi.mock('@tauri-apps/plugin-log', () => ({ info: vi.fn(), warn: vi.fn() }));
@@ -346,7 +349,7 @@ async function setupIndex(initialGain = 1) {
       } as OVRDevice,
     ]),
     analogGainUpdates,
-    getAnalogGain: vi.fn(async () => gain),
+    getAnalogGain: vi.fn(async () => ok(gain)),
     setAnalogGain: vi.fn(async (value: number) => {
       gain = value;
     }),
@@ -456,7 +459,7 @@ function setupGeneric() {
     status,
     devices,
     analogGainUpdates: new Subject<number>(),
-    getAnalogGain: async () => analogGain,
+    getAnalogGain: async () => ok(analogGain),
     setAnalogGain,
   };
   const service = new HardwareBrightnessControlService(

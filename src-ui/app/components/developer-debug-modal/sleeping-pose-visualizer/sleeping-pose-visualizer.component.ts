@@ -9,30 +9,16 @@ import {
   signal,
   ViewChild,
 } from '@angular/core';
-import { invoke } from '@tauri-apps/api/core';
-import { listen, UnlistenFn } from '@tauri-apps/api/event';
+import { UnlistenFn } from '@tauri-apps/api/event';
 import type * as Three from 'three';
 import type { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
-import { SleepingPose } from 'src-ui/app/models/sleeping-pose';
-
-type Vec3 = [number, number, number];
-
-interface Obb {
-  center: Vec3;
-  halfSize: Vec3;
-  axes: [Vec3, Vec3, Vec3];
-}
-
-interface DebugSnapshot {
-  quaternion: [number, number, number, number];
-  geometry: {
-    mainAxisSender: Obb;
-    crossAxisSender: Obb;
-    receivers: { pose: SleepingPose; center: Vec3; radius: number; colliding: boolean }[];
-  };
-  rawPose: SleepingPose;
-  stablePose: SleepingPose;
-}
+import {
+  commands,
+  events,
+  type DebugSnapshot,
+  type Obb,
+  type SleepingPose,
+} from 'src-ui/app/bindings';
 
 interface Viewer {
   three: typeof Three;
@@ -85,11 +71,11 @@ export class SleepingPoseVisualizerComponent implements OnInit, AfterViewInit, O
   }
 
   ngOnInit() {
-    this.unlisten = listen<DebugSnapshot>('SLEEPING_POSE_DEBUG', (event) => {
+    this.unlisten = events.sleepingPoseDebugEvent.listen((event) => {
       this.source.set('live');
       this.snapshot.set(event.payload);
     });
-    invoke('sleeping_pose_set_debug', { enabled: true });
+    commands.sleepingPoseSetDebug(true);
     this.updatePreview();
   }
 
@@ -123,7 +109,7 @@ export class SleepingPoseVisualizerComponent implements OnInit, AfterViewInit, O
 
   ngOnDestroy() {
     this.destroyed = true;
-    invoke('sleeping_pose_set_debug', { enabled: false });
+    commands.sleepingPoseSetDebug(false);
     this.unlisten?.then((unlisten) => unlisten());
     const viewer = this.viewer();
     if (!viewer) return;
@@ -134,9 +120,9 @@ export class SleepingPoseVisualizerComponent implements OnInit, AfterViewInit, O
   }
 
   protected async updatePreview() {
-    const snapshot = await invoke<DebugSnapshot>('sleeping_pose_debug_preview', {
-      quaternion: this.quaternionFromEuler(this.preview),
-    });
+    const snapshot = await commands.sleepingPoseDebugPreview(
+      this.quaternionFromEuler(this.preview)
+    );
     this.source.set('preview');
     this.snapshot.set(snapshot);
   }
@@ -155,7 +141,11 @@ export class SleepingPoseVisualizerComponent implements OnInit, AfterViewInit, O
   }
 
   /** Euler angles in degrees, applied in order YXZ, to a quaternion `[x, y, z, w]`. */
-  private quaternionFromEuler({ pitch, yaw, roll }: Record<'pitch' | 'yaw' | 'roll', number>) {
+  private quaternionFromEuler({
+    pitch,
+    yaw,
+    roll,
+  }: Record<'pitch' | 'yaw' | 'roll', number>): [number, number, number, number] {
     const half = (deg: number) => (deg * Math.PI) / 360;
     const [c1, s1] = [Math.cos(half(pitch)), Math.sin(half(pitch))];
     const [c2, s2] = [Math.cos(half(yaw)), Math.sin(half(yaw))];

@@ -3,7 +3,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { info } from '@tauri-apps/plugin-log';
 import { CancellableTask } from '../../utils/cancellable-task';
 import { BrightnessTransitionTask } from './brightness-transition';
-import { invoke } from '@tauri-apps/api/core';
+import { commands } from 'src-ui/app/bindings';
 import {
   SET_BRIGHTNESS_OR_CCT_OPTIONS_DEFAULTS,
   SetBrightnessOrCCTOptions,
@@ -46,10 +46,10 @@ export class SoftwareBrightnessControlService {
   }
 
   private async setSoftwareBrightness(brightness: number) {
-    await invoke('openvr_set_image_brightness', {
-      brightness: brightness / 100,
-      perceivedBrightnessAdjustmentGamma: this._perceivedBrightnessAdjustmentGamma ?? null,
-    });
+    await commands.openvrSetImageBrightness(
+      brightness / 100,
+      this._perceivedBrightnessAdjustmentGamma ?? null
+    );
   }
 
   transitionBrightness(

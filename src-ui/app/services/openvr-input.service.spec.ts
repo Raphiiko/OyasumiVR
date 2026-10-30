@@ -30,7 +30,7 @@ async function createInput(initial: OpenVRStatus = 'INITIALIZED') {
   const callback = vi
     .mocked(listen)
     .mock.calls.find(
-      ([name]) => name === 'OVR_INPUT_EVENT_DIGITAL'
+      ([name]) => name === 'open-vr-input-event'
     )![1] as EventCallback<OVRInputEvent>;
   const emit = (
     action: OVRInputEventAction,
@@ -38,7 +38,7 @@ async function createInput(initial: OpenVRStatus = 'INITIALIZED') {
     device: OVRDevice | null = controller
   ) =>
     callback({
-      event: 'OVR_INPUT_EVENT_DIGITAL',
+      event: 'open-vr-input-event',
       id: 1,
       payload: { action, pressed, device, timeAgo: 0 },
     });

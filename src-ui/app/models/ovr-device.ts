@@ -1,35 +1,17 @@
-export type OVRDeviceClass =
-  'Invalid' | 'HMD' | 'Controller' | 'GenericTracker' | 'TrackingReference' | 'DisplayRedirect';
+import type {
+  OVRDevice as CoreOVRDevice,
+  OVRHandleType,
+  PowerMethod,
+  TrackedControllerRole,
+  TrackedDeviceClass,
+} from 'src-ui/app/bindings';
 
-export type OVRDeviceRole =
-  'Invalid' | 'LeftHand' | 'RightHand' | 'OptOut' | 'Treadmill' | 'Stylus';
-
-export type OVRHandleType =
-  | 'HandPrimary'
-  | 'HandSecondary'
-  | 'Head'
-  | 'Gamepad'
-  | 'Treadmill'
-  | 'Stylus'
-  | 'FootLeft'
-  | 'FootRight'
-  | 'ShoulderLeft'
-  | 'ShoulderRight'
-  | 'ElbowLeft'
-  | 'ElbowRight'
-  | 'KneeLeft'
-  | 'KneeRight'
-  | 'WristLeft'
-  | 'WristRight'
-  | 'AnkleLeft'
-  | 'AnkleRight'
-  | 'Waist'
-  | 'Chest'
-  | 'Camera'
-  | 'Keyboard';
+export type { OVRHandleType };
+export type OVRDeviceClass = TrackedDeviceClass;
+export type OVRDeviceRole = TrackedControllerRole;
 
 /** How OyasumiVR turns the device off. */
-export type OVRDevicePowerMethod = 'Lighthouse' | 'SteamFrame' | 'None';
+export type OVRDevicePowerMethod = PowerMethod | 'SteamFrame';
 
 export interface OVRDevice {
   // Native properties
@@ -58,4 +40,9 @@ export interface OVRDevice {
 
   // Status properties
   isTurningOff: boolean;
+}
+
+/** The core sends null for unknown values, which this model types as absent. */
+export function fromCoreDevice(device: CoreOVRDevice): OVRDevice {
+  return device as OVRDevice;
 }

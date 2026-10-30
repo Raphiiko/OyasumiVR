@@ -12,7 +12,7 @@ import {
   firstValueFrom,
 } from 'rxjs';
 import { isEqual, omit } from 'lodash';
-import { invoke } from '@tauri-apps/api/core';
+import { commands, OVRFrameLimits } from 'src-ui/app/bindings';
 import { OpenVRService } from './openvr.service';
 
 export interface FrameLimiterAppPreset {
@@ -101,10 +101,7 @@ export class FrameLimiterService {
             appId
           )
         );
-        await invoke('openvr_set_app_framelimit', {
-          appId,
-          limits: null,
-        });
+        await this.applyFrameLimit(appId, null);
         return;
       default:
         if (typeof value !== 'number') throw new Error('Invalid frame limit value');
@@ -112,31 +109,26 @@ export class FrameLimiterService {
           ...this._activeFrameLimits.value,
           [appId]: value,
         });
-        await invoke('openvr_set_app_framelimit', {
-          appId,
-          limits: {
-            additionalFramesToPredict: value,
-            framesToThrottle: value,
-          },
+        await this.applyFrameLimit(appId, {
+          additionalFramesToPredict: value,
+          framesToThrottle: value,
         });
         return;
     }
   }
 
+  /** Rejects with the core's error, which the frame limit automations log as a failure. */
+  private async applyFrameLimit(appId: number, limits: OVRFrameLimits | null) {
+    const result = await commands.openvrSetAppFramelimit(appId, limits);
+    if (result.status === 'error') throw result.error;
+  }
+
   private async getActiveFrameLimitForAppId(appId: number): Promise<FrameLimitConfigOption | null> {
     const status = await firstValueFrom(this.openvr.status);
     if (status !== 'INITIALIZED') return null;
-    try {
-      const result = await invoke<{
-        additionalFramesToPredict: number;
-        framesToThrottle: number;
-      } | null>('openvr_get_app_framelimit', {
-        appId,
-      });
-      if (result === null) return 'AUTO';
-      return Math.max(result.framesToThrottle, result.additionalFramesToPredict);
-    } catch {
-      return null;
-    }
+    const result = await commands.openvrGetAppFramelimit(appId);
+    if (result.status === 'error') return null;
+    if (result.data === null) return 'AUTO';
+    return Math.max(result.data.framesToThrottle, result.data.additionalFramesToPredict);
   }
 }
