@@ -42,24 +42,24 @@ describe('LighthouseConnectsFailingMessageMonitor', () => {
   }
 
   it('dismisses the message and keeps it away after a successful restart', async () => {
-    handlers['lighthouse-connects-failing-event']();
+    handlers['lighthouse-connects-failing-event']({ payload: null });
 
     await clickRestart();
     expect(messages.size).toBe(0);
 
-    handlers['lighthouse-connects-recovered-event']();
-    handlers['lighthouse-connects-failing-event']();
+    handlers['lighthouse-connects-recovered-event']({ payload: null });
+    handlers['lighthouse-connects-failing-event']({ payload: null });
     expect(messages.size).toBe(0);
   });
 
   it('keeps the message away when connects fail again during the restart', async () => {
     let finishRestart!: () => void;
     vi.mocked(invoke).mockReturnValue(new Promise<void>((resolve) => (finishRestart = resolve)));
-    handlers['lighthouse-connects-failing-event']();
+    handlers['lighthouse-connects-failing-event']({ payload: null });
 
     const restart = clickRestart();
-    handlers['lighthouse-connects-recovered-event']();
-    handlers['lighthouse-connects-failing-event']();
+    handlers['lighthouse-connects-recovered-event']({ payload: null });
+    handlers['lighthouse-connects-failing-event']({ payload: null });
     expect(messages.size).toBe(0);
 
     finishRestart();
@@ -69,14 +69,14 @@ describe('LighthouseConnectsFailingMessageMonitor', () => {
 
   it('shows the restart failure after a failed restart', async () => {
     vi.mocked(invoke).mockRejectedValue('radio access was refused');
-    handlers['lighthouse-connects-failing-event']();
+    handlers['lighthouse-connects-failing-event']({ payload: null });
 
     await clickRestart();
     expect(messages.get('lighthouseConnectsFailing')?.message).toBe(
       'message-center.messages.lighthouseConnectsFailing.restartFailed'
     );
 
-    handlers['lighthouse-connects-failing-event']();
+    handlers['lighthouse-connects-failing-event']({ payload: null });
     expect(messages.size).toBe(1);
   });
 });

@@ -1,6 +1,6 @@
-import { LighthouseDeviceModel, LighthousePowerState } from '../bindings';
+import { LighthouseDeviceModel_Serialize, LighthousePowerState } from '../bindings';
 
-export interface LighthouseDevice extends LighthouseDeviceModel {
+export interface LighthouseDevice extends LighthouseDeviceModel_Serialize {
   // For UI purposes only
   transitioningToPowerState?: LighthousePowerState;
 }

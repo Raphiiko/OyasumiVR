@@ -23,8 +23,8 @@ import { warn } from '@tauri-apps/plugin-log';
 import {
   commands,
   events,
-  LighthouseDeviceDiscoveredEvent,
-  LighthouseDevicePowerStateChangedEvent,
+  LighthouseDeviceDiscoveredEvent_Serialize,
+  LighthouseDevicePowerStateChangedEvent_Serialize,
   LighthouseScanningStatusChangedEvent,
   LighthouseStatus,
   LighthouseStatusChangedEvent,
@@ -208,7 +208,7 @@ export class LighthouseService {
     if (this._scanning.value !== event.scanning) this._scanning.next(event.scanning);
   }
 
-  private async handleDeviceDiscovered(event: LighthouseDeviceDiscoveredEvent) {
+  private async handleDeviceDiscovered(event: LighthouseDeviceDiscoveredEvent_Serialize) {
     const device = event.device;
     const devices = this._devices.value;
     if (!devices.some((d) => d.id === device.id)) {
@@ -221,7 +221,9 @@ export class LighthouseService {
     }
   }
 
-  private async handleDevicePowerStateChange(event: LighthouseDevicePowerStateChangedEvent) {
+  private async handleDevicePowerStateChange(
+    event: LighthouseDevicePowerStateChangedEvent_Serialize
+  ) {
     let devices = this._devices.value;
     let index = devices.findIndex((d) => d.id === event.deviceId);
     if (index === -1) {
