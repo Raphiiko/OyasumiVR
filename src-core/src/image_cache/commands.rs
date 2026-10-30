@@ -1,4 +1,5 @@
 #[tauri::command]
+#[specta::specta]
 pub async fn clean_image_cache(only_expired: bool) -> Result<(), String> {
     super::INSTANCE
         .lock()

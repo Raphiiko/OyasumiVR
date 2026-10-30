@@ -2,3 +2,4 @@ package-lock.json
 dist
 .vscode/*
 src-overlay-ui/build
+src-ui/app/bindings.ts

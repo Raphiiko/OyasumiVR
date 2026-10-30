@@ -23,7 +23,7 @@ static TRACKER: LazyLock<Mutex<PoseTracker>> = LazyLock::new(|| Mutex::new(PoseT
 static EPOCH: LazyLock<Instant> = LazyLock::new(Instant::now);
 static DEBUG_ENABLED: AtomicBool = AtomicBool::new(false);
 
-#[derive(Clone, Serialize)]
+#[derive(Clone, Serialize, specta::Type)]
 #[serde(rename_all = "camelCase")]
 pub struct DebugSnapshot {
     quaternion: [f64; 4],

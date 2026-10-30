@@ -28,7 +28,7 @@ use super::wrappers::{
     AudioDeviceIAudioMeterInformation, AudioDeviceIMMDevice,
 };
 
-#[derive(Serialize)]
+#[derive(Serialize, specta::Type)]
 #[serde(rename_all = "camelCase")]
 pub struct AudioDeviceDto {
     pub id: String,
@@ -88,7 +88,7 @@ impl AudioDeviceState {
     }
 }
 
-#[derive(PartialEq, Eq, Clone, Copy, Serialize)]
+#[derive(PartialEq, Eq, Clone, Copy, Serialize, specta::Type)]
 pub enum AudioDeviceType {
     Capture,
     Render,

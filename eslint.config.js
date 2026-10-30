@@ -17,6 +17,7 @@ export default [
       'node_modules/**',
       'dist/**',
       'src-overlay-ui/build/**',
+      'src-ui/app/bindings.ts',
     ],
   },
 

@@ -2,6 +2,7 @@ use log::debug;
 use tauri::Manager;
 
 #[tauri::command]
+#[specta::specta]
 pub async fn close_splashscreen(window: tauri::Window) {
     debug!("[Core] Closing splash screen");
     // Close splashscreen

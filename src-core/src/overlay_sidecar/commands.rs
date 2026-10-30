@@ -10,6 +10,7 @@ use std::time::Duration;
 static DEV_SIDECAR_WATCHER_RUNNING: AtomicBool = AtomicBool::new(false);
 
 #[tauri::command]
+#[specta::specta]
 pub async fn start_overlay_sidecar(gpu_acceleration: bool) {
     crate::openvr::DASHBOARD_GPU_ACCELERATION.store(gpu_acceleration, Ordering::Release);
     match crate::utils::cli_sidecar_overlay_mode().await {
@@ -59,6 +60,7 @@ pub async fn start_overlay_sidecar(gpu_acceleration: bool) {
 }
 
 #[tauri::command]
+#[specta::specta]
 pub async fn overlay_sidecar_get_grpc_web_port() -> Option<u32> {
     let manager_guard = super::SIDECAR_MANAGER.lock().await;
     let manager = manager_guard.as_ref();
@@ -72,6 +74,7 @@ pub async fn overlay_sidecar_get_grpc_web_port() -> Option<u32> {
 }
 
 #[tauri::command]
+#[specta::specta]
 pub async fn overlay_sidecar_get_grpc_port() -> Option<u32> {
     let manager_guard = super::SIDECAR_MANAGER.lock().await;
     let manager = manager_guard.as_ref();

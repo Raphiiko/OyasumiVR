@@ -226,6 +226,7 @@ async fn main() {
     oyasumivr_shared::install_tls_provider();
     ensure_webview2_available();
     install_panic_log_hook();
+    let specta = specta_builder();
 
     // Construct OyasumiVR Tauri application
     tauri::Builder::default()
@@ -288,7 +289,7 @@ async fn main() {
             }
             Ok(())
         })
-        .invoke_handler(configure_command_handlers())
+        .invoke_handler(specta.invoke_handler())
         .on_window_event(system_tray::handle_window_events)
         .run(tauri::generate_context!())
         .expect("An error occurred while running the application")
@@ -538,142 +539,184 @@ fn on_cron_minute_start(_: &str) {
     futures::executor::block_on(utils::send_event("CRON_MINUTE_START", ()));
 }
 
-fn configure_command_handlers() -> impl Fn(tauri::ipc::Invoke) -> bool {
-    tauri::generate_handler![
-        openvr::commands::openvr_get_devices,
-        openvr::commands::openvr_status,
-        openvr::commands::openvr_dashboard_render_mode,
-        i18n::set_ui_language,
-        openvr::commands::openvr_get_analog_gain,
-        openvr::commands::openvr_set_analog_gain,
-        openvr::commands::openvr_get_supersample_scale,
-        openvr::commands::openvr_set_supersample_scale,
-        openvr::commands::openvr_get_fade_distance,
-        openvr::commands::openvr_set_fade_distance,
-        openvr::commands::openvr_set_image_brightness,
-        openvr::commands::openvr_launch_binding_configuration,
-        openvr::commands::openvr_get_binding_origins,
-        openvr::commands::openvr_is_dashboard_visible,
-        openvr::commands::openvr_get_application_auto_launch,
-        openvr::commands::openvr_set_application_auto_launch,
-        openvr::commands::openvr_reregister_manifest,
-        openvr::commands::openvr_set_init_delay_fix,
-        openvr::commands::openvr_set_analog_color_temp,
-        openvr::commands::openvr_set_app_framelimit,
-        openvr::commands::openvr_get_app_framelimit,
-        openvr::sleeping_pose::commands::sleeping_pose_get,
-        openvr::sleeping_pose::commands::sleeping_pose_force,
-        openvr::sleeping_pose::commands::sleeping_pose_set_debug,
-        openvr::sleeping_pose::commands::sleeping_pose_debug_preview,
-        hardware::beyond::commands::bigscreen_beyond_is_connected,
-        hardware::beyond::commands::bigscreen_beyond_set_brightness,
-        hardware::beyond::commands::bigscreen_beyond_set_led_color,
-        hardware::beyond::commands::bigscreen_beyond_set_fan_speed,
-        hardware::beyond::commands::bigscreen_beyond_get_saved_preferences,
-        os::commands::run_command,
-        os::commands::run_cmd_commands,
-        os::commands::play_sound,
-        os::commands::show_in_folder,
-        os::commands::quit_steamvr,
-        os::commands::get_windows_power_policies,
-        os::commands::set_windows_power_policy,
-        os::commands::active_windows_power_policy,
-        os::commands::windows_shutdown,
-        os::commands::windows_reboot,
-        os::commands::windows_sleep,
-        os::commands::windows_logout,
-        os::commands::windows_hibernate,
-        os::commands::windows_is_elevated,
-        os::commands::get_audio_devices,
-        os::commands::set_audio_device_volume,
-        os::commands::set_audio_device_mute,
-        os::commands::set_mic_activity_device_id,
-        os::commands::set_hardware_mic_activity_enabled,
-        os::commands::set_hardware_mic_activivation_threshold,
-        os::commands::is_vrchat_active,
-        os::commands::is_elevation_security_disabled,
-        osc::commands::osc_send_command,
-        osc::commands::osc_valid_addr,
-        osc::commands::start_osc_server,
-        osc::commands::stop_osc_server,
-        osc::commands::get_vrchat_osc_address,
-        osc::commands::get_vrchat_oscquery_address,
-        osc::commands::add_osc_method,
-        osc::commands::set_osc_method_value,
-        osc::commands::set_osc_receive_address_whitelist,
-        elevated_sidecar::commands::elevated_sidecar_started,
-        elevated_sidecar::commands::elevated_features_enable,
-        elevated_sidecar::commands::elevated_features_disable,
-        elevated_sidecar::commands::elevated_sidecar_get_grpc_web_port,
-        elevated_sidecar::commands::elevated_sidecar_get_grpc_port,
-        overlay_sidecar::commands::start_overlay_sidecar,
-        overlay_sidecar::commands::overlay_sidecar_get_grpc_web_port,
-        overlay_sidecar::commands::overlay_sidecar_get_grpc_port,
-        system_tray::commands::set_close_to_system_tray,
-        vrc_log_parser::commands::init_vrc_log_watcher,
-        discord::commands::discord_update_activity,
-        discord::commands::discord_clear_activity,
-        http::commands::get_http_server_port,
-        image_cache::commands::clean_image_cache,
-        lighthouse::commands::lighthouse_start_scan,
-        lighthouse::commands::lighthouse_get_devices,
-        lighthouse::commands::lighthouse_set_device_power_state,
-        lighthouse::commands::lighthouse_get_device_power_state,
-        lighthouse::commands::lighthouse_get_status,
-        lighthouse::commands::lighthouse_get_scanning_status,
-        lighthouse::commands::lighthouse_reset,
-        lighthouse::commands::lighthouse_restart_bluetooth_radio,
-        steam::commands::steam_active,
-        steam::commands::steam_achievement_get,
-        steam::commands::steam_achievement_set,
-        commands::log_utils::clear_log_files,
-        commands::afterburner::msi_afterburner_set_profile,
-        commands::notifications::xsoverlay_send_message,
-        commands::splash::close_splashscreen,
-        commands::nvml::nvml_status,
-        commands::nvml::nvml_get_devices,
-        commands::nvml::nvml_set_power_management_limit,
-        commands::debug::dev_tools_available,
-        commands::debug::open_dev_tools,
-        debug_report::commands::debug_report_create,
-        debug_report::commands::debug_report_upload,
-        debug_report::commands::debug_report_save,
-        debug_report::commands::debug_report_discard,
-        cn_compliance::cn_compliance_mode,
-        commands::time::get_sunrise_sunset_time,
-        commands::secrets::protect_secret,
-        commands::secrets::unprotect_secret,
-        store_safety::commands::store_safety_save_snapshot,
-        store_safety::commands::store_safety_read_snapshot,
-        store_safety::commands::store_safety_restore_snapshot,
-        store_safety::commands::store_safety_create_checkpoint,
-        store_safety::commands::store_safety_list_checkpoints,
-        store_safety::commands::store_safety_read_checkpoint,
-        store_safety::commands::store_safety_quarantine_store,
-        store_safety::commands::store_safety_replace_store,
-        grpc::commands::get_core_grpc_port,
-        grpc::commands::get_core_grpc_web_port,
-        telemetry::commands::set_telemetry_enabled,
-        telemetry::commands::track_event,
-        error_reporting::set_error_reporting_enabled,
-        error_reporting::allow_ui_event,
-        vrcx::commands::vrcx_log,
-        steam_frame::commands::steam_frame_get_supported_models,
-        steam_frame::commands::steam_frame_discover_headsets,
-        steam_frame::commands::steam_frame_get_ssh_user,
-        steam_frame::commands::steam_frame_create_pairing_keys,
-        steam_frame::commands::steam_frame_request_approval,
-        steam_frame::commands::steam_frame_check_ssh_access,
-        steam_frame::commands::steam_frame_set_up_helper,
-        steam_frame::commands::steam_frame_remove_access,
-        steam_frame::commands::steam_frame_sync_connections,
-        steam_frame::commands::steam_frame_get_connection_states,
-        steam_frame::commands::steam_frame_update_helper,
-        steam_frame::commands::steam_frame_count_other_pcs,
-        steam_frame::commands::steam_frame_set_brightness,
-        steam_frame::commands::steam_frame_set_cct,
-        steam_frame::commands::steam_frame_disconnect_controller,
-        steam_frame::commands::steam_frame_fade,
-        steam_frame::commands::steam_frame_cancel_fade,
-    ]
+/// Registers every command and event the UI uses, and describes them for `src-ui/app/bindings.ts`.
+fn specta_builder() -> tauri_specta::Builder<Wry> {
+    tauri_specta::Builder::<Wry>::new()
+        // JSON.parse turns every integer into a number, whatever its Rust width
+        .dangerously_cast_bigints_to_number()
+        // serde_json sends NaN and infinite floats as null, which the bindings type as number
+        .semantic_types(
+            specta_typescript::semantic::Configuration::empty().enable_lossless_floats(),
+        )
+        .commands(tauri_specta::collect_commands![
+            openvr::commands::openvr_get_devices,
+            openvr::commands::openvr_status,
+            openvr::commands::openvr_dashboard_render_mode,
+            i18n::set_ui_language,
+            openvr::commands::openvr_get_analog_gain,
+            openvr::commands::openvr_set_analog_gain,
+            openvr::commands::openvr_get_supersample_scale,
+            openvr::commands::openvr_set_supersample_scale,
+            openvr::commands::openvr_get_fade_distance,
+            openvr::commands::openvr_set_fade_distance,
+            openvr::commands::openvr_set_image_brightness,
+            openvr::commands::openvr_launch_binding_configuration,
+            openvr::commands::openvr_get_binding_origins,
+            openvr::commands::openvr_is_dashboard_visible,
+            openvr::commands::openvr_get_application_auto_launch,
+            openvr::commands::openvr_set_application_auto_launch,
+            openvr::commands::openvr_reregister_manifest,
+            openvr::commands::openvr_set_init_delay_fix,
+            openvr::commands::openvr_set_analog_color_temp,
+            openvr::commands::openvr_set_app_framelimit,
+            openvr::commands::openvr_get_app_framelimit,
+            openvr::sleeping_pose::commands::sleeping_pose_get,
+            openvr::sleeping_pose::commands::sleeping_pose_force,
+            openvr::sleeping_pose::commands::sleeping_pose_set_debug,
+            openvr::sleeping_pose::commands::sleeping_pose_debug_preview,
+            hardware::beyond::commands::bigscreen_beyond_is_connected,
+            hardware::beyond::commands::bigscreen_beyond_set_brightness,
+            hardware::beyond::commands::bigscreen_beyond_set_led_color,
+            hardware::beyond::commands::bigscreen_beyond_set_fan_speed,
+            hardware::beyond::commands::bigscreen_beyond_get_saved_preferences,
+            os::commands::run_command,
+            os::commands::run_cmd_commands,
+            os::commands::play_sound,
+            os::commands::show_in_folder,
+            os::commands::quit_steamvr,
+            os::commands::get_windows_power_policies,
+            os::commands::set_windows_power_policy,
+            os::commands::active_windows_power_policy,
+            os::commands::windows_shutdown,
+            os::commands::windows_reboot,
+            os::commands::windows_sleep,
+            os::commands::windows_logout,
+            os::commands::windows_hibernate,
+            os::commands::windows_is_elevated,
+            os::commands::get_audio_devices,
+            os::commands::set_audio_device_volume,
+            os::commands::set_audio_device_mute,
+            os::commands::set_mic_activity_device_id,
+            os::commands::set_hardware_mic_activity_enabled,
+            os::commands::set_hardware_mic_activivation_threshold,
+            os::commands::is_vrchat_active,
+            os::commands::is_elevation_security_disabled,
+            osc::commands::osc_send_command,
+            osc::commands::osc_valid_addr,
+            osc::commands::start_osc_server,
+            osc::commands::stop_osc_server,
+            osc::commands::get_vrchat_osc_address,
+            osc::commands::get_vrchat_oscquery_address,
+            osc::commands::add_osc_method,
+            osc::commands::set_osc_method_value,
+            osc::commands::set_osc_receive_address_whitelist,
+            elevated_sidecar::commands::elevated_sidecar_started,
+            elevated_sidecar::commands::elevated_features_enable,
+            elevated_sidecar::commands::elevated_features_disable,
+            elevated_sidecar::commands::elevated_sidecar_get_grpc_web_port,
+            elevated_sidecar::commands::elevated_sidecar_get_grpc_port,
+            overlay_sidecar::commands::start_overlay_sidecar,
+            overlay_sidecar::commands::overlay_sidecar_get_grpc_web_port,
+            overlay_sidecar::commands::overlay_sidecar_get_grpc_port,
+            system_tray::commands::set_close_to_system_tray,
+            vrc_log_parser::commands::init_vrc_log_watcher,
+            discord::commands::discord_update_activity,
+            discord::commands::discord_clear_activity,
+            http::commands::get_http_server_port,
+            image_cache::commands::clean_image_cache,
+            lighthouse::commands::lighthouse_start_scan,
+            lighthouse::commands::lighthouse_get_devices,
+            lighthouse::commands::lighthouse_set_device_power_state,
+            lighthouse::commands::lighthouse_get_device_power_state,
+            lighthouse::commands::lighthouse_get_status,
+            lighthouse::commands::lighthouse_get_scanning_status,
+            lighthouse::commands::lighthouse_reset,
+            lighthouse::commands::lighthouse_restart_bluetooth_radio,
+            steam::commands::steam_active,
+            steam::commands::steam_achievement_get,
+            steam::commands::steam_achievement_set,
+            commands::log_utils::clear_log_files,
+            commands::afterburner::msi_afterburner_set_profile,
+            commands::notifications::xsoverlay_send_message,
+            commands::splash::close_splashscreen,
+            commands::nvml::nvml_status,
+            commands::nvml::nvml_get_devices,
+            commands::nvml::nvml_set_power_management_limit,
+            commands::debug::dev_tools_available,
+            commands::debug::open_dev_tools,
+            debug_report::commands::debug_report_create,
+            debug_report::commands::debug_report_upload,
+            debug_report::commands::debug_report_save,
+            debug_report::commands::debug_report_discard,
+            cn_compliance::cn_compliance_mode,
+            commands::time::get_sunrise_sunset_time,
+            commands::secrets::protect_secret,
+            commands::secrets::unprotect_secret,
+            store_safety::commands::store_safety_save_snapshot,
+            store_safety::commands::store_safety_read_snapshot,
+            store_safety::commands::store_safety_restore_snapshot,
+            store_safety::commands::store_safety_create_checkpoint,
+            store_safety::commands::store_safety_list_checkpoints,
+            store_safety::commands::store_safety_read_checkpoint,
+            store_safety::commands::store_safety_quarantine_store,
+            store_safety::commands::store_safety_replace_store,
+            grpc::commands::get_core_grpc_port,
+            grpc::commands::get_core_grpc_web_port,
+            telemetry::commands::set_telemetry_enabled,
+            telemetry::commands::track_event,
+            error_reporting::set_error_reporting_enabled,
+            error_reporting::allow_ui_event,
+            vrcx::commands::vrcx_log,
+            steam_frame::commands::steam_frame_get_supported_models,
+            steam_frame::commands::steam_frame_discover_headsets,
+            steam_frame::commands::steam_frame_get_ssh_user,
+            steam_frame::commands::steam_frame_create_pairing_keys,
+            steam_frame::commands::steam_frame_request_approval,
+            steam_frame::commands::steam_frame_check_ssh_access,
+            steam_frame::commands::steam_frame_set_up_helper,
+            steam_frame::commands::steam_frame_remove_access,
+            steam_frame::commands::steam_frame_sync_connections,
+            steam_frame::commands::steam_frame_get_connection_states,
+            steam_frame::commands::steam_frame_update_helper,
+            steam_frame::commands::steam_frame_count_other_pcs,
+            steam_frame::commands::steam_frame_set_brightness,
+            steam_frame::commands::steam_frame_set_cct,
+            steam_frame::commands::steam_frame_disconnect_controller,
+            steam_frame::commands::steam_frame_fade,
+            steam_frame::commands::steam_frame_cancel_fade,
+        ])
+}
+
+#[cfg(test)]
+mod bindings_tests {
+    const BINDINGS: &str = concat!(env!("CARGO_MANIFEST_DIR"), "/../src-ui/app/bindings.ts");
+
+    fn export(path: &std::path::Path) {
+        super::specta_builder()
+            .export(specta_typescript::Typescript::default(), path)
+            .expect("export the TypeScript bindings");
+    }
+
+    /// Writes `src-ui/app/bindings.ts`. Run it through `npm run generate:bindings`.
+    #[test]
+    #[ignore]
+    fn export_bindings() {
+        export(std::path::Path::new(BINDINGS));
+    }
+
+    #[test]
+    fn bindings_are_up_to_date() {
+        let temporary = tempfile::tempdir().unwrap();
+        let expected = temporary.path().join("bindings.ts");
+        export(&expected);
+        let read = |path: &std::path::Path| {
+            std::fs::read_to_string(path)
+                .unwrap_or_default()
+                .replace("\r\n", "\n")
+        };
+        assert!(
+            read(&expected) == read(std::path::Path::new(BINDINGS)),
+            "src-ui/app/bindings.ts is out of date. Run npm run generate:bindings."
+        );
+    }
 }

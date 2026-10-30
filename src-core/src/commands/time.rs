@@ -9,6 +9,7 @@ struct IpLocation {
 }
 
 #[tauri::command]
+#[specta::specta]
 pub async fn get_sunrise_sunset_time() -> Result<(String, String), String> {
     let location = locate_public_address().await?;
     // calculate today's events at the resolved coordinates

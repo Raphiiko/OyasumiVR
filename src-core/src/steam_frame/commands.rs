@@ -15,12 +15,14 @@ use super::{
 use crate::utils::send_event;
 
 #[tauri::command]
+#[specta::specta]
 pub fn steam_frame_get_supported_models() -> Vec<SupportedModel> {
     SUPPORTED_MODELS.to_vec()
 }
 
 /// One candidate per headset: addresses that show the same SSH host key are one headset.
 #[tauri::command]
+#[specta::specta]
 pub async fn steam_frame_discover_headsets() -> Vec<Candidate> {
     let candidates = discovery::discover(Duration::from_secs(3)).await;
     let pins = futures::future::join_all(
@@ -45,11 +47,13 @@ fn distinct_headsets(candidates: Vec<Candidate>, pins: Vec<Option<String>>) -> V
 
 /// `None` when no devkit service answers at the address.
 #[tauri::command]
+#[specta::specta]
 pub async fn steam_frame_get_ssh_user(address: String) -> Option<String> {
     devkit::login_name(address.trim()).await
 }
 
 #[tauri::command]
+#[specta::specta]
 pub async fn steam_frame_create_pairing_keys() -> Result<PairingKeys, String> {
     // name the key after this PC
     let computer = std::env::var("COMPUTERNAME").unwrap_or_else(|_| "PC".into());
@@ -68,12 +72,14 @@ pub async fn steam_frame_create_pairing_keys() -> Result<PairingKeys, String> {
 }
 
 #[tauri::command]
+#[specta::specta]
 pub async fn steam_frame_request_approval(address: String, public_key: String) -> RegisterOutcome {
     devkit::register(&address, &public_key).await
 }
 
 /// Tries this PC's saved key, and reports the host key a first login would pin.
 #[tauri::command]
+#[specta::specta]
 pub async fn steam_frame_check_ssh_access(access: Access) -> ProbeOutcome {
     match ssh::connect(&access).await {
         Ok(session) => {
@@ -89,6 +95,7 @@ pub async fn steam_frame_check_ssh_access(access: Access) -> ProbeOutcome {
 }
 
 #[tauri::command]
+#[specta::specta]
 pub async fn steam_frame_set_up_helper(request: SetupRequest) -> SetupOutcome {
     let attempt_id = request.attempt_id.clone();
     setup::setup(request, move |stage| {
@@ -102,33 +109,39 @@ pub async fn steam_frame_set_up_helper(request: SetupRequest) -> SetupOutcome {
 }
 
 #[tauri::command]
+#[specta::specta]
 pub async fn steam_frame_remove_access(request: CleanupRequest) -> CleanupOutcome {
     setup::cleanup(request).await
 }
 
 #[tauri::command]
+#[specta::specta]
 pub async fn steam_frame_count_other_pcs(access: Access, pc_id: String) -> OtherPcsOutcome {
     setup::count_other_pcs(&access, &pc_id).await
 }
 
 #[tauri::command]
+#[specta::specta]
 pub async fn steam_frame_sync_connections(pairings: Vec<Pairing>) {
     connection::set_pairings(pairings).await
 }
 
 /// Starts a helper update. The result arrives as connection state events.
 #[tauri::command]
+#[specta::specta]
 pub async fn steam_frame_update_helper(pairing_id: String) -> bool {
     connection::request_update(&pairing_id).await
 }
 
 #[tauri::command]
+#[specta::specta]
 pub async fn steam_frame_get_connection_states() -> Vec<State> {
     connection::states().await
 }
 
 /// Sets the paired headset's hardware brightness and returns the percentage the helper applied.
 #[tauri::command]
+#[specta::specta]
 pub async fn steam_frame_set_brightness(
     pairing_id: String,
     percentage: f64,
@@ -138,23 +151,27 @@ pub async fn steam_frame_set_brightness(
 
 /// Sets the paired headset's color temperature and returns the snapshot the helper applied.
 #[tauri::command]
+#[specta::specta]
 pub async fn steam_frame_set_cct(pairing_id: String, kelvin: u32) -> Result<Cct, SetCctError> {
     connection::set_cct(&pairing_id, kelvin).await
 }
 
 /// Starts a fade on the helper. The outcome arrives as a `STEAM_FRAME_FADE_ENDED` event.
 #[tauri::command]
+#[specta::specta]
 pub async fn steam_frame_fade(pairing_id: String, request: FadeRequest) -> Result<(), FadeError> {
     connection::fade(&pairing_id, request).await
 }
 
 #[tauri::command]
+#[specta::specta]
 pub async fn steam_frame_cancel_fade(pairing_id: String, operation: String) {
     connection::cancel_fade(&pairing_id, operation).await
 }
 
 /// Disconnects the paired headset's controller with this serial. It stays paired.
 #[tauri::command]
+#[specta::specta]
 pub async fn steam_frame_disconnect_controller(
     pairing_id: String,
     serial: String,

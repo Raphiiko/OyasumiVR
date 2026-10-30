@@ -27,6 +27,7 @@ pub async fn init(path: PathBuf) {
 }
 
 #[tauri::command]
+#[specta::specta]
 pub async fn clear_log_files() {
     info!("[Core] Deleting log files...");
     // Delete all log files in the log directory

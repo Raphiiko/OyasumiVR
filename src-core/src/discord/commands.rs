@@ -1,4 +1,5 @@
 #[tauri::command]
+#[specta::specta]
 pub async fn discord_update_activity(
     details: String,
     state: String,
@@ -9,6 +10,7 @@ pub async fn discord_update_activity(
 }
 
 #[tauri::command]
+#[specta::specta]
 pub async fn discord_clear_activity() -> bool {
     super::clear_activity().await
 }

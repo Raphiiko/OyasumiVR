@@ -10,7 +10,7 @@ pub const CHECKPOINT_FORMAT_VERSION: u32 = 1;
 const MAX_NAME_LENGTH: usize = 128;
 
 /// Checkpoint metadata, serialized camelCase for the frontend.
-#[derive(Serialize, Deserialize, Clone, Debug)]
+#[derive(Serialize, Deserialize, Clone, Debug, specta::Type)]
 #[serde(rename_all = "camelCase")]
 pub struct CheckpointMetadata {
     pub format_version: u32,
@@ -29,7 +29,7 @@ pub struct CheckpointMetadata {
     pub content_file_exists: bool,
 }
 
-#[derive(Serialize, Clone, Debug, PartialEq, Eq)]
+#[derive(Serialize, Clone, Debug, PartialEq, Eq, specta::Type)]
 #[serde(rename_all = "camelCase")]
 pub struct SnapshotData {
     pub contents: String,

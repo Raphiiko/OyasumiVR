@@ -73,6 +73,7 @@ fn assemble_binding_origins(
 }
 
 #[tauri::command]
+#[specta::specta]
 pub async fn openvr_set_app_framelimit(
     app_id: u32,
     limits: Option<OVRFrameLimits>,
@@ -81,21 +82,25 @@ pub async fn openvr_set_app_framelimit(
 }
 
 #[tauri::command]
+#[specta::specta]
 pub async fn openvr_get_app_framelimit(app_id: u32) -> Result<Option<OVRFrameLimits>, String> {
     super::framelimiter::get_app_framelimits(app_id).await
 }
 
 #[tauri::command]
+#[specta::specta]
 pub async fn openvr_set_init_delay_fix(enabled: bool) {
     *super::OVR_INIT_DELAY_FIX.lock().await = enabled;
 }
 
 #[tauri::command]
+#[specta::specta]
 pub async fn openvr_get_devices() -> Vec<OVRDevice> {
     super::devices::get_devices().await
 }
 
 #[tauri::command]
+#[specta::specta]
 pub fn openvr_dashboard_render_mode() -> &'static str {
     match super::DASHBOARD_RENDER_MODE.load(std::sync::atomic::Ordering::Acquire) {
         super::dashboard::RENDER_GPU => "hardware",
@@ -107,6 +112,7 @@ pub fn openvr_dashboard_render_mode() -> &'static str {
 }
 
 #[tauri::command]
+#[specta::specta]
 pub async fn openvr_status() -> String {
     let status = super::OVR_STATUS.lock().await;
     let status_str = serde_json::to_string(&*status).unwrap();
@@ -114,36 +120,43 @@ pub async fn openvr_status() -> String {
 }
 
 #[tauri::command]
+#[specta::specta]
 pub async fn openvr_set_analog_gain(analog_gain: f32) -> Result<(), String> {
     super::brightness_analog::set_analog_gain(analog_gain).await
 }
 
 #[tauri::command]
+#[specta::specta]
 pub async fn openvr_get_analog_gain() -> Result<f32, String> {
     super::brightness_analog::get_analog_gain().await
 }
 
 #[tauri::command]
+#[specta::specta]
 pub async fn openvr_set_supersample_scale(supersample_scale: Option<f32>) -> Result<(), String> {
     super::supersampling::set_supersample_scale(supersample_scale).await
 }
 
 #[tauri::command]
+#[specta::specta]
 pub async fn openvr_get_supersample_scale() -> Result<Option<f32>, String> {
     super::supersampling::get_supersample_scale().await
 }
 
 #[tauri::command]
+#[specta::specta]
 pub async fn openvr_set_fade_distance(fade_distance: f32) -> Result<(), String> {
     super::chaperone::set_fade_distance(fade_distance).await
 }
 
 #[tauri::command]
+#[specta::specta]
 pub async fn openvr_get_fade_distance() -> Result<f32, String> {
     super::chaperone::get_fade_distance().await
 }
 
 #[tauri::command]
+#[specta::specta]
 pub async fn openvr_set_analog_color_temp(
     temperature: Option<u32>,
 ) -> Result<(f64, f64, f64), String> {
@@ -151,6 +164,7 @@ pub async fn openvr_set_analog_color_temp(
 }
 
 #[tauri::command]
+#[specta::specta]
 pub async fn openvr_set_image_brightness(
     brightness: f64,
     perceived_brightness_adjustment_gamma: Option<f64>,
@@ -160,6 +174,7 @@ pub async fn openvr_set_image_brightness(
 }
 
 #[tauri::command]
+#[specta::specta]
 pub async fn openvr_launch_binding_configuration(show_on_desktop: bool) {
     let context = OVR_CONTEXT.lock().await;
     let input = match context.as_ref() {
@@ -179,6 +194,7 @@ pub async fn openvr_launch_binding_configuration(show_on_desktop: bool) {
 }
 
 #[tauri::command]
+#[specta::specta]
 pub async fn openvr_is_dashboard_visible() -> bool {
     let context = OVR_CONTEXT.lock().await;
     let manager = match context.as_ref() {
@@ -189,6 +205,7 @@ pub async fn openvr_is_dashboard_visible() -> bool {
 }
 
 #[tauri::command]
+#[specta::specta]
 pub async fn openvr_get_application_auto_launch() -> Result<bool, String> {
     let context = OVR_CONTEXT.lock().await;
     let Some(context) = context.as_ref() else {
@@ -204,6 +221,7 @@ pub async fn openvr_get_application_auto_launch() -> Result<bool, String> {
 }
 
 #[tauri::command]
+#[specta::specta]
 pub async fn openvr_set_application_auto_launch(enabled: bool) -> Result<(), String> {
     let context = OVR_CONTEXT.lock().await;
     let Some(context) = context.as_ref() else {
@@ -219,6 +237,7 @@ pub async fn openvr_set_application_auto_launch(enabled: bool) -> Result<(), Str
 }
 
 #[tauri::command]
+#[specta::specta]
 pub async fn openvr_reregister_manifest() -> Result<(), String> {
     let ctx = OVR_CONTEXT.lock().await;
     let ctx = ctx.as_ref().ok_or("OPENVR_NOT_INITIALIZED")?;
@@ -269,6 +288,7 @@ pub async fn openvr_reregister_manifest() -> Result<(), String> {
 }
 
 #[tauri::command]
+#[specta::specta]
 pub async fn openvr_get_binding_origins(
     action_set_key: String,
     action_key: String,

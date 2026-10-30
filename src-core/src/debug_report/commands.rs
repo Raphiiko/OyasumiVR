@@ -10,6 +10,7 @@ use super::{ReportSources, MAX_REPORT_BYTES, UPLOAD_URL};
 /// Builds a debug report and keeps it for `debug_report_upload` and `debug_report_save`.
 /// Returns the zip size in bytes.
 #[tauri::command]
+#[specta::specta]
 pub async fn debug_report_create(app_handle: AppHandle, ui_state: Value) -> Result<usize, String> {
     let path = app_handle.path();
     let sources = ReportSources {
@@ -32,6 +33,7 @@ struct UploadResponse {
 /// Uploads the pending debug report and returns its report code.
 /// Fails with `REPORT_TOO_LARGE` without a request when the zip exceeds the endpoint limit.
 #[tauri::command]
+#[specta::specta]
 pub async fn debug_report_upload() -> Result<String, String> {
     let zip = super::pending_report()
         .await
@@ -69,6 +71,7 @@ pub async fn debug_report_upload() -> Result<String, String> {
 
 /// Writes the pending debug report to `path`.
 #[tauri::command]
+#[specta::specta]
 pub async fn debug_report_save(path: String) -> Result<(), String> {
     let zip = super::pending_report()
         .await
@@ -81,6 +84,7 @@ pub async fn debug_report_save(path: String) -> Result<(), String> {
 
 /// Drops the pending debug report from memory, once neither a retry nor a save needs it.
 #[tauri::command]
+#[specta::specta]
 pub async fn debug_report_discard() {
     super::discard().await;
 }

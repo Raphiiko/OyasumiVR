@@ -92,6 +92,7 @@ fn cli_parse_error_message(error: &str, args: impl Iterator<Item = String>) -> S
 }
 
 #[tauri::command]
+#[specta::specta]
 pub async fn set_error_reporting_enabled(app: tauri::AppHandle, enabled: bool) {
     let _update = UPDATE_LOCK.lock().await;
     let enabled = set_enabled(&app, enabled);
@@ -100,6 +101,7 @@ pub async fn set_error_reporting_enabled(app: tauri::AppHandle, enabled: bool) {
 }
 
 #[tauri::command]
+#[specta::specta]
 pub fn allow_ui_event(issue: String) -> bool {
     if !ENABLED.load(Ordering::Relaxed) || issue.len() > 2_048 {
         return false;
