@@ -192,11 +192,11 @@
           "message": "Impossible de charger le contrôle.\nNouvel essai en cours."
         },
         "MISSING_CONTROLLER": {
-          "tooltip": "Vérifiez que les manettes gauche et droite sont connectées"
+          "tooltip": "Vérifiez que les contrôleurs gauche et droit sont connectés"
         },
         "STEAMVR_INACTIVE": {
           "message": "SteamVR inactif",
-          "tooltip": "Pour voir ou modifier les contrôles des manettes,\nSteamVR doit être lancé"
+          "tooltip": "Pour voir ou modifier les contrôles des contrôleurs,\nSteamVR doit être lancé"
         },
         "UNKNOWN": {
           "message": "Configurer le contrôle"
@@ -253,7 +253,7 @@
     },
     "device-list": {
       "category": {
-        "Controller": "Manettes",
+        "Controller": "Contrôleurs",
         "GenericTracker": "Trackers",
         "HMD": "Casque",
         "Lighthouse": "Stations de base",
@@ -284,18 +284,18 @@
         "WristRight": "Poignet droit"
       },
       "forceOnBootingWarning": {
-        "message": "Cette station de base semble déjà allumée.\n\nSi vous forcez l'allumage d'une station de base déjà allumée, elle reste généralement bloquée en démarrage. Dans ce cas, remettez-la en sommeil ou en veille, puis rallumez-la.\n\nVoulez-vous vraiment forcer l'allumage de cette station de base ?",
+        "message": "Cette station de base semble déjà allumée.\n\nSi vous forcez l'allumage d'une station de base déjà allumée, elle reste généralement bloquée en démarrage. Dans ce cas, remettez-la en veille profonde ou en veille, puis rallumez-la.\n\nVoulez-vous vraiment forcer l'allumage de cette station de base ?",
         "title": "Attention"
       },
       "lhForceState": {
         "on": "Forcer l'allumage",
-        "sleep": "Forcer le sommeil",
+        "sleep": "Forcer la veille profonde",
         "standby": "Forcer la veille"
       },
       "lighthouseStatus": {
         "booting": "Démarrage",
         "on": "Allumée",
-        "sleep": "En sommeil",
+        "sleep": "En veille profonde",
         "standby": "En veille"
       },
       "noDevices": "Aucun appareil détecté",
@@ -320,9 +320,9 @@
         "acceptedInviteRequest": {
           "subtitle": {
             "anyone": "Car les demandes d'invitation de tout le monde sont acceptées",
-            "blacklist": "Car ce joueur n'était pas sur la liste noire",
+            "blacklist": "Car ce joueur n'était pas sur la liste de blocage",
             "joinMe": "Car votre statut était Join Me",
-            "whitelist": "Car ce joueur était sur la liste blanche"
+            "whitelist": "Car ce joueur était sur la liste d'autorisation"
           },
           "title": "Demande d'invitation de ''{displayName}'' acceptée automatiquement"
         },
@@ -374,8 +374,8 @@
             "SLEEP_PREPARATION": "Car vous vous prépariez à dormir"
           },
           "title": {
-            "PUSH_TO_TALK": "Comportement du bouton micro de la manette changé en 'Push-to-talk'",
-            "TOGGLE": "Comportement du bouton micro de la manette changé en 'Bascule'"
+            "PUSH_TO_TALK": "Comportement du bouton micro du contrôleur changé en 'Push-to-talk'",
+            "TOGGLE": "Comportement du bouton micro du contrôleur changé en 'Bascule'"
           }
         },
         "changedSystemMicMuteState": {
@@ -421,8 +421,8 @@
         },
         "declinedInviteRequest": {
           "reason": {
-            "NOT_ON_WHITELIST": "Car ce joueur n'était pas sur la liste blanche",
-            "ON_BLACKLIST": "Car ce joueur était sur la liste noire",
+            "NOT_ON_WHITELIST": "Car ce joueur n'était pas sur la liste d'autorisation",
+            "ON_BLACKLIST": "Car ce joueur était sur la liste de blocage",
             "PLAYER_COUNT_CONDITION_FAILED": "Car il y avait trop de joueurs dans l'instance",
             "SLEEP_MODE_ENABLED_CONDITION_FAILED": "Car le mode sommeil était inactif"
           },
@@ -476,24 +476,24 @@
           "ALL": {
             "on": "Toutes les stations de base ont été allumées",
             "on_FAILED": "Impossible d'allumer toutes les stations de base",
-            "sleep": "Toutes les stations de base ont été mises en sommeil",
-            "sleep_FAILED": "Impossible de mettre toutes les stations de base en sommeil",
+            "sleep": "Toutes les stations de base ont été mises en veille profonde",
+            "sleep_FAILED": "Impossible de mettre toutes les stations de base en veille profonde",
             "standby": "Toutes les stations de base ont été mises en veille",
             "standby_FAILED": "Impossible de mettre toutes les stations de base en veille"
           },
           "SINGLE": {
             "on": "Une station de base a été allumée",
             "on_FAILED": "Impossible d'allumer une station de base",
-            "sleep": "Une station de base a été mise en sommeil",
-            "sleep_FAILED": "Impossible de mettre une station de base en sommeil",
+            "sleep": "Une station de base a été mise en veille profonde",
+            "sleep_FAILED": "Impossible de mettre une station de base en veille profonde",
             "standby": "Une station de base a été mise en veille",
             "standby_FAILED": "Impossible de mettre une station de base en veille"
           },
           "VARIOUS": {
             "on": "Plusieurs stations de base ont été allumées",
             "on_FAILED": "Impossible d'allumer plusieurs stations de base",
-            "sleep": "Plusieurs stations de base ont été mises en sommeil",
-            "sleep_FAILED": "Impossible de mettre plusieurs stations de base en sommeil",
+            "sleep": "Plusieurs stations de base ont été mises en veille profonde",
+            "sleep_FAILED": "Impossible de mettre plusieurs stations de base en veille profonde",
             "standby": "Plusieurs stations de base ont été mises en veille",
             "standby_FAILED": "Impossible de mettre plusieurs stations de base en veille"
           },
@@ -616,7 +616,7 @@
               "SLEEP_MODE_ENABLE_AT_BATTERY_PERCENTAGE": "Car la batterie d'un appareil a atteint le seuil prédéfini",
               "SLEEP_MODE_ENABLE_AT_TIME": "À une heure prédéfinie",
               "SLEEP_MODE_ENABLE_FOR_SLEEP_DETECTOR": "Car votre sommeil a été détecté",
-              "SLEEP_MODE_ENABLE_ON_CONTROLLERS_POWERED_OFF": "Car vos manettes ont toutes été éteintes",
+              "SLEEP_MODE_ENABLE_ON_CONTROLLERS_POWERED_OFF": "Car vos contrôleurs ont tous été éteints",
               "SLEEP_MODE_ENABLE_ON_HEART_RATE_CALM_PERIOD": "Car votre fréquence cardiaque est restée calme assez longtemps",
               "unknown": "Par une automatisation inconnue"
             },
@@ -671,10 +671,10 @@
           "title": {
             "ALL": "Tous les appareils ont été éteints",
             "ALL_FAILED": "Impossible d'éteindre tous les appareils",
-            "CONTROLLER": "Une manette a été éteinte",
-            "CONTROLLERS": "Plusieurs manettes ont été éteintes",
-            "CONTROLLERS_FAILED": "Impossible d'éteindre plusieurs manettes",
-            "CONTROLLER_FAILED": "Impossible d'éteindre une manette",
+            "CONTROLLER": "Un contrôleur a été éteint",
+            "CONTROLLERS": "Plusieurs contrôleurs ont été éteints",
+            "CONTROLLERS_FAILED": "Impossible d'éteindre plusieurs contrôleurs",
+            "CONTROLLER_FAILED": "Impossible d'éteindre un contrôleur",
             "TRACKER": "Un tracker a été éteint",
             "TRACKERS": "Plusieurs trackers ont été éteints",
             "TRACKERS_FAILED": "Impossible d'éteindre plusieurs trackers",
@@ -804,9 +804,9 @@
         "instructions": "Si aucun identifiant n'est détecté automatiquement, veuillez le saisir manuellement.",
         "steps": {
           "connectDevice": "Connecter un appareil suivi",
-          "connectDeviceDesc": "Connectez un casque, une manette ou un tracker suivi par stations de base...",
+          "connectDeviceDesc": "Connectez un casque, un contrôleur ou un tracker suivi par stations de base...",
           "detectBasestation": "Détecter la station de base",
-          "detectBasestationDesc": "Vérifiez qu'un casque, une manette ou un tracker voit la station de base",
+          "detectBasestationDesc": "Vérifiez qu'un casque, un contrôleur ou un tracker voit la station de base",
           "deviceDetected": "Appareil détecté",
           "running": "En cours",
           "startSteamVR": "Lancer SteamVR",
@@ -956,18 +956,18 @@
     },
     "player-list-preset-modal": {
       "confirmDelete": {
-        "message": "Voulez-vous vraiment supprimer votre préréglage ''{name}'' ? Il contient {count, plural, one {# joueur} other {# joueurs}}.",
+        "message": "Voulez-vous vraiment supprimer votre preset ''{name}'' ? Il contient {count, plural, one {# joueur} other {# joueurs}}.",
         "title": "Êtes-vous sûr ?"
       },
       "confirmOverwrite": {
-        "message": "Voulez-vous vraiment écraser votre préréglage ''{name}'' ?",
+        "message": "Voulez-vous vraiment écraser votre preset ''{name}'' ?",
         "title": "Êtes-vous sûr ?"
       },
-      "delete": "Supprimer le préréglage",
-      "load": "Charger le préréglage",
-      "namePlaceholder": "Nom du préréglage",
-      "noPresets": "Vous n'avez encore aucun préréglage enregistré",
-      "overwrite": "Écraser le préréglage",
+      "delete": "Supprimer le preset",
+      "load": "Charger le preset",
+      "namePlaceholder": "Nom du preset",
+      "noPresets": "Vous n'avez encore aucun preset enregistré",
+      "overwrite": "Écraser le preset",
       "preset": {
         "subtitle": "Liste de {count, plural, one {# joueur} other {# joueurs}}"
       },
@@ -979,7 +979,7 @@
     "player-list": {
       "addFriends": "Ajouter des amis",
       "clearPlayers": "Tout effacer",
-      "loadPreset": "Charger un préréglage",
+      "loadPreset": "Charger un preset",
       "loadingFriends": "Chargement des amis...",
       "noPlayersAdded": "Aucun joueur n'a encore été ajouté à la liste.",
       "removeModal": {
@@ -990,7 +990,7 @@
         "message": "Voulez-vous vraiment retirer tout le monde de votre liste ?",
         "title": "Confirmer le retrait"
       },
-      "savePreset": "Enregistrer comme préréglage",
+      "savePreset": "Enregistrer comme preset",
       "title": "Liste de joueurs"
     },
     "select-box": {
@@ -1096,7 +1096,7 @@
       "deselectAll": "Tout désélectionner",
       "deviceTags": "Étiquettes d'appareils",
       "deviceTypes": {
-        "CONTROLLER": "Toutes les manettes",
+        "CONTROLLER": "Tous les contrôleurs",
         "HMD": "Tous les casques",
         "LIGHTHOUSE": "Toutes les stations de base",
         "TRACKER": "Tous les trackers"
@@ -1108,14 +1108,14 @@
       "title": "Sélectionner des appareils"
     },
     "deviceType": {
-      "CONTROLLER": "Manettes",
+      "CONTROLLER": "Contrôleurs",
       "HMD": "Casques",
       "LIGHTHOUSE": "Stations de base",
       "PREVIOUSLY_SEEN": "Déjà vus",
       "TRACKER": "Trackers"
     },
     "empty": {
-      "noDevices": "Aucun appareil détecté pour l'instant. Connectez un appareil, comme une manette ou un tracker, pour commencer.",
+      "noDevices": "Aucun appareil détecté pour l'instant. Connectez un appareil, comme un contrôleur ou un tracker, pour commencer.",
       "noDevicesMatchingSearch": "Aucun appareil ne correspond à votre recherche."
     },
     "filter": {
@@ -1311,7 +1311,7 @@
         "description": "Configurez ici OyasumiVR pour n'accepter les demandes d'invitation que lorsque certaines conditions sont remplies.",
         "title": "Conditions"
       },
-      "description": "OyasumiVR peut accepter automatiquement les demandes d'invitation que vous recevez. Grâce à la liste blanche ou à la liste noire de joueurs, vous choisissez quels amis verront leurs demandes acceptées automatiquement.",
+      "description": "OyasumiVR peut accepter automatiquement les demandes d'invitation que vous recevez. Grâce à la liste d'autorisation ou à la liste de blocage, vous choisissez quels amis verront leurs demandes acceptées automatiquement.",
       "options": {
         "acceptMessage": {
           "customMessage": {
@@ -1343,7 +1343,7 @@
           "description": "Fonctionnement de la liste de joueurs",
           "options": {
             "BLACKLIST": {
-              "label": "Liste noire",
+              "label": "Liste de blocage",
               "subLabel": "Accepter les amis absents de la liste"
             },
             "DISABLED": {
@@ -1351,7 +1351,7 @@
               "subLabel": "Accepter tout le monde"
             },
             "WHITELIST": {
-              "label": "Liste blanche",
+              "label": "Liste d'autorisation",
               "subLabel": "Accepter les amis de la liste"
             }
           },
@@ -1373,16 +1373,16 @@
       "otherAutomations": {
         "changeListPreset": {
           "onSleepDisable": {
-            "description": "Charger un préréglage enregistré pour la liste de joueurs quand le mode sommeil se désactive",
-            "title": "Charger un préréglage quand je me réveille"
+            "description": "Charger un preset enregistré pour la liste de joueurs quand le mode sommeil se désactive",
+            "title": "Charger un preset quand je me réveille"
           },
           "onSleepEnable": {
-            "description": "Charger un préréglage enregistré pour la liste de joueurs quand le mode sommeil s'active",
-            "title": "Charger un préréglage quand je vais dormir"
+            "description": "Charger un preset enregistré pour la liste de joueurs quand le mode sommeil s'active",
+            "title": "Charger un preset quand je vais dormir"
           },
           "onSleepPreparation": {
-            "description": "Charger un préréglage enregistré pour la liste de joueurs quand vous vous préparez à dormir",
-            "title": "Charger un préréglage quand je me prépare à dormir"
+            "description": "Charger un preset enregistré pour la liste de joueurs quand vous vous préparez à dormir",
+            "title": "Charger un preset quand je me prépare à dormir"
           }
         },
         "description": "Retrouvez ici des automatisations qui modifient automatiquement le fonctionnement de cette fonctionnalité.",
@@ -1404,8 +1404,8 @@
       }
     },
     "playerList": {
-      "blacklist": "Liste noire",
-      "whitelist": "Liste blanche"
+      "blacklist": "Liste de blocage",
+      "whitelist": "Liste d'autorisation"
     },
     "soundsTab": {
       "options": {
@@ -1547,12 +1547,12 @@
         "actions": {
           "restartBluetooth": "Redémarrer le Bluetooth"
         },
-        "message": "OyasumiVR détecte vos stations de base mais ne parvient pas à s'y connecter. Redémarrer le Bluetooth règle généralement ce problème. Le redémarrage déconnecte brièvement tous les appareils Bluetooth, comme les casques audio et les manettes.",
+        "message": "OyasumiVR détecte vos stations de base mais ne parvient pas à s'y connecter. Redémarrer le Bluetooth règle généralement ce problème. Le redémarrage déconnecte brièvement tous les appareils Bluetooth, comme les casques audio et les contrôleurs.",
         "restartFailed": "OyasumiVR détecte vos stations de base mais ne parvient pas à s'y connecter, et le redémarrage du Bluetooth a échoué. Redémarrez votre PC pour régler ce problème.",
         "title": "Connexion aux stations de base impossible"
       },
       "lighthouseConsoleError": {
-        "message": "La console Lighthouse est introuvable ou ne fonctionne pas correctement. Sans accès à la console Lighthouse, OyasumiVR ne pourra probablement pas éteindre vos manettes et vos trackers. Veuillez vérifier votre configuration.",
+        "message": "La console Lighthouse est introuvable ou ne fonctionne pas correctement. Sans accès à la console Lighthouse, OyasumiVR ne pourra probablement pas éteindre vos contrôleurs et vos trackers. Veuillez vérifier votre configuration.",
         "title": "Console Lighthouse indisponible"
       },
       "manyLighthousesDetected": {
@@ -1604,8 +1604,8 @@
     "title": "Impossible de récupérer : {store}"
   },
   "misc": {
-    "GOGO_LOCO_LEGACY_PRESET_WARNING": "Ce préréglage utilise une solution de contournement qui pose quelques problèmes. N'utilisez ce préréglage que si vous ne pouvez pas utiliser le préréglage GoGo Loco plus récent. Si votre avatar utilise encore une ancienne version de GoGo Loco, nous vous recommandons de le mettre à jour avec la dernière version de GoGo Loco.",
-    "GORONE_LEGACY_PRESET_WARNING": "Les versions 4.0 et ultérieures de ce prefab intègrent déjà la rotation et ne sont pas compatibles avec ce préréglage. Ce préréglage reste disponible si votre avatar utilise une ancienne version de ce prefab.",
+    "GOGO_LOCO_LEGACY_PRESET_WARNING": "Ce preset utilise une solution de contournement qui pose quelques problèmes. N'utilisez ce preset que si vous ne pouvez pas utiliser le preset GoGo Loco plus récent. Si votre avatar utilise encore une ancienne version de GoGo Loco, nous vous recommandons de le mettre à jour avec la dernière version de GoGo Loco.",
+    "GORONE_LEGACY_PRESET_WARNING": "Les versions 4.0 et ultérieures de ce prefab intègrent déjà la rotation et ne sont pas compatibles avec ce preset. Ce preset reste disponible si votre avatar utilise une ancienne version de ce prefab.",
     "WEBVIEW2_MISSING": "OyasumiVR nécessite Microsoft Edge WebView2, qui n'est pas installé.\n\nInstallez-le puis relancez OyasumiVR. Ouvrir la page de téléchargement ?",
     "oneTimeFlagDialogs": {
       "OSC_SCRIPT_SIMPLE_EDITOR_VRCHAT_AUTOCOMPLETE_INFO": {
@@ -1678,7 +1678,7 @@
       "content": "Impossible d'accepter la demande d'invitation de {username}"
     },
     "sleepCheck": {
-      "content": "Le mode sommeil s'activera dans 20 secondes.\nDormez-vous ?\n\nPour annuler :\nsecouez la tête ou appuyez sur un bouton de la manette"
+      "content": "Le mode sommeil s'activera dans 20 secondes.\nDormez-vous ?\n\nPour annuler :\nsecouez la tête ou appuyez sur un bouton du contrôleur"
     },
     "sleepCheckCancel": {
       "content": "L'activation automatique du mode sommeil a été annulée"
@@ -1690,10 +1690,10 @@
       "content": "Le mode sommeil a été activé"
     },
     "turningOffControllers": {
-      "content": "Extinction de vos manettes"
+      "content": "Extinction de vos contrôleurs"
     },
     "turningOffControllersAndTrackers": {
-      "content": "Extinction de vos manettes et de vos trackers"
+      "content": "Extinction de vos contrôleurs et de vos trackers"
     },
     "turningOffTrackers": {
       "content": "Extinction de vos trackers"
@@ -1724,7 +1724,7 @@
     "sleepingAnimations": {
       "currentPose": "Position actuelle",
       "customPreset": "Animations personnalisées",
-      "description": "OyasumiVR peut changer automatiquement les animations de votre avatar quand vous changez de position de sommeil. Cela peut être utile si vous n'avez pas de full body tracking, ou si vous (ou OyasumiVR) éteignez vos trackers pendant la nuit. Voici un <a href=\"https://youtu.be/3T54bTAzT7o\" target=\"_blank\">exemple</a> du résultat.\n\nDes préréglages sont disponibles pour plusieurs prefabs de locomotion d'avatar, mais vous pouvez aussi définir vos propres animations.",
+      "description": "OyasumiVR peut changer automatiquement les animations de votre avatar quand vous changez de position de sommeil. Cela peut être utile si vous n'avez pas de full body tracking, ou si vous (ou OyasumiVR) éteignez vos trackers pendant la nuit. Voici un <a href=\"https://youtu.be/3T54bTAzT7o\" target=\"_blank\">exemple</a> du résultat.\n\nDes presets sont disponibles pour plusieurs prefabs de locomotion d'avatar, mais vous pouvez aussi définir vos propres animations.",
       "enable": "Activer les animations automatiques",
       "manualControl": "Contrôle manuel",
       "options": {
@@ -1780,9 +1780,9 @@
       "automations": {
         "autoAcceptInviteRequests": {
           "mode": {
-            "Blacklist": "Liste noire",
+            "Blacklist": "Liste de blocage",
             "Disabled": "Pour tout le monde",
-            "Whitelist": "Liste blanche"
+            "Whitelist": "Liste d'autorisation"
           },
           "subtitle": "{mode} : {playerCount, plural, one {# ami} other {# amis}}",
           "title": "Accepter automatiquement les demandes d'invitation"
@@ -1810,8 +1810,8 @@
       "deviceControl": {
         "title": "Contrôle des appareils",
         "turnOff": {
-          "AllControllers": "Éteindre toutes\nles manettes",
-          "AllControllersAndTrackers": "Éteindre toutes les\nmanettes et tous les trackers",
+          "AllControllers": "Éteindre tous\nles contrôleurs",
+          "AllControllersAndTrackers": "Éteindre tous les\ncontrôleurs et trackers",
           "AllTrackers": "Éteindre tous\nles trackers"
         }
       },
@@ -1855,7 +1855,7 @@
   "power-automations": {
     "devices": {
       "turnOff": {
-        "description": "OyasumiVR peut éteindre vos manettes, vos trackers et même vos stations de base lors de certains évènements. Par exemple, éteignez vos trackers quand vous vous endormez, pour qu'il leur reste de la batterie à votre réveil !",
+        "description": "OyasumiVR peut éteindre vos contrôleurs, vos trackers et même vos stations de base lors de certains évènements. Par exemple, éteignez vos trackers quand vous vous endormez, pour qu'il leur reste de la batterie à votre réveil !",
         "subtitle": "Éteindre les appareils suivants",
         "title": "Éteindre des appareils",
         "triggers": {
@@ -2022,7 +2022,7 @@
       "lighthouseConsole": {
         "description": "OyasumiVR doit connaître l'emplacement du fichier <strong>lighthouse_console.exe</strong> de votre installation SteamVR.\nSi OyasumiVR ne le trouve pas à l'emplacement par défaut, vous devez indiquer où il se trouve.",
         "powerOffDelay": {
-          "description": "Si cette option est activée, OyasumiVR attend un instant entre l'extinction de chaque manette et de chaque tracker. Cela peut aider si l'extinction de vos appareils fait planter SteamVR ou laisse certains appareils allumés.",
+          "description": "Si cette option est activée, OyasumiVR attend un instant entre l'extinction de chaque contrôleur et de chaque tracker. Cela peut aider si l'extinction de vos appareils fait planter SteamVR ou laisse certains appareils allumés.",
           "title": "Délai entre les extinctions d'appareils"
         },
         "status": {
@@ -2042,10 +2042,10 @@
           "title": "Activer le contrôle de l'alimentation"
         },
         "powerOffMode": {
-          "description": "Contrairement au mode veille, le mode sommeil coupe aussi les moteurs, qui peuvent alors mettre plus de temps à redémarrer.",
+          "description": "Contrairement au mode veille, le mode veille profonde coupe aussi les moteurs, qui peuvent alors mettre plus de temps à redémarrer.",
           "sleep": {
             "description": "Éteint les\nlasers et moteurs",
-            "title": "Sommeil"
+            "title": "Veille profonde"
           },
           "standby": {
             "description": "Éteint les\nlasers",
@@ -2058,7 +2058,7 @@
       "overlay": {
         "binding": {
           "description": "Le bouton qui ouvre le menu overlay se configure dans le menu des contrôles de SteamVR.",
-          "title": "Bouton de la manette"
+          "title": "Bouton du contrôleur"
         },
         "onlyOpenMenuWhenVRChatRunning": {
           "description": "Activez cette option pour empêcher l'ouverture du menu lorsque VRChat n'est pas lancé",
@@ -2128,7 +2128,7 @@
         "HOTKEY_RUN_SLEEP_PREPARATION": "Se préparer à dormir",
         "HOTKEY_TOGGLE_LIGHTHOUSE_DEVICES": "Basculer les stations de base",
         "HOTKEY_TOGGLE_SLEEP_MODE": "Basculer le mode sommeil",
-        "HOTKEY_TURN_OFF_CONTROLLER_DEVICES": "Éteindre les manettes",
+        "HOTKEY_TURN_OFF_CONTROLLER_DEVICES": "Éteindre les contrôleurs",
         "HOTKEY_TURN_OFF_LIGHTHOUSE_DEVICES": "Éteindre les stations de base",
         "HOTKEY_TURN_OFF_TRACKER_DEVICES": "Éteindre les trackers",
         "HOTKEY_TURN_ON_LIGHTHOUSE_DEVICES": "Allumer les stations de base"
@@ -2694,11 +2694,11 @@
       "description": "Activer automatiquement le mode sommeil selon d'autres déclencheurs",
       "onControllersPoweredOff": {
         "batteryLevelAutomationConflict": {
-          "action": "Automatisations d'alimentation :\nManettes et trackers",
-          "description": "Vous avez configuré l'extinction automatique des manettes quand leur batterie descend sous un certain pourcentage. Cela peut activer le mode sommeil par accident, ce qui n'est peut-être pas ce que vous voulez. Pour l'éviter, vous pouvez désactiver ce comportement dans la section \"Manettes et trackers\" des réglages des automatisations d'alimentation.",
+          "action": "Automatisations d'alimentation :\nContrôleurs et trackers",
+          "description": "Vous avez configuré l'extinction automatique des contrôleurs quand leur batterie descend sous un certain pourcentage. Cela peut activer le mode sommeil par accident, ce qui n'est peut-être pas ce que vous voulez. Pour l'éviter, vous pouvez désactiver ce comportement dans la section \"Contrôleurs et trackers\" des réglages des automatisations d'alimentation.",
           "title": "Attention : une autre automatisation peut déclencher ceci !"
         },
-        "title": "Quand toutes les manettes sont éteintes"
+        "title": "Quand tous les contrôleurs sont éteints"
       },
       "onHeartRateCalmPeriod": {
         "description": "Nécessite l'<a class=\"integrationsPageLink\">intégration Pulsoid</a>",
@@ -2750,13 +2750,13 @@
         "title": "Désactiver le mode sommeil"
       },
       "disableOnDevicePowerOn": {
-        "Controller": "Manette",
+        "Controller": "Contrôleur",
         "GenericTracker": "Tracker",
         "title": "Désactiver le mode sommeil",
         "whenTurningOn": "Quand j'allume un(e)"
       },
       "enableAtBatteryPercentage": {
-        "Controller": "Manette",
+        "Controller": "Contrôleur",
         "GenericTracker": "Tracker",
         "fallsBelow": "Descend sous",
         "title": "Activer le mode sommeil",
@@ -2774,8 +2774,8 @@
           "title": "Calibration"
         },
         "considerControllerPresence": {
-          "description": "Si activé, le détecteur de sommeil tient aussi compte des actions sur vos manettes.",
-          "title": "Tenir compte des manettes"
+          "description": "Si activé, le détecteur de sommeil tient aussi compte des actions sur vos contrôleurs.",
+          "title": "Tenir compte des contrôleurs"
         },
         "considerSleepingPose": {
           "description": "Si activé, le détecteur de sommeil tient aussi compte de votre position de sommeil.",
@@ -2882,7 +2882,7 @@
       "configuration": {
         "title": "Configuration"
       },
-      "description": "La détection du sommeil est le moyen prévu par OyasumiVR pour activer le mode sommeil. Cette fonctionnalité active automatiquement le mode sommeil quand elle pense que vous dormez, selon plusieurs facteurs comme les mouvements de votre casque VR et les actions sur vos manettes."
+      "description": "La détection du sommeil est le moyen prévu par OyasumiVR pour activer le mode sommeil. Cette fonctionnalité active automatiquement le mode sommeil quand elle pense que vous dormez, selon plusieurs facteurs comme les mouvements de votre casque VR et les actions sur vos contrôleurs."
     },
     "tab": {
       "detection": "Détection",
@@ -2981,16 +2981,16 @@
       "sendAgain": "Renvoyer",
       "tryAgain": "Réessayer",
       "unpair": "Dissocier",
-      "unpairAll": "Désinstaller le Helper",
+      "unpairAll": "Désinstaller l'assistant",
       "update": "Mettre à jour",
       "yesPair": "Oui, l'associer"
     },
     "details": {
-      "helper": "OyasumiVR Helper",
+      "helper": "Assistant OyasumiVR",
       "pairing": "Association",
       "pairingDescription": "Ne plus utiliser ce casque avec OyasumiVR sur ce PC",
-      "repair": "Réparer le Helper",
-      "repairDescription": "Réinstaller le Helper et le redémarrer, si le casque ne répond plus à OyasumiVR",
+      "repair": "Réparer l'assistant",
+      "repairDescription": "Réinstaller l'assistant et le redémarrer, si le casque ne répond plus à OyasumiVR",
       "repairing": "Réparation…",
       "upToDate": "À jour",
       "updating": "Mise à jour…",
@@ -3023,7 +3023,7 @@
       },
       "cleanupFailed": {
         "body": "OyasumiVR n'a pas pu supprimer ce que cette association a laissé sur le casque. Pour le supprimer vous-même, exécutez cette commande dans un terminal sur le casque.",
-        "note": "Si la commande indique que le fichier n'existe pas, OyasumiVR Helper n'est pas installé sur ce casque.",
+        "note": "Si la commande indique que le fichier n'existe pas, l'assistant OyasumiVR n'est pas installé sur ce casque.",
         "title": "Le nettoyage n'a pas pu se terminer"
       },
       "declined": {
@@ -3043,7 +3043,7 @@
         "title": "Est-ce votre casque ?"
       },
       "intro": {
-        "install": "Quand vous associez votre casque, OyasumiVR installe OyasumiVR Helper sur votre Steam Frame. Il vous donne le contrôle matériel de la luminosité et de la température de couleur, ainsi que d'autres fonctionnalités propres au matériel.",
+        "install": "Quand vous associez votre casque, OyasumiVR installe l'assistant OyasumiVR sur votre Steam Frame. Il vous donne le contrôle matériel de la luminosité et de la température de couleur, ainsi que d'autres fonctionnalités propres au matériel.",
         "nearby": "Gardez le casque à portée de main. Vous allez le mettre et le retirer plusieurs fois.",
         "title": "Associez votre casque",
         "uninstall": "Vous pouvez le désinstaller à tout moment en dissociant le casque, ou en suivant les <a href=\"https://raphii.co/oyasumivr/hidden/troubleshooting/steam-frame-uninstall/\">instructions de désinstallation manuelle</a>."
@@ -3055,7 +3055,7 @@
         "title": "Saisissez l'adresse du casque"
       },
       "needsUpdate": {
-        "body": "Le casque a une version plus récente d'OyasumiVR Helper que cette version d'OyasumiVR ne peut pas utiliser. OyasumiVR ne l'a pas remplacée. Mettez à jour OyasumiVR, puis associez à nouveau le casque.",
+        "body": "Le casque a une version plus récente de l'assistant OyasumiVR que cette version d'OyasumiVR ne peut pas utiliser. OyasumiVR ne l'a pas remplacée. Mettez à jour OyasumiVR, puis associez à nouveau le casque.",
         "title": "OyasumiVR doit être mis à jour pour contrôler ce Frame"
       },
       "notfound": {
@@ -3083,14 +3083,14 @@
       },
       "setup": {
         "body": "Vous pouvez retirer le casque. Gardez-le éveillé et connecté pendant la fin de l'installation.",
-        "title": "Installation d'OyasumiVR Helper"
+        "title": "Installation de l'assistant OyasumiVR"
       },
       "setupFailed": {
         "body": "OyasumiVR n'a pas pu terminer l'installation sur votre casque.",
         "title": "L'installation n'a pas abouti"
       },
       "success": {
-        "body": "OyasumiVR Helper est installé et connecté.",
+        "body": "L'assistant OyasumiVR est installé et connecté.",
         "title": "Le Steam Frame est associé"
       },
       "timeout": {
@@ -3108,33 +3108,33 @@
     },
     "stages": {
       "connection": "Vérification de la connexion",
-      "install": "Installation d'OyasumiVR Helper",
+      "install": "Installation de l'assistant OyasumiVR",
       "verify": "Vérification du casque"
     },
     "status": {
       "connected": "Connecté",
       "connecting": "Connexion",
-      "helperMissing": "Helper absent",
-      "helperUpdated": "Helper mis à jour vers {version}",
+      "helperMissing": "Assistant absent",
+      "helperUpdated": "Assistant mis à jour vers {version}",
       "notRecognized": "Non reconnu",
       "offline": "Hors ligne",
-      "reinstalling": "Réinstallation du Helper",
+      "reinstalling": "Réinstallation de l'assistant",
       "updateApp": "Mettre à jour OyasumiVR",
       "updateFailed": "Échec de la mise à jour",
-      "updateHelper": "Mettre à jour le Helper",
-      "updatingHelper": "Mise à jour du Helper"
+      "updateHelper": "Mettre à jour l'assistant",
+      "updatingHelper": "Mise à jour de l'assistant"
     },
     "statusDetail": {
       "helperMissing": {
-        "body": "OyasumiVR Helper n'est plus sur ce casque, par exemple parce qu'un autre PC l'a désinstallé. Utilisez Réinstaller pour l'installer à nouveau. Les autres PC associés à ce casque se reconnectent ensuite d'eux-mêmes.",
-        "title": "OyasumiVR Helper est absent"
+        "body": "L'assistant OyasumiVR n'est plus sur ce casque, par exemple parce qu'un autre PC l'a désinstallé. Utilisez Réinstaller pour l'installer à nouveau. Les autres PC associés à ce casque se reconnectent ensuite d'eux-mêmes.",
+        "title": "L'assistant OyasumiVR est absent"
       },
       "needsAppUpdate": {
-        "body": "Le Helper de ce casque est plus récent que cette version d'OyasumiVR. Mettez à jour OyasumiVR sur ce PC avec l'outil de mise à jour dans Paramètres › Mises à jour, ou en installant la dernière version, pour vous y reconnecter.",
+        "body": "L'assistant de ce casque est plus récent que cette version d'OyasumiVR. Mettez à jour OyasumiVR sur ce PC avec l'outil de mise à jour dans Paramètres › Mises à jour, ou en installant la dernière version, pour vous y reconnecter.",
         "title": "OyasumiVR doit être mis à jour"
       },
       "needsAppUpdateSteam": {
-        "body": "Le Helper de ce casque est plus récent que cette version d'OyasumiVR. Steam met OyasumiVR à jour pour vous : laissez Steam terminer la mise à jour, puis redémarrez OyasumiVR pour vous y reconnecter.",
+        "body": "L'assistant de ce casque est plus récent que cette version d'OyasumiVR. Steam met OyasumiVR à jour pour vous : laissez Steam terminer la mise à jour, puis redémarrez OyasumiVR pour vous y reconnecter.",
         "title": "OyasumiVR doit être mis à jour"
       },
       "notRecognized": {
@@ -3142,8 +3142,8 @@
         "title": "Casque non reconnu"
       },
       "updateFailed": {
-        "body": "Une erreur s'est produite pendant la mise à jour. OyasumiVR continue d'utiliser le Helper installé quand c'est possible. Utilisez Réessayer pour recommencer.",
-        "title": "Échec de la mise à jour du Helper"
+        "body": "Une erreur s'est produite pendant la mise à jour. OyasumiVR continue d'utiliser l'assistant installé quand c'est possible. Utilisez Réessayer pour recommencer.",
+        "title": "Échec de la mise à jour de l'assistant"
       }
     },
     "steps": {
@@ -3152,15 +3152,15 @@
       "developer": "Mode développeur",
       "find": "Trouver le casque",
       "finished": "Terminé",
-      "install": "Installer le Helper",
+      "install": "Installer l'assistant",
       "pairhost": "Pair new host"
     },
     "unpair": {
       "checking": "Vérification du casque…",
       "choose": {
-        "onlyPc": "Ce PC ne se connectera plus au casque. Aucun autre PC n'utilise OyasumiVR Helper, il sera donc aussi désinstallé du casque.",
-        "otherPcsMany": "Ce PC ne se connectera plus au casque. OyasumiVR Helper reste installé, car {count} autres PC l'utilisent encore. Pour les déconnecter aussi, désinstallez le Helper.",
-        "otherPcsOne": "Ce PC ne se connectera plus au casque. OyasumiVR Helper reste installé, car 1 autre PC l'utilise encore. Pour déconnecter aussi ce PC, désinstallez le Helper.",
+        "onlyPc": "Ce PC ne se connectera plus au casque. Aucun autre PC n'utilise l'assistant OyasumiVR, il sera donc aussi désinstallé du casque.",
+        "otherPcsMany": "Ce PC ne se connectera plus au casque. L'assistant OyasumiVR reste installé, car {count} autres PC l'utilisent encore. Pour les déconnecter aussi, désinstallez l'assistant.",
+        "otherPcsOne": "Ce PC ne se connectera plus au casque. L'assistant OyasumiVR reste installé, car 1 autre PC l'utilise encore. Pour déconnecter aussi ce PC, désinstallez l'assistant.",
         "title": "Dissocier le Steam Frame ?"
       },
       "failed": {
@@ -3171,14 +3171,14 @@
         "unreachable": "Le casque n'a pas répondu. Vérifiez qu'il est allumé et connecté, puis réessayez."
       },
       "forget": {
-        "body": "Cela supprime l'association de ce PC uniquement. OyasumiVR Helper reste installé sur le casque, et les autres PC associés continuent de fonctionner.",
-        "command": "Exécutez ceci dans un terminal sur le casque pour désinstaller OyasumiVR Helper du casque :",
+        "body": "Cela supprime l'association de ce PC uniquement. L'assistant OyasumiVR reste installé sur le casque, et les autres PC associés continuent de fonctionner.",
+        "command": "Exécutez ceci dans un terminal sur le casque pour désinstaller l'assistant OyasumiVR du casque :",
         "noPcLeft": "Impossible de dissocier depuis un PC ?",
         "removed": "Ce casque n'accepte plus ce PC. Oubliez-le pour supprimer l'association de ce PC uniquement.",
         "title": "Oublier le Steam Frame ?"
       },
       "working": {
-        "removeHelper": "Suppression de l'accès de ce PC et désinstallation d'OyasumiVR Helper.",
+        "removeHelper": "Suppression de l'accès de ce PC et désinstallation de l'assistant OyasumiVR.",
         "removePc": "Suppression de l'accès de ce PC au casque.",
         "title": "Dissociation du Steam Frame"
       }
@@ -3208,22 +3208,22 @@
       "title": "Périphérique audio du micro"
     },
     "controllerBinding": {
-      "automations": "Automatisations du bouton de manette",
+      "automations": "Automatisations du bouton de contrôleur",
       "binding": {
-        "description": "Choisissez le ou les boutons de manette qui contrôlent la coupure de votre micro.",
+        "description": "Choisissez le ou les boutons de contrôleur qui contrôlent la coupure de votre micro.",
         "title": "Bouton assigné"
       },
       "conflictWarning": "Si vous utilisez cette fonctionnalité pour couper et réactiver votre micro avec VRChat, nous vous recommandons, dans les paramètres de VRChat, de retirer l'assignation de votre bouton de micro ou de régler le mode du micro sur \"Always On\" pour éviter tout conflit.",
       "currentMode": {
         "PUSH_TO_TALK": "Push-to-talk",
         "TOGGLE": "Bascule",
-        "description": "Indique le mode actuel du bouton de manette",
+        "description": "Indique le mode actuel du bouton de contrôleur",
         "title": "Comportement actif du bouton"
       },
-      "description": "Assignez un bouton de manette pour couper et réactiver votre micro.",
+      "description": "Assignez un bouton de contrôleur pour couper et réactiver votre micro.",
       "enabled": {
-        "description": "Activer ou non l'assignation d'un bouton de manette pour couper et réactiver votre micro",
-        "title": "Bouton de manette"
+        "description": "Activer ou non l'assignation d'un bouton de contrôleur pour couper et réactiver votre micro",
+        "title": "Bouton de contrôleur"
       },
       "mode": {
         "description": "Comment un appui sur le bouton change l'état de votre micro par défaut",
@@ -3235,18 +3235,18 @@
         "title": "Comportement par défaut du bouton"
       },
       "onSleepModeDisable": {
-        "description": "Changer le comportement du bouton de manette en",
+        "description": "Changer le comportement du bouton de contrôleur en",
         "title": "Quand le mode sommeil est désactivé"
       },
       "onSleepModeEnable": {
-        "description": "Changer le comportement du bouton de manette en",
+        "description": "Changer le comportement du bouton de contrôleur en",
         "title": "Quand le mode sommeil est activé"
       },
       "onSleepPreparation": {
-        "description": "Changer le comportement du bouton de manette en",
+        "description": "Changer le comportement du bouton de contrôleur en",
         "title": "Quand je me prépare à dormir"
       },
-      "title": "Bouton de manette",
+      "title": "Bouton de contrôleur",
       "volume": {
         "description": "Le volume des effets sonores joués quand le micro est coupé ou réactivé",
         "title": "Volume du son de coupure"
@@ -3265,7 +3265,7 @@
         "title": "Indicateur de micro coupé en overlay"
       },
       "fade": {
-        "description": "Faire disparaître l'indicateur en fondu après quelques secondes. Appuyez sur n'importe quel bouton de manette pour le réafficher. Recommandé pour les casques VR à écrans OLED, afin de réduire le risque de marquage.",
+        "description": "Faire disparaître l'indicateur en fondu après quelques secondes. Appuyez sur n'importe quel bouton de contrôleur pour le réafficher. Recommandé pour les casques VR à écrans OLED, afin de réduire le risque de marquage.",
         "title": "Disparition en fondu"
       },
       "hardwareVoiceActivityThreshold": {
@@ -3339,7 +3339,7 @@
       "turnOffFailed": {
         "commandFailed": "La console Lighthouse n'a pas pu joindre l'appareil. Consultez les journaux pour plus de détails.",
         "consoleNotReady": "Configurez d'abord la console Lighthouse de SteamVR dans les paramètres généraux.",
-        "frameHelperFailed": "Le Helper du Steam Frame n'a pas pu déconnecter la manette. Consultez les journaux pour plus de détails.",
+        "frameHelperFailed": "L'assistant du Steam Frame n'a pas pu déconnecter le contrôleur. Consultez les journaux pour plus de détails.",
         "title": "Impossible d'éteindre {name}"
       }
     },
@@ -3366,7 +3366,7 @@
     "playerListPreset": {
       "saved": {
         "message": "Liste de joueurs enregistrée sous ''{name}''.",
-        "title": "Préréglage enregistré"
+        "title": "Preset enregistré"
       }
     },
     "pulsoid": {
