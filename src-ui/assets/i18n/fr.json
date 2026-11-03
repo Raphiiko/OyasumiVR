@@ -1070,16 +1070,10 @@
         "title": "Désactiver l'appareil",
         "tooltip": "Cet appareil est désactivé"
       },
-      "nickname": {
-        "description": "Donnez un nom personnalisé à cet appareil pour l'identifier plus facilement",
-        "title": "Surnom de l'appareil"
-      },
       "tags": {
         "description": "Attribuez des étiquettes pour organiser et filtrer vos appareils",
-        "noTags": "Aucune étiquette disponible. Créez-en dans l'onglet Étiquettes.",
         "title": "Étiquettes de l'appareil"
       },
-      "title": "Configurer {deviceName}",
       "v1Identifier": {
         "change": "Changer l'ID",
         "description": "OyasumiVR a besoin de l'ID d'une station de base V1 pour pouvoir la contrôler",
@@ -1091,6 +1085,36 @@
       "confirm": "Supprimer l'étiquette",
       "message": "Voulez-vous vraiment supprimer cette étiquette ? Elle sera retirée de tous les appareils.",
       "title": "Supprimer l'étiquette"
+    },
+    "detail": {
+      "createTags": "Créer des étiquettes",
+      "facts": {
+        "address": "Adresse réseau",
+        "bluetoothAddress": "Adresse Bluetooth",
+        "dongleId": "ID du dongle",
+        "hardwareRevision": "Révision matérielle",
+        "lastSeen": "Vu pour la dernière fois",
+        "manufacturer": "Fabricant",
+        "model": "Modèle",
+        "now": "Maintenant",
+        "serialNumber": "Numéro de série"
+      },
+      "helperUpdateAvailable": "Une nouvelle version de l'assistant OyasumiVR est disponible.",
+      "noTags": "Aucune étiquette pour le moment.",
+      "notConnected": "Non connecté",
+      "pairNeedsSteamVR": "Connectez le casque à SteamVR pour l'associer.",
+      "powerOffState": {
+        "description": "S'applique à toutes vos stations de base."
+      },
+      "sections": {
+        "baseStation": "Station de base",
+        "details": "Détails",
+        "settings": "Paramètres"
+      },
+      "tabs": {
+        "general": "Général",
+        "steamFrame": "Steam Frame"
+      }
     },
     "deviceSelector": {
       "deselectAll": "Tout désélectionner",
@@ -2044,11 +2068,9 @@
         "powerOffMode": {
           "description": "Contrairement au mode veille, le mode veille profonde coupe aussi les moteurs, qui peuvent alors mettre plus de temps à redémarrer.",
           "sleep": {
-            "description": "Éteint les\nlasers et moteurs",
             "title": "Veille profonde"
           },
           "standby": {
-            "description": "Éteint les\nlasers",
             "title": "Veille"
           },
           "title": "État d'extinction préféré"
