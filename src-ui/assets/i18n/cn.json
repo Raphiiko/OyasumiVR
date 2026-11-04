@@ -124,7 +124,7 @@
       "simple": "简单模式"
     },
     "modeInfoModal": {
-      "message": "OyasumiVR 有两种控制 VR 头显亮度的方法：软件控制和硬件控制：\n\n软件控制适用于所有头显。它通过调整图像亮度来调整 VR 头显的亮度。\n\n硬件控制仅适用于支持的头显（Valve Index、Bigscreen Beyond）。它会在支持的范围内直接调整头显显示器的亮度。\n\n在简单模式下，OyasumiVR 会在软件亮度和硬件亮度之间平滑过渡；如果不支持硬件亮度，则只控制软件亮度。\n\n如果你更喜欢直接控制，高级模式允许你分别控制软件亮度和硬件亮度，并为两者设置精确的亮度值。",
+      "message": "OyasumiVR 有两种控制 VR 头显亮度的方法：软件控制和硬件控制：\n\n软件控制适用于所有头显。它通过调整图像亮度来调整 VR 头显的亮度。\n\n硬件控制仅适用于支持的头显（Valve Index、Bigscreen Beyond、PlayStation VR2）。它会在支持的范围内直接调整头显显示器的亮度。\n\n在简单模式下，OyasumiVR 会在软件亮度和硬件亮度之间平滑过渡；如果不支持硬件亮度，则只控制软件亮度。\n\n如果你更喜欢直接控制，高级模式允许你分别控制软件亮度和硬件亮度，并为两者设置精确的亮度值。",
       "title": "亮度调节模式"
     },
     "onlyWhenSleepModeDisabled": {
@@ -307,7 +307,14 @@
     },
     "event-log-entry": {
       "failure": {
-        "MUTE_STATE_UNKNOWN": "VRChat 未告知 OyasumiVR 你的麦克风是否已静音。请确保 VRChat 中已启用 OSC。"
+        "BASE_STATION_NO_RESPONSE": "有基站未响应。请确保你的基站在蓝牙适配器的范围内。",
+        "MUTE_STATE_UNKNOWN": "VRChat 未告知 OyasumiVR 你的麦克风是否已静音。请确保 VRChat 中已启用 OSC。",
+        "SEE_MESSAGE_CENTRE": "详情请查看消息中心。",
+        "UNKNOWN": "出现了问题。如果问题反复出现，请在 OyasumiVR 的 Discord 上寻求帮助。",
+        "VRCHAT_AVATAR_UNAVAILABLE": "该模型已不可用。",
+        "VRCHAT_LOGGED_OUT": "OyasumiVR 未登录你的 VRChat 账号。",
+        "VRCHAT_NOT_GROUP_MEMBER": "你已不再是该群组的成员。",
+        "VRCHAT_RATE_LIMITED": "OyasumiVR 向 VRChat 发送的请求过多，VRChat 拒绝了此次请求。"
       },
       "type": {
         "acceptedInviteRequest": {
@@ -357,7 +364,8 @@
             "SLEEP_MODE_ENABLED": "因为已开启睡眠模式",
             "SLEEP_PREPARATION": "因为你准备入睡了"
           },
-          "title": "音频设备“{deviceName}”的音量已设置为 {percentage}"
+          "title": "音频设备“{deviceName}”的音量已设置为 {percentage}",
+          "title_FAILED": "无法将音频设备“{deviceName}”的音量设置为 {percentage}"
         },
         "changedSystemMicControllerButtonBehavior": {
           "reason": {
@@ -378,7 +386,9 @@
           },
           "title": {
             "MUTE": "已静音麦克风：{deviceName}",
-            "UNMUTE": "已取消静音麦克风：{deviceName}"
+            "MUTE_FAILED": "无法静音麦克风：{deviceName}",
+            "UNMUTE": "已取消静音麦克风：{deviceName}",
+            "UNMUTE_FAILED": "无法取消静音麦克风：{deviceName}"
           }
         },
         "changedVRChatMicMuteState": {
@@ -399,13 +409,15 @@
             "SLEEP_MODE_DISABLED": "因为已关闭睡眠模式",
             "SLEEP_MODE_ENABLED": "因为已开启睡眠模式"
           },
-          "title": "Chaperone 淡化距离已设置为 {value}"
+          "title": "Chaperone 淡化距离已设置为 {value}",
+          "title_FAILED": "无法将 Chaperone 淡化距离设置为 {value}"
         },
         "declinedInvite": {
           "reason": {
             "SLEEP_MODE_ENABLED": "因为睡眠模式已开启"
           },
-          "title": "已自动拒绝来自“{displayName}”的邀请"
+          "title": "已自动拒绝来自“{displayName}”的邀请",
+          "title_FAILED": "无法自动拒绝来自“{displayName}”的邀请"
         },
         "declinedInviteRequest": {
           "reason": {
@@ -414,14 +426,16 @@
             "PLAYER_COUNT_CONDITION_FAILED": "由于房间中的玩家过多",
             "SLEEP_MODE_ENABLED_CONDITION_FAILED": "因为睡眠模式未开启"
           },
-          "title": "已自动拒绝来自“{displayName}”的邀请请求"
+          "title": "已自动拒绝来自“{displayName}”的邀请请求",
+          "title_FAILED": "无法自动拒绝来自“{displayName}”的邀请请求"
         },
         "failedInviteRequest": {
           "subtitle": {
             "noMessage": "VRChat 拒绝了，但未说明原因",
             "vrchatMessage": "VRChat 拒绝了，原因：“{message}”"
           },
-          "title": "无法接受来自“{displayName}”的邀请请求"
+          "title": "无法接受来自“{displayName}”的邀请请求",
+          "title_FAILED": "无法接受来自“{displayName}”的邀请请求"
         },
         "frameLimitChanged": {
           "reason": {
@@ -429,7 +443,8 @@
             "SLEEP_MODE_ENABLED": "因为已开启睡眠模式",
             "SLEEP_PREPARATION": "因为你准备入睡了"
           },
-          "title": "已将“{appName}”的帧率限制设为 {limit}"
+          "title": "已将“{appName}”的帧率限制设为 {limit}",
+          "title_FAILED": "无法将“{appName}”的帧率限制设为 {limit}"
         },
         "gpuPowerLimitChanged": {
           "reason": {
@@ -437,8 +452,11 @@
             "SLEEP_MODE_ENABLED": "因为已开启睡眠模式"
           },
           "title": {
+            "noDevice_FAILED": "无法更改显卡的功耗限制",
             "reset": "已将“{device}”的功耗限制恢复为 {limit}",
-            "set": "已将“{device}”的功耗限制设为 {limit}"
+            "reset_FAILED": "无法将“{device}”的功耗限制恢复为 {limit}",
+            "set": "已将“{device}”的功耗限制设为 {limit}",
+            "set_FAILED": "无法将“{device}”的功耗限制设为 {limit}"
           }
         },
         "hardwareBrightnessChanged": {
@@ -457,18 +475,27 @@
         "lighthouseSetPowerState": {
           "ALL": {
             "on": "已打开所有基站",
+            "on_FAILED": "无法打开所有基站",
             "sleep": "已将所有基站设置为睡眠模式",
-            "standby": "已将所有基站设置为待机模式"
+            "sleep_FAILED": "无法将所有基站设置为睡眠模式",
+            "standby": "已将所有基站设置为待机模式",
+            "standby_FAILED": "无法将所有基站设置为待机模式"
           },
           "SINGLE": {
             "on": "已打开一个基站",
+            "on_FAILED": "无法打开一个基站",
             "sleep": "已将一个基站设置为睡眠模式",
-            "standby": "已将一个基站设置为待机模式"
+            "sleep_FAILED": "无法将一个基站设置为睡眠模式",
+            "standby": "已将一个基站设置为待机模式",
+            "standby_FAILED": "无法将一个基站设置为待机模式"
           },
           "VARIOUS": {
             "on": "已打开多个基站",
+            "on_FAILED": "无法打开多个基站",
             "sleep": "已将多个基站设置为睡眠模式",
-            "standby": "已将多个基站设置为待机模式"
+            "sleep_FAILED": "无法将多个基站设置为睡眠模式",
+            "standby": "已将多个基站设置为待机模式",
+            "standby_FAILED": "无法将多个基站设置为待机模式"
           },
           "reasons": {
             "HOTKEY": "由于你按下了快捷键",
@@ -484,7 +511,8 @@
             "SLEEP_MODE_DISABLED": "因为已关闭睡眠模式",
             "SLEEP_MODE_ENABLED": "因为已开启睡眠模式"
           },
-          "title": "MSI Afterburner 的配置文件已设置为 {profile}"
+          "title": "MSI Afterburner 的配置文件已设置为 {profile}",
+          "title_FAILED": "无法将 MSI Afterburner 的配置文件设置为 {profile}"
         },
         "mutedAudioDevice": {
           "reason": {
@@ -492,7 +520,8 @@
             "SLEEP_MODE_ENABLED": "因为已开启睡眠模式",
             "SLEEP_PREPARATION": "因为你准备入睡了"
           },
-          "title": "已静音音频设备“{deviceName}”"
+          "title": "已静音音频设备“{deviceName}”",
+          "title_FAILED": "无法静音音频设备“{deviceName}”"
         },
         "renderResolutionChanged": {
           "reason": {
@@ -501,7 +530,9 @@
           },
           "title": {
             "auto": "SteamVR 渲染分辨率已设置为“自动”",
-            "custom": "SteamVR 渲染分辨率已设置为 {value}"
+            "auto_FAILED": "无法将 SteamVR 渲染分辨率设置为“自动”",
+            "custom": "SteamVR 渲染分辨率已设置为 {value}",
+            "custom_FAILED": "无法将 SteamVR 渲染分辨率设置为 {value}"
           }
         },
         "runAutomationExecuted": {
@@ -510,7 +541,8 @@
             "SLEEP_MODE_ENABLED": "因为已开启睡眠模式",
             "SLEEP_PREPARATION": "因为你准备入睡了"
           },
-          "title": "已通过 Windows 命令提示符执行用户自定义命令"
+          "title": "已通过 Windows 命令提示符执行用户自定义命令",
+          "title_FAILED": "无法通过 Windows 命令提示符执行用户自定义命令"
         },
         "shutdownSequenceCancelled": {
           "reason": {
@@ -527,6 +559,17 @@
             "VRC_ALONE_TRIGGER": "因为你已经独自在世界房间中待了足够长的时间"
           },
           "title": "关机流程已开始"
+        },
+        "shutdownSequenceStepFailed": {
+          "title": {
+            "HIBERNATE_FAILED": "关机流程中无法让 Windows 休眠",
+            "LOGOUT_FAILED": "关机流程中无法退出 Windows 登录",
+            "QUITTING_STEAMVR_FAILED": "关机流程中无法退出 SteamVR",
+            "REBOOT_FAILED": "关机流程中无法重启 Windows",
+            "SHUTDOWN_FAILED": "关机流程中无法关闭 Windows",
+            "SLEEP_FAILED": "关机流程中无法让 Windows 进入睡眠",
+            "TURNING_OFF_DEVICES_FAILED": "关机流程中无法关闭你的设备"
+          }
         },
         "simpleBrightnessChanged": {
           "reason": {
@@ -602,13 +645,17 @@
             "SLEEP_MODE_DISABLED": "因为已关闭睡眠模式",
             "SLEEP_MODE_ENABLED": "因为已开启睡眠模式",
             "SLEEP_PREPARATION": "因为你准备入睡"
-          }
+          },
+          "title": "已更改你的 VRChat 状态：{statusChange}",
+          "title_FAILED": "无法更改你的 VRChat 状态：{statusChange}"
         },
         "statusChangedOnPlayerCountChange": {
           "reason": {
             "AT_LIMIT_OR_ABOVE": "因为你世界房间中的玩家数量已达到 {threshold} 人的上限",
             "BELOW_LIMIT": "因为你世界房间中的玩家数量已降到 {threshold} 人以下"
-          }
+          },
+          "title": "已更改你的 VRChat 状态：{statusChange}",
+          "title_FAILED": "无法更改你的 VRChat 状态：{statusChange}"
         },
         "turnedOffOpenVRDevices": {
           "reason": {
@@ -623,11 +670,17 @@
           },
           "title": {
             "ALL": "已关闭全部设备",
+            "ALL_FAILED": "无法关闭全部设备",
             "CONTROLLER": "已关闭一个控制器",
             "CONTROLLERS": "已关闭多个控制器",
+            "CONTROLLERS_FAILED": "无法关闭多个控制器",
+            "CONTROLLER_FAILED": "无法关闭一个控制器",
             "TRACKER": "已关闭一个追踪器",
             "TRACKERS": "已关闭多个追踪器",
-            "VARIOUS": "已关闭多个设备"
+            "TRACKERS_FAILED": "无法关闭多个追踪器",
+            "TRACKER_FAILED": "无法关闭一个追踪器",
+            "VARIOUS": "已关闭多个设备",
+            "VARIOUS_FAILED": "无法关闭多个设备"
           }
         },
         "unmutedAudioDevice": {
@@ -636,7 +689,8 @@
             "SLEEP_MODE_ENABLED": "因为已开启睡眠模式",
             "SLEEP_PREPARATION": "因为你准备入睡"
           },
-          "title": "已解除音频设备“{deviceName}”的静音"
+          "title": "已解除音频设备“{deviceName}”的静音",
+          "title_FAILED": "无法解除音频设备“{deviceName}”的静音"
         },
         "vrchatAvatarChanged": {
           "reason": {
@@ -644,7 +698,8 @@
             "SLEEP_MODE_ENABLED": "因为已开启睡眠模式",
             "SLEEP_PREPARATION": "因为你准备入睡"
           },
-          "title": "已将你的 VRChat 模型更改为“{avatarName}”"
+          "title": "已将你的 VRChat 模型更改为“{avatarName}”",
+          "title_FAILED": "无法将你的 VRChat 模型更改为“{avatarName}”"
         },
         "vrchatGroupChanged": {
           "reason": {
@@ -654,7 +709,10 @@
           },
           "title": {
             "clear": "已停止代表 VRChat 群组“{groupName}”",
-            "set": "已将代表的 VRChat 群组更改为“{groupName}”"
+            "clearUnknown_FAILED": "无法停止代表你的 VRChat 群组",
+            "clear_FAILED": "无法停止代表 VRChat 群组“{groupName}”",
+            "set": "已将代表的 VRChat 群组更改为“{groupName}”",
+            "set_FAILED": "无法将代表的 VRChat 群组更改为“{groupName}”"
           }
         },
         "windowsPowerPolicySet": {
@@ -662,7 +720,8 @@
             "SLEEP_MODE_DISABLED": "因为已关闭睡眠模式",
             "SLEEP_MODE_ENABLED": "因为已开启睡眠模式"
           },
-          "title": "已将 Windows 电源计划设置为“{policy}”"
+          "title": "已将 Windows 电源计划设置为“{policy}”",
+          "title_FAILED": "无法将 Windows 电源计划设置为“{policy}”"
         }
       }
     },
@@ -1473,6 +1532,13 @@
         },
         "enable": {
           "title": "管理员权限不可用"
+        },
+        "startupPromptNotApproved": {
+          "actions": {
+            "enable": "显示提示"
+          },
+          "message": "OyasumiVR 在启动时请求了管理员权限，但 Windows 提示被拒绝或未及时响应。在你批准该提示之前，需要这些权限的功能将保持不可用。",
+          "title": "管理员权限需要你的批准"
         }
       },
       "gpuAutomationsAfterburnerError": {
@@ -1918,17 +1984,17 @@
       },
       "cctControl": {
         "unsupportedHmds": {
-          "description": "开启后即启用色温控制，即使尚不确定它是否适用于你的头显。",
+          "description": "开启后，OyasumiVR 会尝试通过 SteamVR 控制你头显的色温，即使尚不确定它是否适用于你的头显。",
           "listedHmd": "你的头显支持色温控制。",
           "manufacturer": "制造商",
           "model": "型号",
           "noHmd": "连接头显后才能更改此设置。",
           "notReported": "未报告",
-          "title": "在不受支持的头显上启用",
+          "title": "在不受支持的头显上使用色温控制",
           "unlistedHmd": "启用后，色温控制仍可能在部分头显上正常工作。如果你的头显不受支持但实际可用，请通过 <a href='https://discord.gg/7MqdPJhYxC' target='_blank' rel='noopener noreferrer'>Discord</a> 告诉我们！"
         }
       },
-      "description": "在这里你会找到与亮度和色温相关的所有设置",
+      "description": "亮度和色温的硬件设置，包括针对特定头显的设置。",
       "hardwareBrightness": {
         "unsupportedHmds": {
           "description": "开启此选项后，OyasumiVR 会尝试通过 SteamVR 控制你头显的亮度，尽管目前尚不确定该功能是否适用于你的头显型号",
@@ -2369,7 +2435,8 @@
         },
         "hmd": {
           "label": "头显",
-          "notDetected": "未检测到"
+          "notDetected": "未检测到",
+          "value": "{model}"
         },
         "mqtt": {
           "CONNECTED": "已连接",
@@ -2395,6 +2462,11 @@
           "label": "Pulsoid",
           "loggedIn": "已登录",
           "loggedOut": "未登录"
+        },
+        "steamFrame": {
+          "label": "Steam Frame",
+          "notPaired": "未配对",
+          "pairingRemoved": "配对已移除"
         },
         "steamvr": {
           "INACTIVE": "未运行",
@@ -2906,6 +2978,242 @@
     },
     "title": "状态自动化"
   },
+  "steamFrame": {
+    "actions": {
+      "back": "返回",
+      "cancel": "取消",
+      "cancelPairing": "中止配对",
+      "close": "关闭",
+      "closeForNow": "暂时关闭",
+      "connect": "连接",
+      "continue": "继续",
+      "copyCommand": "复制命令",
+      "done": "完成",
+      "enterAddress": "输入地址",
+      "findHeadset": "查找你的头显",
+      "forget": "忘记",
+      "pair": "配对头显",
+      "pairAgain": "重新配对",
+      "pairThis": "配对此头显",
+      "reinstall": "重新安装",
+      "repair": "修复",
+      "retry": "重试",
+      "retryUpdate": "重试",
+      "searchAgain": "重新搜索",
+      "sendAgain": "重新发送",
+      "tryAgain": "再试一次",
+      "unpair": "取消配对",
+      "unpairAll": "卸载辅助程序",
+      "update": "更新",
+      "yesPair": "是，配对"
+    },
+    "details": {
+      "helper": "OyasumiVR 辅助程序",
+      "pairing": "配对",
+      "pairingDescription": "在此电脑上停止将此头显用于 OyasumiVR",
+      "repair": "修复辅助程序",
+      "repairDescription": "如果头显不再响应 OyasumiVR，可重新安装并重启辅助程序",
+      "repairing": "正在修复…",
+      "upToDate": "已是最新版本",
+      "updating": "正在更新…",
+      "version": "版本 {version}",
+      "versionUnknown": "头显连接后将显示版本"
+    },
+    "errors": {
+      "identityMissing": "OyasumiVR 无法确认这是哪台头显。请确保头显已唤醒，然后重试。",
+      "keys": "开始配对时出现了问题。请重试。",
+      "offline": "无法连接到头显。请检查头显是否已唤醒并与此电脑处于同一网络，然后重试。",
+      "persistence": "此电脑上出现了问题。请重试。",
+      "setupFailed": "设置过程中出现了问题。请重试。",
+      "wrongDeviceAccessLeft": "OyasumiVR 未能完成对该头显的清理。残留的内容不会造成任何影响。"
+    },
+    "headset": "Steam Frame",
+    "invitation": {
+      "body": "配对头显后，你可以使用针对该硬件的功能和自动化，例如亮度控制等。",
+      "title": "配对你的 Steam Frame"
+    },
+    "pages": {
+      "awaiting": {
+        "body": "戴上头显。头显会询问是否允许此电脑连接。请选择 <kbd>Allow</kbd>。",
+        "return": "然后摘下头显，回到这里。",
+        "title": "在头显上批准请求"
+      },
+      "cancelling": {
+        "access": "OyasumiVR 会移除此次配对在头显上设置的内容。",
+        "body": "正在等待当前步骤完成，然后进行清理。",
+        "title": "正在中止配对"
+      },
+      "cleanupFailed": {
+        "body": "OyasumiVR 无法移除此次配对在头显上留下的内容。如需手动移除，请在头显的终端中运行以下命令。",
+        "note": "如果命令提示文件不存在，说明此头显上未安装 OyasumiVR 辅助程序。",
+        "title": "未能完成清理"
+      },
+      "declined": {
+        "body": "头显拒绝了此电脑的请求。如果不是你本人操作，请确认是谁戴着头显。",
+        "nothing": "未安装任何内容。",
+        "title": "请求已被拒绝"
+      },
+      "devmode": {
+        "enable": "开启 <kbd>Developer Mode</kbd>。",
+        "open": "戴上头显，打开 <kbd>Settings</kbd> › <kbd>System</kbd>。",
+        "title": "开启开发者模式"
+      },
+      "found": {
+        "body": "请确认地址与 <kbd>Pair new host</kbd> 界面上显示的地址一致。",
+        "multiple": "<kbd>Pair new host</kbd> 界面上会显示头显的地址。",
+        "multipleTitle": "哪一台是你的头显？",
+        "title": "这是你的头显吗？"
+      },
+      "intro": {
+        "install": "配对头显时，OyasumiVR 会在你的 Steam Frame 上安装 OyasumiVR 辅助程序。它可以提供硬件亮度控制、色温控制以及其他针对该硬件的功能。",
+        "nearby": "请将头显放在身边。你需要戴上并摘下头显几次。",
+        "title": "配对你的头显",
+        "uninstall": "你可以随时通过取消配对头显来卸载它，也可以按照<a href=\"https://raphii.co/oyasumivr/hidden/troubleshooting/steam-frame-uninstall/\">手动卸载说明</a>操作。"
+      },
+      "manual": {
+        "body": "<kbd>Pair new host</kbd> 界面上会显示头显的地址。",
+        "hint": "请输入 IP 地址或主机名，不要包含端口或 URL。",
+        "label": "地址",
+        "title": "输入头显的地址"
+      },
+      "needsUpdate": {
+        "body": "头显上安装了较新版本的 OyasumiVR 辅助程序，当前版本的 OyasumiVR 无法使用它。OyasumiVR 未替换该程序。请更新 OyasumiVR，然后重新配对头显。",
+        "title": "OyasumiVR 需要更新才能控制这台 Steam Frame"
+      },
+      "notfound": {
+        "body": "请检查头显是否已唤醒、是否与此电脑处于同一网络，并且仍显示 <kbd>Pair new host</kbd> 界面。",
+        "title": "未找到头显"
+      },
+      "notready": {
+        "body": "<kbd>Pair new host</kbd> 界面未打开。请在头显中打开该界面，然后重试。",
+        "title": "已找到头显，但尚未准备好配对"
+      },
+      "pairhost": {
+        "open": "戴上头显，打开 <kbd>Settings</kbd> › <kbd>Developer</kbd>。",
+        "return": "保持该界面打开，摘下头显，然后在这里继续。",
+        "select": "在 <kbd>Development Kit</kbd> 下，选择 <kbd>Pair new host</kbd>。",
+        "title": "选择 Pair new host"
+      },
+      "request": {
+        "body": "这可能需要一点时间。",
+        "title": "正在连接你的头显"
+      },
+      "search": {
+        "body": "请保持头显处于唤醒状态，并停留在 <kbd>Pair new host</kbd> 界面。",
+        "manualTitle": "正在连接 {address}",
+        "title": "正在查找你的头显"
+      },
+      "setup": {
+        "body": "你可以不戴头显。设置完成前，请保持头显处于唤醒和连接状态。",
+        "title": "正在设置 OyasumiVR 辅助程序"
+      },
+      "setupFailed": {
+        "body": "OyasumiVR 未能完成头显的设置。",
+        "title": "设置未完成"
+      },
+      "success": {
+        "body": "OyasumiVR 辅助程序已安装并连接。",
+        "title": "Steam Frame 已配对"
+      },
+      "timeout": {
+        "body": "请求在获得批准前已过期。准备好后，请戴上头显再试一次。",
+        "title": "头显没有回应"
+      },
+      "uncertain": {
+        "body": "头显未确认该请求。请检查头显，然后重新发送请求。",
+        "title": "无法确认是否已批准"
+      },
+      "wrongDevice": {
+        "body": "此地址上的头显不是你在设备管理中选择的那一台。OyasumiVR 未在其上安装任何内容。",
+        "title": "这是另一台头显"
+      }
+    },
+    "stages": {
+      "connection": "正在检查连接",
+      "install": "正在安装 OyasumiVR 辅助程序",
+      "verify": "正在验证头显"
+    },
+    "status": {
+      "connected": "已连接",
+      "connecting": "正在连接",
+      "helperMissing": "辅助程序缺失",
+      "helperUpdated": "辅助程序已更新至 {version}",
+      "notRecognized": "无法识别",
+      "offline": "离线",
+      "reinstalling": "正在重新安装辅助程序",
+      "updateApp": "更新 OyasumiVR",
+      "updateFailed": "更新失败",
+      "updateHelper": "更新辅助程序",
+      "updatingHelper": "正在更新辅助程序"
+    },
+    "statusDetail": {
+      "helperMissing": {
+        "body": "此头显上已没有 OyasumiVR 辅助程序，例如它可能已被另一台电脑卸载。点击“重新安装”可再次安装。与此头显配对的其他电脑随后会自动重新连接。",
+        "title": "OyasumiVR 辅助程序缺失"
+      },
+      "needsAppUpdate": {
+        "body": "此头显上的辅助程序比当前版本的 OyasumiVR 更新。请通过“设置 › 更新”中的更新程序，或安装最新版本，在此电脑上更新 OyasumiVR，以便重新连接。",
+        "title": "OyasumiVR 需要更新"
+      },
+      "needsAppUpdateSteam": {
+        "body": "此头显上的辅助程序比当前版本的 OyasumiVR 更新。Steam 会为你更新 OyasumiVR：请等待 Steam 完成更新，然后重启 OyasumiVR 以重新连接。",
+        "title": "OyasumiVR 需要更新"
+      },
+      "notRecognized": {
+        "body": "OyasumiVR 无法确认这是你配对过的头显，例如头显可能已被重置。请重新配对以重新连接。",
+        "title": "无法识别头显"
+      },
+      "updateFailed": {
+        "body": "更新过程中出现了问题。OyasumiVR 会尽可能继续使用已安装的辅助程序。点击“重试”可再试一次。",
+        "title": "辅助程序更新失败"
+      }
+    },
+    "steps": {
+      "approve": "批准",
+      "before": "开始之前",
+      "developer": "开发者模式",
+      "find": "查找头显",
+      "finished": "完成",
+      "install": "安装辅助程序",
+      "pairhost": "Pair new host"
+    },
+    "unpair": {
+      "checking": "正在检查头显…",
+      "choose": {
+        "onlyPc": "此电脑将不再连接该头显。由于没有其他电脑使用 OyasumiVR 辅助程序，它也会从头显上卸载。",
+        "otherPcsMany": "此电脑将不再连接该头显。由于仍有 {count} 台其他电脑在使用 OyasumiVR 辅助程序，它将保留在头显上。如需同时断开这些电脑，请卸载辅助程序。",
+        "otherPcsOne": "此电脑将不再连接该头显。由于仍有 1 台其他电脑在使用 OyasumiVR 辅助程序，它将保留在头显上。如需同时断开那台电脑，请卸载辅助程序。",
+        "title": "取消配对 Steam Frame？"
+      },
+      "failed": {
+        "hostKeyChanged": "OyasumiVR 无法确认这是你配对过的头显，因此未对其做任何更改。忘记该头显即可仅从此电脑上移除配对。",
+        "other": "出现了问题。请重试，或忘记该头显以仅从此电脑上移除配对。",
+        "rejected": "此头显已不再接受此电脑，因此 OyasumiVR 无法对其做任何更改。忘记该头显即可仅从此电脑上移除配对。",
+        "title": "无法取消配对",
+        "unreachable": "头显没有响应。请确保头显已开机并已连接，然后重试。"
+      },
+      "forget": {
+        "body": "这只会从此电脑上移除配对。OyasumiVR 辅助程序仍会保留在头显上，其他已配对的电脑也能继续正常使用。",
+        "command": "在头显的终端中运行以下命令，即可从头显上卸载 OyasumiVR 辅助程序：",
+        "noPcLeft": "无法从任何电脑取消配对？",
+        "removed": "此头显已不再接受此电脑。忘记该头显即可仅从此电脑上移除配对。",
+        "title": "忘记 Steam Frame？"
+      },
+      "working": {
+        "removeHelper": "正在移除此电脑的访问权限并卸载 OyasumiVR 辅助程序。",
+        "removePc": "正在从头显上移除此电脑的访问权限。",
+        "title": "正在取消配对 Steam Frame"
+      }
+    },
+    "waiting": {
+      "awaiting": "正在等待你在头显中回应…",
+      "cancelling": "正在清理…",
+      "request": "正在联系头显…",
+      "search": "正在搜索网络…",
+      "setup": "正在设置…",
+      "wrongDevice": "正在清理…"
+    }
+  },
   "steamvr-dashboard": {
     "desktopNotice": {
       "button": "在这里显示",
@@ -3053,6 +3361,7 @@
       "turnOffFailed": {
         "commandFailed": "Lighthouse 控制台无法连接设备。详情请查看日志。",
         "consoleNotReady": "请先在常规设置中设置 SteamVR Lighthouse 控制台。",
+        "frameHelperFailed": "Steam Frame 辅助程序无法断开控制器。详情请查看日志。",
         "title": "无法关闭 {name}"
       }
     },

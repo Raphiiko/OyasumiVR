@@ -307,7 +307,14 @@
     },
     "event-log-entry": {
       "failure": {
-        "MUTE_STATE_UNKNOWN": "VRChatからマイクのミュート状態が通知されませんでした。VRChatでOSCが有効になっているか確認してください。"
+        "BASE_STATION_NO_RESPONSE": "ベースステーションが応答しませんでした。ベースステーションがBluetoothアダプターの通信範囲内にあることを確認してください。",
+        "MUTE_STATE_UNKNOWN": "VRChatからマイクのミュート状態が通知されませんでした。VRChatでOSCが有効になっているか確認してください。",
+        "SEE_MESSAGE_CENTRE": "詳しくは通知センターを確認してください。",
+        "UNKNOWN": "問題が発生しました。繰り返し発生する場合は、OyasumiVRのDiscordでサポートを依頼してください。",
+        "VRCHAT_AVATAR_UNAVAILABLE": "このアバターは利用できなくなりました。",
+        "VRCHAT_LOGGED_OUT": "OyasumiVRがVRChatアカウントにログインしていません。",
+        "VRCHAT_NOT_GROUP_MEMBER": "このグループのメンバーではなくなりました。",
+        "VRCHAT_RATE_LIMITED": "OyasumiVRからのリクエストが多すぎたため、VRChatに拒否されました。"
       },
       "type": {
         "acceptedInviteRequest": {
@@ -357,7 +364,8 @@
             "SLEEP_MODE_ENABLED": "睡眠モードが有効になった",
             "SLEEP_PREPARATION": "就寝準備をした"
           },
-          "title": "''{deviceName}'' の音量を {percentage} に設定"
+          "title": "''{deviceName}'' の音量を {percentage} に設定",
+          "title_FAILED": "''{deviceName}'' の音量を {percentage} に設定できませんでした"
         },
         "changedSystemMicControllerButtonBehavior": {
           "reason": {
@@ -378,7 +386,9 @@
           },
           "title": {
             "MUTE": "ミュート: {deviceName}",
-            "UNMUTE": "ミュート解除: {deviceName}"
+            "MUTE_FAILED": "マイクをミュートできませんでした: {deviceName}",
+            "UNMUTE": "ミュート解除: {deviceName}",
+            "UNMUTE_FAILED": "マイクのミュートを解除できませんでした: {deviceName}"
           }
         },
         "changedVRChatMicMuteState": {
@@ -399,13 +409,15 @@
             "SLEEP_MODE_DISABLED": "睡眠モードが無効になった",
             "SLEEP_MODE_ENABLED": "睡眠モードが有効になった"
           },
-          "title": "プレイエリアの境界線のフェード距離を{value}に設定"
+          "title": "プレイエリアの境界線のフェード距離を{value}に設定",
+          "title_FAILED": "プレイエリアの境界線のフェード距離を{value}に設定できませんでした"
         },
         "declinedInvite": {
           "reason": {
             "SLEEP_MODE_ENABLED": "睡眠モードが有効だった"
           },
-          "title": "''{displayName}''からの招待を自動で辞退"
+          "title": "''{displayName}''からの招待を自動で辞退",
+          "title_FAILED": "''{displayName}''からの招待を自動で辞退できませんでした"
         },
         "declinedInviteRequest": {
           "reason": {
@@ -414,14 +426,16 @@
             "PLAYER_COUNT_CONDITION_FAILED": "インスタンス人数が多かった",
             "SLEEP_MODE_ENABLED_CONDITION_FAILED": "睡眠モードが無効だった"
           },
-          "title": "''{displayName}''からの招待リクエストを自動で辞退"
+          "title": "''{displayName}''からの招待リクエストを自動で辞退",
+          "title_FAILED": "''{displayName}''からの招待リクエストを自動で辞退できませんでした"
         },
         "failedInviteRequest": {
           "subtitle": {
             "noMessage": "VRChatに拒否されました（理由は示されませんでした）",
             "vrchatMessage": "VRChatに拒否されました。理由: ''{message}''"
           },
-          "title": "''{displayName}''からの招待リクエストを承認できませんでした"
+          "title": "''{displayName}''からの招待リクエストを承認できませんでした",
+          "title_FAILED": "''{displayName}''からの招待リクエストを承認できませんでした"
         },
         "frameLimitChanged": {
           "reason": {
@@ -429,7 +443,8 @@
             "SLEEP_MODE_ENABLED": "睡眠モードが有効になった",
             "SLEEP_PREPARATION": "就寝準備をした"
           },
-          "title": "''{appName}''のフレーム制限を{limit}に設定"
+          "title": "''{appName}''のフレーム制限を{limit}に設定",
+          "title_FAILED": "''{appName}''のフレーム制限を{limit}に設定できませんでした"
         },
         "gpuPowerLimitChanged": {
           "reason": {
@@ -437,8 +452,11 @@
             "SLEEP_MODE_ENABLED": "睡眠モードが有効になった"
           },
           "title": {
+            "noDevice_FAILED": "GPUの電力制限を変更できませんでした",
             "reset": "「{device}」の電力制限を{limit}に復元",
-            "set": "「{device}」の電力制限を{limit}に設定"
+            "reset_FAILED": "「{device}」の電力制限を{limit}に復元できませんでした",
+            "set": "「{device}」の電力制限を{limit}に設定",
+            "set_FAILED": "「{device}」の電力制限を{limit}に設定できませんでした"
           }
         },
         "hardwareBrightnessChanged": {
@@ -457,18 +475,27 @@
         "lighthouseSetPowerState": {
           "ALL": {
             "on": "すべてのベースステーションの電源を入れた",
+            "on_FAILED": "すべてのベースステーションの電源を入れられませんでした",
             "sleep": "すべてのベースステーションをスリープモードにした",
-            "standby": "すべてのベースステーションをスタンバイモードにした"
+            "sleep_FAILED": "すべてのベースステーションをスリープモードにできませんでした",
+            "standby": "すべてのベースステーションをスタンバイモードにした",
+            "standby_FAILED": "すべてのベースステーションをスタンバイモードにできませんでした"
           },
           "SINGLE": {
             "on": "ベースステーションの電源を入れた",
+            "on_FAILED": "ベースステーションの電源を入れられませんでした",
             "sleep": "ベースステーションをスリープモードにした",
-            "standby": "ベースステーションをスタンバイモードにした"
+            "sleep_FAILED": "ベースステーションをスリープモードにできませんでした",
+            "standby": "ベースステーションをスタンバイモードにした",
+            "standby_FAILED": "ベースステーションをスタンバイモードにできませんでした"
           },
           "VARIOUS": {
             "on": "複数のベースステーションの電源を入れた",
+            "on_FAILED": "複数のベースステーションの電源を入れられませんでした",
             "sleep": "複数のベースステーションをスリープモードにした",
-            "standby": "複数のベースステーションをスタンバイモードにした"
+            "sleep_FAILED": "複数のベースステーションをスリープモードにできませんでした",
+            "standby": "複数のベースステーションをスタンバイモードにした",
+            "standby_FAILED": "複数のベースステーションをスタンバイモードにできませんでした"
           },
           "reasons": {
             "HOTKEY": "ショートカットキーが押下された",
@@ -484,7 +511,8 @@
             "SLEEP_MODE_DISABLED": "睡眠モードが無効になった",
             "SLEEP_MODE_ENABLED": "睡眠モードが有効になった"
           },
-          "title": "MSI Afterburnerのプロファイルを{profile}に設定"
+          "title": "MSI Afterburnerのプロファイルを{profile}に設定",
+          "title_FAILED": "MSI Afterburnerのプロファイルを{profile}に設定できませんでした"
         },
         "mutedAudioDevice": {
           "reason": {
@@ -492,7 +520,8 @@
             "SLEEP_MODE_ENABLED": "睡眠モードが有効になった",
             "SLEEP_PREPARATION": "就寝準備をした"
           },
-          "title": "''{deviceName}''をミュート"
+          "title": "''{deviceName}''をミュート",
+          "title_FAILED": "''{deviceName}''をミュートできませんでした"
         },
         "renderResolutionChanged": {
           "reason": {
@@ -501,7 +530,9 @@
           },
           "title": {
             "auto": "SteamVRのレンダリング解像度を「自動」に設定",
-            "custom": "SteamVRのレンダリング解像度を{value}に設定"
+            "auto_FAILED": "SteamVRのレンダリング解像度を「自動」に設定できませんでした",
+            "custom": "SteamVRのレンダリング解像度を{value}に設定",
+            "custom_FAILED": "SteamVRのレンダリング解像度を{value}に設定できませんでした"
           }
         },
         "runAutomationExecuted": {
@@ -510,7 +541,8 @@
             "SLEEP_MODE_ENABLED": "睡眠モードが有効になった",
             "SLEEP_PREPARATION": "就寝準備をした"
           },
-          "title": "ユーザー定義コマンドをWindowsコマンドプロンプトで実行"
+          "title": "ユーザー定義コマンドをWindowsコマンドプロンプトで実行",
+          "title_FAILED": "ユーザー定義コマンドをWindowsコマンドプロンプトで実行できませんでした"
         },
         "shutdownSequenceCancelled": {
           "reason": {
@@ -527,6 +559,17 @@
             "VRC_ALONE_TRIGGER": "指定時間、一人だった"
           },
           "title": "シャットダウン処理を開始した"
+        },
+        "shutdownSequenceStepFailed": {
+          "title": {
+            "HIBERNATE_FAILED": "シャットダウン処理中にWindowsを休止状態にできませんでした",
+            "LOGOUT_FAILED": "シャットダウン処理中にWindowsからログアウトできませんでした",
+            "QUITTING_STEAMVR_FAILED": "シャットダウン処理中にSteamVRを終了できませんでした",
+            "REBOOT_FAILED": "シャットダウン処理中にWindowsを再起動できませんでした",
+            "SHUTDOWN_FAILED": "シャットダウン処理中にWindowsをシャットダウンできませんでした",
+            "SLEEP_FAILED": "シャットダウン処理中にWindowsをスリープにできませんでした",
+            "TURNING_OFF_DEVICES_FAILED": "シャットダウン処理中にデバイスをオフにできませんでした"
+          }
         },
         "simpleBrightnessChanged": {
           "reason": {
@@ -602,13 +645,17 @@
             "SLEEP_MODE_DISABLED": "睡眠モードが無効になった",
             "SLEEP_MODE_ENABLED": "睡眠モードが有効になった",
             "SLEEP_PREPARATION": "就寝準備をした"
-          }
+          },
+          "title": "VRChatのステータスを変更: {statusChange}",
+          "title_FAILED": "VRChatのステータスを変更できませんでした: {statusChange}"
         },
         "statusChangedOnPlayerCountChange": {
           "reason": {
             "AT_LIMIT_OR_ABOVE": "ワールド人数が{threshold}人に達した",
             "BELOW_LIMIT": "ワールド人数が{threshold}人未満になった"
-          }
+          },
+          "title": "VRChatのステータスを変更: {statusChange}",
+          "title_FAILED": "VRChatのステータスを変更できませんでした: {statusChange}"
         },
         "turnedOffOpenVRDevices": {
           "reason": {
@@ -623,11 +670,17 @@
           },
           "title": {
             "ALL": "全デバイスの電源をオフ",
+            "ALL_FAILED": "全デバイスの電源をオフにできませんでした",
             "CONTROLLER": "コントローラーをオフ",
             "CONTROLLERS": "複数のコントローラーをオフ",
+            "CONTROLLERS_FAILED": "複数のコントローラーをオフにできませんでした",
+            "CONTROLLER_FAILED": "コントローラーをオフにできませんでした",
             "TRACKER": "トラッカーをオフ",
             "TRACKERS": "複数のトラッカーをオフ",
-            "VARIOUS": "複数デバイスの電源をオフ"
+            "TRACKERS_FAILED": "複数のトラッカーをオフにできませんでした",
+            "TRACKER_FAILED": "トラッカーをオフにできませんでした",
+            "VARIOUS": "複数デバイスの電源をオフ",
+            "VARIOUS_FAILED": "複数デバイスの電源をオフにできませんでした"
           }
         },
         "unmutedAudioDevice": {
@@ -636,7 +689,8 @@
             "SLEEP_MODE_ENABLED": "睡眠モードが有効になった",
             "SLEEP_PREPARATION": "就寝準備をした"
           },
-          "title": "''{deviceName}''をミュート解除"
+          "title": "''{deviceName}''をミュート解除",
+          "title_FAILED": "''{deviceName}''のミュートを解除できませんでした"
         },
         "vrchatAvatarChanged": {
           "reason": {
@@ -644,7 +698,8 @@
             "SLEEP_MODE_ENABLED": "睡眠モードが有効になった",
             "SLEEP_PREPARATION": "就寝準備をした"
           },
-          "title": "アバターを''{avatarName}''に変更"
+          "title": "アバターを''{avatarName}''に変更",
+          "title_FAILED": "アバターを''{avatarName}''に変更できませんでした"
         },
         "vrchatGroupChanged": {
           "reason": {
@@ -654,7 +709,10 @@
           },
           "title": {
             "clear": "グループ『{groupName}』のバナー表示を取り下げ",
-            "set": "バナー表示をグループ『{groupName}』へ変更"
+            "clearUnknown_FAILED": "グループのバナー表示を取り下げられませんでした",
+            "clear_FAILED": "グループ『{groupName}』のバナー表示を取り下げられませんでした",
+            "set": "バナー表示をグループ『{groupName}』へ変更",
+            "set_FAILED": "バナー表示をグループ『{groupName}』へ変更できませんでした"
           }
         },
         "windowsPowerPolicySet": {
@@ -662,7 +720,8 @@
             "SLEEP_MODE_DISABLED": "睡眠モードが無効になった",
             "SLEEP_MODE_ENABLED": "睡眠モードが有効になった"
           },
-          "title": "Windowsの電源プランを{policy}に設定"
+          "title": "Windowsの電源プランを{policy}に設定",
+          "title_FAILED": "Windowsの電源プランを{policy}に設定できませんでした"
         }
       }
     },
@@ -1473,6 +1532,13 @@
         },
         "enable": {
           "title": "管理者権限を利用できません"
+        },
+        "startupPromptNotApproved": {
+          "actions": {
+            "enable": "確認画面を表示"
+          },
+          "message": "OyasumiVRは起動時に管理者権限を要求しましたが、Windowsの確認画面が拒否されたか、時間内に応答がありませんでした。確認画面で承認するまで、管理者権限が必要な機能は利用できません。",
+          "title": "管理者権限の承認が必要です"
         }
       },
       "gpuAutomationsAfterburnerError": {
@@ -2397,6 +2463,11 @@
           "loggedIn": "ログイン中",
           "loggedOut": "未ログイン"
         },
+        "steamFrame": {
+          "label": "Steam Frame",
+          "notPaired": "未ペアリング",
+          "pairingRemoved": "ペアリング解除済み"
+        },
         "steamvr": {
           "INACTIVE": "停止中",
           "INITIALIZED": "実行中",
@@ -2412,6 +2483,7 @@
           "hardware": "ハードウェアアクセラレーション",
           "label": "SteamVRダッシュボード",
           "notRendering": "描画なし",
+          "pending": "ダッシュボードが開くのを待機中",
           "software": "ソフトウェアレンダリング",
           "softwareFallback": "ソフトウェアレンダリング（フォールバック）"
         },
@@ -2632,7 +2704,7 @@
         "title": "時間経過"
       },
       "atTime": "時刻指定",
-      "description": "任意の設定に基づいて睡眠モードを無効にします。",
+      "description": "その他の様々な条件に基づいて、睡眠モードを自動的に無効にします。",
       "onDevicePowerOn": "デバイスの電源がオンになったとき",
       "onPlayerJoinOrLeave": "他のプレイヤーが参加、退出したとき",
       "onSteamVRStop": "SteamVRが終了したとき",
@@ -2641,7 +2713,7 @@
     "enableAutomations": {
       "atBatteryPercentage": "デバイスのバッテリー残量が<strong>{value}%</strong>を下回ったとき",
       "atTime": "時刻指定",
-      "description": "任意の設定に基づいて睡眠モードを有効にします。",
+      "description": "その他の様々な条件に基づいて、睡眠モードを自動的に有効にします。",
       "onControllersPoweredOff": {
         "batteryLevelAutomationConflict": {
           "action": "デバイスの電源：\nコントローラーとトラッカー",
@@ -2906,6 +2978,242 @@
     },
     "title": "ステータス自動化"
   },
+  "steamFrame": {
+    "actions": {
+      "back": "戻る",
+      "cancel": "キャンセル",
+      "cancelPairing": "ペアリングをキャンセル",
+      "close": "閉じる",
+      "closeForNow": "今は閉じる",
+      "connect": "接続",
+      "continue": "続行",
+      "copyCommand": "コマンドをコピー",
+      "done": "完了",
+      "enterAddress": "アドレスを入力",
+      "findHeadset": "HMDを探す",
+      "forget": "削除",
+      "pair": "HMDをペアリング",
+      "pairAgain": "再ペアリング",
+      "pairThis": "このHMDをペアリング",
+      "reinstall": "再インストール",
+      "repair": "修復",
+      "retry": "再試行",
+      "retryUpdate": "再試行",
+      "searchAgain": "再検索",
+      "sendAgain": "再送信",
+      "tryAgain": "再試行",
+      "unpair": "ペアリング解除",
+      "unpairAll": "ヘルパーをアンインストール",
+      "update": "アップデート",
+      "yesPair": "はい、ペアリングします"
+    },
+    "details": {
+      "helper": "OyasumiVRヘルパー",
+      "pairing": "ペアリング",
+      "pairingDescription": "このPCでのOyasumiVRによるこのHMDの使用を停止します",
+      "repair": "ヘルパーを修復",
+      "repairDescription": "HMDがOyasumiVRに応答しなくなった場合に、ヘルパーを再インストールして再起動します",
+      "repairing": "修復中…",
+      "upToDate": "最新",
+      "updating": "アップデート中…",
+      "version": "バージョン {version}",
+      "versionUnknown": "HMDが接続されるとバージョンが表示されます"
+    },
+    "errors": {
+      "identityMissing": "どのHMDかを確認できませんでした。HMDがスリープ状態でないことを確認してから、もう一度お試しください。",
+      "keys": "ペアリングの開始中に問題が発生しました。もう一度お試しください。",
+      "offline": "HMDに接続できませんでした。HMDがスリープ状態でなく、同じネットワークに接続されていることを確認してから、もう一度お試しください。",
+      "persistence": "このPCで問題が発生しました。もう一度お試しください。",
+      "setupFailed": "セットアップ中に問題が発生しました。もう一度お試しください。",
+      "wrongDeviceAccessLeft": "そのHMDのクリーンアップを完了できませんでした。残っているものがあっても害はありません。"
+    },
+    "headset": "Steam Frame",
+    "invitation": {
+      "body": "HMDをペアリングすると、輝度コントロールなど、ハードウェア固有の機能や自動化を利用できるようになります。",
+      "title": "Steam Frameをペアリング"
+    },
+    "pages": {
+      "awaiting": {
+        "body": "HMDを装着してください。このPCからの接続を許可するか確認されるので、<kbd>Allow</kbd>を選択してください。",
+        "return": "その後、HMDを外してここに戻ってください。",
+        "title": "HMDでリクエストを承認してください"
+      },
+      "cancelling": {
+        "access": "このペアリングでHMDに設定した内容を削除します。",
+        "body": "現在の手順が終わるのを待ってから、クリーンアップします。",
+        "title": "ペアリングをキャンセル中"
+      },
+      "cleanupFailed": {
+        "body": "このペアリングでHMDに残った内容を削除できませんでした。手動で削除するには、HMDのターミナルで次のコマンドを実行してください。",
+        "note": "ファイルが存在しないと表示される場合、このHMDにはOyasumiVRヘルパーがインストールされていません。",
+        "title": "クリーンアップを完了できませんでした"
+      },
+      "declined": {
+        "body": "HMDがこのPCからのリクエストを拒否しました。心当たりがない場合は、誰がHMDを装着しているか確認してください。",
+        "nothing": "何もインストールされていません。",
+        "title": "リクエストが拒否されました"
+      },
+      "devmode": {
+        "enable": "<kbd>Developer Mode</kbd>をオンにします。",
+        "open": "HMDを装着し、<kbd>Settings</kbd> › <kbd>System</kbd>を開きます。",
+        "title": "Developer Modeをオンにする"
+      },
+      "found": {
+        "body": "アドレスが<kbd>Pair new host</kbd>画面に表示されているものと一致しているか確認してください。",
+        "multiple": "HMDのアドレスは<kbd>Pair new host</kbd>画面に表示されています。",
+        "multipleTitle": "どれがあなたのHMDですか？",
+        "title": "これはあなたのHMDですか？"
+      },
+      "intro": {
+        "install": "HMDをペアリングすると、Steam FrameにOyasumiVRヘルパーがインストールされます。これにより、ハードウェアの輝度コントロール、色温度コントロール、その他のハードウェア固有の機能を利用できます。",
+        "nearby": "HMDを手元に置いておいてください。何度か装着したり外したりします。",
+        "title": "HMDをペアリング",
+        "uninstall": "HMDのペアリングを解除するか、<a href=\"https://raphii.co/oyasumivr/hidden/troubleshooting/steam-frame-uninstall/\">手動アンインストール手順</a>に従うことで、いつでもアンインストールできます。"
+      },
+      "manual": {
+        "body": "HMDのアドレスは<kbd>Pair new host</kbd>画面に表示されています。",
+        "hint": "ポートやURLを含めず、IPアドレスまたはホスト名を入力してください。",
+        "label": "アドレス",
+        "title": "HMDのアドレスを入力"
+      },
+      "needsUpdate": {
+        "body": "HMDには、このバージョンのOyasumiVRでは使用できない新しいOyasumiVRヘルパーが入っています。OyasumiVRはこれを置き換えていません。OyasumiVRをアップデートしてから、もう一度HMDをペアリングしてください。",
+        "title": "このFrameを制御するにはOyasumiVRのアップデートが必要です"
+      },
+      "notfound": {
+        "body": "HMDがスリープ状態でなく、このPCと同じネットワークに接続され、<kbd>Pair new host</kbd>画面が表示されたままか確認してください。",
+        "title": "HMDが見つかりません"
+      },
+      "notready": {
+        "body": "<kbd>Pair new host</kbd>画面が開いていません。HMDでこの画面を開いてから、もう一度お試しください。",
+        "title": "HMDは見つかりましたが、ペアリングの準備ができていません"
+      },
+      "pairhost": {
+        "open": "HMDを装着し、<kbd>Settings</kbd> › <kbd>Developer</kbd>を開きます。",
+        "return": "その画面を開いたままHMDを外し、ここで続行してください。",
+        "select": "<kbd>Development Kit</kbd>の下にある<kbd>Pair new host</kbd>を選択します。",
+        "title": "Pair new hostを選択"
+      },
+      "request": {
+        "body": "少し時間がかかる場合があります。",
+        "title": "HMDに接続中"
+      },
+      "search": {
+        "body": "HMDをスリープさせず、<kbd>Pair new host</kbd>画面を表示したままにしてください。",
+        "manualTitle": "{address}に接続中",
+        "title": "HMDを検索中"
+      },
+      "setup": {
+        "body": "HMDは外したままで構いません。セットアップが完了するまで、HMDをスリープさせず接続したままにしてください。",
+        "title": "OyasumiVRヘルパーをセットアップ中"
+      },
+      "setupFailed": {
+        "body": "HMDのセットアップを完了できませんでした。",
+        "title": "セットアップが完了しませんでした"
+      },
+      "success": {
+        "body": "OyasumiVRヘルパーがインストールされ、接続されました。",
+        "title": "Steam Frameのペアリングが完了しました"
+      },
+      "timeout": {
+        "body": "承認される前にリクエストの有効期限が切れました。準備ができたらHMDを装着して、もう一度お試しください。",
+        "title": "HMDから応答がありません"
+      },
+      "uncertain": {
+        "body": "HMDがリクエストを確認しませんでした。HMDを確認してから、リクエストを再送信してください。",
+        "title": "承認を確認できませんでした"
+      },
+      "wrongDevice": {
+        "body": "このアドレスのHMDは、デバイス管理で選択したものとは異なります。このHMDには何もインストールしていません。",
+        "title": "別のHMDです"
+      }
+    },
+    "stages": {
+      "connection": "接続を確認中",
+      "install": "OyasumiVRヘルパーをインストール中",
+      "verify": "HMDを確認中"
+    },
+    "status": {
+      "connected": "接続済み",
+      "connecting": "接続中",
+      "helperMissing": "ヘルパーなし",
+      "helperUpdated": "ヘルパーを{version}にアップデートしました",
+      "notRecognized": "認識できません",
+      "offline": "オフライン",
+      "reinstalling": "ヘルパーを再インストール中",
+      "updateApp": "OyasumiVRをアップデート",
+      "updateFailed": "アップデート失敗",
+      "updateHelper": "ヘルパーをアップデート",
+      "updatingHelper": "ヘルパーをアップデート中"
+    },
+    "statusDetail": {
+      "helperMissing": {
+        "body": "別のPCがアンインストールしたなどの理由で、OyasumiVRヘルパーがこのHMDから削除されています。再インストールを選ぶと、もう一度インストールされます。その後、このHMDとペアリングしている他のPCは自動的に再接続されます。",
+        "title": "OyasumiVRヘルパーが見つかりません"
+      },
+      "needsAppUpdate": {
+        "body": "このHMDのヘルパーは、このバージョンのOyasumiVRより新しいものです。再接続するには、設定 › アップデートのアップデーターを使うか、最新のリリースをインストールして、このPCのOyasumiVRをアップデートしてください。",
+        "title": "OyasumiVRのアップデートが必要です"
+      },
+      "needsAppUpdateSteam": {
+        "body": "このHMDのヘルパーは、このバージョンのOyasumiVRより新しいものです。OyasumiVRはSteamによって自動的にアップデートされます。Steamのアップデートが完了したら、OyasumiVRを再起動して再接続してください。",
+        "title": "OyasumiVRのアップデートが必要です"
+      },
+      "notRecognized": {
+        "body": "HMDがリセットされたなどの理由で、これがペアリングしたHMDであることを確認できません。再接続するには、もう一度ペアリングしてください。",
+        "title": "HMDを認識できません"
+      },
+      "updateFailed": {
+        "body": "アップデート中に問題が発生しました。可能な場合は、インストール済みのヘルパーを引き続き使用します。再試行を選ぶと、もう一度試せます。",
+        "title": "ヘルパーのアップデートに失敗しました"
+      }
+    },
+    "steps": {
+      "approve": "承認",
+      "before": "始める前に",
+      "developer": "Developer Mode",
+      "find": "HMDを探す",
+      "finished": "完了",
+      "install": "ヘルパーをインストール",
+      "pairhost": "Pair new host"
+    },
+    "unpair": {
+      "checking": "HMDを確認中…",
+      "choose": {
+        "onlyPc": "このPCはHMDに接続しなくなります。OyasumiVRヘルパーを使用している他のPCがないため、HMDからもアンインストールされます。",
+        "otherPcsMany": "このPCはHMDに接続しなくなります。他の{count}台のPCがまだ使用しているため、OyasumiVRヘルパーはインストールされたままになります。それらのPCも切断するには、ヘルパーをアンインストールしてください。",
+        "otherPcsOne": "このPCはHMDに接続しなくなります。他の1台のPCがまだ使用しているため、OyasumiVRヘルパーはインストールされたままになります。そのPCも切断するには、ヘルパーをアンインストールしてください。",
+        "title": "Steam Frameのペアリングを解除しますか？"
+      },
+      "failed": {
+        "hostKeyChanged": "これがペアリングしたHMDであることを確認できないため、HMDには何も変更を加えていません。削除を選ぶと、このPCからのみペアリングが削除されます。",
+        "other": "問題が発生しました。もう一度お試しいただくか、HMDを削除して、このPCからのみペアリングを削除してください。",
+        "rejected": "このHMDはこのPCを受け付けなくなったため、HMDには何も変更を加えられません。削除を選ぶと、このPCからのみペアリングが削除されます。",
+        "title": "ペアリングを解除できませんでした",
+        "unreachable": "HMDが応答しませんでした。電源が入っていて接続されていることを確認してから、もう一度お試しください。"
+      },
+      "forget": {
+        "body": "このPCからのみペアリングを削除します。OyasumiVRヘルパーはHMDにインストールされたままになり、ペアリングされている他のPCも引き続き使用できます。",
+        "command": "HMDからOyasumiVRヘルパーをアンインストールするには、HMDのターミナルで次のコマンドを実行してください:",
+        "noPcLeft": "どのPCからもペアリングを解除できませんか？",
+        "removed": "このHMDはこのPCを受け付けなくなりました。削除を選ぶと、このPCからのみペアリングが削除されます。",
+        "title": "Steam Frameを削除しますか？"
+      },
+      "working": {
+        "removeHelper": "このPCのアクセス権を削除し、OyasumiVRヘルパーをアンインストールしています。",
+        "removePc": "HMDからこのPCのアクセス権を削除しています。",
+        "title": "Steam Frameのペアリングを解除中"
+      }
+    },
+    "waiting": {
+      "awaiting": "HMDでの応答を待っています…",
+      "cancelling": "クリーンアップ中…",
+      "request": "HMDに接続中…",
+      "search": "ネットワークを検索中…",
+      "setup": "セットアップ中…",
+      "wrongDevice": "クリーンアップ中…"
+    }
+  },
   "steamvr-dashboard": {
     "desktopNotice": {
       "button": "ここに表示",
@@ -3053,6 +3361,7 @@
       "turnOffFailed": {
         "commandFailed": "Lighthouseコンソールがデバイスに接続できませんでした。詳細はログを確認してください。",
         "consoleNotReady": "先に一般設定でSteamVRのLighthouseコンソールを設定してください。",
+        "frameHelperFailed": "Steam Frameヘルパーがコントローラーを切断できませんでした。詳細はログを確認してください。",
         "title": "{name}をオフにできませんでした"
       }
     },
