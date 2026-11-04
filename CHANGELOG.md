@@ -19,8 +19,8 @@ with [SemVer](https://semver.org/) prerelease suffixes:
 
 ### Added
 
-- Steam Frame support: pair your Steam Frame with OyasumiVR to control its hardware brightness
-  and colour temperature, and to turn off its controllers
+- Hardware brightness and colour temperature control for the Steam Frame, and turning off its
+  controllers. This requires pairing the Steam Frame with OyasumiVR on your PC
 - Messages that tell you when something opens on your desktop while you use OyasumiVR from the
   SteamVR dashboard, such as a link in your browser, a folder, a file picker or a Windows
   administrator prompt
