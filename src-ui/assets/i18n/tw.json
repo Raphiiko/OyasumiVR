@@ -124,7 +124,7 @@
       "simple": "簡單模式"
     },
     "modeInfoModal": {
-      "message": "OyasumiVR 提供兩種控制 VR 頭戴顯示器亮度的方式：軟體控制與硬體控制。\n\n軟體控制適用於所有頭戴顯示器。它會透過調整畫面亮度來改變 VR 頭戴顯示器的亮度。\n\n硬體控制僅適用於支援的頭戴顯示器（Valve Index、Bigscreen Beyond）。它會在裝置支援的範圍內，直接調整頭戴顯示器顯示器的硬體亮度。\n\n在簡易模式下，OyasumiVR 會平滑地在軟體亮度與硬體亮度之間切換；若你的頭戴顯示器不支援硬體亮度控制，則僅會調整軟體亮度。\n\n如果你偏好更精細的控制，進階模式可讓你分別調整軟體亮度與硬體亮度，為兩者設定各自精確的亮度值。",
+      "message": "OyasumiVR 提供兩種控制 VR 頭戴顯示器亮度的方式：軟體控制與硬體控制。\n\n軟體控制適用於所有頭戴顯示器。它會透過調整畫面亮度來改變 VR 頭戴顯示器的亮度。\n\n硬體控制僅適用於支援的頭戴顯示器（Valve Index、Bigscreen Beyond、PlayStation VR2）。它會在裝置支援的範圍內，直接調整頭戴顯示器螢幕的硬體亮度。\n\n在簡易模式下，OyasumiVR 會平滑地在軟體亮度與硬體亮度之間切換；若你的頭戴顯示器不支援硬體亮度控制，則僅會調整軟體亮度。\n\n如果你偏好更精細的控制，進階模式可讓你分別調整軟體亮度與硬體亮度，為兩者設定各自精確的亮度值。",
       "title": "亮度控制模式"
     },
     "onlyWhenSleepModeDisabled": {
@@ -307,7 +307,14 @@
     },
     "event-log-entry": {
       "failure": {
-        "MUTE_STATE_UNKNOWN": "VRChat 未告知 OyasumiVR 你的麥克風是否已靜音。請確認你已在 VRChat 中啟用 OSC。"
+        "BASE_STATION_NO_RESPONSE": "定位器沒有回應。請確認你的定位器位於藍牙轉接器的範圍內。",
+        "MUTE_STATE_UNKNOWN": "VRChat 未告知 OyasumiVR 你的麥克風是否已靜音。請確認你已在 VRChat 中啟用 OSC。",
+        "SEE_MESSAGE_CENTRE": "詳情請查看訊息中心。",
+        "UNKNOWN": "發生錯誤。如果問題持續發生，請到 OyasumiVR 的 Discord 尋求協助。",
+        "VRCHAT_AVATAR_UNAVAILABLE": "此角色已無法使用。",
+        "VRCHAT_LOGGED_OUT": "OyasumiVR 尚未登入你的 VRChat 帳號。",
+        "VRCHAT_NOT_GROUP_MEMBER": "你已不再是此群組的成員。",
+        "VRCHAT_RATE_LIMITED": "VRChat 收到太多來自 OyasumiVR 的請求，因此拒絕了這次請求。"
       },
       "type": {
         "acceptedInviteRequest": {
@@ -357,7 +364,8 @@
             "SLEEP_MODE_ENABLED": "由於已開啟睡眠模式",
             "SLEEP_PREPARATION": "因為你準備入睡了"
           },
-          "title": "音訊裝置「{deviceName}」的音量已設定為 {percentage}"
+          "title": "音訊裝置「{deviceName}」的音量已設定為 {percentage}",
+          "title_FAILED": "無法將音訊裝置「{deviceName}」的音量設定為 {percentage}"
         },
         "changedSystemMicControllerButtonBehavior": {
           "reason": {
@@ -378,7 +386,9 @@
           },
           "title": {
             "MUTE": "已靜音麥克風：{deviceName}",
-            "UNMUTE": "已取消靜音麥克風：{deviceName}"
+            "MUTE_FAILED": "無法將麥克風靜音：{deviceName}",
+            "UNMUTE": "已取消靜音麥克風：{deviceName}",
+            "UNMUTE_FAILED": "無法取消麥克風靜音：{deviceName}"
           }
         },
         "changedVRChatMicMuteState": {
@@ -399,13 +409,15 @@
             "SLEEP_MODE_DISABLED": "由於已關閉睡眠模式",
             "SLEEP_MODE_ENABLED": "由於已開啟睡眠模式"
           },
-          "title": "Chaperone 淡化距離已設定為 {value}"
+          "title": "Chaperone 淡化距離已設定為 {value}",
+          "title_FAILED": "無法將 Chaperone 淡化距離設定為 {value}"
         },
         "declinedInvite": {
           "reason": {
             "SLEEP_MODE_ENABLED": "由於睡眠模式已開啟"
           },
-          "title": "已自動拒絕來自「{displayName}」的邀請"
+          "title": "已自動拒絕來自「{displayName}」的邀請",
+          "title_FAILED": "無法自動拒絕來自「{displayName}」的邀請"
         },
         "declinedInviteRequest": {
           "reason": {
@@ -414,14 +426,16 @@
             "PLAYER_COUNT_CONDITION_FAILED": "由於房間中的玩家過多",
             "SLEEP_MODE_ENABLED_CONDITION_FAILED": "由於睡眠模式未開啟"
           },
-          "title": "已自動拒絕來自「{displayName}」的邀請請求"
+          "title": "已自動拒絕來自「{displayName}」的邀請請求",
+          "title_FAILED": "無法自動拒絕來自「{displayName}」的邀請請求"
         },
         "failedInviteRequest": {
           "subtitle": {
             "noMessage": "VRChat 拒絕了，但未說明原因",
             "vrchatMessage": "VRChat 拒絕了，原因：「{message}」"
           },
-          "title": "無法接受來自「{displayName}」的邀請請求"
+          "title": "無法接受來自「{displayName}」的邀請請求",
+          "title_FAILED": "無法接受來自「{displayName}」的邀請請求"
         },
         "frameLimitChanged": {
           "reason": {
@@ -429,7 +443,8 @@
             "SLEEP_MODE_ENABLED": "由於已開啟睡眠模式",
             "SLEEP_PREPARATION": "因為你準備入睡了"
           },
-          "title": "已將「{appName}」的幀率限制設為 {limit}"
+          "title": "已將「{appName}」的幀率限制設為 {limit}",
+          "title_FAILED": "無法將「{appName}」的幀率限制設為 {limit}"
         },
         "gpuPowerLimitChanged": {
           "reason": {
@@ -437,8 +452,11 @@
             "SLEEP_MODE_ENABLED": "由於已開啟睡眠模式"
           },
           "title": {
+            "noDevice_FAILED": "無法變更顯示卡的功耗限制",
             "reset": "已將「{device}」的功耗限制恢復為 {limit}",
-            "set": "已將「{device}」的功耗限制設為 {limit}"
+            "reset_FAILED": "無法將「{device}」的功耗限制恢復為 {limit}",
+            "set": "已將「{device}」的功耗限制設為 {limit}",
+            "set_FAILED": "無法將「{device}」的功耗限制設為 {limit}"
           }
         },
         "hardwareBrightnessChanged": {
@@ -457,18 +475,27 @@
         "lighthouseSetPowerState": {
           "ALL": {
             "on": "已開啟所有定位器",
+            "on_FAILED": "無法開啟所有定位器",
             "sleep": "已將所有定位器設定為睡眠模式",
-            "standby": "已將所有定位器設定為待機模式"
+            "sleep_FAILED": "無法將所有定位器設定為睡眠模式",
+            "standby": "已將所有定位器設定為待機模式",
+            "standby_FAILED": "無法將所有定位器設定為待機模式"
           },
           "SINGLE": {
             "on": "已開啟一個定位器",
+            "on_FAILED": "無法開啟一個定位器",
             "sleep": "已將一個定位器設定為睡眠模式",
-            "standby": "已將一個定位器設定為待機模式"
+            "sleep_FAILED": "無法將一個定位器設定為睡眠模式",
+            "standby": "已將一個定位器設定為待機模式",
+            "standby_FAILED": "無法將一個定位器設定為待機模式"
           },
           "VARIOUS": {
             "on": "已開啟多個定位器",
+            "on_FAILED": "無法開啟多個定位器",
             "sleep": "已將多個定位器設定為睡眠模式",
-            "standby": "已將多個定位器設定為待機模式"
+            "sleep_FAILED": "無法將多個定位器設定為睡眠模式",
+            "standby": "已將多個定位器設定為待機模式",
+            "standby_FAILED": "無法將多個定位器設定為待機模式"
           },
           "reasons": {
             "HOTKEY": "由於已按下快捷鍵",
@@ -484,7 +511,8 @@
             "SLEEP_MODE_DISABLED": "由於已關閉睡眠模式",
             "SLEEP_MODE_ENABLED": "由於已開啟睡眠模式"
           },
-          "title": "MSI Afterburner 的設定檔已變更為 {profile}"
+          "title": "MSI Afterburner 的設定檔已變更為 {profile}",
+          "title_FAILED": "無法將 MSI Afterburner 的設定檔變更為 {profile}"
         },
         "mutedAudioDevice": {
           "reason": {
@@ -492,7 +520,8 @@
             "SLEEP_MODE_ENABLED": "由於已開啟睡眠模式",
             "SLEEP_PREPARATION": "因為你準備入睡了"
           },
-          "title": "已靜音音訊裝置「{deviceName}」"
+          "title": "已靜音音訊裝置「{deviceName}」",
+          "title_FAILED": "無法靜音音訊裝置「{deviceName}」"
         },
         "renderResolutionChanged": {
           "reason": {
@@ -501,7 +530,9 @@
           },
           "title": {
             "auto": "SteamVR 彩現解析度已設定為「自動」",
-            "custom": "SteamVR 彩現解析度已設定為 {value}"
+            "auto_FAILED": "無法將 SteamVR 彩現解析度設定為「自動」",
+            "custom": "SteamVR 彩現解析度已設定為 {value}",
+            "custom_FAILED": "無法將 SteamVR 彩現解析度設定為 {value}"
           }
         },
         "runAutomationExecuted": {
@@ -510,7 +541,8 @@
             "SLEEP_MODE_ENABLED": "由於已開啟睡眠模式",
             "SLEEP_PREPARATION": "因為你準備入睡了"
           },
-          "title": "已透過 Windows 命令提示字元執行使用者自訂命令"
+          "title": "已透過 Windows 命令提示字元執行使用者自訂命令",
+          "title_FAILED": "無法透過 Windows 命令提示字元執行使用者自訂命令"
         },
         "shutdownSequenceCancelled": {
           "reason": {
@@ -527,6 +559,17 @@
             "VRC_ALONE_TRIGGER": "因為你已在世界房間中獨處足夠長的時間"
           },
           "title": "關機流程已開始"
+        },
+        "shutdownSequenceStepFailed": {
+          "title": {
+            "HIBERNATE_FAILED": "關機流程中無法讓 Windows 休眠",
+            "LOGOUT_FAILED": "關機流程中無法登出 Windows",
+            "QUITTING_STEAMVR_FAILED": "關機流程中無法退出 SteamVR",
+            "REBOOT_FAILED": "關機流程中無法重新啟動 Windows",
+            "SHUTDOWN_FAILED": "關機流程中無法將 Windows 關機",
+            "SLEEP_FAILED": "關機流程中無法讓 Windows 進入睡眠",
+            "TURNING_OFF_DEVICES_FAILED": "關機流程中無法關閉你的裝置"
+          }
         },
         "simpleBrightnessChanged": {
           "reason": {
@@ -602,13 +645,17 @@
             "SLEEP_MODE_DISABLED": "由於已關閉睡眠模式",
             "SLEEP_MODE_ENABLED": "由於已開啟睡眠模式",
             "SLEEP_PREPARATION": "由於你準備入睡"
-          }
+          },
+          "title": "已變更你的 VRChat 狀態：{statusChange}",
+          "title_FAILED": "無法變更你的 VRChat 狀態：{statusChange}"
         },
         "statusChangedOnPlayerCountChange": {
           "reason": {
             "AT_LIMIT_OR_ABOVE": "由於你的世界房間中的玩家數量已達到 {threshold} 人的上限",
             "BELOW_LIMIT": "由於你的世界房間中的玩家數量已降至 {threshold} 人以下"
-          }
+          },
+          "title": "已變更你的 VRChat 狀態：{statusChange}",
+          "title_FAILED": "無法變更你的 VRChat 狀態：{statusChange}"
         },
         "turnedOffOpenVRDevices": {
           "reason": {
@@ -623,11 +670,17 @@
           },
           "title": {
             "ALL": "已關閉全部裝置",
+            "ALL_FAILED": "無法關閉全部裝置",
             "CONTROLLER": "已關閉一個控制器",
             "CONTROLLERS": "已關閉多個控制器",
+            "CONTROLLERS_FAILED": "無法關閉多個控制器",
+            "CONTROLLER_FAILED": "無法關閉一個控制器",
             "TRACKER": "已關閉一個追蹤器",
             "TRACKERS": "已關閉多個追蹤器",
-            "VARIOUS": "已關閉多個裝置"
+            "TRACKERS_FAILED": "無法關閉多個追蹤器",
+            "TRACKER_FAILED": "無法關閉一個追蹤器",
+            "VARIOUS": "已關閉多個裝置",
+            "VARIOUS_FAILED": "無法關閉多個裝置"
           }
         },
         "unmutedAudioDevice": {
@@ -636,7 +689,8 @@
             "SLEEP_MODE_ENABLED": "由於已開啟睡眠模式",
             "SLEEP_PREPARATION": "由於你準備入睡"
           },
-          "title": "已取消靜音音訊裝置「{deviceName}」"
+          "title": "已取消靜音音訊裝置「{deviceName}」",
+          "title_FAILED": "無法取消靜音音訊裝置「{deviceName}」"
         },
         "vrchatAvatarChanged": {
           "reason": {
@@ -644,7 +698,8 @@
             "SLEEP_MODE_ENABLED": "由於已開啟睡眠模式",
             "SLEEP_PREPARATION": "由於你準備入睡"
           },
-          "title": "已將你的 VRChat 角色更改為「{avatarName}」"
+          "title": "已將你的 VRChat 角色更改為「{avatarName}」",
+          "title_FAILED": "無法將你的 VRChat 角色更改為「{avatarName}」"
         },
         "vrchatGroupChanged": {
           "reason": {
@@ -654,7 +709,10 @@
           },
           "title": {
             "clear": "已停止代表 VRChat 群組「{groupName}」",
-            "set": "已將你所代表的 VRChat 群組變更為「{groupName}」"
+            "clearUnknown_FAILED": "無法停止代表你的 VRChat 群組",
+            "clear_FAILED": "無法停止代表 VRChat 群組「{groupName}」",
+            "set": "已將你所代表的 VRChat 群組變更為「{groupName}」",
+            "set_FAILED": "無法將你所代表的 VRChat 群組變更為「{groupName}」"
           }
         },
         "windowsPowerPolicySet": {
@@ -662,7 +720,8 @@
             "SLEEP_MODE_DISABLED": "由於已關閉睡眠模式",
             "SLEEP_MODE_ENABLED": "由於已開啟睡眠模式"
           },
-          "title": "已將 Windows 電源計劃設為「{policy}」"
+          "title": "已將 Windows 電源計劃設為「{policy}」",
+          "title_FAILED": "無法將 Windows 電源計劃設為「{policy}」"
         }
       }
     },
@@ -1473,6 +1532,13 @@
         },
         "enable": {
           "title": "系統管理員權限無法使用"
+        },
+        "startupPromptNotApproved": {
+          "actions": {
+            "enable": "顯示提示"
+          },
+          "message": "OyasumiVR 在啟動時要求系統管理員權限，但 Windows 提示遭到拒絕或未及時回應。在你核准提示之前，需要這些權限的功能將無法使用。",
+          "title": "系統管理員權限需要你的核准"
         }
       },
       "gpuAutomationsAfterburnerError": {
@@ -1897,6 +1963,8 @@
   },
   "settings": {
     "brightnessCct": {
+      "automationsHint": "亮度與色溫的自動化設定位於{link}。",
+      "automationsLink": "自動化頁面",
       "bigscreenBeyond": {
         "forceFanSafety": {
           "description": "當亮度值超過 100% 時，強制將風扇轉速設為 100%",
@@ -1916,17 +1984,26 @@
       },
       "cctControl": {
         "unsupportedHmds": {
-          "description": "開啟後即啟用色溫控制，即使尚不確定它是否適用於你的頭戴顯示器。",
+          "description": "開啟後，OyasumiVR 會嘗試透過 SteamVR 控制頭戴顯示器的色溫，即使尚未確認它能在你的頭戴顯示器上運作。",
           "listedHmd": "你的頭戴顯示器支援色溫控制。",
           "manufacturer": "製造商",
           "model": "型號",
           "noHmd": "連接頭戴顯示器後才能變更此設定。",
           "notReported": "未回報",
-          "title": "在不受支援的頭戴顯示器上啟用",
+          "title": "在不受支援的頭戴顯示器上控制色溫",
           "unlistedHmd": "啟用後，色溫控制仍可能在部分頭戴顯示器上正常運作。如果你的頭戴顯示器不受支援但實際可用，請透過 <a href='https://discord.gg/7MqdPJhYxC' target='_blank' rel='noopener noreferrer'>Discord</a> 告訴我們！"
         }
       },
-      "description": "在這裡你可以找到與亮度和色溫相關的所有設定。",
+      "description": "亮度與色溫的硬體設定，包括特定頭戴顯示器的專屬設定。",
+      "hardwareBrightness": {
+        "unsupportedHmds": {
+          "description": "開啟後，OyasumiVR 會嘗試透過 SteamVR 控制頭戴顯示器的亮度，即使尚未確認它能在你的頭戴顯示器上運作。",
+          "listedHmd": "你的頭戴顯示器支援硬體亮度控制。",
+          "noHmd": "連接頭戴顯示器後才能變更此設定。",
+          "title": "在不受支援的頭戴顯示器上控制硬體亮度",
+          "unlistedHmd": "啟用後，硬體亮度控制仍可能在你的頭戴顯示器上正常運作。如果實際可用，請透過 <a href='https://discord.gg/7MqdPJhYxC' target='_blank' rel='noopener noreferrer'>Discord</a> 告訴我們！"
+        }
+      },
       "title": "亮度與色溫",
       "valveIndex": {
         "maxBrightness": {
@@ -2356,6 +2433,11 @@
           "ready": "已找到介面卡",
           "uninitialized": "未使用"
         },
+        "hmd": {
+          "label": "頭戴顯示器",
+          "notDetected": "未偵測到",
+          "value": "{model}"
+        },
         "mqtt": {
           "CONNECTED": "已連線",
           "DISABLED": "關閉",
@@ -2381,6 +2463,11 @@
           "loggedIn": "已登入",
           "loggedOut": "未登入"
         },
+        "steamFrame": {
+          "label": "Steam Frame",
+          "notPaired": "未配對",
+          "pairingRemoved": "配對已移除"
+        },
         "steamvr": {
           "INACTIVE": "未執行",
           "INITIALIZED": "執行中",
@@ -2391,6 +2478,14 @@
           "label": "SteamVR 自動啟動",
           "off": "關閉",
           "on": "開啟"
+        },
+        "steamvrDashboard": {
+          "hardware": "硬體加速",
+          "label": "SteamVR 主控台",
+          "notRendering": "未渲染",
+          "pending": "正在等待主控台開啟",
+          "software": "軟體渲染",
+          "softwareFallback": "軟體渲染（備援）"
         },
         "title": "狀態",
         "vrchat": {
@@ -2883,6 +2978,242 @@
     },
     "title": "狀態自動化"
   },
+  "steamFrame": {
+    "actions": {
+      "back": "返回",
+      "cancel": "取消",
+      "cancelPairing": "取消配對",
+      "close": "關閉",
+      "closeForNow": "暫時關閉",
+      "connect": "連線",
+      "continue": "繼續",
+      "copyCommand": "複製命令",
+      "done": "完成",
+      "enterAddress": "輸入位址",
+      "findHeadset": "尋找你的頭戴顯示器",
+      "forget": "忘記",
+      "pair": "配對頭戴顯示器",
+      "pairAgain": "重新配對",
+      "pairThis": "配對此頭戴顯示器",
+      "reinstall": "重新安裝",
+      "repair": "修復",
+      "retry": "重試",
+      "retryUpdate": "重試",
+      "searchAgain": "重新搜尋",
+      "sendAgain": "重新傳送",
+      "tryAgain": "再試一次",
+      "unpair": "解除配對",
+      "unpairAll": "解除安裝輔助程式",
+      "update": "更新",
+      "yesPair": "是，進行配對"
+    },
+    "details": {
+      "helper": "OyasumiVR 輔助程式",
+      "pairing": "配對",
+      "pairingDescription": "停止在這台電腦上透過 OyasumiVR 使用此頭戴顯示器",
+      "repair": "修復輔助程式",
+      "repairDescription": "若頭戴顯示器不再回應 OyasumiVR，可重新安裝並重新啟動輔助程式",
+      "repairing": "正在修復…",
+      "upToDate": "已是最新版本",
+      "updating": "正在更新…",
+      "version": "版本 {version}",
+      "versionUnknown": "頭戴顯示器連線後即會顯示版本"
+    },
+    "errors": {
+      "identityMissing": "OyasumiVR 無法確認這是哪一台頭戴顯示器。請確認頭戴顯示器已喚醒，然後再試一次。",
+      "keys": "開始配對時發生錯誤。請再試一次。",
+      "offline": "無法連線至頭戴顯示器。請確認它已喚醒並位於同一網路，然後再試一次。",
+      "persistence": "這台電腦上發生錯誤。請再試一次。",
+      "setupFailed": "設定過程中發生錯誤。請再試一次。",
+      "wrongDeviceAccessLeft": "OyasumiVR 無法完成該頭戴顯示器的清理。殘留的內容不會造成任何影響。"
+    },
+    "headset": "Steam Frame",
+    "invitation": {
+      "body": "配對頭戴顯示器後，即可使用亮度控制等硬體專屬功能與自動化。",
+      "title": "配對你的 Steam Frame"
+    },
+    "pages": {
+      "awaiting": {
+        "body": "戴上頭戴顯示器。它會詢問是否允許這台電腦連線，請選擇 <kbd>Allow</kbd>。",
+        "return": "接著取下頭戴顯示器，回到這裡。",
+        "title": "在頭戴顯示器上核准請求"
+      },
+      "cancelling": {
+        "access": "OyasumiVR 會移除此次配對在頭戴顯示器上設定的內容。",
+        "body": "正在等待目前步驟完成，接著進行清理。",
+        "title": "正在取消配對"
+      },
+      "cleanupFailed": {
+        "body": "OyasumiVR 無法移除此次配對留在頭戴顯示器上的內容。若要自行移除，請在頭戴顯示器的終端機中執行此命令。",
+        "note": "如果命令顯示檔案不存在，表示此頭戴顯示器並未安裝 OyasumiVR 輔助程式。",
+        "title": "無法完成清理"
+      },
+      "declined": {
+        "body": "頭戴顯示器拒絕了這台電腦的請求。如果不是你本人操作，請確認是誰正戴著它。",
+        "nothing": "未安裝任何內容。",
+        "title": "請求已被拒絕"
+      },
+      "devmode": {
+        "enable": "開啟 <kbd>Developer Mode</kbd>。",
+        "open": "戴上頭戴顯示器，開啟 <kbd>Settings</kbd> › <kbd>System</kbd>。",
+        "title": "開啟開發人員模式"
+      },
+      "found": {
+        "body": "請確認位址與 <kbd>Pair new host</kbd> 畫面上顯示的位址相符。",
+        "multiple": "<kbd>Pair new host</kbd> 畫面會顯示頭戴顯示器的位址。",
+        "multipleTitle": "哪一台是你的頭戴顯示器？",
+        "title": "這是你的頭戴顯示器嗎？"
+      },
+      "intro": {
+        "install": "配對頭戴顯示器時，OyasumiVR 會在你的 Steam Frame 上安裝 OyasumiVR 輔助程式。它提供硬體亮度控制、色溫控制及其他硬體專屬功能。",
+        "nearby": "請將頭戴顯示器放在身邊。過程中你需要戴上和取下它幾次。",
+        "title": "配對你的頭戴顯示器",
+        "uninstall": "你可以隨時解除配對頭戴顯示器來解除安裝它，或依照<a href=\"https://raphii.co/oyasumivr/hidden/troubleshooting/steam-frame-uninstall/\">手動解除安裝說明</a>操作。"
+      },
+      "manual": {
+        "body": "<kbd>Pair new host</kbd> 畫面會顯示頭戴顯示器的位址。",
+        "hint": "請輸入 IP 位址或主機名稱，不要包含連接埠或網址。",
+        "label": "位址",
+        "title": "輸入頭戴顯示器的位址"
+      },
+      "needsUpdate": {
+        "body": "頭戴顯示器上的 OyasumiVR 輔助程式版本較新，目前版本的 OyasumiVR 無法使用。OyasumiVR 並未取代它。請更新 OyasumiVR，然後重新配對頭戴顯示器。",
+        "title": "OyasumiVR 需要更新才能控制這台 Frame"
+      },
+      "notfound": {
+        "body": "請確認頭戴顯示器已喚醒、與這台電腦位於同一網路，且仍停留在 <kbd>Pair new host</kbd> 畫面。",
+        "title": "找不到頭戴顯示器"
+      },
+      "notready": {
+        "body": "<kbd>Pair new host</kbd> 畫面尚未開啟。請在頭戴顯示器中開啟它，然後再試一次。",
+        "title": "已找到頭戴顯示器，但尚未準備好配對"
+      },
+      "pairhost": {
+        "open": "戴上頭戴顯示器，開啟 <kbd>Settings</kbd> › <kbd>Developer</kbd>。",
+        "return": "讓該畫面保持開啟，取下頭戴顯示器，然後在這裡繼續。",
+        "select": "在 <kbd>Development Kit</kbd> 下方選擇 <kbd>Pair new host</kbd>。",
+        "title": "選擇 Pair new host"
+      },
+      "request": {
+        "body": "這可能需要一點時間。",
+        "title": "正在連線至你的頭戴顯示器"
+      },
+      "search": {
+        "body": "請讓頭戴顯示器保持喚醒，並停留在 <kbd>Pair new host</kbd> 畫面。",
+        "manualTitle": "正在連線至 {address}",
+        "title": "正在尋找你的頭戴顯示器"
+      },
+      "setup": {
+        "body": "你可以取下頭戴顯示器。在設定完成前，請讓它保持喚醒並維持連線。",
+        "title": "正在設定 OyasumiVR 輔助程式"
+      },
+      "setupFailed": {
+        "body": "OyasumiVR 無法完成頭戴顯示器的設定。",
+        "title": "設定未完成"
+      },
+      "success": {
+        "body": "OyasumiVR 輔助程式已安裝並連線。",
+        "title": "Steam Frame 已配對"
+      },
+      "timeout": {
+        "body": "請求在核准前已逾時。準備好後，請戴上頭戴顯示器再試一次。",
+        "title": "頭戴顯示器沒有回應"
+      },
+      "uncertain": {
+        "body": "頭戴顯示器未確認請求。請檢查頭戴顯示器，然後重新傳送請求。",
+        "title": "無法確認是否已核准"
+      },
+      "wrongDevice": {
+        "body": "此位址的頭戴顯示器不是你在裝置管理員中選擇的那一台。OyasumiVR 未在其上安裝任何內容。",
+        "title": "這是另一台頭戴顯示器"
+      }
+    },
+    "stages": {
+      "connection": "正在檢查連線",
+      "install": "正在安裝 OyasumiVR 輔助程式",
+      "verify": "正在驗證頭戴顯示器"
+    },
+    "status": {
+      "connected": "已連線",
+      "connecting": "連線中",
+      "helperMissing": "缺少輔助程式",
+      "helperUpdated": "輔助程式已更新至 {version}",
+      "notRecognized": "無法識別",
+      "offline": "離線",
+      "reinstalling": "正在重新安裝輔助程式",
+      "updateApp": "更新 OyasumiVR",
+      "updateFailed": "更新失敗",
+      "updateHelper": "更新輔助程式",
+      "updatingHelper": "正在更新輔助程式"
+    },
+    "statusDetail": {
+      "helperMissing": {
+        "body": "此頭戴顯示器上已沒有 OyasumiVR 輔助程式，例如另一台電腦已將它解除安裝。請使用「重新安裝」再次安裝。之後與此頭戴顯示器配對的其他電腦會自動重新連線。",
+        "title": "缺少 OyasumiVR 輔助程式"
+      },
+      "needsAppUpdate": {
+        "body": "此頭戴顯示器上的輔助程式比目前版本的 OyasumiVR 更新。請透過「設定 › 更新」中的更新程式，或安裝最新版本，在這台電腦上更新 OyasumiVR 以重新連線。",
+        "title": "OyasumiVR 需要更新"
+      },
+      "needsAppUpdateSteam": {
+        "body": "此頭戴顯示器上的輔助程式比目前版本的 OyasumiVR 更新。Steam 會自動為你更新 OyasumiVR：請等待 Steam 完成更新，然後重新啟動 OyasumiVR 以重新連線。",
+        "title": "OyasumiVR 需要更新"
+      },
+      "notRecognized": {
+        "body": "OyasumiVR 無法確認這是你配對過的頭戴顯示器，例如頭戴顯示器曾經重設。請重新配對以重新連線。",
+        "title": "無法識別頭戴顯示器"
+      },
+      "updateFailed": {
+        "body": "更新時發生錯誤。OyasumiVR 會盡可能繼續使用已安裝的輔助程式。請使用「重試」再試一次。",
+        "title": "輔助程式更新失敗"
+      }
+    },
+    "steps": {
+      "approve": "核准",
+      "before": "開始之前",
+      "developer": "開發人員模式",
+      "find": "尋找頭戴顯示器",
+      "finished": "完成",
+      "install": "安裝輔助程式",
+      "pairhost": "Pair new host"
+    },
+    "unpair": {
+      "checking": "正在檢查頭戴顯示器…",
+      "choose": {
+        "onlyPc": "這台電腦將不再連線至頭戴顯示器。由於沒有其他電腦使用 OyasumiVR 輔助程式，它也會從頭戴顯示器上解除安裝。",
+        "otherPcsMany": "這台電腦將不再連線至頭戴顯示器。由於仍有 {count} 台其他電腦在使用，OyasumiVR 輔助程式會保留安裝。若也要中斷它們的連線，請解除安裝輔助程式。",
+        "otherPcsOne": "這台電腦將不再連線至頭戴顯示器。由於仍有 1 台其他電腦在使用，OyasumiVR 輔助程式會保留安裝。若也要中斷那台電腦的連線，請解除安裝輔助程式。",
+        "title": "要解除配對 Steam Frame 嗎？"
+      },
+      "failed": {
+        "hostKeyChanged": "OyasumiVR 無法確認這是你配對過的頭戴顯示器，因此未對其做任何變更。忘記它即可僅從這台電腦移除配對。",
+        "other": "發生錯誤。請再試一次，或忘記此頭戴顯示器以僅從這台電腦移除配對。",
+        "rejected": "此頭戴顯示器已不再接受這台電腦，因此 OyasumiVR 無法對其做任何變更。忘記它即可僅從這台電腦移除配對。",
+        "title": "無法解除配對",
+        "unreachable": "頭戴顯示器沒有回應。請確認它已開機並已連線，然後再試一次。"
+      },
+      "forget": {
+        "body": "這只會從這台電腦移除配對。OyasumiVR 輔助程式仍會保留在頭戴顯示器上，其他已配對的電腦也能繼續運作。",
+        "command": "在頭戴顯示器的終端機中執行以下命令，即可從頭戴顯示器解除安裝 OyasumiVR 輔助程式：",
+        "noPcLeft": "無法從任何電腦解除配對？",
+        "removed": "此頭戴顯示器已不再接受這台電腦。忘記它即可僅從這台電腦移除配對。",
+        "title": "要忘記 Steam Frame 嗎？"
+      },
+      "working": {
+        "removeHelper": "正在移除這台電腦的存取權並解除安裝 OyasumiVR 輔助程式。",
+        "removePc": "正在從頭戴顯示器移除這台電腦的存取權。",
+        "title": "正在解除配對 Steam Frame"
+      }
+    },
+    "waiting": {
+      "awaiting": "正在等待你在頭戴顯示器中回應…",
+      "cancelling": "正在清理…",
+      "request": "正在聯繫頭戴顯示器…",
+      "search": "正在搜尋網路…",
+      "setup": "正在設定…",
+      "wrongDevice": "正在清理…"
+    }
+  },
   "steamvr-dashboard": {
     "desktopNotice": {
       "button": "在這裡顯示",
@@ -3030,6 +3361,7 @@
       "turnOffFailed": {
         "commandFailed": "Lighthouse 主控台無法連線至裝置。詳情請查看紀錄。",
         "consoleNotReady": "請先在一般設定中設定 SteamVR Lighthouse 主控台。",
+        "frameHelperFailed": "Steam Frame 輔助程式無法中斷控制器的連線。詳情請查看紀錄。",
         "title": "無法關閉 {name}"
       }
     },
