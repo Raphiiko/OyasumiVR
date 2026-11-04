@@ -20,33 +20,27 @@ with [SemVer](https://semver.org/) prerelease suffixes:
 ### Added
 
 - Hardware brightness and colour temperature control for the Steam Frame, and turning off its
-  controllers. This requires pairing the Steam Frame with OyasumiVR on your PC
-- Messages that tell you when something opens on your desktop while you use OyasumiVR from the
-  SteamVR dashboard, such as a link in your browser, a folder, a file picker or a Windows
-  administrator prompt
-- Event log warnings for automations that could not do what you set them up to do, such as the
-  VRChat microphone mute automation when VRChat does not report whether you are muted
+  controllers
+- Event log warnings for automations that could not do what you set them up to do
 
 ### Changed
 
 - Devices in the Device Manager now open on their own page, where you can rename them, set their
   tags and see their details
-- Base stations now have buttons to turn them on, put them in standby or put them to sleep,
-  instead of hiding these behind a right click
-- The Bigscreen Beyond LED colour picker and the time fields now work from the SteamVR dashboard.
-  The colour picker has colour presets, and times are set on a 24-hour dial
-- Improved the event log: the filter is now a small menu that applies changes right away, and
-  VRChat status changes show the old and new status on one line
-- OyasumiVR now follows Valve Index brightness changes made in SteamVR
-- Debug reports no longer include your public IP address
-- Completed the French, Dutch, Japanese, Simplified Chinese and Traditional Chinese translations
+- The Device Manager now has buttons to force base stations on, into standby or to sleep, without
+  a right click
+- Various improvements to the event log
+- Hardware brightness for the Valve Index now follows brightness changes made in SteamVR
+- Improved various translations
 
 ### Fixed
 
 - Fixed the VRChat microphone mute automation sometimes unmuting you instead of muting you
-- Fixed run automations opening a command prompt window on your desktop every time they ran
-- Fixed the shutdown sequence skipping devices that were off when you selected them or when
-  OyasumiVR started
+- Fixed run automations opening a visible command prompt window every time they ran
+- Fixed the shutdown sequence not turning off devices that were off when you selected them, or
+  when OyasumiVR started
+- Fixed the Bigscreen Beyond LED colour picker and the time fields not working from the SteamVR
+  dashboard
 - Fixed base stations failing to connect on some Bluetooth adapters, or getting stuck while
   turning on or off
 - Fixed turning off base stations from the Device Manager always putting them to sleep, instead
@@ -55,8 +49,8 @@ with [SemVer](https://semver.org/) prerelease suffixes:
   unplugged and turned on
 - Fixed invite request automations ignoring every request when OyasumiVR started shortly after
   VRChat, until you changed worlds
-- Fixed the player count status automation setting the same VRChat status again every few minutes
-  when it contained punctuation
+- Fixed the player count status automation setting your VRChat status over and over with some
+  status messages
 - Fixed the "VRChat OSC(Query) services unavailable" warning showing on PCs with several network
   adapters, while OSC was enabled
 - Various smaller fixes
