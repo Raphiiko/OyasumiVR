@@ -15,6 +15,13 @@ with [SemVer](https://semver.org/) prerelease suffixes:
 - Pre-release numbering never predicts the version of the eventual stable release, and
   versions are assigned when a build is published, never before.
 
+## [Unreleased]
+
+### Security
+
+- Updated the browser engine behind the SteamVR overlays to Chromium 156, which fixes several
+  critical security issues
+
 ## [26.11.0]
 
 ### Added
