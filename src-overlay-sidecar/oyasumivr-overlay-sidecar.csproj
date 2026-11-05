@@ -16,7 +16,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="CefSharp.OffScreen.NETCore" Version="152.0.100" />
+    <PackageReference Include="CefSharp.OffScreen.NETCore" Version="156.0.150" />
     <PackageReference Include="Grpc.AspNetCore.Web" Version="2.84.0"/>
     <PackageReference Include="Serilog" Version="4.4.0"/>
     <PackageReference Include="Serilog.AspNetCore" Version="10.0.0"/>
