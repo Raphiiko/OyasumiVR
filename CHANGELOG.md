@@ -19,8 +19,7 @@ with [SemVer](https://semver.org/) prerelease suffixes:
 
 ### Security
 
-- Updated the browser engine behind the SteamVR overlays to Chromium 156, which fixes several
-  critical security issues
+- Updated various dependencies to fix several critical security issues
 
 ## [26.11.0]
 
