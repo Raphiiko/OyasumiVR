@@ -19,11 +19,7 @@ with [SemVer](https://semver.org/) prerelease suffixes:
 
 ### Security
 
-- Updated the browser engine behind the SteamVR overlays to Chromium 156, which fixes several
-  critical security issues
-- Updated the libraries behind OyasumiVR's internet connections, which fixes several security
-  issues in how they check and encrypt those connections
-- Updated various other dependencies with known security issues
+- Updated various dependencies to fix several critical security issues
 
 ## [26.11.0]
 
