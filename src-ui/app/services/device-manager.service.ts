@@ -3,6 +3,7 @@ import {
   asyncScheduler,
   BehaviorSubject,
   combineLatest,
+  concatMap,
   distinctUntilChanged,
   firstValueFrom,
   map,
@@ -28,6 +29,7 @@ import { OVRDevice } from '../models/ovr-device';
 import { LighthouseDevice } from '../models/lighthouse-device';
 import { isEqual, uniq } from 'lodash';
 import { error } from '@tauri-apps/plugin-log';
+import type { DisabledLighthouse } from 'src-ui/app/bindings';
 
 @Injectable({
   providedIn: 'root',
@@ -56,6 +58,7 @@ export class DeviceManagerService {
       .subscribe();
     this.listenForOpenVRDevices();
     this.listenForLighthouseDevices();
+    this.syncDisabledLighthouses();
   }
 
   public getKnownDeviceById(id: string): DMKnownDevice | undefined {
@@ -494,6 +497,30 @@ export class DeviceManagerService {
           });
         }
       });
+  }
+
+  private syncDisabledLighthouses() {
+    this.knownDevices
+      .pipe(
+        map((devices) =>
+          devices
+            .filter((d) => d.disabled)
+            .map((d) => this.getDisabledLighthouse(d))
+            .filter((d): d is DisabledLighthouse => d !== null)
+        ),
+        distinctUntilChanged(isEqual),
+        concatMap((devices) => this.lighthouse.setDisabledDevices(devices))
+      )
+      .subscribe();
+  }
+
+  /** The base station a known device names, or null for any other device. */
+  private getDisabledLighthouse(device: DMKnownDevice): DisabledLighthouse | null {
+    for (const deviceType of ['lighthouseV1', 'lighthouseV2'] as const) {
+      const prefix = `LH_${deviceType}_`;
+      if (device.id.startsWith(prefix)) return { id: device.id.slice(prefix.length), deviceType };
+    }
+    return null;
   }
 
   public getIdForOpenVRDevice(device: OVRDevice): string {

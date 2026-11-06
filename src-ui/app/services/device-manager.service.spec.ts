@@ -9,10 +9,10 @@ import type { DeviceManagerData, DeviceSelection, DMKnownDevice } from '../model
 import type { OVRDevice } from '../models/ovr-device';
 import type { LighthouseDevice } from '../models/lighthouse-device';
 
-const { get, invoke } = vi.hoisted(() => ({ get: vi.fn(), invoke: vi.fn() }));
+const { get, set, invoke } = vi.hoisted(() => ({ get: vi.fn(), set: vi.fn(), invoke: vi.fn() }));
 vi.mock('../globals', () => ({
   SETTINGS_KEY_DEVICE_MANAGER: 'DEVICE_MANAGER',
-  SETTINGS_STORE: { get },
+  SETTINGS_STORE: { get, set },
 }));
 vi.mock('@tauri-apps/api/core', () => ({ invoke }));
 vi.mock('@tauri-apps/api/event', () => ({ listen: vi.fn(async () => () => {}) }));
@@ -215,4 +215,49 @@ it('refreshes when an OpenVR index is reused by another serial', async () => {
   h.ovr.next([{ ...h.ovr.value[0], serialNumber: 'C' }, h.ovr.value[1]]);
   expect(seen).toEqual([['A'], []]);
   sub.unsubscribe();
+});
+
+it('tells the core which base stations are disabled, by address and type', async () => {
+  const knownDevice = (id: string, disabled: boolean): DMKnownDevice => ({
+    id,
+    defaultName: id,
+    typeName: id,
+    deviceType: id.startsWith('LH_') ? 'LIGHTHOUSE' : 'CONTROLLER',
+    tagIds: [],
+    disabled,
+    lastSeen: 0,
+  });
+  const enabledStation = knownDevice('LH_lighthouseV2_AA:BB:CC:DD:EE:03', false);
+  get.mockResolvedValue({
+    version: 2,
+    knownDevices: [
+      knownDevice('LH_lighthouseV2_AA:BB:CC:DD:EE:01', true),
+      knownDevice('LH_lighthouseV1_AA:BB:CC:DD:EE:02', true),
+      enabledStation,
+      knownDevice('OVR_Controller_LHR-0001', true),
+    ],
+    tags: [],
+  } satisfies DeviceManagerData);
+  const setDisabledDevices = vi.fn(async () => {});
+  const manager = new DeviceManagerService(
+    { devices: new BehaviorSubject<OVRDevice[]>([]) } as unknown as DMDependencies[0],
+    {
+      devices: new BehaviorSubject<LighthouseDevice[]>([]),
+      setDisabledDevices,
+    } as unknown as DMDependencies[1]
+  );
+
+  await manager.init();
+  expect(setDisabledDevices).toHaveBeenLastCalledWith([
+    { id: 'AA:BB:CC:DD:EE:01', deviceType: 'lighthouseV2' },
+    { id: 'AA:BB:CC:DD:EE:02', deviceType: 'lighthouseV1' },
+  ]);
+
+  manager.disableKnownDevice(enabledStation, true);
+  await Promise.resolve();
+  expect(setDisabledDevices).toHaveBeenLastCalledWith([
+    { id: 'AA:BB:CC:DD:EE:01', deviceType: 'lighthouseV2' },
+    { id: 'AA:BB:CC:DD:EE:02', deviceType: 'lighthouseV1' },
+    { id: 'AA:BB:CC:DD:EE:03', deviceType: 'lighthouseV2' },
+  ]);
 });

@@ -77,6 +77,11 @@ export class KnownDeviceViewService {
     );
   }
 
+  /** The base station this PC may send commands to; a disabled one is left to other PCs. */
+  controllableLighthouseFor(device: DMKnownDevice): LighthouseDevice | undefined {
+    return device.disabled ? undefined : this.lighthouseFor(device);
+  }
+
   batteryOf(device: DMKnownDevice): { level: number; isCharging: boolean } | null {
     const ovrDevice = this.ovrFor(device);
     if (!ovrDevice?.providesBatteryStatus) return null;
@@ -125,7 +130,7 @@ export class KnownDeviceViewService {
       if (ovrDevice.class !== 'Controller' && ovrDevice.class !== 'GenericTracker') return false;
       return ovrDevice.canPowerOff || ovrDevice.isTurningOff;
     }
-    return !!this.lighthouseFor(device);
+    return !!this.controllableLighthouseFor(device);
   }
 
   /** Runs the power button's action. A base station in an unknown state changes only by force. */
