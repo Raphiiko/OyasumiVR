@@ -297,6 +297,10 @@ pub async fn get_device_power_state(
     let (state_changed, timeout_changed) = {
         let mut power_states_guard = LIGHTHOUSE_DEVICE_POWER_STATES.lock().await;
         let mut timeouts_guard = LIGHTHOUSE_DEVICE_V1_TIMEOUTS.lock().await;
+        // set_disabled_devices clears this cache under the same lock, after marking the station
+        if is_disabled(&device.id) {
+            return Err(LighthouseError::DeviceDisabled);
+        }
 
         let current_state = power_states_guard
             .get(&device_id)
@@ -514,6 +518,10 @@ async fn identify_discovered_device(device: &Peripheral, device_id: &PeripheralI
         }
         lighthouse_devices_guard.push(discovered_device.clone());
     }
+    // set_disabled_devices skips a station it could not see in the list yet
+    if is_disabled(device_id) {
+        let _ = device.disconnect().await;
+    }
     // Send an event
     send_event(LighthouseDeviceDiscoveredEvent {
         device: map_discovered_device_to_lighthouse_device(discovered_device.clone()).await,
@@ -558,12 +566,24 @@ async fn discover_device_type(
 }
 
 /// Replaces the set of stations this PC must never connect to.
-/// A connection to a newly disabled station is released by its next power state poll.
+/// Waits for each disabled station's operation in progress, then releases its connection.
 pub async fn set_disabled_devices(devices: Vec<DisabledLighthouse>) {
     let disabled: HashMap<String, LighthouseDeviceType> =
         devices.into_iter().map(|d| (d.id, d.device_type)).collect();
     let disabled_ids: HashSet<String> = disabled.keys().cloned().collect();
     *DISABLED_DEVICES.lock().unwrap() = disabled;
+
+    // release held stations, once no operation on them can still connect or write
+    let known = LIGHTHOUSE_DEVICES.lock().await.clone();
+    for device in known
+        .iter()
+        .filter(|d| disabled_ids.contains(&d.id.to_string()))
+    {
+        let _guard = device.op_lock.lock().await;
+        if device.bt_device.is_connected().await.unwrap_or(false) {
+            let _ = device.bt_device.disconnect().await;
+        }
+    }
 
     // a disabled station's state can no longer be read, so forget the last one
     let mut cleared = Vec::new();
@@ -669,6 +689,11 @@ async fn ensure_connected(device: &Peripheral, device_name: &str) -> Result<(), 
         // Leaving it connected without services would make every later operation fail
         let _ = device.disconnect().await;
         return Err(LighthouseError::FailedToGetServices(err));
+    }
+    // the station may have been disabled while connecting
+    if is_disabled(&device_id) {
+        let _ = device.disconnect().await;
+        return Err(LighthouseError::DeviceDisabled);
     }
     Ok(())
 }
