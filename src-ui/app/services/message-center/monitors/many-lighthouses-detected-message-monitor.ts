@@ -8,7 +8,7 @@ export class ManyLighthousesDetectedMessageMonitor extends MessageMonitor {
 
   public override async init(): Promise<void> {
     // Show message when more than 4 lighthouses are detected
-    this.lighthouse.devices
+    this.lighthouse.enabledDevices
       .pipe(
         filter((d) => d.length > 4),
         take(1)

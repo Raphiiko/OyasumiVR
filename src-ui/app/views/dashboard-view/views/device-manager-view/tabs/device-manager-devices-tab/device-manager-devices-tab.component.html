@@ -140,7 +140,7 @@
                     </button>
                   }
                 }
-                @if (devices.lighthouseFor(device); as lighthouseDevice) {
+                @if (devices.controllableLighthouseFor(device); as lighthouseDevice) {
                   @if (!lighthouse.deviceNeedsIdentifier(lighthouseDevice)) {
                     <app-lighthouse-force-state-buttons
                       [type]="lighthouseDevice.deviceType"

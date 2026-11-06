@@ -22,6 +22,7 @@ import { ToastService } from './toast.service';
 import { warn } from '@tauri-apps/plugin-log';
 import {
   commands,
+  DisabledLighthouse,
   events,
   LighthouseDeviceDiscoveredEvent_Serialize,
   LighthouseDevicePowerStateChangedEvent_Serialize,
@@ -49,6 +50,14 @@ export class LighthouseService {
   private v1Identifiers: { [id: string]: string } = {};
   private transitions: { [deviceId: string]: number } = {};
   private lastTransitionId = 0;
+  private readonly disabledDeviceIds = new BehaviorSubject<ReadonlySet<string>>(new Set());
+  /** The discovered stations, without the ones disabled on this PC. */
+  public readonly enabledDevices: Observable<LighthouseDevice[]> = combineLatest([
+    this._devices,
+    this.disabledDeviceIds,
+  ]).pipe(map(([devices, disabled]) => devices.filter((d) => !disabled.has(d.id))));
+  // scanning waits for the first list, so a disabled station is never connected at startup
+  private readonly disabledDevicesSynced = new BehaviorSubject<boolean>(false);
 
   constructor(
     private appSettings: AppSettingsService,
@@ -94,11 +103,12 @@ export class LighthouseService {
         map((settings) => settings.lighthousePowerControl),
         distinctUntilChanged()
       ),
+      this.disabledDevicesSynced.pipe(distinctUntilChanged()),
     ])
       .pipe(
         map(
-          ([scanning, status, lighthousePowerControl]) =>
-            !scanning && status === 'ready' && lighthousePowerControl
+          ([scanning, status, lighthousePowerControl, disabledDevicesSynced]) =>
+            !scanning && status === 'ready' && lighthousePowerControl && disabledDevicesSynced
         ),
         debounceTime(1000),
         distinctUntilChanged(),
@@ -107,6 +117,13 @@ export class LighthouseService {
       .subscribe(() => {
         commands.lighthouseStartScan(DEFAULT_SCAN_DURATION);
       });
+  }
+
+  /** Replaces the stations the core must never connect to, so another PC can use them. */
+  public async setDisabledDevices(devices: DisabledLighthouse[]) {
+    this.disabledDeviceIds.next(new Set(devices.map((d) => d.id)));
+    await commands.lighthouseSetDisabledDevices(devices);
+    this.disabledDevicesSynced.next(true);
   }
 
   /** Sets the power state for a user action, and shows a toast when the device does not respond. */
@@ -135,6 +152,7 @@ export class LighthouseService {
     powerState: LighthouseDevicePowerState,
     force = false
   ): Promise<boolean> {
+    if (this.disabledDeviceIds.value.has(device.id)) return false;
     // If the device is a V1 and we don't have the identifier, don't send the command
     let v1Identifier: number | null = null;
     if (device.deviceType === 'lighthouseV1') {

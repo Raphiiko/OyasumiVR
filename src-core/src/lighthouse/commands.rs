@@ -1,6 +1,6 @@
 use std::time::Duration;
 
-use super::models::{LighthouseDeviceModel, LighthouseError};
+use super::models::{DisabledLighthouse, LighthouseDeviceModel, LighthouseError};
 
 #[tauri::command]
 #[specta::specta]
@@ -55,4 +55,10 @@ pub async fn lighthouse_reset() {
 #[specta::specta]
 pub async fn lighthouse_restart_bluetooth_radio() -> Result<(), String> {
     super::restart_bluetooth_radio().await
+}
+
+#[tauri::command]
+#[specta::specta]
+pub async fn lighthouse_set_disabled_devices(devices: Vec<DisabledLighthouse>) {
+    super::set_disabled_devices(devices).await
 }

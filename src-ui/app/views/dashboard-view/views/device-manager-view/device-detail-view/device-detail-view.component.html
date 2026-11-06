@@ -73,7 +73,7 @@
             <app-icon [name]="battery.isCharging ? 'battery' : 'battery-level'" />
           </div>
         }
-        @if (devices.lighthouseFor(device); as lighthouseDevice) {
+        @if (devices.controllableLighthouseFor(device); as lighthouseDevice) {
           @if (v1IdentifierMode() !== 'NEEDS_ID') {
             <app-lighthouse-force-state-buttons
               [type]="lighthouseDevice.deviceType"

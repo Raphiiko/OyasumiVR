@@ -32,8 +32,8 @@ use self::events::{
     LighthouseScanningStatusChangedEvent, LighthouseStatusChangedEvent,
 };
 use self::models::{
-    LighthouseDeviceModel, LighthouseDeviceType, LighthouseError, LighthousePowerState,
-    LighthouseStatus,
+    DisabledLighthouse, LighthouseDeviceModel, LighthouseDeviceType, LighthouseError,
+    LighthousePowerState, LighthouseStatus,
 };
 
 const LIGHTHOUSE_V1_PWR_SERVICE: Uuid = Uuid::from_u128(0x0000CB00_0000_1000_8000_00805F9B34FB);
@@ -70,6 +70,9 @@ static VISIBLE_CONNECT_FAILURE_STREAK: LazyLock<Mutex<u32>> = LazyLock::new(|| M
 static LAST_ADVERTISEMENTS: LazyLock<std::sync::Mutex<HashMap<PeripheralId, Instant>>> =
     LazyLock::new(|| std::sync::Mutex::new(HashMap::new()));
 static RADIO_RECOVERY_LOCK: LazyLock<Mutex<()>> = LazyLock::new(|| Mutex::new(()));
+// Keyed by the peripheral ID as a string, with the type found when the station was first identified
+static DISABLED_DEVICES: LazyLock<std::sync::Mutex<HashMap<String, LighthouseDeviceType>>> =
+    LazyLock::new(|| std::sync::Mutex::new(HashMap::new()));
 
 const CONNECT_TIMEOUT: Duration = Duration::from_secs(15);
 // A GATT call holds the device's op_lock, so it must not wait forever
@@ -291,9 +294,13 @@ pub async fn get_device_power_state(
     };
 
     // Get currently known power state and timeout, and update atomically
-    let (state_changed, timeout_changed) = {
+    {
         let mut power_states_guard = LIGHTHOUSE_DEVICE_POWER_STATES.lock().await;
         let mut timeouts_guard = LIGHTHOUSE_DEVICE_V1_TIMEOUTS.lock().await;
+        // set_disabled_devices clears this cache under the same lock, after marking the station
+        if is_disabled(&device.id) {
+            return Err(LighthouseError::DeviceDisabled);
+        }
 
         let current_state = power_states_guard
             .get(&device_id)
@@ -318,17 +325,15 @@ pub async fn get_device_power_state(
             }
         }
 
-        (state_changed, timeout_changed)
-    };
-
-    // Send event if either state or timeout changed
-    if state_changed || timeout_changed {
-        send_event(LighthouseDevicePowerStateChangedEvent {
-            device_id: device_id.clone(),
-            power_state: state.clone(),
-            v1_timeout,
-        })
-        .await;
+        // sent under the cache lock, so it cannot follow the Unknown that disabling sends
+        if state_changed || timeout_changed {
+            send_event(LighthouseDevicePowerStateChangedEvent {
+                device_id: device_id.clone(),
+                power_state: state.clone(),
+                v1_timeout,
+            })
+            .await;
+        }
     }
     Ok((state, v1_timeout))
 }
@@ -482,36 +487,18 @@ async fn identify_discovered_device(device: &Peripheral, device_id: &PeripheralI
     {
         return true;
     }
-    // Connect and enumerate the device's services
-    let services = {
-        if let Err(err) = ensure_connected(device, &device_name).await {
-            if !matches!(err, LighthouseError::ConnectBackoff) {
-                warn!("[Core] Failed to connect to discovered device ({device_name}): {err:?}");
-            }
-            let _ = device.disconnect().await;
-            return false;
-        }
-        device.services()
-    };
-    // Determine the device type based on the services present
-    let device_type = {
-        if services
-            .iter()
-            .any(|service| service.uuid.eq(&LIGHTHOUSE_V1_PWR_SERVICE))
-        {
-            LighthouseDeviceType::LighthouseV1
-        } else if services
-            .iter()
-            .any(|service| service.uuid.eq(&LIGHTHOUSE_V2_PWR_SERVICE))
-        {
-            LighthouseDeviceType::LighthouseV2
-        } else {
-            warn!(
-                "[Core] Discovered device does not contain a lighthouse control service: {device_name}"
-            );
-            let _ = device.disconnect().await;
-            return false;
-        }
+    // a disabled station passed service discovery when it was first found, by this address
+    let disabled_type = DISABLED_DEVICES
+        .lock()
+        .unwrap()
+        .get(&device_id.to_string())
+        .cloned();
+    let device_type = match disabled_type {
+        Some(device_type) => device_type,
+        None => match discover_device_type(device, &device_name).await {
+            Some(device_type) => device_type,
+            None => return false,
+        },
     };
     // Add the device to the list of lighthouse devices
     let discovered_device = LighthouseDevice {
@@ -529,6 +516,10 @@ async fn identify_discovered_device(device: &Peripheral, device_id: &PeripheralI
         }
         lighthouse_devices_guard.push(discovered_device.clone());
     }
+    // set_disabled_devices skips a station it could not see in the list yet
+    if is_disabled(device_id) {
+        let _ = device.disconnect().await;
+    }
     // Send an event
     send_event(LighthouseDeviceDiscoveredEvent {
         device: map_discovered_device_to_lighthouse_device(discovered_device.clone()).await,
@@ -540,6 +531,90 @@ async fn identify_discovered_device(device: &Peripheral, device_id: &PeripheralI
         device_name
     );
     true
+}
+
+/// Connects and reads the services. Returns None, disconnected, when the device is not a lighthouse.
+async fn discover_device_type(
+    device: &Peripheral,
+    device_name: &str,
+) -> Option<LighthouseDeviceType> {
+    if let Err(err) = ensure_connected(device, device_name).await {
+        if !matches!(err, LighthouseError::ConnectBackoff) {
+            warn!("[Core] Failed to connect to discovered device ({device_name}): {err:?}");
+        }
+        let _ = device.disconnect().await;
+        return None;
+    }
+    let services = device.services();
+    if services
+        .iter()
+        .any(|service| service.uuid.eq(&LIGHTHOUSE_V1_PWR_SERVICE))
+    {
+        return Some(LighthouseDeviceType::LighthouseV1);
+    }
+    if services
+        .iter()
+        .any(|service| service.uuid.eq(&LIGHTHOUSE_V2_PWR_SERVICE))
+    {
+        return Some(LighthouseDeviceType::LighthouseV2);
+    }
+    warn!("[Core] Discovered device does not contain a lighthouse control service: {device_name}");
+    let _ = device.disconnect().await;
+    None
+}
+
+/// Replaces the set of stations this PC must never connect to.
+/// Waits for each disabled station's operation in progress, then releases its connection.
+pub async fn set_disabled_devices(devices: Vec<DisabledLighthouse>) {
+    let disabled: HashMap<String, LighthouseDeviceType> =
+        devices.into_iter().map(|d| (d.id, d.device_type)).collect();
+    let disabled_ids: HashSet<String> = disabled.keys().cloned().collect();
+    *DISABLED_DEVICES.lock().unwrap() = disabled;
+
+    // release held stations, once no operation on them can still connect or write
+    let known = LIGHTHOUSE_DEVICES.lock().await.clone();
+    for device in known
+        .iter()
+        .filter(|d| disabled_ids.contains(&d.id.to_string()))
+    {
+        let _guard = device.op_lock.lock().await;
+        if device.bt_device.is_connected().await.unwrap_or(false) {
+            let _ = device.bt_device.disconnect().await;
+        }
+    }
+
+    // a disabled station's state can no longer be read, so forget the last one
+    let mut cleared = Vec::new();
+    {
+        let mut power_states = LIGHTHOUSE_DEVICE_POWER_STATES.lock().await;
+        for id in &disabled_ids {
+            if power_states
+                .remove(id)
+                .is_some_and(|s| s != LighthousePowerState::Unknown)
+            {
+                cleared.push(id.clone());
+            }
+        }
+        LIGHTHOUSE_DEVICE_V1_TIMEOUTS
+            .lock()
+            .await
+            .retain(|id, _| !disabled_ids.contains(id));
+        for device_id in cleared {
+            send_event(LighthouseDevicePowerStateChangedEvent {
+                device_id,
+                power_state: LighthousePowerState::Unknown,
+                v1_timeout: None,
+            })
+            .await;
+        }
+    }
+}
+
+fn is_disabled(device_id: &PeripheralId) -> bool {
+    DISABLED_DEVICES
+        .lock()
+        .unwrap()
+        .contains_key(&device_id.to_string())
 }
 
 async fn set_lighthouse_status(status: LighthouseStatus) {
@@ -580,10 +655,17 @@ async fn with_gatt_timeout<T>(
 }
 
 async fn ensure_connected(device: &Peripheral, device_name: &str) -> Result<(), LighthouseError> {
+    let device_id = device.id();
+    // a station accepts one connection, so holding a disabled one locks out other PCs
+    if is_disabled(&device_id) {
+        if device.is_connected().await.unwrap_or(false) {
+            let _ = device.disconnect().await;
+        }
+        return Err(LighthouseError::DeviceDisabled);
+    }
     if device.is_connected().await.unwrap_or(false) {
         return Ok(());
     }
-    let device_id = device.id();
     if !backoff_elapsed(&device_id) {
         return Err(LighthouseError::ConnectBackoff);
     }
@@ -605,6 +687,11 @@ async fn ensure_connected(device: &Peripheral, device_name: &str) -> Result<(), 
         // Leaving it connected without services would make every later operation fail
         let _ = device.disconnect().await;
         return Err(LighthouseError::FailedToGetServices(err));
+    }
+    // the station may have been disabled while connecting
+    if is_disabled(&device_id) {
+        let _ = device.disconnect().await;
+        return Err(LighthouseError::DeviceDisabled);
     }
     Ok(())
 }

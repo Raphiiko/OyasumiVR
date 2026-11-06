@@ -221,3 +221,58 @@ describe('LighthouseService.setPowerStateForUser', () => {
     expect(await toastsAfter('booting', 'on')).toHaveLength(0);
   });
 });
+
+describe('LighthouseService disabled stations', () => {
+  beforeEach(() => {
+    vi.useFakeTimers();
+    invoke.mockReset();
+    invoke.mockImplementation(async (command: string) => {
+      if (command === 'lighthouse_get_status') return 'ready';
+      if (command === 'lighthouse_get_devices') return [];
+      return null;
+    });
+  });
+
+  afterEach(() => vi.useRealTimers());
+
+  const commandsSent = () => invoke.mock.calls.map(([command]) => command);
+
+  it('starts scanning only after the core knows which stations are disabled', async () => {
+    const appSettings = {
+      settings: new BehaviorSubject({ v1LighthouseIdentifiers: {}, lighthousePowerControl: true }),
+    } as unknown as AppSettingsService;
+    const service = new LighthouseService(appSettings, new ToastService());
+    await service.init();
+    await vi.advanceTimersByTimeAsync(5000);
+    expect(commandsSent()).not.toContain('lighthouse_start_scan');
+
+    await service.setDisabledDevices([{ id: 'dev-1', deviceType: 'lighthouseV2' }]);
+    await vi.advanceTimersByTimeAsync(1000);
+    expect(commandsSent()).toContain('lighthouse_start_scan');
+    expect(commandsSent().indexOf('lighthouse_set_disabled_devices')).toBeLessThan(
+      commandsSent().indexOf('lighthouse_start_scan')
+    );
+  });
+
+  it('leaves a station out of the enabled devices while it is disabled', async () => {
+    const d = device();
+    const service = makeService(d);
+    const enabledIds: string[][] = [];
+    service.enabledDevices.subscribe((devices) => enabledIds.push(devices.map((e) => e.id)));
+
+    await service.setDisabledDevices([{ id: d.id, deviceType: d.deviceType }]);
+    await service.setDisabledDevices([]);
+
+    expect(enabledIds).toEqual([[d.id], [], [d.id]]);
+  });
+
+  it('sends no power command to a disabled station', async () => {
+    const d = device();
+    const service = makeService(d);
+    await service.setDisabledDevices([{ id: d.id, deviceType: d.deviceType }]);
+
+    await expect(service.setPowerState(d, 'sleep')).resolves.toBe(false);
+    expect(commandsSent()).not.toContain('lighthouse_set_device_power_state');
+    expect(d.transitioningToPowerState).toBeUndefined();
+  });
+});

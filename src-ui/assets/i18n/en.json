@@ -1066,7 +1066,7 @@
     },
     "config": {
       "disabled": {
-        "description": "Disabled devices are not affected by automations or bulk actions, and are not shown in the device list",
+        "description": "Disabled devices are not affected by automations or bulk actions, and are not shown in the device list. OyasumiVR does not connect to a disabled base station, so another PC can control it.",
         "title": "Disable device",
         "tooltip": "This device is disabled"
       },

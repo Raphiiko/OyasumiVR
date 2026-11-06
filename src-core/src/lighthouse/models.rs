@@ -33,6 +33,7 @@ pub enum LighthouseDeviceType {
 #[derive(Debug)]
 pub enum LighthouseError {
     DeviceNotFound,
+    DeviceDisabled,
     ConnectBackoff,
     FailedToConnect(btleplug::Error),
     FailedToGetServices(btleplug::Error),
@@ -67,6 +68,10 @@ impl Serialize for LighthouseError {
         match self {
             LighthouseError::DeviceNotFound => {
                 error.serialize_field("error", "DeviceNotFound")?;
+                error.serialize_field("message", &None::<String>)?;
+            }
+            LighthouseError::DeviceDisabled => {
+                error.serialize_field("error", "DeviceDisabled")?;
                 error.serialize_field("message", &None::<String>)?;
             }
             LighthouseError::ConnectBackoff => {
@@ -118,6 +123,14 @@ pub struct LighthouseDeviceModel {
     pub power_state: LighthousePowerState,
     pub device_type: LighthouseDeviceType,
     pub v1_timeout: Option<u16>,
+}
+
+/// A base station the user disabled on this PC. OyasumiVR never connects to it.
+#[derive(Debug, Serialize, Deserialize, Clone, specta::Type)]
+#[serde(rename_all = "camelCase")]
+pub struct DisabledLighthouse {
+    pub id: String,
+    pub device_type: LighthouseDeviceType,
 }
 
 #[derive(Debug, Clone)]

@@ -15,6 +15,21 @@ with [SemVer](https://semver.org/) prerelease suffixes:
 - Pre-release numbering never predicts the version of the eventual stable release, and
   versions are assigned when a build is published, never before.
 
+## [Unreleased]
+
+### Changed
+
+- Disabling a base station in the Device Manager now stops OyasumiVR from connecting to it, so
+  another PC running OyasumiVR can control it
+- V1 base stations now show up in the MQTT integration once their identifier is set, and no
+  longer before
+
+### Fixed
+
+- Fixed V2 base stations not showing up in the MQTT integration
+- Fixed disabled base stations still showing up in the MQTT integration and counting towards the
+  "many base stations" message
+
 ## [26.11.1]
 
 ### Security

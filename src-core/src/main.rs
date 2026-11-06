@@ -633,6 +633,7 @@ fn specta_builder() -> tauri_specta::Builder<Wry> {
             lighthouse::commands::lighthouse_get_scanning_status,
             lighthouse::commands::lighthouse_reset,
             lighthouse::commands::lighthouse_restart_bluetooth_radio,
+            lighthouse::commands::lighthouse_set_disabled_devices,
             steam::commands::steam_active,
             steam::commands::steam_achievement_get,
             steam::commands::steam_achievement_set,

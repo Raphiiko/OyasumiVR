@@ -95,6 +95,7 @@ export const commands = {
 	lighthouseGetScanningStatus: () => __TAURI_INVOKE<boolean>("lighthouse_get_scanning_status"),
 	lighthouseReset: () => __TAURI_INVOKE<void>("lighthouse_reset"),
 	lighthouseRestartBluetoothRadio: () => typedError<null, string>(__TAURI_INVOKE("lighthouse_restart_bluetooth_radio")),
+	lighthouseSetDisabledDevices: (devices: DisabledLighthouse[]) => __TAURI_INVOKE<void>("lighthouse_set_disabled_devices", { devices }),
 	steamActive: () => __TAURI_INVOKE<boolean>("steam_active"),
 	steamAchievementGet: (achievementId: string) => typedError<boolean, string>(__TAURI_INVOKE("steam_achievement_get", { achievementId })),
 	steamAchievementSet: (achievementId: string, unlocked: boolean) => typedError<null, string>(__TAURI_INVOKE("steam_achievement_set", { achievementId, unlocked })),
@@ -399,6 +400,12 @@ export type DebugSnapshot = {
 };
 
 export type DisableResult = { result: "ok" } | { result: "cleanupFailed"; reason: string };
+
+/**  A base station the user disabled on this PC. OyasumiVR never connects to it. */
+export type DisabledLighthouse = {
+	id: string,
+	deviceType: LighthouseDeviceType,
+};
 
 export type DisconnectControllerError = "runtimeUnavailable" | "writeFailed" | 
 /**  No open connection, or it closed before the helper replied. */
