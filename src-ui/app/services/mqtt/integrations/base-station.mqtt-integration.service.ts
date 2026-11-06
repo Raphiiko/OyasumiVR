@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { isEqual } from 'lodash';
 import { MqttDiscoveryService } from '../mqtt-discovery.service';
 import { LighthouseService } from '../../lighthouse.service';
 import {
@@ -42,7 +43,7 @@ export class BaseStationMqttIntegrationService {
       this.lighthouseService.enabledDevices,
       this.appSettingsService.settings.pipe(
         map((settings) => settings.v1LighthouseIdentifiers),
-        distinctUntilChanged()
+        distinctUntilChanged(isEqual)
       ),
     ])
       .pipe(
@@ -90,6 +91,7 @@ export class BaseStationMqttIntegrationService {
       topicPath: `device/${powerStateId}`,
       displayName: 'Power State',
       value: device.powerState,
+      available: true,
       device: deviceDesc,
     });
 
@@ -121,6 +123,7 @@ export class BaseStationMqttIntegrationService {
 
   private async removeDevice(device: LighthouseDevice) {
     await this.mqtt.setPropertyAvailability(this.sanitizedId(device.id), false);
+    await this.mqtt.setPropertyAvailability(this.sanitizedId(device.id, POWER_STATE_SUFFIX), false);
     this.deviceRemoved.next(device);
   }
 

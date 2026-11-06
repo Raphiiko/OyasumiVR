@@ -71,6 +71,20 @@ describe('BaseStationMqttIntegrationService', () => {
     expect(publishedIds()).toEqual(['LH-V1']);
   });
 
+  it('marks both entities of a removed station unavailable', async () => {
+    const { mqtt, enabledDevices } = await createService([station('V2', 'lighthouseV2')]);
+
+    enabledDevices.next([]);
+    await flush();
+
+    expect(mqtt.setPropertyAvailability.mock.calls).toEqual(
+      expect.arrayContaining([
+        ['LH-V2', false],
+        ['LH-V2-power_state', false],
+      ])
+    );
+  });
+
   it('sends one power command per MQTT command after a station is removed and added again', async () => {
     const v2 = station('V2', 'lighthouseV2');
     const { enabledDevices, lighthouse, commands } = await createService([v2]);
