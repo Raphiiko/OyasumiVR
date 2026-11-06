@@ -294,7 +294,7 @@ pub async fn get_device_power_state(
     };
 
     // Get currently known power state and timeout, and update atomically
-    let (state_changed, timeout_changed) = {
+    {
         let mut power_states_guard = LIGHTHOUSE_DEVICE_POWER_STATES.lock().await;
         let mut timeouts_guard = LIGHTHOUSE_DEVICE_V1_TIMEOUTS.lock().await;
         // set_disabled_devices clears this cache under the same lock, after marking the station
@@ -325,17 +325,15 @@ pub async fn get_device_power_state(
             }
         }
 
-        (state_changed, timeout_changed)
-    };
-
-    // Send event if either state or timeout changed
-    if state_changed || timeout_changed {
-        send_event(LighthouseDevicePowerStateChangedEvent {
-            device_id: device_id.clone(),
-            power_state: state.clone(),
-            v1_timeout,
-        })
-        .await;
+        // sent under the cache lock, so it cannot follow the Unknown that disabling sends
+        if state_changed || timeout_changed {
+            send_event(LighthouseDevicePowerStateChangedEvent {
+                device_id: device_id.clone(),
+                power_state: state.clone(),
+                v1_timeout,
+            })
+            .await;
+        }
     }
     Ok((state, v1_timeout))
 }
@@ -601,14 +599,14 @@ pub async fn set_disabled_devices(devices: Vec<DisabledLighthouse>) {
             .lock()
             .await
             .retain(|id, _| !disabled_ids.contains(id));
-    }
-    for device_id in cleared {
-        send_event(LighthouseDevicePowerStateChangedEvent {
-            device_id,
-            power_state: LighthousePowerState::Unknown,
-            v1_timeout: None,
-        })
-        .await;
+        for device_id in cleared {
+            send_event(LighthouseDevicePowerStateChangedEvent {
+                device_id,
+                power_state: LighthousePowerState::Unknown,
+                v1_timeout: None,
+            })
+            .await;
+        }
     }
 }
 
