@@ -1,7 +1,17 @@
 import { Injectable } from '@angular/core';
 import { MqttDiscoveryService } from '../mqtt-discovery.service';
 import { LighthouseService } from '../../lighthouse.service';
-import { concatMap, filter, map, pairwise, startWith, Subject, takeUntil } from 'rxjs';
+import {
+  combineLatest,
+  concatMap,
+  distinctUntilChanged,
+  filter,
+  map,
+  pairwise,
+  startWith,
+  Subject,
+  takeUntil,
+} from 'rxjs';
 import { LighthouseDevice } from '../../../models/lighthouse-device';
 import { MqttDiscoveryConfigDevice, MqttToggleProperty } from '../../../models/mqtt';
 
@@ -27,10 +37,19 @@ export class BaseStationMqttIntegrationService {
     this.appSettingsService.settings.subscribe((settings) => {
       this.appSettings = settings;
     });
-    this.lighthouseService.enabledDevices
+    // a V1 station without its identifier cannot take commands, so it appears once one is set
+    combineLatest([
+      this.lighthouseService.enabledDevices,
+      this.appSettingsService.settings.pipe(
+        map((settings) => settings.v1LighthouseIdentifiers),
+        distinctUntilChanged()
+      ),
+    ])
       .pipe(
+        map(([devices, identifiers]) =>
+          devices.filter((d) => d.deviceType !== 'lighthouseV1' || !!identifiers[d.id])
+        ),
         startWith([] as LighthouseDevice[]),
-        map((devices) => devices.filter((d) => this.lighthouseService.deviceNeedsIdentifier(d))),
         pairwise(),
         concatMap(async ([prevDevices, devices]) => {
           await this.handleDeviceChanges(prevDevices, devices);
@@ -87,7 +106,7 @@ export class BaseStationMqttIntegrationService {
 
     this.mqtt
       .getCommandStreamForProperty<MqttToggleProperty>(id)
-      .pipe(takeUntil(this.deviceRemoved.pipe(filter((d) => d.id === id))))
+      .pipe(takeUntil(this.deviceRemoved.pipe(filter((d) => d.id === device.id))))
       .subscribe(async (command) => {
         if (command.current.value) {
           await this.lighthouseService.setPowerState(device, 'on');
