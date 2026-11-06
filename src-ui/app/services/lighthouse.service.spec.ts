@@ -254,6 +254,18 @@ describe('LighthouseService disabled stations', () => {
     );
   });
 
+  it('leaves a station out of the enabled devices while it is disabled', async () => {
+    const d = device();
+    const service = makeService(d);
+    const enabledIds: string[][] = [];
+    service.enabledDevices.subscribe((devices) => enabledIds.push(devices.map((e) => e.id)));
+
+    await service.setDisabledDevices([{ id: d.id, deviceType: d.deviceType }]);
+    await service.setDisabledDevices([]);
+
+    expect(enabledIds).toEqual([[d.id], [], [d.id]]);
+  });
+
   it('sends no power command to a disabled station', async () => {
     const d = device();
     const service = makeService(d);

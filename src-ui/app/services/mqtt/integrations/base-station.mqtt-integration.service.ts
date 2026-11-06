@@ -27,7 +27,7 @@ export class BaseStationMqttIntegrationService {
     this.appSettingsService.settings.subscribe((settings) => {
       this.appSettings = settings;
     });
-    this.lighthouseService.devices
+    this.lighthouseService.enabledDevices
       .pipe(
         startWith([] as LighthouseDevice[]),
         map((devices) => devices.filter((d) => this.lighthouseService.deviceNeedsIdentifier(d))),
