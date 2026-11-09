@@ -163,7 +163,9 @@ current page, and a setup failure without its own page lands on the setup-failed
 
 A cleanup takes the `authorized_keys` lock, and the maintenance lock while the helper folder
 exists, before it changes anything. It removes the key lines last, so a retry finishes a partial
-cleanup. `clients/<pc-id>.pub` lets the uninstall script find every OyasumiVR key line.
+cleanup. `clients/<pc-id>.pub` lets the uninstall script find every OyasumiVR key line. A cleanup
+that finds no helper folder still removes the service, which a folder deleted by hand leaves
+behind.
 
 ```mermaid
 flowchart TD

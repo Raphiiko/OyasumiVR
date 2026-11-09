@@ -218,11 +218,15 @@ prune() {
   done
 }
 
-remove_helper() {
+remove_unit() {
   systemctl --user disable --now "$unit" 2>/dev/null || true
   rm -f "$units/$unit" "$units/default.target.wants/$unit"
   systemctl --user daemon-reload || true
   rmdir "$units/default.target.wants" "$units" 2>/dev/null || true
+}
+
+remove_helper() {
+  remove_unit
   rm -rf "$root"
 }
 
@@ -263,6 +267,9 @@ cleanup() {
       remove_helper
     fi
   fi
+
+  # a helper folder deleted by hand leaves its unit restarting a missing executable every 5 s
+  [ "$locked" = 1 ] || remove_unit
 
   # remove the key lines last, so a failed step above leaves this PC able to try again
   if [ -f "$keys" ]; then
