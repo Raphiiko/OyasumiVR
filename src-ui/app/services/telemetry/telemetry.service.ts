@@ -17,6 +17,8 @@ import { commands } from 'src-ui/app/bindings';
 import { isEqual } from 'lodash';
 import { FeatureSnapshotService } from './feature-snapshot.service';
 
+const THROTTLED_EVENT_RETRY_DELAY = 10 * 60_000;
+
 @Injectable({
   providedIn: 'root',
 })
@@ -105,21 +107,24 @@ export class TelemetryService {
     if (lastEvent && now - lastEvent.timestamp < lastEvent.timeout) {
       if (!allowValueOverride || lastEvent.lastValue === propString) return;
     }
-    // only a sent event enters the cache, so a failed send is retried on the next call
-    if (!(await this.send(event, props))) return;
-    // read the cache again: other throttled events may have updated it during the await
-    const reportingCache = this._settings.value.reportingCache.filter((e) => e.event !== event);
-    reportingCache.push({
-      event,
-      timestamp: now,
-      lastValue: propString,
-      timeout,
-    });
-    // Save the new cache
-    this._settings.next({
-      ...this._settings.value,
-      reportingCache,
-    });
+    // cache before sending, so calls made during the send do not send again
+    const entry = { event, timestamp: now, lastValue: propString, timeout };
+    this.setCacheEntry(entry);
+
+    // a failed send holds the event for the retry delay only
+    if (!(await this.send(event, props))) {
+      const current = this._settings.value.reportingCache.find((e) => e.event === event);
+      if (!isEqual(current, entry)) return;
+      this.setCacheEntry({ ...entry, timeout: THROTTLED_EVENT_RETRY_DELAY });
+    }
     await this.saveSettings();
+  }
+
+  private setCacheEntry(entry: TelemetrySettings['reportingCache'][number]) {
+    const reportingCache = this._settings.value.reportingCache.filter(
+      (e) => e.event !== entry.event
+    );
+    reportingCache.push(entry);
+    this._settings.next({ ...this._settings.value, reportingCache });
   }
 }

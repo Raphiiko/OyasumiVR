@@ -1,6 +1,6 @@
 import '@angular/compiler';
 import type { Injector } from '@angular/core';
-import { describe, expect, it, vi } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import { TelemetryService } from './telemetry.service';
 
 const { invoke } = vi.hoisted(() => ({ invoke: vi.fn() }));
@@ -10,7 +10,11 @@ vi.mock('../../globals', () => ({
   SETTINGS_STORE: { get: vi.fn(), set: vi.fn() },
 }));
 
+const DAY = 24 * 60 * 60_000;
+
 describe('TelemetryService', () => {
+  afterEach(() => vi.useRealTimers());
+
   it('keeps every throttled event in the cache when two overlap', async () => {
     const pending: Array<() => void> = [];
     invoke.mockImplementation(() => new Promise<void>((resolve) => pending.push(resolve)));
@@ -28,15 +32,34 @@ describe('TelemetryService', () => {
     expect(events.sort()).toEqual(['feature_snapshot', 'use_language']);
   });
 
-  it('keeps a throttled event out of the cache when sending fails', async () => {
+  it('sends a throttled event once when calls overlap its send', async () => {
+    invoke.mockReset();
+    const pending: Array<() => void> = [];
+    invoke.mockImplementation(() => new Promise<void>((resolve) => pending.push(resolve)));
+    const service = new TelemetryService({} as Injector);
+
+    const first = service.trackThrottledEvent('vr_hmd', { hmdName: 'A' }, DAY, true);
+    const second = service.trackThrottledEvent('vr_hmd', { hmdName: 'A' }, DAY, true);
+    pending.forEach((resolve) => resolve());
+    await Promise.all([first, second]);
+
+    expect(invoke).toHaveBeenCalledTimes(1);
+  });
+
+  it('retries a failed throttled event only after 10 minutes', async () => {
+    vi.useFakeTimers({ now: 0 });
+    invoke.mockReset();
     invoke.mockRejectedValue('offline');
     const service = new TelemetryService({} as Injector);
 
-    await service.trackThrottledEvent('feature_snapshot', { a: 1 }, 1000);
+    await service.trackThrottledEvent('vr_hmd', { hmdName: 'A' }, DAY, true);
+    vi.setSystemTime(10 * 60_000 - 1);
+    await service.trackThrottledEvent('vr_hmd', { hmdName: 'A' }, DAY, true);
+    expect(invoke).toHaveBeenCalledTimes(1);
 
-    let events: string[] = [];
-    service.settings.subscribe((s) => (events = s.reportingCache.map((e) => e.event)));
-    expect(events).toEqual([]);
+    vi.setSystemTime(10 * 60_000);
+    await service.trackThrottledEvent('vr_hmd', { hmdName: 'A' }, DAY, true);
+    expect(invoke).toHaveBeenCalledTimes(2);
   });
 
   it('enables telemetry in the core before init resolves', async () => {
@@ -48,6 +71,5 @@ describe('TelemetryService', () => {
     await service.init();
 
     expect(invoke).toHaveBeenCalledWith('set_telemetry_enabled', { enable: true });
-    vi.useRealTimers();
   });
 });
