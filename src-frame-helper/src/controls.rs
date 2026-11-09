@@ -6,6 +6,7 @@ use crate::{
     brightness::{Backend, Brightness, SetError, POLL_INTERVAL},
     cct::{self, Cct, ColorGains},
     hub::{Action, Command, Event},
+    vrserver::Controller,
 };
 
 /// 60 Hz.
@@ -135,6 +136,7 @@ pub struct Controls<B> {
     /// Set while the headset is in standby.
     standby: Option<StandbyWrites>,
     next_poll: Instant,
+    controllers: Vec<Controller>,
     /// The time of the current tick or command.
     now: Instant,
     events: Vec<Event>,
@@ -148,6 +150,7 @@ impl<B: Backend + ColorGains> Controls<B> {
             fades: [None, None],
             standby: None,
             next_poll: now,
+            controllers: Vec::new(),
             now,
             events: Vec::new(),
         }
@@ -251,6 +254,20 @@ impl<B: Backend + ColorGains> Controls<B> {
         self.report_change(Control::Cct, cct.is_some());
         self.after_read();
         self.read_standby();
+        self.read_controllers();
+    }
+
+    /// Reports the controllers when they differ from the last report. None without a session.
+    fn read_controllers(&mut self) {
+        let controllers = self
+            .brightness
+            .session()
+            .and_then(|session| session.controllers().ok())
+            .unwrap_or_default();
+        if controllers != self.controllers {
+            self.controllers = controllers.clone();
+            self.events.push(Event::Controllers(controllers));
+        }
     }
 
     /// Ends the fades a read made obsolete: every fade on runtime loss, and the fade of a control

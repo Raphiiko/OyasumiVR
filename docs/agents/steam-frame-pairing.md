@@ -394,15 +394,21 @@ as its field 1. The web server needs no web secret from its own origin, so the h
 `Origin: http://127.0.0.1:27062`. Neither the PC's SteamVR nor OpenVR power-off reaches these
 controllers.
 
-The helper keeps a second socket to the same web server open, and sends `02 08 2D 0A 00` on it every
-second: the same request with an empty field 1, `update`. The web server answers with a message of
-type 44. Its field 3, `connected_controller`, and field 4, `paired_controller`, each hold a
-controller whose field 1 is its serial. A socket without a state for 5 seconds counts as failed, and
-the helper opens a new one. Nobody has seen the web server send a state without a request.
+The helper opens that socket only for the request and closes it right after. While a socket that
+sent `steam_connect` is open, the web server sends Steam UI's messages to it instead of to Steam UI,
+such as `UpdateFrameUIs` for a new window. A window that opens meanwhile never shows in VR, and
+the Frame's power button stops working. Steam UI gets its messages again as soon as the socket
+closes.
+
+The helper reads the controllers from OpenVR on every 250 ms poll: each device of class
+`Controller` with its `Prop_SerialNumber_String`, connected when its pose says so. The serial is the
+one the disconnect request takes. A controller that turns off keeps its device index and serial, so
+it stays listed as not connected. A controller that has been off since SteamVR started is not
+listed.
 
 The helper sends every PC `{"type":"controllers","controllers":[{"serial":"96c863a69af3","connected":true}]}`
-on connect and on every change. The list holds every paired controller, sorted by serial. It is
-empty while SteamVR on the headset does not answer.
+on connect and on every change. The list is sorted by serial, and empty while SteamVR on the headset
+does not answer.
 
 ### On the PC
 

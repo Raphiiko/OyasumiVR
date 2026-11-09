@@ -6,6 +6,8 @@ use std::{
 use raphii_openvr_rs::{raw, Context, TrackedDeviceIndex};
 use serde::Serialize;
 
+use crate::vrserver::Controller;
+
 pub const POLL_INTERVAL: Duration = Duration::from_millis(250);
 const RECONNECT_INTERVAL: Duration = Duration::from_secs(2);
 /// A read that differs from the last known gain by more than this is a change made elsewhere.
@@ -78,6 +80,10 @@ pub trait Backend {
     fn set_gain(&mut self, gain: f32) -> Result<(), RuntimeLost>;
     /// True while the HMD's activity level is Standby.
     fn standby(&mut self) -> Result<bool, RuntimeLost>;
+    /// The controllers SteamVR has seen since it started, sorted by serial.
+    fn controllers(&mut self) -> Result<Vec<Controller>, RuntimeLost> {
+        Ok(Vec::new())
+    }
 }
 
 #[derive(Serialize, Clone, Debug, PartialEq)]
@@ -388,6 +394,39 @@ impl Backend for OpenVr {
             .get_tracked_device_activity_level(TrackedDeviceIndex::HMD)
             .map_err(|_| RuntimeLost)?;
         Ok(level == raw::EDeviceActivityLevel::k_EDeviceActivityLevel_Standby)
+    }
+
+    fn controllers(&mut self) -> Result<Vec<Controller>, RuntimeLost> {
+        let system = self.context()?.system();
+        let poses = system
+            .get_device_to_absolute_tracking_pose(
+                raw::ETrackingUniverseOrigin::TrackingUniverseRawAndUncalibrated,
+                0.0,
+            )
+            .map_err(|_| RuntimeLost)?;
+        let mut controllers = Vec::new();
+        for (index, pose) in poses.iter().enumerate().skip(1) {
+            let index = TrackedDeviceIndex(index as u32);
+            let class = system
+                .get_tracked_device_class(index)
+                .map_err(|_| RuntimeLost)?;
+            if class != raw::ETrackedDeviceClass::TrackedDeviceClass_Controller {
+                continue;
+            }
+            // a turned-off controller keeps its index and its serial
+            let Ok(serial) = system.get_tracked_device_property::<String>(
+                index,
+                raw::ETrackedDeviceProperty::Prop_SerialNumber_String,
+            ) else {
+                continue;
+            };
+            controllers.push(Controller {
+                serial,
+                connected: pose.bDeviceIsConnected,
+            });
+        }
+        controllers.sort_by(|a, b| a.serial.cmp(&b.serial));
+        Ok(controllers)
     }
 }
 
