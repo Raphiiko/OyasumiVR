@@ -17,6 +17,8 @@ import { commands } from 'src-ui/app/bindings';
 import { isEqual } from 'lodash';
 import { FeatureSnapshotService } from './feature-snapshot.service';
 
+const THROTTLED_EVENT_RETRY_DELAY = 10 * 60_000;
+
 @Injectable({
   providedIn: 'root',
 })
@@ -25,6 +27,8 @@ export class TelemetryService {
     TELEMETRY_SETTINGS_DEFAULT
   );
   public settings: Observable<TelemetrySettings> = this._settings.asObservable();
+  /** Counts trackThrottledEvent sends per event, so a finished send can tell whether a newer one started. */
+  private sendAttempts = new Map<string, number>();
 
   constructor(private injector: Injector) {}
 
@@ -105,21 +109,24 @@ export class TelemetryService {
     if (lastEvent && now - lastEvent.timestamp < lastEvent.timeout) {
       if (!allowValueOverride || lastEvent.lastValue === propString) return;
     }
-    // only a sent event enters the cache, so a failed send is retried on the next call
+    // hold the event for the retry delay while it sends, so overlapping calls do not send again
+    const attempt = (this.sendAttempts.get(event) ?? 0) + 1;
+    this.sendAttempts.set(event, attempt);
+    const entry = { event, timestamp: now, lastValue: propString, timeout };
+    this.setCacheEntry({ ...entry, timeout: THROTTLED_EVENT_RETRY_DELAY });
+
+    // only a success of the latest attempt holds the event for the full timeout
     if (!(await this.send(event, props))) return;
-    // read the cache again: other throttled events may have updated it during the await
-    const reportingCache = this._settings.value.reportingCache.filter((e) => e.event !== event);
-    reportingCache.push({
-      event,
-      timestamp: now,
-      lastValue: propString,
-      timeout,
-    });
-    // Save the new cache
-    this._settings.next({
-      ...this._settings.value,
-      reportingCache,
-    });
+    if (this.sendAttempts.get(event) !== attempt) return;
+    this.setCacheEntry(entry);
     await this.saveSettings();
+  }
+
+  private setCacheEntry(entry: TelemetrySettings['reportingCache'][number]) {
+    const reportingCache = this._settings.value.reportingCache.filter(
+      (e) => e.event !== entry.event
+    );
+    reportingCache.push(entry);
+    this._settings.next({ ...this._settings.value, reportingCache });
   }
 }
