@@ -1,3 +1,4 @@
+import { STEAM_FRAME_PAIRING_ENABLED } from 'src-ui/app/globals';
 import { Injectable } from '@angular/core';
 import { DMKnownDevice } from 'src-ui/app/models/device-manager';
 import {
@@ -90,7 +91,8 @@ export class SteamFrameDeviceViewService {
   ) {}
 
   isSupported(device: DMKnownDevice): boolean {
-    return !!this.steamFrame.identityOf(device);
+    if (!this.steamFrame.identityOf(device)) return false;
+    return STEAM_FRAME_PAIRING_ENABLED || !!this.steamFrame.pairingFor(device.id)?.complete;
   }
 
   /** Pairing status and action for a supported Steam Frame, or null for any other device. */
@@ -103,7 +105,7 @@ export class SteamFrameDeviceViewService {
     const state = pairing?.complete ? this.steamFrame.connections()[pairing.id] : undefined;
     const status = state?.status ?? 'connecting';
     if (!pairing?.complete || status === 'pairingRemoved')
-      return active ? { action: 'pair' } : null;
+      return active && STEAM_FRAME_PAIRING_ENABLED ? { action: 'pair' } : null;
 
     // a reinstall from this row
     if (this.steamFrame.reinstalls()[pairing.id]) {
@@ -113,7 +115,10 @@ export class SteamFrameDeviceViewService {
     // a problem: its pill, and Pair again only while SteamVR uses it
     const statusRow = FRAME_STATUS_ROWS[status];
     if (statusRow) {
-      return statusRow.action === 'pairAgain' && !active ? { pill: statusRow.pill } : statusRow;
+      const canPairAgain = active && STEAM_FRAME_PAIRING_ENABLED;
+      return statusRow.action === 'pairAgain' && !canPairAgain
+        ? { pill: statusRow.pill }
+        : statusRow;
     }
 
     // a helper update in progress or just finished

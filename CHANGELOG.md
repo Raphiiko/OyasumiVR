@@ -19,6 +19,8 @@ with [SemVer](https://semver.org/) prerelease suffixes:
 
 ### Changed
 
+- Temporarily disabled pairing new Steam Frames while we investigate reports of the helper breaking
+  the Frame's own UI. Paired headsets keep working and can still be unpaired
 - Disabling a base station in the Device Manager now stops OyasumiVR from connecting to it, so
   another PC running OyasumiVR can control it
 - V1 base stations now show up in the MQTT integration once their identifier is set, and no

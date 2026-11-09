@@ -1,3 +1,4 @@
+import { STEAM_FRAME_PAIRING_ENABLED } from 'src-ui/app/globals';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, combineLatest, distinctUntilChanged, map } from 'rxjs';
 import { AppSettingsService } from '../app-settings.service';
@@ -68,7 +69,7 @@ export class MessageCenterService {
       new VRChatWebsocketConnectionMonitor(this),
       new OverlaySidecarMessageMonitor(this),
       new PSVR2ToolkitMessageMonitor(this),
-      new SteamFramePairingMessageMonitor(this),
+      ...(STEAM_FRAME_PAIRING_ENABLED ? [new SteamFramePairingMessageMonitor(this)] : []),
     ];
   }
 

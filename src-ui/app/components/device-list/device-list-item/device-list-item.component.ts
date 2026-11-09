@@ -1,3 +1,4 @@
+import { STEAM_FRAME_PAIRING_ENABLED } from 'src-ui/app/globals';
 import {
   ChangeDetectorRef,
   Component,
@@ -238,7 +239,7 @@ export class DeviceListItemComponent implements OnInit {
 
   /** Whether the headset is a Steam Frame without a completed pairing the headset still knows. */
   private framePairable(device: DMKnownDevice): boolean {
-    if (!this.steamFrame.identityOf(device)) return false;
+    if (!STEAM_FRAME_PAIRING_ENABLED || !this.steamFrame.identityOf(device)) return false;
     const pairing = this.steamFrame.pairingFor(device.id);
     if (!pairing?.complete) return true;
     return this.steamFrame.connections()[pairing.id]?.status === 'pairingRemoved';
