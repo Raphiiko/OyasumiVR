@@ -27,6 +27,8 @@ export class TelemetryService {
     TELEMETRY_SETTINGS_DEFAULT
   );
   public settings: Observable<TelemetrySettings> = this._settings.asObservable();
+  /** Counts trackThrottledEvent sends per event, so a finished send can tell whether a newer one started. */
+  private sendAttempts = new Map<string, number>();
 
   constructor(private injector: Injector) {}
 
@@ -107,16 +109,16 @@ export class TelemetryService {
     if (lastEvent && now - lastEvent.timestamp < lastEvent.timeout) {
       if (!allowValueOverride || lastEvent.lastValue === propString) return;
     }
-    // cache before sending, so calls made during the send do not send again
+    // hold the event for the retry delay while it sends, so overlapping calls do not send again
+    const attempt = (this.sendAttempts.get(event) ?? 0) + 1;
+    this.sendAttempts.set(event, attempt);
     const entry = { event, timestamp: now, lastValue: propString, timeout };
-    this.setCacheEntry(entry);
+    this.setCacheEntry({ ...entry, timeout: THROTTLED_EVENT_RETRY_DELAY });
 
-    // a failed send holds the event for the retry delay only
-    if (!(await this.send(event, props))) {
-      const current = this._settings.value.reportingCache.find((e) => e.event === event);
-      if (!isEqual(current, entry)) return;
-      this.setCacheEntry({ ...entry, timeout: THROTTLED_EVENT_RETRY_DELAY });
-    }
+    // only a success of the latest attempt holds the event for the full timeout
+    if (!(await this.send(event, props))) return;
+    if (this.sendAttempts.get(event) !== attempt) return;
+    this.setCacheEntry(entry);
     await this.saveSettings();
   }
 

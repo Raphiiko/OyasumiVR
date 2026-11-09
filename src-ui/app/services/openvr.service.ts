@@ -12,7 +12,7 @@ import {
   startWith,
   Subject,
 } from 'rxjs';
-import { isEqual, orderBy } from 'lodash';
+import { orderBy } from 'lodash';
 import { AppSettingsService } from './app-settings.service';
 import { error, info, warn } from '@tauri-apps/plugin-log';
 import { TelemetryService } from './telemetry/telemetry.service';
@@ -245,15 +245,19 @@ export class OpenVRService {
       .pipe(
         map((devices) => devices.find((d) => d.class === 'HMD')),
         filter(Boolean),
-        map((hmd) => ({
-          manufacturerName: hmd.manufacturerName ?? 'Unknown',
-          modelNumber: hmd.modelNumber ?? 'Unknown',
-          hmdName: `${hmd.manufacturerName} ${hmd.modelNumber}`,
-        })),
-        distinctUntilChanged(isEqual)
+        distinctUntilChanged()
       )
-      .subscribe((props) => {
-        this.telemetry.trackThrottledEvent('vr_hmd', props, 1000 * 60 * 60 * 24, true);
+      .subscribe((hmdName) => {
+        this.telemetry.trackThrottledEvent(
+          'vr_hmd',
+          {
+            manufacturerName: hmdName.manufacturerName ?? 'Unknown',
+            modelNumber: hmdName.modelNumber ?? 'Unknown',
+            hmdName: `${hmdName.manufacturerName} ${hmdName.modelNumber}`,
+          },
+          1000 * 60 * 60 * 24,
+          true
+        );
       });
   }
 }

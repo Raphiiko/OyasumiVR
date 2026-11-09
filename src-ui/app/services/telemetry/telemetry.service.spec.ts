@@ -62,6 +62,29 @@ describe('TelemetryService', () => {
     expect(invoke).toHaveBeenCalledTimes(2);
   });
 
+  it('keeps the full timeout when an older send fails after a newer one with the same value succeeded', async () => {
+    vi.useFakeTimers({ now: 0 });
+    invoke.mockReset();
+    const sends: Array<{ resolve: () => void; reject: (e: unknown) => void }> = [];
+    invoke.mockImplementation(
+      () => new Promise<void>((resolve, reject) => sends.push({ resolve, reject }))
+    );
+    const service = new TelemetryService({} as Injector);
+
+    const olderA = service.trackThrottledEvent('vr_hmd', { hmdName: 'A' }, DAY, true);
+    const b = service.trackThrottledEvent('vr_hmd', { hmdName: 'B' }, DAY, true);
+    const newerA = service.trackThrottledEvent('vr_hmd', { hmdName: 'A' }, DAY, true);
+    sends[1].resolve();
+    sends[2].resolve();
+    await Promise.all([b, newerA]);
+    sends[0].reject('offline');
+    await olderA;
+
+    vi.setSystemTime(10 * 60_000);
+    void service.trackThrottledEvent('vr_hmd', { hmdName: 'A' }, DAY, true);
+    expect(invoke).toHaveBeenCalledTimes(3);
+  });
+
   it('enables telemetry in the core before init resolves', async () => {
     vi.useFakeTimers();
     invoke.mockReset();
