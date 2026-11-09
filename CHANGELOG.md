@@ -20,6 +20,7 @@ with [SemVer](https://semver.org/) prerelease suffixes:
 ### Changed
 
 - Re-enabled pairing new Steam Frames, which 26.11.2 turned off temporarily
+- Improved the stability of the OyasumiVR helper on the Steam Frame
 
 ## [26.11.2]
 
