@@ -29,6 +29,8 @@ with [SemVer](https://semver.org/) prerelease suffixes:
 - Fixed V2 base stations not showing up in the MQTT integration
 - Fixed disabled base stations still showing up in the MQTT integration and counting towards the
   "many base stations" message
+- Fixed unpairing a Steam Frame whose helper folder was deleted by hand leaving the helper's
+  service behind, restarting every few seconds
 
 ## [26.11.1]
 

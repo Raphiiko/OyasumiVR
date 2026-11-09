@@ -163,7 +163,10 @@ current page, and a setup failure without its own page lands on the setup-failed
 
 A cleanup takes the `authorized_keys` lock, and the maintenance lock while the helper folder
 exists, before it changes anything. It removes the key lines last, so a retry finishes a partial
-cleanup. `clients/<pc-id>.pub` lets the uninstall script find every OyasumiVR key line.
+cleanup. `clients/<pc-id>.pub` lets the uninstall script find every OyasumiVR key line. A cleanup
+that finds no helper folder still removes the service, which a folder deleted by hand leaves
+behind. It checks for the folder again under the `authorized_keys` lock, and `install` writes the
+service under that lock too, so the cleanup never removes the service of another PC's installation.
 
 ```mermaid
 flowchart TD
@@ -491,5 +494,5 @@ All paths under `~/.local/share/oyasumivr_helper/` unless noted.
 | `clients/<pc-id>`                                       | one token per paired PC, plus its `.pub` key record                                                              |
 | `maintenance.lock`                                      | held by every `helper.sh` change to the folder                                                                   |
 | `uninstall`                                             | removes the helper and every recorded key line                                                                   |
-| `~/.ssh/.oyasumivr-keys.lock`                           | held by every `authorized_keys` rewrite; deleted with the helper                                                 |
+| `~/.ssh/.oyasumivr-keys.lock`                           | held by every `authorized_keys` rewrite and service write; deleted with the helper                               |
 | `~/.config/systemd/user/oyasumivr-frame-helper.service` | the user service, enabled through `default.target.wants`                                                         |
