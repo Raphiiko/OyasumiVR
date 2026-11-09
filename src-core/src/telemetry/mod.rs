@@ -94,12 +94,28 @@ async fn send_event(name: &str, props: Option<Map<String, Value>>) -> Result<(),
         .map_err(|e| e.to_string())
 }
 
+/// Sends `app_quit`, blocking the caller for up to 2 seconds while OpenPanel accepts it.
+pub fn track_quit() {
+    if !TELEMETRY_ENABLED.load(Ordering::Relaxed) {
+        return;
+    }
+    let timeout = Duration::from_secs(2);
+    let sent = tauri::async_runtime::block_on(async {
+        tokio::time::timeout(timeout, send_event("app_quit", None)).await
+    });
+    match sent {
+        Ok(Ok(())) => {}
+        Ok(Err(e)) => warn!("[Core] Could not send telemetry event app_quit: {e}"),
+        Err(_) => warn!("[Core] Could not send telemetry event app_quit: timed out"),
+    }
+}
+
 pub async fn init_telemetry() {
     *TELEMETRY_INITIALIZED.lock().await = true;
-    // the server ends a session after 4 hours without events
+    // a session that ends without app_quit reads short by up to this interval
     tokio::task::spawn(async {
         loop {
-            tokio::time::sleep(Duration::from_secs(3600 * 7 / 2)).await;
+            tokio::time::sleep(Duration::from_secs(3600)).await;
             track_event("app_heartbeat", None);
         }
     });

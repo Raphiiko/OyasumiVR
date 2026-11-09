@@ -292,8 +292,13 @@ async fn main() {
         })
         .invoke_handler(specta.invoke_handler())
         .on_window_event(system_tray::handle_window_events)
-        .run(tauri::generate_context!())
+        .build(tauri::generate_context!())
         .expect("An error occurred while running the application")
+        .run(|_, event| {
+            if let tauri::RunEvent::Exit = event {
+                telemetry::track_quit();
+            }
+        })
 }
 
 #[cfg(windows)]
