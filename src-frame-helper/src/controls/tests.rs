@@ -16,6 +16,7 @@ struct Headset {
     gains_writes: Vec<[f32; 3]>,
     /// Drops every write while in standby, as the runtime may.
     drops_standby_writes: bool,
+    controllers: Vec<Controller>,
 }
 
 #[derive(Clone)]
@@ -31,6 +32,7 @@ impl Fake {
             gain_writes: Vec::new(),
             gains_writes: Vec::new(),
             drops_standby_writes: false,
+            controllers: Vec::new(),
         })))
     }
 
@@ -92,6 +94,15 @@ impl Backend for Fake {
             headset
                 .running
                 .then_some(headset.standby)
+                .ok_or(RuntimeLost)
+        })
+    }
+
+    fn controllers(&mut self) -> Result<Vec<Controller>, RuntimeLost> {
+        self.edit(|headset| {
+            headset
+                .running
+                .then(|| headset.controllers.clone())
                 .ok_or(RuntimeLost)
         })
     }
@@ -600,4 +611,36 @@ fn refuses_fades_it_cannot_run() {
         fade_reply(&rig.fade(Control::Cct, "b", 3000.0, 1000)),
         Some(Err(FadeError::RuntimeUnavailable))
     );
+}
+
+#[test]
+fn reports_controllers_only_when_they_change() {
+    let mut rig = Rig::new();
+    let controllers = |connected| {
+        vec![Controller {
+            serial: "96c863a69af3".into(),
+            connected,
+        }]
+    };
+    let reports = |events: Vec<Event>| -> Vec<Vec<Controller>> {
+        events
+            .into_iter()
+            .filter_map(|event| match event {
+                Event::Controllers(controllers) => Some(controllers),
+                _ => None,
+            })
+            .collect()
+    };
+
+    rig.fake
+        .edit(|headset| headset.controllers = controllers(true));
+    assert_eq!(reports(rig.run_until(300)), vec![controllers(true)]);
+    assert_eq!(reports(rig.run_until(600)), Vec::<Vec<Controller>>::new());
+
+    rig.fake
+        .edit(|headset| headset.controllers = controllers(false));
+    assert_eq!(reports(rig.run_until(900)), vec![controllers(false)]);
+
+    rig.fake.edit(|headset| headset.running = false);
+    assert_eq!(reports(rig.run_until(1200)), vec![Vec::new()]);
 }
