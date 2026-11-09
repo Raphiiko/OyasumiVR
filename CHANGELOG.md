@@ -15,6 +15,12 @@ with [SemVer](https://semver.org/) prerelease suffixes:
 - Pre-release numbering never predicts the version of the eventual stable release, and
   versions are assigned when a build is published, never before.
 
+## [Unreleased]
+
+### Changed
+
+- Re-enabled pairing new Steam Frames, which 26.11.2 turned off temporarily
+
 ## [26.11.2]
 
 ### Changed

@@ -12,7 +12,7 @@ export const SETTINGS_KEY_THEMING_SETTINGS = 'THEMING_SETTINGS';
 export const SETTINGS_KEY_PULSOID_API = 'PULSOID_API';
 export const SETTINGS_KEY_STEAM_FRAME_PAIRING = 'STEAM_FRAME_PAIRING';
 /** Whether the UI offers new Steam Frame pairings. When off, a paired headset keeps its connection and its Unpair. */
-export const STEAM_FRAME_PAIRING_ENABLED = false;
+export const STEAM_FRAME_PAIRING_ENABLED = true;
 export const SETTINGS_FILE = 'settings.dat';
 export const CACHE_FILE = 'cache.dat';
 export const EVENT_LOG_FILE = 'event_log.dat';
