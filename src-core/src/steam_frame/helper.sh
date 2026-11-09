@@ -273,8 +273,8 @@ cleanup() {
   fi
 
   # a helper folder deleted by hand leaves its unit restarting a missing executable every 5 s;
-  # the second folder check, under keys_lock, keeps the unit of an installation started meanwhile
-  [ "$locked" = 1 ] || [ -d "$root" ] || remove_unit
+  # checking the folder under keys_lock keeps the unit of an installation started meanwhile
+  [ -d "$root" ] || remove_unit
 
   # remove the key lines last, so a failed step above leaves this PC able to try again
   if [ -f "$keys" ]; then
