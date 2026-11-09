@@ -84,7 +84,7 @@ install() {
   fi
 
   # upload and check the executable
-  mkdir -p "$root/staging" "$root/releases" "$root/clients" "$units/default.target.wants"
+  mkdir -p "$root/staging" "$root/releases" "$root/clients"
   cat >"$root/staging/$binary"
   printf '%s  %s\n' "$digest" "$root/staging/$binary" | sha256sum -c --status - || exit 65
   chmod 755 "$root/staging/$binary"
@@ -124,6 +124,9 @@ install() {
 
   # write the config and unit, switch current, restart
   [ -f "$root/config.json" ] || printf '{"port":%d}\n' "$port" >"$root/config.json"
+  # a cleanup that finds no helper folder removes the unit under keys_lock, so write it under it too
+  keys_lock
+  mkdir -p "$units/default.target.wants"
   cat >"$units/$unit" <<EOF
 [Unit]
 Description=OyasumiVR Helper
@@ -137,6 +140,7 @@ RestartSec=5
 WantedBy=default.target
 EOF
   ln -sfn "../$unit" "$units/default.target.wants/$unit"
+  exec 8>&-
   ln -sfn "releases/$version" "$root/current.new"
   mv -T "$root/current.new" "$root/current"
   systemctl --user daemon-reload
@@ -268,8 +272,9 @@ cleanup() {
     fi
   fi
 
-  # a helper folder deleted by hand leaves its unit restarting a missing executable every 5 s
-  [ "$locked" = 1 ] || remove_unit
+  # a helper folder deleted by hand leaves its unit restarting a missing executable every 5 s;
+  # the second folder check, under keys_lock, keeps the unit of an installation started meanwhile
+  [ "$locked" = 1 ] || [ -d "$root" ] || remove_unit
 
   # remove the key lines last, so a failed step above leaves this PC able to try again
   if [ -f "$keys" ]; then
