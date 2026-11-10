@@ -305,6 +305,59 @@ describe('SteamFrameHardwareBrightnessControlDriver', () => {
     fade.cancel();
   });
 
+  it("cancels a second Frame's fade when its maximum drops to the first Frame's", async () => {
+    const h = setup({
+      hmdSettings: {
+        [`OVR_HMD_${SERIAL}`]: { maxBrightness: 100 },
+        OVR_HMD_FPTEST000002: { maxBrightness: 125 },
+      },
+    });
+    h.report(brightness(40));
+    const first = sendFade(h, { target: 90, durationMs: 60_000, shownTarget: 90 });
+    await first.sent;
+    // a second paired Frame becomes the active HMD and starts its own fade
+    h.pairings.next([
+      ...h.pairings.value,
+      {
+        id: 'pairing-2',
+        complete: true,
+        identity: { serial: 'FPTEST000002' },
+      } as SteamFramePairing,
+    ]);
+    h.devices.next([
+      { class: 'HMD', isConnected: true, serialNumber: 'FPTEST000002' } as OVRDevice,
+    ]);
+    h.connections.next({
+      'pairing-2': {
+        pairingId: 'pairing-2',
+        status: 'connected',
+        brightness: brightness(40),
+      } as SteamFrameConnectionState,
+    });
+    const second = sendFade(h, { target: 120, durationMs: 60_000, shownTarget: 120 });
+    await second.sent;
+    h.settings.next({
+      ...h.settings.value,
+      hmdSettings: {
+        ...h.settings.value.hmdSettings,
+        OVR_HMD_FPTEST000002: { maxBrightness: 100 },
+      },
+    });
+    expect(second.fade.isCancelled()).toBe(true);
+    first.fade.cancel();
+    second.fade.cancel();
+  });
+
+  it('keeps a fade down from above the maximum through an unrelated settings change', async () => {
+    const h = setup({ hmdSettings: { [`OVR_HMD_${SERIAL}`]: { maxBrightness: 100 } } });
+    h.report(brightness(120));
+    const { fade, sent } = sendFade(h, { target: 30, durationMs: 60_000, shownTarget: 30 });
+    await sent;
+    h.settings.next({ ...h.settings.value, cctSoftwareMode: !h.settings.value.cctSoftwareMode });
+    expect(fade.isCancelled()).toBe(false);
+    fade.cancel();
+  });
+
   const noop = () => {};
   it.each([
     [
