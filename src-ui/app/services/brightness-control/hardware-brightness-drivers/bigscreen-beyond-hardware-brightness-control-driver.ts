@@ -30,14 +30,15 @@ export const BIGSCREEN_BEYOND_HARDWARE_BRIGHTNESS_CONTROL_DRIVER_BOUNDS: Hardwar
 export class BigscreenBeyondHardwareBrightnessControlDriver extends HardwareBrightnessControlDriver {
   private lastSetBrightnessPercentage = 100;
   private connected = new BehaviorSubject(false);
-  /** The Beyond SteamVR reports as its HMD; null without SteamVR, so the global settings apply. */
-  private hmdId: string | null = null;
+  /** The last Beyond SteamVR reported, kept while SteamVR stops; null until one is seen. */
+  private readonly hmdIds = new BehaviorSubject<string | null>(null);
+  override readonly boundsInputs: Observable<unknown> = this.hmdIds.pipe(distinctUntilChanged());
 
   constructor(appSettings: Observable<AppSettings>, devices: Observable<OVRDevice[]>) {
     super(appSettings);
     devices.subscribe((list) => {
       const hmd = list.find((d) => d.class === 'HMD' && d.manufacturerName === 'Bigscreen');
-      this.hmdId = hmd ? knownDeviceIdForOpenVR(hmd) : null;
+      if (hmd) this.hmdIds.next(knownDeviceIdForOpenVR(hmd));
     });
     events.bigscreenBeyondConnectedEvent.listen((event) => {
       this.connected.next(event.payload);
@@ -68,7 +69,8 @@ export class BigscreenBeyondHardwareBrightnessControlDriver extends HardwareBrig
   getBrightnessBounds(appSettings?: AppSettings): [number, number] {
     const config = this.getBrightnessConfiguration();
     const settings = appSettings ?? this.appSettings;
-    const own = this.hmdId ? settings.hmdSettings[this.hmdId]?.maxBrightness : undefined;
+    const hmdId = this.hmdIds.value;
+    const own = hmdId ? settings.hmdSettings[hmdId]?.maxBrightness : undefined;
     return [config.softwareStops[0], own ?? settings.bigscreenBeyondMaxBrightness];
   }
 

@@ -417,6 +417,20 @@ describe('HardwareBrightnessControlService with a Valve Index', () => {
     expect(h.service.brightness).toBe(120);
     expect(h.openvr.setAnalogGain).toHaveBeenCalledWith(1.2);
   });
+
+  it('applies and clamps to the own maximum of another Index that becomes active', async () => {
+    const h = await setupIndex(1.5);
+    h.settings.next({
+      ...h.settings.value,
+      hmdSettings: { 'OVR_HMD_LHR-SECOND': { maxBrightness: 120 } },
+    });
+    await settle();
+    expect(h.service.brightness).toBe(150);
+    h.openvr.devices.next([{ ...h.openvr.devices.value[0], serialNumber: 'LHR-SECOND' }]);
+    await settle();
+    expect(await firstValueFrom(h.service.brightnessBounds)).toEqual([9, 120]);
+    expect(h.service.brightness).toBe(120);
+  });
 });
 
 describe('simple brightness following a Valve Index', () => {

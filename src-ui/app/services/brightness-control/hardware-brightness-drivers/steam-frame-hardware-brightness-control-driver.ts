@@ -50,12 +50,17 @@ export class SteamFrameHardwareBrightnessControlDriver extends HardwareBrightnes
   private readonly updates = new ReplaySubject<number>(1);
   override readonly brightnessUpdates = this.updates.asObservable();
   private readonly hmd: Observable<ActiveHmd>;
+  override readonly boundsInputs: Observable<unknown>;
   private readonly matching: Observable<boolean>;
   private readonly available: Observable<boolean>;
   private currentHmd: ActiveHmd = { kind: 'none' };
   private frame: { pairingId: string; brightness: Brightness } | null = null;
   /** The last fade sent, with its hardware target; a lower maximum cancels it while it runs. */
-  private activeFade: { fade: SteamFrameBrightnessFade; target: number } | null = null;
+  private activeFade: {
+    fade: SteamFrameBrightnessFade;
+    target: number;
+    deviceId: string;
+  } | null = null;
   /** Set while a command runs; a newer value waits in `pending` and replaces an older one. */
   private sending = false;
   /** Also holds a value set while the paired Frame cannot take it, which goes out once it can. */
@@ -86,10 +91,15 @@ export class SteamFrameHardwareBrightnessControlDriver extends HardwareBrightnes
       distinctUntilChanged(),
       shareReplay(1)
     );
+    this.boundsInputs = this.hmd.pipe(
+      map((hmd) => (hmd.kind === 'frame' ? hmd.deviceId : null)),
+      distinctUntilChanged()
+    );
     this.hmd.subscribe((hmd) => this.onHmd(hmd));
-    appSettings
+    // the headset input re-runs the map once onHmd has stored the Frame it reads
+    combineLatest([appSettings, this.hmd])
       .pipe(
-        map((settings) => this.maxBrightness(settings)),
+        map(([settings]) => this.maxBrightness(settings, this.runningFade()?.deviceId)),
         distinctUntilChanged()
       )
       .subscribe((max) => this.onMaxBrightness(max));
@@ -104,12 +114,14 @@ export class SteamFrameHardwareBrightnessControlDriver extends HardwareBrightnes
     return [config.hardwareStops[0], this.maxBrightness(appSettings ?? this.appSettings)];
   }
 
-  /** The active Frame's own maximum, or the global one. */
-  private maxBrightness(settings: AppSettings): number {
-    const hmd = this.currentHmd;
-    const own =
-      hmd.kind === 'frame' ? settings.hmdSettings[hmd.deviceId]?.maxBrightness : undefined;
+  /** A Frame's own maximum, the active Frame's by default, or the global one. */
+  private maxBrightness(settings: AppSettings, deviceId = this.activeDeviceId()): number {
+    const own = deviceId ? settings.hmdSettings[deviceId]?.maxBrightness : undefined;
     return own ?? settings.steamFrameMaxBrightness;
+  }
+
+  private activeDeviceId(): string | null {
+    return this.currentHmd.kind === 'frame' ? this.currentHmd.deviceId : null;
   }
 
   async getBrightnessPercentage(): Promise<number> {
@@ -161,7 +173,8 @@ export class SteamFrameHardwareBrightnessControlDriver extends HardwareBrightnes
    * Drops a waiting set.
    */
   override fade(options: HardwareBrightnessFadeOptions): SteamFrameBrightnessFade | null {
-    if (!this.frame) return null;
+    const deviceId = this.activeDeviceId();
+    if (!this.frame || !deviceId) return null;
     // a waiting set would go out after the fade and supersede it
     this.pending = null;
     const request: SteamFrameFadeRequest = {
@@ -178,18 +191,24 @@ export class SteamFrameHardwareBrightnessControlDriver extends HardwareBrightnes
       frames,
       options.onAccept
     );
-    this.activeFade = { fade, target: request.target };
+    this.activeFade = { fade, target: request.target, deviceId };
     return fade;
   }
 
-  /** Cancels a running fade that would pass a new, lower maximum; its owner stops where it is. */
-  private onMaxBrightness(max: number) {
+  /** The last fade sent while it runs, or null. */
+  private runningFade() {
     const active = this.activeFade;
+    if (!active) return null;
+    const { fade } = active;
+    return fade.isComplete() || fade.isCancelled() || fade.isError() ? null : active;
+  }
+
+  /** Cancels a running fade that would pass its Frame's new, lower maximum; it stops where it is. */
+  private onMaxBrightness(max: number) {
+    const active = this.runningFade();
     if (!active) return;
-    const { fade, target } = active;
-    if (fade.isComplete() || fade.isCancelled() || fade.isError()) return;
-    const reported = this.frame?.brightness.percentage ?? target;
-    if (Math.max(target, reported) > max) fade.cancel();
+    const reported = this.frame?.brightness.percentage ?? active.target;
+    if (Math.max(active.target, reported) > max) active.fade.cancel();
   }
 
   /**

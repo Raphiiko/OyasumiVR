@@ -1,7 +1,7 @@
 import { invoke } from '@tauri-apps/api/core';
 import { BehaviorSubject, firstValueFrom, Subject } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { APP_SETTINGS_DEFAULT } from '../../../models/settings';
+import { APP_SETTINGS_DEFAULT, AppSettings } from '../../../models/settings';
 import type { OVRDevice } from '../../../models/ovr-device';
 import type { Brightness, FadeRequest as SteamFrameFadeCommand } from 'src-ui/app/bindings';
 import type { HardwareBrightnessFadeOptions } from './hardware-brightness-control-driver';
@@ -22,7 +22,7 @@ function brightness(percentage: number, overrides: Partial<Brightness> = {}) {
   return { runtime: true, supported: true, min: 9, max: 125, percentage, ...overrides };
 }
 
-function setup() {
+function setup(initial: Partial<AppSettings> = {}) {
   const status = new BehaviorSubject<OpenVRStatus>('INITIALIZED');
   const devices = new BehaviorSubject<OVRDevice[]>([
     { class: 'HMD', isConnected: true, serialNumber: SERIAL } as OVRDevice,
@@ -31,7 +31,7 @@ function setup() {
     { id: 'pairing-1', complete: true, identity: { serial: SERIAL } } as SteamFramePairing,
   ]);
   const connections = new BehaviorSubject<Record<string, SteamFrameConnectionState>>({});
-  const settings = new BehaviorSubject(structuredClone(APP_SETTINGS_DEFAULT));
+  const settings = new BehaviorSubject({ ...structuredClone(APP_SETTINGS_DEFAULT), ...initial });
   const driver = new SteamFrameHardwareBrightnessControlDriver(
     settings,
     { status, devices },
@@ -302,6 +302,35 @@ describe('SteamFrameHardwareBrightnessControlDriver', () => {
     await sent;
     h.setMax(100);
     expect(fade.isCancelled()).toBe(cancelled);
+    fade.cancel();
+  });
+
+  const noop = () => {};
+  it.each([
+    [
+      'after the Frame stops streaming here',
+      noop,
+      (h: ReturnType<typeof setup>) =>
+        h.devices.next([{ class: 'HMD', isConnected: false, serialNumber: SERIAL } as OVRDevice]),
+    ],
+    [
+      'to the global maximum read while SteamVR was off',
+      (h: ReturnType<typeof setup>) => {
+        h.status.next('INACTIVE');
+        h.settings.next({ ...h.settings.value, steamFrameMaxBrightness: 100 });
+        h.status.next('INITIALIZED');
+      },
+      noop,
+    ],
+  ])("cancels a fade when the Frame's own maximum drops %s", async (_, before, during) => {
+    const h = setup({ hmdSettings: { [`OVR_HMD_${SERIAL}`]: { maxBrightness: 125 } } });
+    before(h);
+    h.report(brightness(40));
+    const { fade, sent } = sendFade(h, { target: 120, durationMs: 60_000, shownTarget: 120 });
+    await sent;
+    during(h);
+    h.setMax(100);
+    expect(fade.isCancelled()).toBe(true);
     fade.cancel();
   });
 });
