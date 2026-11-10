@@ -898,8 +898,22 @@
   },
   "device-manager": {
     "config": {
+      "beyondFanSafety": {
+        "description": "Forzar el ventilador al 100% con valores de luminosidad superiores al 100%",
+        "title": "Seguridad del ventilador Overdrive",
+        "warning": "Esta función imita los parámetros de ventilador seguro del controlador oficial Bigscreen Beyond. Desactiva esta funcionalidad bajo tu propia responsabilidad."
+      },
+      "beyondSafeBrightness": {
+        "description": "Impide ajustar el brillo por encima del 150%.",
+        "title": "Limitar a niveles de brillo seguros",
+        "warning": "El fabricante no admite esta función.\n\nTenga en cuenta que podría dañar su visor: Desactive esta función bajo su propia responsabilidad."
+      },
       "disabled": {
         "tooltip": "Este dispositivo está desactivado"
+      },
+      "maxBrightness": {
+        "description": "Limita el valor máximo de brillo que OyasumiVR establecerá.",
+        "title": "Brillo máximo"
       },
       "tags": {
         "description": "Asigna etiquetas para organizar y filtrar tus dispositivos"
@@ -1576,34 +1590,6 @@
     "title": "Ejecutar automatizaciones"
   },
   "settings": {
-    "brightnessCct": {
-      "bigscreenBeyond": {
-        "forceFanSafety": {
-          "description": "Forzar el ventilador al 100% con valores de luminosidad superiores al 100%",
-          "title": "Seguridad del ventilador Overdrive",
-          "warning": "Esta función imita los parámetros de ventilador seguro del controlador oficial Bigscreen Beyond. Desactiva esta funcionalidad bajo tu propia responsabilidad."
-        },
-        "maxBrightness": {
-          "description": "Limita el valor máximo de brillo que OyasumiVR establecerá.",
-          "title": "Brillo máximo"
-        },
-        "permitRiskRange": {
-          "description": "Impide ajustar el brillo por encima del 150%.",
-          "title": "Limitar a niveles de brillo seguros",
-          "warning": "El fabricante no admite esta función.\n\nTenga en cuenta que podría dañar su visor: Desactive esta función bajo su propia responsabilidad."
-        },
-        "title": "Bigscreen Beyond"
-      },
-      "description": "Aquí encontrarás los ajustes relacionados con el brillo y la temperatura de color.",
-      "title": "Brillo y CCT",
-      "valveIndex": {
-        "maxBrightness": {
-          "description": "Limita el valor máximo de brillo que OyasumiVR establecerá.",
-          "title": "Brillo máximo"
-        },
-        "title": "Valve Index"
-      }
-    },
     "general": {
       "adminPrivileges": {
         "description": "Algunas funciones, como controlar los límites de potencia de tu GPU, necesitan privilegios de administrador. Al activarlo se piden una sola vez. Después OyasumiVR configura estas funciones sin volver a preguntar.",

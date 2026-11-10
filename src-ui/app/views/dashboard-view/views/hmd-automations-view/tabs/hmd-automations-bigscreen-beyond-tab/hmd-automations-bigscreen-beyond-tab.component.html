@@ -62,8 +62,8 @@
       </label>
     </app-setting-row>
     <app-setting-row
-      label="settings.brightnessCct.bigscreenBeyond.forceFanSafety.title"
-      description="settings.brightnessCct.bigscreenBeyond.forceFanSafety.description"
+      label="device-manager.config.beyondFanSafety.title"
+      description="device-manager.config.beyondFanSafety.description"
       [value]="appSettings.bigscreenBeyondBrightnessFanSafety"
       [defaultValue]="appSettingsDefaults.bigscreenBeyondBrightnessFanSafety"
       (resetToDefault)="toggleBigscreenBeyondForceFanBrightnessSafety()"
@@ -71,7 +71,7 @@
       <span
         rowLabel
         class="experimental-flag"
-        [tooltip]="'settings.brightnessCct.bigscreenBeyond.forceFanSafety.warning'"
+        [tooltip]="'device-manager.config.beyondFanSafety.warning'"
         [tooltipMode]="'right'"
       >
         <app-icon name="warning" />

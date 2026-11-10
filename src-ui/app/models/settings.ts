@@ -62,6 +62,7 @@ export interface AppSettings {
   // HW Specific
   valveIndexMaxBrightness: number; // User limit
   bigscreenBeyondMaxBrightness: number; // User limit
+  steamFrameMaxBrightness: number; // User limit
   bigscreenBeyondUnsafeBrightness: boolean; // Allow brightness above 150%
   bigscreenBeyondBrightnessFanSafety: boolean; // Force fan to 100% if brightness is above 100%
   // VRCX
@@ -153,6 +154,7 @@ export const APP_SETTINGS_DEFAULT: AppSettings = {
   // HW Specific
   valveIndexMaxBrightness: 160,
   bigscreenBeyondMaxBrightness: 150,
+  steamFrameMaxBrightness: 125,
   bigscreenBeyondUnsafeBrightness: false,
   bigscreenBeyondBrightnessFanSafety: true,
   // VRCX

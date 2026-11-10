@@ -41,6 +41,12 @@ export class DeviceManagerService {
   public readonly observedDevices = this._observedDevices.asObservable();
   public readonly knownDevices = this._data.pipe(map((data) => data.knownDevices));
   public readonly tags = this._data.pipe(map((data) => data.tags));
+  /** The known device id of the HMD SteamVR uses, or null while it reports none. */
+  public readonly activeHmdId = this.openvr.devices.pipe(
+    map((devices) => devices.find((d) => d.index === 0 && d.class === 'HMD')),
+    map((hmd) => (hmd ? this.getIdForOpenVRDevice(hmd) : null)),
+    distinctUntilChanged()
+  );
 
   constructor(
     private openvr: OpenVRService,

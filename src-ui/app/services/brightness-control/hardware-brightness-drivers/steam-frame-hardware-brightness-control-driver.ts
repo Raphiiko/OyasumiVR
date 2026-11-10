@@ -11,7 +11,7 @@ import {
 import { AppSettings } from '../../../models/settings';
 import { OVRDevice } from '../../../models/ovr-device';
 import type { OpenVRService, OpenVRStatus } from '../../openvr.service';
-import { Brightness, commands } from 'src-ui/app/bindings';
+import { Brightness, commands, SimpleCurve } from 'src-ui/app/bindings';
 import {
   SteamFrameConnectionState,
   SteamFrameFadeEnded,
@@ -89,8 +89,9 @@ export class SteamFrameHardwareBrightnessControlDriver extends HardwareBrightnes
     return STEAM_FRAME_HARDWARE_BRIGHTNESS_CONTROL_DRIVER_BOUNDS;
   }
 
-  getBrightnessBounds(): [number, number] {
-    return STEAM_FRAME_HARDWARE_BRIGHTNESS_CONTROL_DRIVER_BOUNDS.hardwareStops as [number, number];
+  getBrightnessBounds(appSettings?: AppSettings): [number, number] {
+    const config = this.getBrightnessConfiguration();
+    return [config.hardwareStops[0], (appSettings ?? this.appSettings).steamFrameMaxBrightness];
   }
 
   async getBrightnessPercentage(): Promise<number> {
@@ -150,10 +151,24 @@ export class SteamFrameHardwareBrightnessControlDriver extends HardwareBrightnes
       control: 'brightness',
       target: this.softwarePercentageToHardwarePercentage(options.target),
       durationMs: options.durationMs,
-      simple: options.simple,
+      simple: options.simple && this.helperSimpleCurve(options.simple, this.frame.brightness),
     };
     const frames = { fadeEnded$: this.fadeEnded };
     return new SteamFrameBrightnessFade(options.shownTarget, request, frames, options.onAccept);
+  }
+
+  /**
+   * The simple curve rescaled for the helper, which splits it with the Frame's reported range,
+   * so its fade steps stop at the user's maximum as `splitSimpleBrightness` does here.
+   */
+  private helperSimpleCurve(simple: SimpleCurve, brightness: Brightness): SimpleCurve {
+    const { min, max } = brightness;
+    const limit = this.getBrightnessBounds()[1];
+    if (min == null || max == null || max <= min || limit >= max) return simple;
+    // the helper's split is linear above min, and holds min below it
+    const scale = (limit - min) / (max - min);
+    const rescale = (value: number) => (value < min ? value : min + (value - min) * scale);
+    return { from: rescale(simple.from), to: rescale(simple.to) };
   }
 
   override matches(): Observable<boolean> {
@@ -205,11 +220,14 @@ export class SteamFrameHardwareBrightnessControlDriver extends HardwareBrightnes
     if (current !== null) this.updates.next(current);
   }
 
-  /** The reported value within the bounds, so a value outside them shows clamped. */
+  /**
+   * The reported value within the Frame's range, so a value outside it shows clamped. A value
+   * above the user's maximum shows as it is.
+   */
   private reportedPercentage(): number | null {
     const percentage = this.frame?.brightness.percentage ?? null;
     if (percentage === null) return null;
-    const [min, max] = this.getBrightnessBounds();
+    const [min, max] = this.getBrightnessConfiguration().hardwareStops;
     return clamp(percentage, min, max);
   }
 }

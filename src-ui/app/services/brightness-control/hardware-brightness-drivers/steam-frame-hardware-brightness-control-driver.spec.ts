@@ -30,8 +30,9 @@ function setup() {
     { id: 'pairing-1', complete: true, identity: { serial: SERIAL } } as SteamFramePairing,
   ]);
   const connections = new BehaviorSubject<Record<string, SteamFrameConnectionState>>({});
+  const settings = new BehaviorSubject(structuredClone(APP_SETTINGS_DEFAULT));
   const driver = new SteamFrameHardwareBrightnessControlDriver(
-    new BehaviorSubject(structuredClone(APP_SETTINGS_DEFAULT)),
+    settings,
     { status, devices },
     pairings,
     connections,
@@ -48,7 +49,9 @@ function setup() {
       } as SteamFrameConnectionState,
     });
   const available = () => firstValueFrom(driver.isAvailable());
-  return { status, devices, pairings, connections, driver, updates, report, available };
+  const setMax = (steamFrameMaxBrightness: number) =>
+    settings.next({ ...settings.value, steamFrameMaxBrightness });
+  return { status, devices, pairings, connections, driver, updates, report, available, setMax };
 }
 
 describe('SteamFrameHardwareBrightnessControlDriver', () => {
@@ -211,4 +214,42 @@ describe('SteamFrameHardwareBrightnessControlDriver', () => {
     expect(fade.targetBrightness).toBe(200);
     fade.cancel();
   });
+
+  it("limits a set to the user's maximum, and shows a report above it as it is", async () => {
+    const h = setup();
+    h.setMax(100);
+    h.report(brightness(40));
+    expect(h.driver.getBrightnessBounds()).toEqual([9, 100]);
+    vi.mocked(invoke).mockResolvedValue(100);
+    await h.driver.setBrightnessPercentage(120);
+    expect(invoke).toHaveBeenCalledWith('steam_frame_set_brightness', {
+      pairingId: 'pairing-1',
+      percentage: 100,
+    });
+    h.report(brightness(115));
+    expect(h.updates.at(-1)).toBe(115);
+  });
+
+  it.each([
+    ['below the maximum', 100, { from: 5, to: 50 }, [9, 50]],
+    ['up to the maximum', 100, { from: 50, to: 100 }, [50, 100]],
+    ['at the Frame maximum', 125, { from: 9, to: 100 }, [9, 125]],
+  ])(
+    "sends a simple fade the helper maps within the user's maximum: %s",
+    async (_, max, simple, [hardwareFrom, hardwareTo]) => {
+      const h = setup();
+      h.setMax(max);
+      h.report(brightness(40));
+      vi.mocked(invoke).mockResolvedValue(undefined);
+      const fade = h.driver.fade({ target: 0, durationMs: 1000, shownTarget: 0, simple })!;
+      void fade.start();
+      await new Promise((resolve) => setTimeout(resolve, 0));
+      const sent = vi.mocked(invoke).mock.calls[0][1] as { request: { simple: typeof simple } };
+      // the helper's split over the Frame's reported range of 9% to 125%
+      const helperSplit = (value: number) => (value < 9 ? 9 : 9 + (116 * (value - 9)) / 91);
+      expect(helperSplit(sent.request.simple.from)).toBeCloseTo(hardwareFrom);
+      expect(helperSplit(sent.request.simple.to)).toBeCloseTo(hardwareTo);
+      fade.cancel();
+    }
+  );
 });

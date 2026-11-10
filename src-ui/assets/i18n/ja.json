@@ -230,7 +230,6 @@
       "resolutionAutomations": "解像度",
       "runAutomations": "コマンドプロンプト",
       "settings": {
-        "brightnessCct": "輝度と色温度",
         "general": "一般",
         "hotkeys": "ショートカットキー",
         "integrations": "外部連携",
@@ -1065,10 +1064,34 @@
       "powerOn": "電源オン"
     },
     "config": {
+      "beyondFanSafety": {
+        "description": "輝度が100%を超える場合、ファン速度を強制的に100%にします",
+        "title": "過熱防止機能",
+        "warning": "この機能は公式のBigscreen Beyondドライバーの安全なファンパラメータを模倣します。この制限を無効にするとHMDを損傷する可能性があります。自己責任にてご利用ください。"
+      },
+      "beyondSafeBrightness": {
+        "description": "150%を超えないように制限します",
+        "title": "安全な輝度レベルに制限",
+        "warning": "この機能はメーカーによってサポートされていません。\n\nこの制限を無効にするとHMDを損傷する可能性があります。自己責任にてご利用ください。"
+      },
+      "brightnessOnUnsupportedHmds": {
+        "description": "オンにすると、お使いのHMDで動作が確認されていなくても、OyasumiVRがSteamVR経由で輝度の制御を試みます。",
+        "title": "非対応のHMDでハードウェアの輝度を制御",
+        "unlistedHmd": "非対応のHMDでも、有効にするとハードウェアの輝度コントロールが動作する場合があります。非対応のHMDで動作した場合は、ぜひ<a href='https://discord.gg/7MqdPJhYxC' target='_blank' rel='noopener noreferrer'>Discord</a>でお知らせください！"
+      },
+      "cctOnUnsupportedHmds": {
+        "description": "オンにすると、お使いのHMDで動作が確認されていなくても、OyasumiVRがSteamVR経由で色温度の制御を試みます。",
+        "title": "非対応のHMDで色温度を制御",
+        "unlistedHmd": "非対応のHMDでも、有効にすると色温度コントロールが動作する場合があります。非対応のHMDで動作した場合は、ぜひ<a href='https://discord.gg/7MqdPJhYxC' target='_blank' rel='noopener noreferrer'>Discord</a>でお知らせください！"
+      },
       "disabled": {
         "description": "無効化されたデバイスは自動処理や一括処理の影響を受けず、デバイスリストにも表示されません",
         "title": "デバイスを無効化",
         "tooltip": "無効化されたデバイス"
+      },
+      "maxBrightness": {
+        "description": "OyasumiVRが設定する最大輝度の値を制限します",
+        "title": "最大輝度"
       },
       "tags": {
         "description": "整理、フィルタリングするためにタグを割り当てます",
@@ -1962,57 +1985,6 @@
     "title": "コマンドの実行"
   },
   "settings": {
-    "brightnessCct": {
-      "automationsHint": "輝度と色温度の自動化は{link}で設定できます。",
-      "automationsLink": "自動化のページ",
-      "bigscreenBeyond": {
-        "forceFanSafety": {
-          "description": "輝度が100%を超える場合、ファン速度を強制的に100%にします",
-          "title": "過熱防止機能",
-          "warning": "この機能は公式のBigscreen Beyondドライバーの安全なファンパラメータを模倣します。この制限を無効にするとHMDを損傷する可能性があります。自己責任にてご利用ください。"
-        },
-        "maxBrightness": {
-          "description": "OyasumiVRが設定する最大輝度の値を制限します",
-          "title": "最大輝度"
-        },
-        "permitRiskRange": {
-          "description": "150%を超えないように制限します",
-          "title": "安全な輝度レベルに制限",
-          "warning": "この機能はメーカーによってサポートされていません。\n\nこの制限を無効にするとHMDを損傷する可能性があります。自己責任にてご利用ください。"
-        },
-        "title": "Bigscreen Beyond"
-      },
-      "cctControl": {
-        "unsupportedHmds": {
-          "description": "オンにすると、お使いのHMDで動作が確認されていなくても、OyasumiVRがSteamVR経由で色温度の制御を試みます。",
-          "listedHmd": "お使いのHMDは色温度コントロールに対応しています。",
-          "manufacturer": "メーカー",
-          "model": "モデル",
-          "noHmd": "この設定を変更するには、HMDを接続してください。",
-          "notReported": "不明",
-          "title": "非対応のHMDで色温度を制御",
-          "unlistedHmd": "非対応のHMDでも、有効にすると色温度コントロールが動作する場合があります。非対応のHMDで動作した場合は、ぜひ<a href='https://discord.gg/7MqdPJhYxC' target='_blank' rel='noopener noreferrer'>Discord</a>でお知らせください！"
-        }
-      },
-      "description": "輝度と色温度のハードウェア設定です。特定のHMD向けの設定も含みます。",
-      "hardwareBrightness": {
-        "unsupportedHmds": {
-          "description": "オンにすると、お使いのHMDで動作が確認されていなくても、OyasumiVRがSteamVR経由で輝度の制御を試みます。",
-          "listedHmd": "お使いのHMDはハードウェアの輝度コントロールに対応しています。",
-          "noHmd": "この設定を変更するには、HMDを接続してください。",
-          "title": "非対応のHMDでハードウェアの輝度を制御",
-          "unlistedHmd": "非対応のHMDでも、有効にするとハードウェアの輝度コントロールが動作する場合があります。非対応のHMDで動作した場合は、ぜひ<a href='https://discord.gg/7MqdPJhYxC' target='_blank' rel='noopener noreferrer'>Discord</a>でお知らせください！"
-        }
-      },
-      "title": "輝度と色温度",
-      "valveIndex": {
-        "maxBrightness": {
-          "description": "OyasumiVRが設定する最大輝度の値を制限します",
-          "title": "最大輝度"
-        },
-        "title": "Valve Index"
-      }
-    },
     "general": {
       "adminPrivileges": {
         "description": "GPUの電力制限の制御など、一部の機能には管理者権限が必要です。有効にすると、権限を一度だけ要求します。以降は、再び確認することなくこれらの機能を使用できます。",

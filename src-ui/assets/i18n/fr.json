@@ -230,7 +230,6 @@
       "resolutionAutomations": "Automatisations de résolution",
       "runAutomations": "Automatisations de commandes",
       "settings": {
-        "brightnessCct": "Luminosité et CCT",
         "general": "Général",
         "hotkeys": "Raccourcis clavier",
         "integrations": "Intégrations",
@@ -1065,10 +1064,34 @@
       "powerOn": "Allumer"
     },
     "config": {
+      "beyondFanSafety": {
+        "description": "Force le ventilateur à 100 % lorsque la luminosité dépasse 100 %",
+        "title": "Sécurité du ventilateur en surrégime",
+        "warning": "Cette fonctionnalité reproduit les paramètres de ventilation sûrs du pilote officiel du Bigscreen Beyond. Ne la désactivez qu'à vos propres risques."
+      },
+      "beyondSafeBrightness": {
+        "description": "Vous empêche de régler la luminosité au-delà de 150 %",
+        "title": "Limiter aux niveaux de luminosité sûrs",
+        "warning": "Cette fonctionnalité n'est pas prise en charge par le fabricant.\n\nAttention, cela pourrait endommager votre casque : ne la désactivez qu'à vos propres risques."
+      },
+      "brightnessOnUnsupportedHmds": {
+        "description": "Activez cette option pour laisser OyasumiVR essayer de contrôler la luminosité de votre casque via SteamVR, même si son fonctionnement n'est pas confirmé pour votre casque.",
+        "title": "Luminosité matérielle sur les casques non pris en charge",
+        "unlistedHmd": "Le contrôle matériel de la luminosité peut tout de même fonctionner sur votre casque une fois activé. Si votre casque fonctionne, faites-le-nous savoir sur <a href='https://discord.gg/7MqdPJhYxC' target='_blank' rel='noopener noreferrer'>Discord</a> !"
+      },
+      "cctOnUnsupportedHmds": {
+        "description": "Activez cette option pour laisser OyasumiVR essayer de contrôler la température de couleur de votre casque via SteamVR, même si son fonctionnement n'est pas confirmé pour votre casque.",
+        "title": "Température de couleur sur les casques non pris en charge",
+        "unlistedHmd": "Le contrôle de la température de couleur peut tout de même fonctionner sur certains casques une fois activé. Si votre casque fonctionne malgré l'absence de prise en charge, faites-le-nous savoir sur <a href='https://discord.gg/7MqdPJhYxC' target='_blank' rel='noopener noreferrer'>Discord</a> !"
+      },
       "disabled": {
         "description": "Les appareils désactivés ne sont pas concernés par les automatisations ni par les actions groupées, et n'apparaissent pas dans la liste des appareils",
         "title": "Désactiver l'appareil",
         "tooltip": "Cet appareil est désactivé"
+      },
+      "maxBrightness": {
+        "description": "Limite la luminosité maximale qu'OyasumiVR peut appliquer.",
+        "title": "Luminosité maximale"
       },
       "tags": {
         "description": "Attribuez des étiquettes pour organiser et filtrer vos appareils",
@@ -1962,57 +1985,6 @@
     "title": "Automatisations de commandes"
   },
   "settings": {
-    "brightnessCct": {
-      "automationsHint": "Les automatisations de luminosité et de température de couleur se trouvent sur leur {link}.",
-      "automationsLink": "page d'automatisations",
-      "bigscreenBeyond": {
-        "forceFanSafety": {
-          "description": "Force le ventilateur à 100 % lorsque la luminosité dépasse 100 %",
-          "title": "Sécurité du ventilateur en surrégime",
-          "warning": "Cette fonctionnalité reproduit les paramètres de ventilation sûrs du pilote officiel du Bigscreen Beyond. Ne la désactivez qu'à vos propres risques."
-        },
-        "maxBrightness": {
-          "description": "Limite la luminosité maximale qu'OyasumiVR peut appliquer.",
-          "title": "Luminosité maximale"
-        },
-        "permitRiskRange": {
-          "description": "Vous empêche de régler la luminosité au-delà de 150 %",
-          "title": "Limiter aux niveaux de luminosité sûrs",
-          "warning": "Cette fonctionnalité n'est pas prise en charge par le fabricant.\n\nAttention, cela pourrait endommager votre casque : ne la désactivez qu'à vos propres risques."
-        },
-        "title": "Bigscreen Beyond"
-      },
-      "cctControl": {
-        "unsupportedHmds": {
-          "description": "Activez cette option pour laisser OyasumiVR essayer de contrôler la température de couleur de votre casque via SteamVR, même si son fonctionnement n'est pas confirmé pour votre casque.",
-          "listedHmd": "Le contrôle de la température de couleur est pris en charge par votre casque.",
-          "manufacturer": "Fabricant",
-          "model": "Modèle",
-          "noHmd": "Connectez votre casque pour modifier ce paramètre.",
-          "notReported": "non communiqué",
-          "title": "Température de couleur sur les casques non pris en charge",
-          "unlistedHmd": "Le contrôle de la température de couleur peut tout de même fonctionner sur certains casques une fois activé. Si votre casque fonctionne malgré l'absence de prise en charge, faites-le-nous savoir sur <a href='https://discord.gg/7MqdPJhYxC' target='_blank' rel='noopener noreferrer'>Discord</a> !"
-        }
-      },
-      "description": "Paramètres matériels de luminosité et de température de couleur, y compris des paramètres propres à certains casques.",
-      "hardwareBrightness": {
-        "unsupportedHmds": {
-          "description": "Activez cette option pour laisser OyasumiVR essayer de contrôler la luminosité de votre casque via SteamVR, même si son fonctionnement n'est pas confirmé pour votre casque.",
-          "listedHmd": "Le contrôle matériel de la luminosité est pris en charge par votre casque.",
-          "noHmd": "Connectez votre casque pour modifier ce paramètre.",
-          "title": "Luminosité matérielle sur les casques non pris en charge",
-          "unlistedHmd": "Le contrôle matériel de la luminosité peut tout de même fonctionner sur votre casque une fois activé. Si votre casque fonctionne, faites-le-nous savoir sur <a href='https://discord.gg/7MqdPJhYxC' target='_blank' rel='noopener noreferrer'>Discord</a> !"
-        }
-      },
-      "title": "Luminosité et température de couleur",
-      "valveIndex": {
-        "maxBrightness": {
-          "description": "Limite la luminosité maximale qu'OyasumiVR peut appliquer.",
-          "title": "Luminosité maximale"
-        },
-        "title": "Valve Index"
-      }
-    },
     "general": {
       "adminPrivileges": {
         "description": "Certaines fonctionnalités, comme la gestion des limites de consommation de votre GPU, nécessitent des droits d'administrateur. Activer cette option les demande une seule fois. Ensuite, OyasumiVR peut utiliser ces fonctionnalités sans redemander.",
