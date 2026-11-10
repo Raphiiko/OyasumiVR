@@ -108,7 +108,8 @@ export class HardwareBrightnessControlService {
       openvr
     );
     this.driverBigscreenBeyond = new BigscreenBeyondHardwareBrightnessControlDriver(
-      this.appSettingsService.settings
+      this.appSettingsService.settings,
+      openvr.devices
     );
     this.driverSteamFrame = new SteamFrameHardwareBrightnessControlDriver(
       this.appSettingsService.settings,

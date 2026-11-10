@@ -50,9 +50,24 @@ function setup() {
       } as SteamFrameConnectionState,
     });
   const available = () => firstValueFrom(driver.isAvailable());
-  const setMax = (steamFrameMaxBrightness: number) =>
-    settings.next({ ...settings.value, steamFrameMaxBrightness });
-  return { status, devices, pairings, connections, driver, updates, report, available, setMax };
+  /** Sets this Frame's own maximum. */
+  const setMax = (maxBrightness: number) =>
+    settings.next({
+      ...settings.value,
+      hmdSettings: { [`OVR_HMD_${SERIAL}`]: { maxBrightness } },
+    });
+  return {
+    status,
+    devices,
+    pairings,
+    connections,
+    settings,
+    driver,
+    updates,
+    report,
+    available,
+    setMax,
+  };
 }
 
 describe('SteamFrameHardwareBrightnessControlDriver', () => {
@@ -214,6 +229,17 @@ describe('SteamFrameHardwareBrightnessControlDriver', () => {
     });
     expect(fade.targetBrightness).toBe(200);
     fade.cancel();
+  });
+
+  it('uses the global maximum while the Frame has none of its own', () => {
+    const h = setup();
+    h.report(brightness(40));
+    h.settings.next({
+      ...h.settings.value,
+      steamFrameMaxBrightness: 110,
+      hmdSettings: { OVR_HMD_FPOTHER00001: { maxBrightness: 100 } },
+    });
+    expect(h.driver.getBrightnessBounds()).toEqual([9, 110]);
   });
 
   it("limits a set to the user's maximum, and shows a report above it as it is", async () => {

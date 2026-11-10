@@ -23,6 +23,7 @@ import {
   SteamFrameFadeRequest,
 } from '../../steam-frame/steam-frame-fade-task';
 import { clamp } from '../../../utils/number-utils';
+import { knownDeviceIdForOpenVR } from '../../../models/device-manager';
 import {
   HardwareBrightnessControlDriver,
   HardwareBrightnessControlDriverBounds,
@@ -39,7 +40,8 @@ export const STEAM_FRAME_HARDWARE_BRIGHTNESS_CONTROL_DRIVER_BOUNDS: HardwareBrig
 
 /** The active HMD: a paired Frame, or none for no HMD and for a headset without a pairing. */
 type ActiveHmd =
-  { kind: 'none' } | { kind: 'frame'; pairingId: string; brightness: Brightness | null };
+  | { kind: 'none' }
+  | { kind: 'frame'; pairingId: string; deviceId: string; brightness: Brightness | null };
 
 /** Sets a paired Steam Frame's brightness through its helper, which also reports it. */
 export class SteamFrameHardwareBrightnessControlDriver extends HardwareBrightnessControlDriver {
@@ -87,7 +89,7 @@ export class SteamFrameHardwareBrightnessControlDriver extends HardwareBrightnes
     this.hmd.subscribe((hmd) => this.onHmd(hmd));
     appSettings
       .pipe(
-        map((settings) => settings.steamFrameMaxBrightness),
+        map((settings) => this.maxBrightness(settings)),
         distinctUntilChanged()
       )
       .subscribe((max) => this.onMaxBrightness(max));
@@ -99,7 +101,15 @@ export class SteamFrameHardwareBrightnessControlDriver extends HardwareBrightnes
 
   getBrightnessBounds(appSettings?: AppSettings): [number, number] {
     const config = this.getBrightnessConfiguration();
-    return [config.hardwareStops[0], (appSettings ?? this.appSettings).steamFrameMaxBrightness];
+    return [config.hardwareStops[0], this.maxBrightness(appSettings ?? this.appSettings)];
+  }
+
+  /** The active Frame's own maximum, or the global one. */
+  private maxBrightness(settings: AppSettings): number {
+    const hmd = this.currentHmd;
+    const own =
+      hmd.kind === 'frame' ? settings.hmdSettings[hmd.deviceId]?.maxBrightness : undefined;
+    return own ?? settings.steamFrameMaxBrightness;
   }
 
   async getBrightnessPercentage(): Promise<number> {
@@ -206,13 +216,19 @@ export class SteamFrameHardwareBrightnessControlDriver extends HardwareBrightnes
     pairings: SteamFramePairing[],
     connections: Record<string, SteamFrameConnectionState>
   ): ActiveHmd {
-    const serial = devices.find((d) => d.class === 'HMD' && d.isConnected)?.serialNumber;
-    if (status !== 'INITIALIZED' || !serial) return { kind: 'none' };
+    const hmd = devices.find((d) => d.class === 'HMD' && d.isConnected);
+    if (status !== 'INITIALIZED' || !hmd?.serialNumber) return { kind: 'none' };
+    const serial = hmd.serialNumber;
     const pairing = pairings.find((p) => p.complete && p.identity.serial === serial);
     if (!pairing) return { kind: 'none' };
     const state = connections[pairing.id];
     const brightness = state?.status === 'connected' ? (state.brightness ?? null) : null;
-    return { kind: 'frame', pairingId: pairing.id, brightness };
+    return {
+      kind: 'frame',
+      pairingId: pairing.id,
+      deviceId: knownDeviceIdForOpenVR(hmd),
+      brightness,
+    };
   }
 
   private usable(brightness: Brightness | null): brightness is Brightness {

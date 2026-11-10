@@ -21,6 +21,7 @@ import {
   DMDeviceTag,
   DMDeviceType,
   DMKnownDevice,
+  knownDeviceIdForOpenVR,
 } from '../models/device-manager';
 import { SETTINGS_KEY_DEVICE_MANAGER, SETTINGS_STORE } from '../globals';
 import { OpenVRService } from './openvr.service';
@@ -530,7 +531,7 @@ export class DeviceManagerService {
   }
 
   public getIdForOpenVRDevice(device: OVRDevice): string {
-    return `OVR_${device.class}_${device.serialNumber}`;
+    return knownDeviceIdForOpenVR(device);
   }
 
   public getIdForLighthouseDevice(device: LighthouseDevice): string {

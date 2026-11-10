@@ -22,7 +22,11 @@ const INDEX: Partial<OVRDevice> = {
   serialNumber: 'LHR-1',
 };
 const BEYOND: Partial<OVRDevice> = { manufacturerName: 'Bigscreen', modelNumber: 'Beyond' };
-const QUEST: Partial<OVRDevice> = { manufacturerName: 'Oculus', modelNumber: 'Quest 3' };
+const QUEST: Partial<OVRDevice> = {
+  manufacturerName: 'Oculus',
+  modelNumber: 'Quest 3',
+  serialNumber: 'QST-TEST0001',
+};
 const FRAME: Partial<OVRDevice> = {
   manufacturerName: 'Valve',
   modelNumber: 'Steam Frame',
@@ -102,6 +106,12 @@ async function setup(
   const reply = (cct: SteamFrameCct) => replies.shift()!(cct);
   const setTryUnsupported = (value: boolean) =>
     settings.next({ ...settings.value, cctControlOnUnsupportedHmds: value });
+  /** Sets the Quest's own value, which wins over the global one. */
+  const setQuestTryUnsupported = (value: boolean) =>
+    settings.next({
+      ...settings.value,
+      hmdSettings: { 'OVR_HMD_QST-TEST0001': { cctControlOnUnsupportedHmd: value } },
+    });
   const activate = (device: Partial<OVRDevice>) =>
     devices.next([{ index: 0, class: 'HMD', isConnected: true, ...device } as OVRDevice]);
   return {
@@ -114,6 +124,7 @@ async function setup(
     report,
     reply,
     setTryUnsupported,
+    setQuestTryUnsupported,
     activate,
     end,
   };
@@ -183,6 +194,17 @@ describe('CCTControlService driver selection', () => {
     expect(writes()).toEqual([6600, 3000, 6600]);
     await service.setCCT(4000);
     expect(writes()).toEqual([6600, 3000, 6600]);
+  });
+
+  it.each([
+    ['its own opt-in over the global setting off', false, true, true],
+    ['its own opt-out over the global setting on', true, false, false],
+  ])('tries an unlisted headset by %s', async (_, global, own, available) => {
+    const { service, setTryUnsupported, setQuestTryUnsupported } = await setup(QUEST);
+    setTryUnsupported(global);
+    setQuestTryUnsupported(own);
+    await settle();
+    expect(await firstValueFrom(service.driverIsAvailable)).toBe(available);
   });
 
   it('writes the stored value once a listed headset becomes active', async () => {

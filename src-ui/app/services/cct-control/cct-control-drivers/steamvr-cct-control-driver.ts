@@ -10,6 +10,7 @@ import {
 } from 'rxjs';
 import { AppSettings } from '../../../models/settings';
 import { OVRDevice } from '../../../models/ovr-device';
+import { knownDeviceIdForOpenVR } from '../../../models/device-manager';
 import type { OpenVRService } from '../../openvr.service';
 import { CctControlDriver } from './cct-control-driver';
 
@@ -38,16 +39,13 @@ export class SteamVrCctControlDriver extends CctControlDriver {
     appSettings: Observable<AppSettings>
   ) {
     super();
-    const tryUnsupported = appSettings.pipe(
-      map((settings) => settings.cctControlOnUnsupportedHmds),
-      distinctUntilChanged()
-    );
-    this.matching = combineLatest([openvr.status, openvr.devices, tryUnsupported]).pipe(
+    this.matching = combineLatest([openvr.status, openvr.devices, appSettings]).pipe(
       debounceTime(100),
-      map(([status, devices, tryUnsupported]) => {
+      map(([status, devices, settings]) => {
         const hmd = devices.find((d) => d.index === 0);
         if (status !== 'INITIALIZED' || hmd?.class !== 'HMD' || !hmd.isConnected) return false;
-        return tryUnsupported || isSteamVrCctSupportedHmd(hmd);
+        const own = settings.hmdSettings[knownDeviceIdForOpenVR(hmd)]?.cctControlOnUnsupportedHmd;
+        return (own ?? settings.cctControlOnUnsupportedHmds) || isSteamVrCctSupportedHmd(hmd);
       }),
       distinctUntilChanged(),
       shareReplay(1)

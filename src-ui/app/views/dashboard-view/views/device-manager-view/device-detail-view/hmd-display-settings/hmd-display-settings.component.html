@@ -2,18 +2,19 @@
   <div class="setting-category">
     <h2>{{ 'device-manager.detail.sections.display' | transloco }}</h2>
     <div class="settings">
-      @if (maxBrightness(); as max) {
+      @if (maxBrightnessRange(); as range) {
+        @let maxBrightness = values().maxBrightness ?? range[1];
         <app-setting-row
           label="device-manager.config.maxBrightness.title"
           description="device-manager.config.maxBrightness.description"
-          [value]="max.value"
-          [defaultValue]="defaults[max.key]"
+          [value]="maxBrightness"
+          [defaultValue]="maxBrightnessDefault()"
           (resetToDefault)="setMaxBrightness($event)"
         >
           <app-slider-setting
-            [min]="max.min"
-            [max]="max.max"
-            [value]="max.value"
+            [min]="range[0]"
+            [max]="range[1]"
+            [value]="maxBrightness"
             (valueChange)="setMaxBrightness($event)"
             unit="%"
           ></app-slider-setting>
@@ -23,7 +24,7 @@
         <app-setting-row
           label="device-manager.config.beyondSafeBrightness.title"
           description="device-manager.config.beyondSafeBrightness.description"
-          [value]="settings().bigscreenBeyondUnsafeBrightness"
+          [value]="values().unsafeBrightness"
           [defaultValue]="defaults.bigscreenBeyondUnsafeBrightness"
           (resetToDefault)="toggleBeyondSafeBrightness()"
         >
@@ -38,32 +39,8 @@
           <label class="switch-toggle">
             <input
               type="checkbox"
-              [checked]="!settings().bigscreenBeyondUnsafeBrightness"
+              [checked]="!values().unsafeBrightness"
               (change)="toggleBeyondSafeBrightness()"
-            />
-            <span class="switch-toggle-slider"></span>
-          </label>
-        </app-setting-row>
-        <app-setting-row
-          label="device-manager.config.beyondFanSafety.title"
-          description="device-manager.config.beyondFanSafety.description"
-          [value]="settings().bigscreenBeyondBrightnessFanSafety"
-          [defaultValue]="defaults.bigscreenBeyondBrightnessFanSafety"
-          (resetToDefault)="toggleBeyondFanSafety()"
-        >
-          <span
-            rowLabel
-            class="experimental-flag"
-            [tooltip]="'device-manager.config.beyondFanSafety.warning'"
-            [tooltipMode]="'right'"
-          >
-            <app-icon name="warning" />
-          </span>
-          <label class="switch-toggle">
-            <input
-              type="checkbox"
-              [checked]="settings().bigscreenBeyondBrightnessFanSafety"
-              (change)="toggleBeyondFanSafety()"
             />
             <span class="switch-toggle-slider"></span>
           </label>
@@ -73,14 +50,14 @@
         <app-setting-row
           label="device-manager.config.brightnessOnUnsupportedHmds.title"
           description="device-manager.config.brightnessOnUnsupportedHmds.description"
-          [value]="settings().hardwareBrightnessOnUnsupportedHmds"
+          [value]="values().hardwareBrightnessOnUnsupportedHmd"
           [defaultValue]="defaults.hardwareBrightnessOnUnsupportedHmds"
           (resetToDefault)="toggleBrightnessFallback()"
         >
           <label class="switch-toggle">
             <input
               type="checkbox"
-              [checked]="settings().hardwareBrightnessOnUnsupportedHmds"
+              [checked]="values().hardwareBrightnessOnUnsupportedHmd"
               (change)="toggleBrightnessFallback()"
             />
             <span class="switch-toggle-slider"></span>
@@ -98,14 +75,14 @@
         <app-setting-row
           label="device-manager.config.cctOnUnsupportedHmds.title"
           description="device-manager.config.cctOnUnsupportedHmds.description"
-          [value]="settings().cctControlOnUnsupportedHmds"
+          [value]="values().cctControlOnUnsupportedHmd"
           [defaultValue]="defaults.cctControlOnUnsupportedHmds"
           (resetToDefault)="toggleCctFallback()"
         >
           <label class="switch-toggle">
             <input
               type="checkbox"
-              [checked]="settings().cctControlOnUnsupportedHmds"
+              [checked]="values().cctControlOnUnsupportedHmd"
               (change)="toggleCctFallback()"
             />
             <span class="switch-toggle-slider"></span>

@@ -1,6 +1,6 @@
 import { BehaviorSubject, filter, firstValueFrom } from 'rxjs';
 import { describe, expect, it } from 'vitest';
-import { APP_SETTINGS_DEFAULT } from '../../../models/settings';
+import { APP_SETTINGS_DEFAULT, AppSettings } from '../../../models/settings';
 import { OVRDevice } from '../../../models/ovr-device';
 import { OpenVRService } from '../../openvr.service';
 import { SteamVRAnalogGainHardwareBrightnessControlDriver } from './steamvr-analog-gain-hardware-brightness-control-driver';
@@ -11,12 +11,17 @@ const ok = <T>(data: T) => ({ status: 'ok' as const, data });
 const ANALOG_GAIN_HMD = {
   manufacturerName: 'Example',
   modelNumber: 'Headset',
+  serialNumber: 'EXM-TEST0001',
   displaySupportsAnalogGain: true,
   displayMinAnalogGain: 0.2,
   displayMaxAnalogGain: 0.8,
 };
 
-function createDriver(hmd: Partial<OVRDevice> | null, enabled = true) {
+function createDriver(
+  hmd: Partial<OVRDevice> | null,
+  enabled = true,
+  hmdSettings: AppSettings['hmdSettings'] = {}
+) {
   let analogGain = 0.8;
   const openvr = {
     status: new BehaviorSubject('INITIALIZED'),
@@ -31,6 +36,7 @@ function createDriver(hmd: Partial<OVRDevice> | null, enabled = true) {
   const settings = new BehaviorSubject({
     ...APP_SETTINGS_DEFAULT,
     hardwareBrightnessOnUnsupportedHmds: enabled,
+    hmdSettings,
   });
   const driver = new SteamVRAnalogGainHardwareBrightnessControlDriver(settings, openvr);
   return { driver, analogGain: () => analogGain };
@@ -45,6 +51,15 @@ describe('SteamVRAnalogGainHardwareBrightnessControlDriver', () => {
     expect(await available(ANALOG_GAIN_HMD, false)).toBe(false);
     expect(await available({ ...ANALOG_GAIN_HMD, isConnected: false })).toBe(false);
     expect(await available(null)).toBe(false);
+  });
+
+  it.each([
+    ['its own opt-in over the global setting off', false, true, true],
+    ['its own opt-out over the global setting on', true, false, false],
+  ])('serves an HMD by %s', async (_, global, own, available) => {
+    const hmdSettings = { 'OVR_HMD_EXM-TEST0001': { hardwareBrightnessOnUnsupportedHmd: own } };
+    const { driver } = createDriver(ANALOG_GAIN_HMD, global, hmdSettings);
+    expect(await firstValueFrom(driver.isAvailable())).toBe(available);
   });
 
   it.each([
