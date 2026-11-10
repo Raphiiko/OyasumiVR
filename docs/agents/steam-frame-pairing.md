@@ -287,7 +287,8 @@ brightness cache without a write, and simple mode derives its value from them. T
 simple services write to it even at the cached value, because the shown value may be clamped.
 Sets and fades stop at the user's maximum, `steamFrameMaxBrightness`, which the Frame's device page
 sets. The helper maps a simple-mode fade over the Frame's own range, so the driver rescales the
-simple curve it sends to keep each step within that maximum.
+simple curve it sends to keep each step within that maximum. Lowering the maximum below a running
+fade's target or the reported value cancels that fade where it is.
 
 `SteamFrameCctControlDriver` works the same way while the report says `available`. A set to the
 shown Kelvin still writes when `exact` is false. The driver also matches an allowlisted Frame model

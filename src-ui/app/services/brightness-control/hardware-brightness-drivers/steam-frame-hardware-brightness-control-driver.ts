@@ -52,6 +52,8 @@ export class SteamFrameHardwareBrightnessControlDriver extends HardwareBrightnes
   private readonly available: Observable<boolean>;
   private currentHmd: ActiveHmd = { kind: 'none' };
   private frame: { pairingId: string; brightness: Brightness } | null = null;
+  /** The last fade sent, with its hardware target; a lower maximum cancels it while it runs. */
+  private activeFade: { fade: SteamFrameBrightnessFade; target: number } | null = null;
   /** Set while a command runs; a newer value waits in `pending` and replaces an older one. */
   private sending = false;
   /** Also holds a value set while the paired Frame cannot take it, which goes out once it can. */
@@ -83,6 +85,12 @@ export class SteamFrameHardwareBrightnessControlDriver extends HardwareBrightnes
       shareReplay(1)
     );
     this.hmd.subscribe((hmd) => this.onHmd(hmd));
+    appSettings
+      .pipe(
+        map((settings) => settings.steamFrameMaxBrightness),
+        distinctUntilChanged()
+      )
+      .subscribe((max) => this.onMaxBrightness(max));
   }
 
   getBrightnessConfiguration(): HardwareBrightnessControlDriverBounds {
@@ -154,7 +162,24 @@ export class SteamFrameHardwareBrightnessControlDriver extends HardwareBrightnes
       simple: options.simple && this.helperSimpleCurve(options.simple, this.frame.brightness),
     };
     const frames = { fadeEnded$: this.fadeEnded };
-    return new SteamFrameBrightnessFade(options.shownTarget, request, frames, options.onAccept);
+    const fade = new SteamFrameBrightnessFade(
+      options.shownTarget,
+      request,
+      frames,
+      options.onAccept
+    );
+    this.activeFade = { fade, target: request.target };
+    return fade;
+  }
+
+  /** Cancels a running fade that would pass a new, lower maximum; its owner stops where it is. */
+  private onMaxBrightness(max: number) {
+    const active = this.activeFade;
+    if (!active) return;
+    const { fade, target } = active;
+    if (fade.isComplete() || fade.isCancelled() || fade.isError()) return;
+    const reported = this.frame?.brightness.percentage ?? target;
+    if (Math.max(target, reported) > max) fade.cancel();
   }
 
   /**
@@ -165,9 +190,9 @@ export class SteamFrameHardwareBrightnessControlDriver extends HardwareBrightnes
     const { min, max } = brightness;
     const limit = this.getBrightnessBounds()[1];
     if (min == null || max == null || max <= min || limit >= max) return simple;
-    // the helper's split is linear above min, and holds min below it
+    // one linear map about min keeps each value on its side of min, and keeps the easing linear
     const scale = (limit - min) / (max - min);
-    const rescale = (value: number) => (value < min ? value : min + (value - min) * scale);
+    const rescale = (value: number) => min + (value - min) * scale;
     return { from: rescale(simple.from), to: rescale(simple.to) };
   }
 

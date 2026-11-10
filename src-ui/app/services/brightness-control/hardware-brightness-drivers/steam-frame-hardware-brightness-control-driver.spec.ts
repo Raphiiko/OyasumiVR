@@ -3,7 +3,8 @@ import { BehaviorSubject, firstValueFrom, Subject } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { APP_SETTINGS_DEFAULT } from '../../../models/settings';
 import type { OVRDevice } from '../../../models/ovr-device';
-import type { Brightness } from 'src-ui/app/bindings';
+import type { Brightness, FadeRequest as SteamFrameFadeCommand } from 'src-ui/app/bindings';
+import type { HardwareBrightnessFadeOptions } from './hardware-brightness-control-driver';
 import type {
   SteamFrameConnectionState,
   SteamFrameFadeEnded,
@@ -230,26 +231,51 @@ describe('SteamFrameHardwareBrightnessControlDriver', () => {
     expect(h.updates.at(-1)).toBe(115);
   });
 
+  /** Starts a fade and resolves with the request the helper receives. */
+  function sendFade(h: ReturnType<typeof setup>, options: HardwareBrightnessFadeOptions) {
+    const fade = h.driver.fade(options)!;
+    const sent = new Promise<SteamFrameFadeCommand>((resolve) =>
+      vi.mocked(invoke).mockImplementation(async (command, args) => {
+        if (command === 'steam_frame_fade')
+          resolve((args as { request: SteamFrameFadeCommand }).request);
+      })
+    );
+    void fade.start();
+    return { fade, sent };
+  }
+
   it.each([
-    ['below the maximum', 100, { from: 5, to: 50 }, [9, 50]],
-    ['up to the maximum', 100, { from: 50, to: 100 }, [50, 100]],
-    ['at the Frame maximum', 125, { from: 9, to: 100 }, [9, 125]],
+    ['below the maximum', 100, { from: 5, to: 50 }, [9, 27.5, 50]],
+    ['up to the maximum', 100, { from: 50, to: 100 }, [50, 75, 100]],
+    ['across the hardware minimum', 100, { from: 0, to: 100 }, [9, 50, 100]],
+    ['at the Frame maximum', 125, { from: 9, to: 100 }, [9, 67, 125]],
   ])(
     "sends a simple fade the helper maps within the user's maximum: %s",
-    async (_, max, simple, [hardwareFrom, hardwareTo]) => {
+    async (_, max, simple, [hardwareFrom, hardwareMid, hardwareTo]) => {
       const h = setup();
       h.setMax(max);
       h.report(brightness(40));
-      vi.mocked(invoke).mockResolvedValue(undefined);
-      const fade = h.driver.fade({ target: 0, durationMs: 1000, shownTarget: 0, simple })!;
-      void fade.start();
-      await new Promise((resolve) => setTimeout(resolve, 0));
-      const sent = vi.mocked(invoke).mock.calls[0][1] as { request: { simple: typeof simple } };
+      const { fade, sent } = sendFade(h, { target: 0, durationMs: 1000, shownTarget: 0, simple });
+      const curve = (await sent).simple!;
       // the helper's split over the Frame's reported range of 9% to 125%
       const helperSplit = (value: number) => (value < 9 ? 9 : 9 + (116 * (value - 9)) / 91);
-      expect(helperSplit(sent.request.simple.from)).toBeCloseTo(hardwareFrom);
-      expect(helperSplit(sent.request.simple.to)).toBeCloseTo(hardwareTo);
+      expect(helperSplit(curve.from)).toBeCloseTo(hardwareFrom);
+      expect(helperSplit((curve.from + curve.to) / 2)).toBeCloseTo(hardwareMid);
+      expect(helperSplit(curve.to)).toBeCloseTo(hardwareTo);
       fade.cancel();
     }
   );
+
+  it.each([
+    ['cancels a fade toward a target above it', 120, true],
+    ['keeps a fade toward a target below it', 30, false],
+  ])('on a lower maximum during a fade, %s', async (_, target, cancelled) => {
+    const h = setup();
+    h.report(brightness(40));
+    const { fade, sent } = sendFade(h, { target, durationMs: 60_000, shownTarget: target });
+    await sent;
+    h.setMax(100);
+    expect(fade.isCancelled()).toBe(cancelled);
+    fade.cancel();
+  });
 });
