@@ -1,99 +1,95 @@
 @if (visible()) {
-  <div class="setting-category">
-    <h2>{{ 'device-manager.detail.sections.display' | transloco }}</h2>
-    <div class="settings">
-      @if (maxBrightnessRange(); as range) {
-        @let maxBrightness = values().maxBrightness ?? range[1];
-        <app-setting-row
-          label="device-manager.config.maxBrightness.title"
-          description="device-manager.config.maxBrightness.description"
+  <h2>{{ 'device-manager.detail.sections.display' | transloco }}</h2>
+  <div class="settings">
+    @if (maxBrightnessRange(); as range) {
+      @let maxBrightness = values().maxBrightness ?? range[1];
+      <app-setting-row
+        label="device-manager.config.maxBrightness.title"
+        description="device-manager.config.maxBrightness.description"
+        [value]="maxBrightness"
+        [defaultValue]="maxBrightnessDefault()"
+        (resetToDefault)="setMaxBrightness($event)"
+      >
+        <app-slider-setting
+          [min]="range[0]"
+          [max]="range[1]"
           [value]="maxBrightness"
-          [defaultValue]="maxBrightnessDefault()"
-          (resetToDefault)="setMaxBrightness($event)"
+          (valueChange)="setMaxBrightness($event)"
+          unit="%"
+        ></app-slider-setting>
+      </app-setting-row>
+    }
+    @if (model() === 'BIGSCREEN_BEYOND') {
+      <app-setting-row
+        label="device-manager.config.beyondSafeBrightness.title"
+        description="device-manager.config.beyondSafeBrightness.description"
+        [value]="values().unsafeBrightness"
+        [defaultValue]="defaults.bigscreenBeyondUnsafeBrightness"
+        (resetToDefault)="toggleBeyondSafeBrightness()"
+      >
+        <span
+          rowLabel
+          class="experimental-flag"
+          [tooltip]="'device-manager.config.beyondSafeBrightness.warning'"
+          [tooltipMode]="'right'"
         >
-          <app-slider-setting
-            [min]="range[0]"
-            [max]="range[1]"
-            [value]="maxBrightness"
-            (valueChange)="setMaxBrightness($event)"
-            unit="%"
-          ></app-slider-setting>
-        </app-setting-row>
-      }
-      @if (model() === 'BIGSCREEN_BEYOND') {
-        <app-setting-row
-          label="device-manager.config.beyondSafeBrightness.title"
-          description="device-manager.config.beyondSafeBrightness.description"
-          [value]="values().unsafeBrightness"
-          [defaultValue]="defaults.bigscreenBeyondUnsafeBrightness"
-          (resetToDefault)="toggleBeyondSafeBrightness()"
-        >
-          <span
-            rowLabel
-            class="experimental-flag"
-            [tooltip]="'device-manager.config.beyondSafeBrightness.warning'"
-            [tooltipMode]="'right'"
-          >
-            <app-icon name="warning" />
-          </span>
-          <label class="switch-toggle">
-            <input
-              type="checkbox"
-              [checked]="!values().unsafeBrightness"
-              (change)="toggleBeyondSafeBrightness()"
-            />
-            <span class="switch-toggle-slider"></span>
-          </label>
-        </app-setting-row>
-      }
-      @if (brightnessFallback()) {
-        <app-setting-row
-          label="device-manager.config.brightnessOnUnsupportedHmds.title"
-          description="device-manager.config.brightnessOnUnsupportedHmds.description"
-          [value]="values().hardwareBrightnessOnUnsupportedHmd"
-          [defaultValue]="defaults.hardwareBrightnessOnUnsupportedHmds"
-          (resetToDefault)="toggleBrightnessFallback()"
-        >
-          <label class="switch-toggle">
-            <input
-              type="checkbox"
-              [checked]="values().hardwareBrightnessOnUnsupportedHmd"
-              (change)="toggleBrightnessFallback()"
-            />
-            <span class="switch-toggle-slider"></span>
-          </label>
-        </app-setting-row>
-        <app-alert severity="info">
-          <span
-            [innerHTML]="
-              'device-manager.config.brightnessOnUnsupportedHmds.unlistedHmd' | transloco
-            "
-          ></span>
-        </app-alert>
-      }
-      @if (cctFallback()) {
-        <app-setting-row
-          label="device-manager.config.cctOnUnsupportedHmds.title"
-          description="device-manager.config.cctOnUnsupportedHmds.description"
-          [value]="values().cctControlOnUnsupportedHmd"
-          [defaultValue]="defaults.cctControlOnUnsupportedHmds"
-          (resetToDefault)="toggleCctFallback()"
-        >
-          <label class="switch-toggle">
-            <input
-              type="checkbox"
-              [checked]="values().cctControlOnUnsupportedHmd"
-              (change)="toggleCctFallback()"
-            />
-            <span class="switch-toggle-slider"></span>
-          </label>
-        </app-setting-row>
-        <app-alert severity="info">
-          <span
-            [innerHTML]="'device-manager.config.cctOnUnsupportedHmds.unlistedHmd' | transloco"
-          ></span>
-        </app-alert>
-      }
-    </div>
+          <app-icon name="warning" />
+        </span>
+        <label class="switch-toggle">
+          <input
+            type="checkbox"
+            [checked]="!values().unsafeBrightness"
+            (change)="toggleBeyondSafeBrightness()"
+          />
+          <span class="switch-toggle-slider"></span>
+        </label>
+      </app-setting-row>
+    }
+    @if (brightnessFallback()) {
+      <app-setting-row
+        label="device-manager.config.brightnessOnUnsupportedHmds.title"
+        description="device-manager.config.brightnessOnUnsupportedHmds.description"
+        [value]="values().hardwareBrightnessOnUnsupportedHmd"
+        [defaultValue]="defaults.hardwareBrightnessOnUnsupportedHmds"
+        (resetToDefault)="toggleBrightnessFallback()"
+      >
+        <label class="switch-toggle">
+          <input
+            type="checkbox"
+            [checked]="values().hardwareBrightnessOnUnsupportedHmd"
+            (change)="toggleBrightnessFallback()"
+          />
+          <span class="switch-toggle-slider"></span>
+        </label>
+      </app-setting-row>
+      <app-alert severity="info">
+        <span
+          [innerHTML]="'device-manager.config.brightnessOnUnsupportedHmds.unlistedHmd' | transloco"
+        ></span>
+      </app-alert>
+    }
+    @if (cctFallback()) {
+      <app-setting-row
+        label="device-manager.config.cctOnUnsupportedHmds.title"
+        description="device-manager.config.cctOnUnsupportedHmds.description"
+        [value]="values().cctControlOnUnsupportedHmd"
+        [defaultValue]="defaults.cctControlOnUnsupportedHmds"
+        (resetToDefault)="toggleCctFallback()"
+      >
+        <label class="switch-toggle">
+          <input
+            type="checkbox"
+            [checked]="values().cctControlOnUnsupportedHmd"
+            (change)="toggleCctFallback()"
+          />
+          <span class="switch-toggle-slider"></span>
+        </label>
+      </app-setting-row>
+      <app-alert severity="info">
+        <span
+          [innerHTML]="'device-manager.config.cctOnUnsupportedHmds.unlistedHmd' | transloco"
+        ></span>
+      </app-alert>
+    }
   </div>
 }

@@ -32,6 +32,8 @@ interface Resolved {
   selector: 'app-hmd-display-settings',
   templateUrl: './hmd-display-settings.component.html',
   standalone: false,
+  // the host is the category, so the global sibling margin between categories applies to it
+  host: { style: 'display: block', '[class.setting-category]': 'visible()' },
 })
 export class HmdDisplaySettingsComponent {
   readonly device = input.required<DMKnownDevice>();
