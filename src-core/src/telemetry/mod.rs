@@ -99,14 +99,18 @@ pub fn track_quit() {
     if !TELEMETRY_ENABLED.load(Ordering::Relaxed) {
         return;
     }
-    let timeout = Duration::from_secs(2);
-    let sent = tauri::async_runtime::block_on(async {
-        tokio::time::timeout(timeout, send_event("app_quit", None)).await
-    });
+    // the caller can run inside the async runtime, where block_on panics
+    let sent = std::thread::spawn(|| {
+        tauri::async_runtime::block_on(async {
+            tokio::time::timeout(Duration::from_secs(2), send_event("app_quit", None)).await
+        })
+    })
+    .join();
     match sent {
-        Ok(Ok(())) => {}
-        Ok(Err(e)) => warn!("[Core] Could not send telemetry event app_quit: {e}"),
-        Err(_) => warn!("[Core] Could not send telemetry event app_quit: timed out"),
+        Ok(Ok(Ok(()))) => {}
+        Ok(Ok(Err(e))) => warn!("[Core] Could not send telemetry event app_quit: {e}"),
+        Ok(Err(_)) => warn!("[Core] Could not send telemetry event app_quit: timed out"),
+        Err(_) => warn!("[Core] Could not send telemetry event app_quit: the sender panicked"),
     }
 }
 
