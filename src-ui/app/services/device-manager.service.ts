@@ -5,6 +5,7 @@ import {
   combineLatest,
   concatMap,
   distinctUntilChanged,
+  filter,
   firstValueFrom,
   map,
   Observable,
@@ -28,6 +29,8 @@ import { OpenVRService } from './openvr.service';
 import { LighthouseService } from './lighthouse.service';
 import { OVRDevice } from '../models/ovr-device';
 import { LighthouseDevice } from '../models/lighthouse-device';
+import { AppSettingsService } from './app-settings.service';
+import { copyLegacyHmdSettings } from '../migrations/legacy-hmd-settings';
 import { isEqual, uniq } from 'lodash';
 import { error } from '@tauri-apps/plugin-log';
 import type { DisabledLighthouse } from 'src-ui/app/bindings';
@@ -51,7 +54,8 @@ export class DeviceManagerService {
 
   constructor(
     private openvr: OpenVRService,
-    private lighthouse: LighthouseService
+    private lighthouse: LighthouseService,
+    private appSettings: AppSettingsService
   ) {}
 
   async init() {
@@ -66,6 +70,17 @@ export class DeviceManagerService {
     this.listenForOpenVRDevices();
     this.listenForLighthouseDevices();
     this.syncDisabledLighthouses();
+    this.copyLegacyHmdSettings();
+  }
+
+  /** Gives the known headsets the migrated global values once a headset is known. */
+  private copyLegacyHmdSettings() {
+    combineLatest([this.appSettings.settings, this.knownDevices])
+      .pipe(
+        map(([settings, devices]) => copyLegacyHmdSettings(settings, devices)),
+        filter((update) => update !== null)
+      )
+      .subscribe((update) => this.appSettings.updateSettings(update));
   }
 
   public getKnownDeviceById(id: string): DMKnownDevice | undefined {

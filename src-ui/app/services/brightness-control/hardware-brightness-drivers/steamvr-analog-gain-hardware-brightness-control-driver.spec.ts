@@ -17,10 +17,15 @@ const ANALOG_GAIN_HMD = {
   displayMaxAnalogGain: 0.8,
 };
 
+const HMD_ID = 'OVR_HMD_EXM-TEST0001';
+
+/** `enabled` sets the opt-in of the HMD in ANALOG_GAIN_HMD; `hmdSettings` replaces it. */
 function createDriver(
   hmd: Partial<OVRDevice> | null,
   enabled = true,
-  hmdSettings: AppSettings['hmdSettings'] = {}
+  hmdSettings: AppSettings['hmdSettings'] = {
+    [HMD_ID]: { hardwareBrightnessOnUnsupportedHmd: enabled },
+  }
 ) {
   let analogGain = 0.8;
   const openvr = {
@@ -35,7 +40,6 @@ function createDriver(
   } as unknown as OpenVRService;
   const settings = new BehaviorSubject({
     ...APP_SETTINGS_DEFAULT,
-    hardwareBrightnessOnUnsupportedHmds: enabled,
     hmdSettings,
   });
   const driver = new SteamVRAnalogGainHardwareBrightnessControlDriver(settings, openvr);
@@ -54,12 +58,14 @@ describe('SteamVRAnalogGainHardwareBrightnessControlDriver', () => {
   });
 
   it.each([
-    ['its own opt-in over the global setting off', false, true, true],
-    ['its own opt-out over the global setting on', true, false, false],
-  ])('serves an HMD by %s', async (_, global, own, available) => {
-    const hmdSettings = { 'OVR_HMD_EXM-TEST0001': { hardwareBrightnessOnUnsupportedHmd: own } };
-    const { driver } = createDriver(ANALOG_GAIN_HMD, global, hmdSettings);
-    expect(await firstValueFrom(driver.isAvailable())).toBe(available);
+    ['without its own value', {}],
+    [
+      'when only another HMD opts in',
+      { 'OVR_HMD_EXM-OTHER': { hardwareBrightnessOnUnsupportedHmd: true } },
+    ],
+  ])('does not serve an HMD %s', async (_, hmdSettings) => {
+    const { driver } = createDriver(ANALOG_GAIN_HMD, true, hmdSettings);
+    expect(await firstValueFrom(driver.isAvailable())).toBe(false);
   });
 
   it.each([
@@ -102,7 +108,7 @@ describe('SteamVRAnalogGainHardwareBrightnessControlDriver', () => {
     } as unknown as OpenVRService;
     const settings = new BehaviorSubject({
       ...APP_SETTINGS_DEFAULT,
-      hardwareBrightnessOnUnsupportedHmds: true,
+      hmdSettings: { [HMD_ID]: { hardwareBrightnessOnUnsupportedHmd: true } },
     });
     const driver = new SteamVRAnalogGainHardwareBrightnessControlDriver(settings, openvr);
     await firstValueFrom(driver.isAvailable());

@@ -95,9 +95,7 @@ export class SteamVRAnalogGainHardwareBrightnessControlDriver extends HardwareBr
   }
 
   protected servesHmd(hmd: OVRDevice, settings: AppSettings): boolean {
-    const own =
-      settings.hmdSettings[knownDeviceIdForOpenVR(hmd)]?.hardwareBrightnessOnUnsupportedHmd;
-    return own ?? settings.hardwareBrightnessOnUnsupportedHmds;
+    return !!settings.hmdSettings[knownDeviceIdForOpenVR(hmd)]?.hardwareBrightnessOnUnsupportedHmd;
   }
 
   protected gainRange(hmd: OVRDevice): [number, number] {

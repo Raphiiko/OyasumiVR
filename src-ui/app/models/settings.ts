@@ -3,7 +3,7 @@ import { PlayerListPreset } from './player-list-preset';
 import { OneTimeFlag } from './one-time-flags';
 import { EventLogType } from './event-log-entry';
 
-/** A headset's own brightness and colour temperature values; a missing one uses the global setting. */
+/** A headset's own brightness and colour temperature values; a missing one uses the model's default. */
 export interface HmdSettings {
   maxBrightness?: number;
   unsafeBrightness?: boolean;
@@ -11,8 +11,15 @@ export interface HmdSettings {
   cctControlOnUnsupportedHmd?: boolean;
 }
 
+/** Global headset values from before each headset had its own, by the headsets they apply to. */
+export interface LegacyHmdSettings {
+  valveIndex: HmdSettings;
+  bigscreenBeyond: HmdSettings;
+  allHmds: HmdSettings;
+}
+
 export interface AppSettings {
-  version: 18;
+  version: 19;
   // General Settings
   userLanguage: string;
   userLanguagePicked: boolean;
@@ -64,17 +71,13 @@ export interface AppSettings {
   mqttProtectedPassword: string | null;
   mqttSecureSocket: boolean;
   // Brightness & CCT
-  cctControlOnUnsupportedHmds: boolean; // Try SteamVR color gains on headsets not on the list
   cctSoftwareMode: boolean;
-  hardwareBrightnessOnUnsupportedHmds: boolean; // Try SteamVR analog gain on headsets without a driver
-  // HW Specific: the starting value for a headset without its own value in hmdSettings
-  valveIndexMaxBrightness: number; // User limit
-  bigscreenBeyondMaxBrightness: number; // User limit
-  steamFrameMaxBrightness: number; // User limit
-  bigscreenBeyondUnsafeBrightness: boolean; // Allow brightness above 150%
+  // HW Specific
   bigscreenBeyondBrightnessFanSafety: boolean; // Force fan to 100% if brightness is above 100%
   /** Each headset's own values, by known device id. */
   hmdSettings: Record<string, HmdSettings>;
+  /** Set by the settings migration; copied to the known headsets, then null, once one is known. */
+  legacyHmdSettings: LegacyHmdSettings | null;
   // VRCX
   vrcxLogsEnabled: VRCXEventLogType[];
 }
@@ -107,7 +110,7 @@ export const NotificationTypes = [
 export type NotificationType = (typeof NotificationTypes)[number];
 
 export const APP_SETTINGS_DEFAULT: AppSettings = {
-  version: 18,
+  version: 19,
   // General Settings
   userLanguage: 'en',
   userLanguagePicked: false,
@@ -158,16 +161,11 @@ export const APP_SETTINGS_DEFAULT: AppSettings = {
   mqttProtectedPassword: null,
   mqttSecureSocket: false,
   // Brightness & CCT
-  cctControlOnUnsupportedHmds: false,
   cctSoftwareMode: false,
-  hardwareBrightnessOnUnsupportedHmds: false,
   // HW Specific
-  valveIndexMaxBrightness: 160,
-  bigscreenBeyondMaxBrightness: 150,
-  steamFrameMaxBrightness: 125,
-  bigscreenBeyondUnsafeBrightness: false,
   bigscreenBeyondBrightnessFanSafety: true,
   hmdSettings: {},
+  legacyHmdSettings: null,
   // VRCX
   vrcxLogsEnabled: ['SleepMode', 'Invites', 'StatusChanges', 'GroupChanges'],
 };

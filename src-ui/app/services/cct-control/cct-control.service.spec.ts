@@ -66,9 +66,10 @@ async function setup(
   );
   const connections = new BehaviorSubject<Record<string, SteamFrameConnectionState>>({});
   const fadeEnded = new Subject<SteamFrameFadeEnded>();
+  const hmdId = `OVR_HMD_${hmd?.serialNumber}`;
   const settings = new BehaviorSubject({
     ...structuredClone(APP_SETTINGS_DEFAULT),
-    cctControlOnUnsupportedHmds: tryUnsupported,
+    hmdSettings: tryUnsupported ? { [hmdId]: { cctControlOnUnsupportedHmd: true } } : {},
   });
   const pairing = { id: 'p', complete: true, identity: { serial: 'FP1' } } as SteamFramePairing;
   const pairingB = { id: 'q', complete: true, identity: { serial: 'FP2' } } as SteamFramePairing;
@@ -104,13 +105,11 @@ async function setup(
   const end = (operation: string, outcome: SteamFrameFadeEnded['outcome']) =>
     fadeEnded.next({ pairingId: 'p', control: 'cct', operation, outcome });
   const reply = (cct: SteamFrameCct) => replies.shift()!(cct);
-  const setTryUnsupported = (value: boolean) =>
-    settings.next({ ...settings.value, cctControlOnUnsupportedHmds: value });
-  /** Sets the Quest's own value, which wins over the global one. */
-  const setQuestTryUnsupported = (value: boolean) =>
+  /** Sets the opt-in of the setup HMD, or of the headset with `id`. */
+  const setTryUnsupported = (value: boolean, id = hmdId) =>
     settings.next({
       ...settings.value,
-      hmdSettings: { 'OVR_HMD_QST-TEST0001': { cctControlOnUnsupportedHmd: value } },
+      hmdSettings: { [id]: { cctControlOnUnsupportedHmd: value } },
     });
   const activate = (device: Partial<OVRDevice>) =>
     devices.next([{ index: 0, class: 'HMD', isConnected: true, ...device } as OVRDevice]);
@@ -124,7 +123,6 @@ async function setup(
     report,
     reply,
     setTryUnsupported,
-    setQuestTryUnsupported,
     activate,
     end,
   };
@@ -196,15 +194,11 @@ describe('CCTControlService driver selection', () => {
     expect(writes()).toEqual([6600, 3000, 6600]);
   });
 
-  it.each([
-    ['its own opt-in over the global setting off', false, true, true],
-    ['its own opt-out over the global setting on', true, false, false],
-  ])('tries an unlisted headset by %s', async (_, global, own, available) => {
-    const { service, setTryUnsupported, setQuestTryUnsupported } = await setup(QUEST);
-    setTryUnsupported(global);
-    setQuestTryUnsupported(own);
+  it('does not try an unlisted headset when only another headset opts in', async () => {
+    const { service, setTryUnsupported } = await setup(QUEST);
+    setTryUnsupported(true, 'OVR_HMD_QST-OTHER');
     await settle();
-    expect(await firstValueFrom(service.driverIsAvailable)).toBe(available);
+    expect(await firstValueFrom(service.driverIsAvailable)).toBe(false);
   });
 
   it('writes the stored value once a listed headset becomes active', async () => {

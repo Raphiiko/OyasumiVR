@@ -21,6 +21,14 @@ vi.mock('@tauri-apps/plugin-log', () => ({ error: vi.fn() }));
 const tag = { id: 'TAG_A', name: 'Selected', color: '#ffffff' };
 const selection: DeviceSelection = { devices: [], types: [], tagIds: [tag.id] };
 type DMDependencies = ConstructorParameters<typeof DeviceManagerService>;
+
+function appSettings(settings = APP_SETTINGS_DEFAULT) {
+  const subject = new BehaviorSubject(settings);
+  return {
+    settings: subject,
+    updateSettings: vi.fn((update) => subject.next({ ...subject.value, ...update })),
+  } as unknown as DMDependencies[2] & { settings: BehaviorSubject<typeof settings> };
+}
 type ShutdownDependencies = ConstructorParameters<typeof ShutdownAutomationsService>;
 
 async function setup(kind: 'OVR' | 'LH' = 'OVR') {
@@ -64,7 +72,8 @@ async function setup(kind: 'OVR' | 'LH' = 'OVR') {
   } satisfies DeviceManagerData);
   const manager = new DeviceManagerService(
     { devices: ovr } as unknown as DMDependencies[0],
-    { devices: lh } as unknown as DMDependencies[1]
+    { devices: lh } as unknown as DMDependencies[1],
+    appSettings()
   );
   await manager['loadData']();
   return { manager, ovr, lh, known };
@@ -244,7 +253,8 @@ it('tells the core which base stations are disabled, by address and type', async
     {
       devices: new BehaviorSubject<LighthouseDevice[]>([]),
       setDisabledDevices,
-    } as unknown as DMDependencies[1]
+    } as unknown as DMDependencies[1],
+    appSettings()
   );
 
   await manager.init();
@@ -260,4 +270,38 @@ it('tells the core which base stations are disabled, by address and type', async
     { id: 'AA:BB:CC:DD:EE:02', deviceType: 'lighthouseV1' },
     { id: 'AA:BB:CC:DD:EE:03', deviceType: 'lighthouseV2' },
   ]);
+});
+
+it('copies the migrated headset values once SteamVR reports the first headset', async () => {
+  get.mockResolvedValue({ version: 2, knownDevices: [], tags: [] } satisfies DeviceManagerData);
+  const settings = appSettings({
+    ...APP_SETTINGS_DEFAULT,
+    legacyHmdSettings: { valveIndex: { maxBrightness: 130 }, bigscreenBeyond: {}, allHmds: {} },
+  });
+  const ovr = new BehaviorSubject<OVRDevice[]>([]);
+  const manager = new DeviceManagerService(
+    { devices: ovr } as unknown as DMDependencies[0],
+    {
+      devices: new BehaviorSubject<LighthouseDevice[]>([]),
+      setDisabledDevices: vi.fn(async () => {}),
+    } as unknown as DMDependencies[1],
+    settings
+  );
+
+  await manager.init();
+  expect(settings.settings.value.legacyHmdSettings).not.toBeNull();
+
+  ovr.next([
+    {
+      index: 0,
+      class: 'HMD',
+      manufacturerName: 'Valve',
+      modelNumber: 'Index',
+      serialNumber: 'LHR-TEST0001',
+    } as OVRDevice,
+  ]);
+  expect(settings.settings.value).toMatchObject({
+    legacyHmdSettings: null,
+    hmdSettings: { 'OVR_HMD_LHR-TEST0001': { maxBrightness: 130 } },
+  });
 });

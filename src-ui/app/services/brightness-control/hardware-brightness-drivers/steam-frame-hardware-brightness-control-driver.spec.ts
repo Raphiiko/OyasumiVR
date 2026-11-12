@@ -231,15 +231,14 @@ describe('SteamFrameHardwareBrightnessControlDriver', () => {
     fade.cancel();
   });
 
-  it('uses the global maximum while the Frame has none of its own', () => {
+  it("uses the Frame's full range while it has no maximum of its own", () => {
     const h = setup();
     h.report(brightness(40));
     h.settings.next({
       ...h.settings.value,
-      steamFrameMaxBrightness: 110,
       hmdSettings: { OVR_HMD_FPOTHER00001: { maxBrightness: 100 } },
     });
-    expect(h.driver.getBrightnessBounds()).toEqual([9, 110]);
+    expect(h.driver.getBrightnessBounds()).toEqual([9, 125]);
   });
 
   it("limits a set to the user's maximum, and shows a report above it as it is", async () => {
@@ -365,15 +364,6 @@ describe('SteamFrameHardwareBrightnessControlDriver', () => {
       noop,
       (h: ReturnType<typeof setup>) =>
         h.devices.next([{ class: 'HMD', isConnected: false, serialNumber: SERIAL } as OVRDevice]),
-    ],
-    [
-      'to the global maximum read while SteamVR was off',
-      (h: ReturnType<typeof setup>) => {
-        h.status.next('INACTIVE');
-        h.settings.next({ ...h.settings.value, steamFrameMaxBrightness: 100 });
-        h.status.next('INITIALIZED');
-      },
-      noop,
     ],
   ])("cancels a fade when the Frame's own maximum drops %s", async (_, before, during) => {
     const h = setup({ hmdSettings: { [`OVR_HMD_${SERIAL}`]: { maxBrightness: 125 } } });

@@ -332,6 +332,8 @@ describe('simple brightness following a Steam Frame', () => {
 const gainFor = (percentage: number) => Math.pow(percentage / 100, 2.2);
 
 /** A service whose only available driver is a Valve Index, with SteamVR holding `initialGain`. */
+const INDEX_ID = 'OVR_HMD_LHR-TEST0001';
+
 async function setupIndex(initialGain = 1) {
   vi.mocked(invoke).mockImplementation(async () => false);
   const analogGainUpdates = new Subject<number>();
@@ -346,6 +348,7 @@ async function setupIndex(initialGain = 1) {
         isConnected: true,
         manufacturerName: 'Valve',
         modelNumber: 'Index',
+        serialNumber: 'LHR-TEST0001',
       } as OVRDevice,
     ]),
     analogGainUpdates,
@@ -412,7 +415,10 @@ describe('HardwareBrightnessControlService with a Valve Index', () => {
   it('clamps the brightness when the maximum drops below it', async () => {
     const h = await setupIndex(1.5);
     expect(h.service.brightness).toBe(150);
-    h.settings.next({ ...h.settings.value, valveIndexMaxBrightness: 120 });
+    h.settings.next({
+      ...h.settings.value,
+      hmdSettings: { [INDEX_ID]: { maxBrightness: 120 } },
+    });
     await settle();
     expect(h.service.brightness).toBe(120);
     expect(h.openvr.setAnalogGain).toHaveBeenCalledWith(1.2);
@@ -451,17 +457,20 @@ const UNSUPPORTED_HMD: Partial<OVRDevice> = {
   isConnected: true,
   manufacturerName: 'Example',
   modelNumber: 'Headset',
+  serialNumber: 'EXM-TEST0001',
   displaySupportsAnalogGain: true,
   displayMinAnalogGain: 0.2,
   displayMaxAnalogGain: 0.8,
 };
+
+const UNSUPPORTED_HMD_ID = 'OVR_HMD_EXM-TEST0001';
 
 const settleDrivers = () => vi.advanceTimersByTimeAsync(DRIVER_DEBOUNCE_MS);
 
 function setupGeneric() {
   const settings = new BehaviorSubject({
     ...APP_SETTINGS_DEFAULT,
-    hardwareBrightnessOnUnsupportedHmds: true,
+    hmdSettings: { [UNSUPPORTED_HMD_ID]: { hardwareBrightnessOnUnsupportedHmd: true } },
   });
   const devices = new BehaviorSubject<Partial<OVRDevice>[]>([UNSUPPORTED_HMD]);
   const status = new BehaviorSubject('INITIALIZED');
@@ -486,7 +495,10 @@ function setupGeneric() {
     } as unknown as Dependencies[2]
   );
   const enable = (value: boolean) =>
-    settings.next({ ...settings.value, hardwareBrightnessOnUnsupportedHmds: value });
+    settings.next({
+      ...settings.value,
+      hmdSettings: { [UNSUPPORTED_HMD_ID]: { hardwareBrightnessOnUnsupportedHmd: value } },
+    });
   return { service, devices, status, enable, setAnalogGain, analogGain: () => analogGain };
 }
 

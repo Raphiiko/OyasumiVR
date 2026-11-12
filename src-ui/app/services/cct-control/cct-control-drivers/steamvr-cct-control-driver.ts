@@ -45,7 +45,7 @@ export class SteamVrCctControlDriver extends CctControlDriver {
         const hmd = devices.find((d) => d.index === 0);
         if (status !== 'INITIALIZED' || hmd?.class !== 'HMD' || !hmd.isConnected) return false;
         const own = settings.hmdSettings[knownDeviceIdForOpenVR(hmd)]?.cctControlOnUnsupportedHmd;
-        return (own ?? settings.cctControlOnUnsupportedHmds) || isSteamVrCctSupportedHmd(hmd);
+        return !!own || isSteamVrCctSupportedHmd(hmd);
       }),
       distinctUntilChanged(),
       shareReplay(1)

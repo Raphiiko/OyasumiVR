@@ -24,7 +24,7 @@
         label="device-manager.config.beyondSafeBrightness.title"
         description="device-manager.config.beyondSafeBrightness.description"
         [value]="values().unsafeBrightness"
-        [defaultValue]="defaults.bigscreenBeyondUnsafeBrightness"
+        [defaultValue]="false"
         (resetToDefault)="toggleBeyondSafeBrightness()"
       >
         <span
@@ -50,7 +50,7 @@
         label="device-manager.config.brightnessOnUnsupportedHmds.title"
         description="device-manager.config.brightnessOnUnsupportedHmds.description"
         [value]="values().hardwareBrightnessOnUnsupportedHmd"
-        [defaultValue]="defaults.hardwareBrightnessOnUnsupportedHmds"
+        [defaultValue]="false"
         (resetToDefault)="toggleBrightnessFallback()"
       >
         <label class="switch-toggle">
@@ -73,7 +73,7 @@
         label="device-manager.config.cctOnUnsupportedHmds.title"
         description="device-manager.config.cctOnUnsupportedHmds.description"
         [value]="values().cctControlOnUnsupportedHmd"
-        [defaultValue]="defaults.cctControlOnUnsupportedHmds"
+        [defaultValue]="false"
         (resetToDefault)="toggleCctFallback()"
       >
         <label class="switch-toggle">

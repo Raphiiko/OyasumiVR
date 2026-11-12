@@ -71,7 +71,7 @@ export class BigscreenBeyondHardwareBrightnessControlDriver extends HardwareBrig
     const settings = appSettings ?? this.appSettings;
     const hmdId = this.hmdIds.value;
     const own = hmdId ? settings.hmdSettings[hmdId]?.maxBrightness : undefined;
-    return [config.softwareStops[0], own ?? settings.bigscreenBeyondMaxBrightness];
+    return [config.softwareStops[0], own ?? config.riskThreshold];
   }
 
   async getBrightnessPercentage(): Promise<number> {

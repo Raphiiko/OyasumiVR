@@ -113,10 +113,10 @@ export class SteamFrameHardwareBrightnessControlDriver extends HardwareBrightnes
     return [config.hardwareStops[0], this.maxBrightness(appSettings ?? this.appSettings)];
   }
 
-  /** A Frame's own maximum, the active Frame's by default, or the global one. */
+  /** A Frame's own maximum, the active Frame's by default, or the Frame's full range. */
   private maxBrightness(settings: AppSettings, deviceId = this.activeDeviceId()): number {
     const own = deviceId ? settings.hmdSettings[deviceId]?.maxBrightness : undefined;
-    return own ?? settings.steamFrameMaxBrightness;
+    return own ?? this.getBrightnessConfiguration().riskThreshold;
   }
 
   private activeDeviceId(): string | null {

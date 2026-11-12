@@ -1,3 +1,4 @@
+import { isEmpty, mapValues, pickBy } from 'lodash';
 import { APP_SETTINGS_DEFAULT } from '../models/settings';
 import type { MigrationDefinition, Versioned } from 'src-shared-ts/src/migration-runner';
 import { migrateLighthouseDeviceId } from './lighthouse-device-id';
@@ -48,6 +49,35 @@ function from17to18(data: any): any {
       t === 'AUTO_ACCEPTED_INVITE_REQUEST' ? 'INVITE_AUTOMATIONS' : t
     ),
   };
+  return data;
+}
+
+function from18to19(data: any): any {
+  data.version = 19;
+
+  // move each global headset value the user changed out of the settings
+  const take = (key: string, defaultValue: unknown) => {
+    const value = data[key];
+    delete data[key];
+    return value === defaultValue ? undefined : value;
+  };
+  const legacy = mapValues(
+    {
+      valveIndex: { maxBrightness: take('valveIndexMaxBrightness', 160) },
+      bigscreenBeyond: {
+        maxBrightness: take('bigscreenBeyondMaxBrightness', 150),
+        unsafeBrightness: take('bigscreenBeyondUnsafeBrightness', false),
+      },
+      allHmds: {
+        hardwareBrightnessOnUnsupportedHmd: take('hardwareBrightnessOnUnsupportedHmds', false),
+        cctControlOnUnsupportedHmd: take('cctControlOnUnsupportedHmds', false),
+      },
+    },
+    (values) => pickBy(values, (value) => value !== undefined)
+  );
+
+  // the device manager copies these to the known headsets
+  data.legacyHmdSettings = Object.values(legacy).some((values) => !isEmpty(values)) ? legacy : null;
   return data;
 }
 
@@ -178,6 +208,7 @@ export const APP_SETTINGS_MIGRATION: MigrationDefinition<Versioned> = {
     15: from15to16,
     16: from16to17,
     17: from17to18,
+    18: from18to19,
   },
   normalizeCurrentVersion: (data) => normalizeWithDefaults(APP_SETTINGS_DEFAULT, data),
 };

@@ -26,7 +26,6 @@ describe('BigscreenBeyondHardwareBrightnessControlDriver', () => {
   it('keeps its own maximum after SteamVR stops reporting the Beyond', () => {
     const settings = new BehaviorSubject({
       ...structuredClone(APP_SETTINGS_DEFAULT),
-      bigscreenBeyondMaxBrightness: 150,
       hmdSettings: { 'OVR_HMD_BSB-TEST0001': { maxBrightness: 100 } },
     });
     const devices = new BehaviorSubject<OVRDevice[]>([]);

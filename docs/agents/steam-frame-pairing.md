@@ -286,7 +286,8 @@ while the connection is `connected` and the report says `supported`. Its reports
 brightness cache without a write, and simple mode derives its value from them. The hardware and
 simple services write to it even at the cached value, because the shown value may be clamped.
 Sets and fades stop at the user's maximum: the Frame's own `maxBrightness` in `hmdSettings`, which
-its device page sets, or `steamFrameMaxBrightness` while it has none. The helper maps a simple-mode fade over the Frame's own range, so the driver rescales the
+its device page sets, or 125% while it has none. The helper maps a simple-mode fade over the
+Frame's own range, so the driver rescales the
 simple curve it sends to keep each step within that maximum. Lowering the maximum below a running
 fade's target or the reported value cancels that fade where it is.
 

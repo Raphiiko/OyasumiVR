@@ -101,7 +101,7 @@ export class ValveIndexHardwareBrightnessControlDriver extends SteamVRAnalogGain
     const config = this.getBrightnessConfiguration();
     const settings = appSettings ?? this.appSettings;
     const own = this.hmdId ? settings.hmdSettings[this.hmdId]?.maxBrightness : undefined;
-    return [config.softwareStops[0], own ?? settings.valveIndexMaxBrightness];
+    return [config.softwareStops[0], own ?? config.riskThreshold];
   }
 
   override async setBrightnessPercentage(percentage: number): Promise<void> {

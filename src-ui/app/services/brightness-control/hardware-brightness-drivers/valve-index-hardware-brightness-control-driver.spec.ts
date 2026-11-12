@@ -23,7 +23,10 @@ const INDEX = {
 const gainFor = (percentage: number) => Math.pow(percentage / 100, 2.2);
 
 /** A driver on an Index whose SteamVR holds `initialGain`, with writes that wait for `release`. */
-function setup(initialGain = 1, hmdSettings: AppSettings['hmdSettings'] = {}) {
+function setup(
+  initialGain = 1,
+  hmdSettings: AppSettings['hmdSettings'] = { 'OVR_HMD_LHR-TEST0001': { maxBrightness: 150 } }
+) {
   const status = new BehaviorSubject<OpenVRStatus>('INITIALIZED');
   const devices = new BehaviorSubject<OVRDevice[]>([INDEX]);
   const analogGainUpdates = new Subject<number>();
@@ -40,7 +43,6 @@ function setup(initialGain = 1, hmdSettings: AppSettings['hmdSettings'] = {}) {
   );
   const getAnalogGain = vi.fn(async () => ok(gain));
   const settings = structuredClone(APP_SETTINGS_DEFAULT);
-  settings.valveIndexMaxBrightness = 150;
   settings.hmdSettings = hmdSettings;
   const openvr = { status, devices, analogGainUpdates, getAnalogGain, setAnalogGain };
   const driver = new ValveIndexHardwareBrightnessControlDriver(
@@ -214,7 +216,7 @@ describe('ValveIndexHardwareBrightnessControlDriver', () => {
 
   it.each([
     ['its own maximum', { 'OVR_HMD_LHR-TEST0001': { maxBrightness: 120 } }, 120],
-    ['the global maximum without its own', { 'OVR_HMD_LHR-OTHER': { maxBrightness: 110 } }, 150],
+    ['its full range without its own', { 'OVR_HMD_LHR-OTHER': { maxBrightness: 110 } }, 160],
   ])('limits the Index to %s', async (_, hmdSettings, max) => {
     const h = setup(1, hmdSettings);
     await vi.advanceTimersByTimeAsync(500);
@@ -222,7 +224,11 @@ describe('ValveIndexHardwareBrightnessControlDriver', () => {
   });
 });
 
-const VALVE_INDEX = { manufacturerName: 'Valve', modelNumber: 'Index' };
+const VALVE_INDEX = {
+  manufacturerName: 'Valve',
+  modelNumber: 'Index',
+  serialNumber: 'LHR-TEST0001',
+};
 
 function createDriver(hmd: Partial<OVRDevice>, analogGain: number | null = 1, maxBrightness = 160) {
   const openvr = {
@@ -239,7 +245,7 @@ function createDriver(hmd: Partial<OVRDevice>, analogGain: number | null = 1, ma
   } as unknown as OpenVRService;
   const settings = new BehaviorSubject({
     ...APP_SETTINGS_DEFAULT,
-    valveIndexMaxBrightness: maxBrightness,
+    hmdSettings: { 'OVR_HMD_LHR-TEST0001': { maxBrightness } },
   });
   const driver = new ValveIndexHardwareBrightnessControlDriver(settings, openvr);
   return { driver, analogGain: () => analogGain };

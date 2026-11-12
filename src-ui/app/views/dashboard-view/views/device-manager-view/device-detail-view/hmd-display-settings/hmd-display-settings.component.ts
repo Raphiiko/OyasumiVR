@@ -1,7 +1,7 @@
 import { Component, computed, inject, input } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { DMKnownDevice } from 'src-ui/app/models/device-manager';
-import { APP_SETTINGS_DEFAULT, AppSettings, HmdSettings } from 'src-ui/app/models/settings';
+import { AppSettings, HmdSettings } from 'src-ui/app/models/settings';
 import { AppSettingsService } from 'src-ui/app/services/app-settings.service';
 import { SteamFrameService } from 'src-ui/app/services/steam-frame/steam-frame.service';
 import { isSteamVrCctSupportedHmd } from 'src-ui/app/services/cct-control/cct-control-drivers/steamvr-cct-control-driver';
@@ -10,16 +10,14 @@ import { BIGSCREEN_BEYOND_HARDWARE_BRIGHTNESS_CONTROL_DRIVER_BOUNDS as BEYOND_BO
 import { STEAM_FRAME_HARDWARE_BRIGHTNESS_CONTROL_DRIVER_BOUNDS as FRAME_BOUNDS } from 'src-ui/app/services/brightness-control/hardware-brightness-drivers/steam-frame-hardware-brightness-control-driver';
 
 type HmdModel = 'VALVE_INDEX' | 'BIGSCREEN_BEYOND' | 'STEAM_FRAME' | 'PSVR2' | 'OTHER';
-type GlobalMaxBrightnessKey =
-  'valveIndexMaxBrightness' | 'bigscreenBeyondMaxBrightness' | 'steamFrameMaxBrightness';
-
-const GLOBAL_MAX_BRIGHTNESS: Partial<Record<HmdModel, GlobalMaxBrightnessKey>> = {
-  VALVE_INDEX: 'valveIndexMaxBrightness',
-  BIGSCREEN_BEYOND: 'bigscreenBeyondMaxBrightness',
-  STEAM_FRAME: 'steamFrameMaxBrightness',
+/** The maximum brightness of a headset without its own, as its driver uses it. */
+const DEFAULT_MAX_BRIGHTNESS: Partial<Record<HmdModel, number>> = {
+  VALVE_INDEX: INDEX_BOUNDS.riskThreshold,
+  BIGSCREEN_BEYOND: BEYOND_BOUNDS.riskThreshold,
+  STEAM_FRAME: FRAME_BOUNDS.riskThreshold,
 };
 
-/** This headset's values, each one falling back to the global setting it replaces. */
+/** This headset's values, each one falling back to its default. */
 interface Resolved {
   maxBrightness: number | null;
   unsafeBrightness: boolean;
@@ -39,7 +37,6 @@ export class HmdDisplaySettingsComponent {
   readonly device = input.required<DMKnownDevice>();
   private readonly appSettingsService = inject(AppSettingsService);
   private readonly steamFrame = inject(SteamFrameService);
-  protected readonly defaults = APP_SETTINGS_DEFAULT;
   protected readonly settings = toSignal(this.appSettingsService.settings, {
     initialValue: this.appSettingsService.settingsSync,
   });
@@ -62,10 +59,9 @@ export class HmdDisplaySettingsComponent {
         return null;
     }
   });
-  protected readonly maxBrightnessDefault = computed(() => {
-    const key = GLOBAL_MAX_BRIGHTNESS[this.model()];
-    return key ? APP_SETTINGS_DEFAULT[key] : null;
-  });
+  protected readonly maxBrightnessDefault = computed(
+    () => DEFAULT_MAX_BRIGHTNESS[this.model()] ?? null
+  );
   /** True for a model whose brightness only the opt-in SteamVR analog gain driver controls. */
   protected readonly brightnessFallback = computed(() => this.model() === 'OTHER');
   protected readonly cctFallback = computed(() => {
@@ -93,14 +89,12 @@ export class HmdDisplaySettingsComponent {
 
   private resolve(settings: AppSettings): Resolved {
     const own = settings.hmdSettings[this.device().id] ?? {};
-    const maxKey = GLOBAL_MAX_BRIGHTNESS[this.model()];
+    const defaultMax = DEFAULT_MAX_BRIGHTNESS[this.model()];
     return {
-      maxBrightness: maxKey ? (own.maxBrightness ?? settings[maxKey]) : null,
-      unsafeBrightness: own.unsafeBrightness ?? settings.bigscreenBeyondUnsafeBrightness,
-      hardwareBrightnessOnUnsupportedHmd:
-        own.hardwareBrightnessOnUnsupportedHmd ?? settings.hardwareBrightnessOnUnsupportedHmds,
-      cctControlOnUnsupportedHmd:
-        own.cctControlOnUnsupportedHmd ?? settings.cctControlOnUnsupportedHmds,
+      maxBrightness: defaultMax === undefined ? null : (own.maxBrightness ?? defaultMax),
+      unsafeBrightness: own.unsafeBrightness ?? false,
+      hardwareBrightnessOnUnsupportedHmd: own.hardwareBrightnessOnUnsupportedHmd ?? false,
+      cctControlOnUnsupportedHmd: own.cctControlOnUnsupportedHmd ?? false,
     };
   }
 
