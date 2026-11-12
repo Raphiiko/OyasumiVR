@@ -61,6 +61,7 @@ export class DeviceListItemComponent implements OnInit {
     const knownDevice = this.deviceManager.getKnownDeviceById(
       this.deviceManager.getIdForOpenVRDevice(device)
     );
+    this.knownDeviceId = knownDevice?.id;
     if (!knownDevice) {
       // the row stays mounted, so it must not keep a pair action for a device it no longer knows
       this.frameToPair = undefined;
@@ -99,6 +100,7 @@ export class DeviceListItemComponent implements OnInit {
     const knownDevice = this.deviceManager.getKnownDeviceById(
       this.deviceManager.getIdForLighthouseDevice(device)
     );
+    this.knownDeviceId = knownDevice?.id;
     if (!knownDevice) return;
 
     this.mode = 'lighthouse';
@@ -156,6 +158,8 @@ export class DeviceListItemComponent implements OnInit {
   }
 
   mode?: 'lighthouse' | 'openvr';
+  /** The device manager entry this row links to; undefined while the device is not known. */
+  knownDeviceId?: string;
   deviceTypeName = '';
   deviceName = '';
   showBattery = false;

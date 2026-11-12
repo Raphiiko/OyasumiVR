@@ -1,22 +1,27 @@
 @if (mode) {
   <div class="wrapper">
     <div class="header-bar">
-      <div class="header-bar-icon">
-        <app-icon
-          [name]="icon() ?? 'device'"
-          [mirrored]="_ovrDevice?.class === 'Controller' && _ovrDevice?.role === 'RightHand'"
-          class="category-icon"
-        />
-        @if (helperStatus) {
-          <span [class]="'helper-badge helper-badge-' + helperStatus"></span>
-        }
-      </div>
-      <div class="header-bar-info">
-        <div class="device-name" [transloco]="deviceTypeName"></div>
-        <div class="device-subtitle">
-          {{ deviceName | transloco }}
+      <a
+        class="header-bar-link"
+        [routerLink]="knownDeviceId ? ['/dashboard/deviceManager/device', knownDeviceId] : null"
+      >
+        <div class="header-bar-icon">
+          <app-icon
+            [name]="icon() ?? 'device'"
+            [mirrored]="_ovrDevice?.class === 'Controller' && _ovrDevice?.role === 'RightHand'"
+            class="category-icon"
+          />
+          @if (helperStatus) {
+            <span [class]="'helper-badge helper-badge-' + helperStatus"></span>
+          }
         </div>
-      </div>
+        <div class="header-bar-info">
+          <div class="device-name" [transloco]="deviceTypeName"></div>
+          <div class="device-subtitle">
+            {{ deviceName | transloco }}
+          </div>
+        </div>
+      </a>
       <div class="header-bar-spacer"></div>
       <div class="header-bar-action">
         @if (canShowPowerButton()) {
