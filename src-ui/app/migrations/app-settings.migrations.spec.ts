@@ -37,7 +37,7 @@ describe('app settings migration 15 to 16', () => {
 });
 
 describe('app settings migration 16 to 17', () => {
-  it('drops the CCT enable setting and warning flag, and defaults unsupported HMD control off', async () => {
+  it('drops the CCT enable setting and warning flag', async () => {
     const result = await runMigrations(
       {
         version: 16,
@@ -53,9 +53,7 @@ describe('app settings migration 16 to 17', () => {
     expect(result.status).toBe('migrated');
     if (result.status === 'migrated') {
       expect(result.value).toMatchObject({
-        version: 18,
         oneTimeFlags: ['OSC_SCRIPT_SIMPLE_EDITOR_VRCHAT_AUTOCOMPLETE_INFO'],
-        cctControlOnUnsupportedHmds: false,
       });
       expect(result.value).not.toHaveProperty('cctControlEnabled');
     }
@@ -83,4 +81,59 @@ describe('app settings migration 17 to 18', () => {
       }
     }
   );
+});
+
+describe('app settings migration 18 to 19', () => {
+  it('moves the changed global headset values out of the settings', async () => {
+    const result = await runMigrations(
+      {
+        version: 18,
+        valveIndexMaxBrightness: 130,
+        bigscreenBeyondMaxBrightness: 150,
+        bigscreenBeyondUnsafeBrightness: true,
+        hardwareBrightnessOnUnsupportedHmds: false,
+        cctControlOnUnsupportedHmds: true,
+      } as Versioned,
+      APP_SETTINGS_MIGRATION
+    );
+
+    expect(result.status).toBe('migrated');
+    if (result.status !== 'migrated') return;
+    expect(result.value).toMatchObject({
+      version: 19,
+      legacyHmdSettings: {
+        valveIndex: { maxBrightness: 130 },
+        bigscreenBeyond: { unsafeBrightness: true },
+        allHmds: { cctControlOnUnsupportedHmd: true },
+      },
+    });
+    for (const key of [
+      'valveIndexMaxBrightness',
+      'bigscreenBeyondMaxBrightness',
+      'bigscreenBeyondUnsafeBrightness',
+      'hardwareBrightnessOnUnsupportedHmds',
+      'cctControlOnUnsupportedHmds',
+    ]) {
+      expect(result.value).not.toHaveProperty(key);
+    }
+  });
+
+  it('leaves nothing to copy when every headset value is its default', async () => {
+    const result = await runMigrations(
+      {
+        version: 18,
+        valveIndexMaxBrightness: 160,
+        bigscreenBeyondMaxBrightness: 150,
+        bigscreenBeyondUnsafeBrightness: false,
+        hardwareBrightnessOnUnsupportedHmds: false,
+        cctControlOnUnsupportedHmds: false,
+      } as Versioned,
+      APP_SETTINGS_MIGRATION
+    );
+
+    expect(result.status === 'migrated' && result.value).toMatchObject({
+      legacyHmdSettings: null,
+      hmdSettings: {},
+    });
+  });
 });

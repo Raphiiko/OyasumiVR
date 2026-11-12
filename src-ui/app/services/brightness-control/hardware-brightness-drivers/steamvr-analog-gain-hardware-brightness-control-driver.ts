@@ -5,6 +5,7 @@ import {
 import { clamp } from '../../../utils/number-utils';
 import { OpenVRService } from '../../openvr.service';
 import {
+  BehaviorSubject,
   combineLatest,
   debounceTime,
   distinctUntilChanged,
@@ -16,6 +17,7 @@ import {
 } from 'rxjs';
 import { AppSettings } from '../../../models/settings';
 import { OVRDevice } from '../../../models/ovr-device';
+import { knownDeviceIdForOpenVR } from '../../../models/device-manager';
 
 // Without a known panel curve, the reported gain range maps linearly onto 20% to 100%.
 export const STEAMVR_ANALOG_GAIN_HARDWARE_BRIGHTNESS_CONTROL_DRIVER_BOUNDS: HardwareBrightnessControlDriverBounds =
@@ -48,6 +50,8 @@ export function analogGainRange(hmd: OVRDevice): [number, number] {
 export class SteamVRAnalogGainHardwareBrightnessControlDriver extends HardwareBrightnessControlDriver {
   /** The connected HMD's gain range, also while this driver does not serve it; null without an HMD. */
   private range: [number, number] | null = null;
+  private readonly hmdIds = new BehaviorSubject<string | null>(null);
+  override readonly boundsInputs: Observable<unknown> = this.hmdIds.pipe(distinctUntilChanged());
   private readonly available: Observable<boolean>;
   /** Emits the new range when a connected HMD's range changes from one usable range to another. */
   public readonly rangeChanges: Observable<[number, number]>;
@@ -63,9 +67,11 @@ export class SteamVRAnalogGainHardwareBrightnessControlDriver extends HardwareBr
         const hmd = devices.find((d) => d.index === 0 && d.class === 'HMD' && d.isConnected);
         if (status !== 'INITIALIZED' || !hmd) {
           this.range = null;
+          this.hmdIds.next(null);
           return { range: null, served: false };
         }
         this.range = this.gainRange(hmd);
+        this.hmdIds.next(knownDeviceIdForOpenVR(hmd));
         return { range: this.range, served: this.servesHmd(hmd, settings) };
       }),
       shareReplay(1)
@@ -83,8 +89,13 @@ export class SteamVRAnalogGainHardwareBrightnessControlDriver extends HardwareBr
     );
   }
 
-  protected servesHmd(_hmd: OVRDevice, settings: AppSettings): boolean {
-    return settings.hardwareBrightnessOnUnsupportedHmds;
+  /** The connected HMD's known device id; null without an HMD. */
+  protected get hmdId(): string | null {
+    return this.hmdIds.value;
+  }
+
+  protected servesHmd(hmd: OVRDevice, settings: AppSettings): boolean {
+    return !!settings.hmdSettings[knownDeviceIdForOpenVR(hmd)]?.hardwareBrightnessOnUnsupportedHmd;
   }
 
   protected gainRange(hmd: OVRDevice): [number, number] {

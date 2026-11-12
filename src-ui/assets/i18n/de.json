@@ -828,6 +828,20 @@
   },
   "device-manager": {
     "config": {
+      "beyondFanSafety": {
+        "description": "Lüftergeschwindigkeit zu 100% erzwingen, wenn der Helligkeitswert über 100% liegt",
+        "title": "Lüftergeschwindigkeit überschreiben",
+        "warning": "Diese Funktion täuscht den Bigscreen Beyond Treiber die sicheren Lüfterparametereinstellungen vor. Nur auf eigenes Risiko deaktivieren."
+      },
+      "beyondSafeBrightness": {
+        "description": "Verhindert die Änderung der Helligkeit auf über 150%",
+        "title": "Limit zur sicheren Helligkeit",
+        "warning": "Diese Funktion wird nicht vom Hersteller unterstützt.\n\nDiese Einstellung kann dein Headset beschädigen; Diese Funktion nur auf dein eigenes Risiko deaktivieren."
+      },
+      "maxBrightness": {
+        "description": "Maximale Helligkeitswerte, die OyasumiVR festlegen kann",
+        "title": "Maximale Helligkeit"
+      },
       "v1Identifier": {
         "change": "ID ändern",
         "description": "OyasumiVR muss die ID von deinen V1 Basis Stationen wissen um diese zu kontrollieren",
@@ -1341,34 +1355,6 @@
     "title": "Auflösungsautomatisierungen"
   },
   "settings": {
-    "brightnessCct": {
-      "bigscreenBeyond": {
-        "forceFanSafety": {
-          "description": "Lüftergeschwindigkeit zu 100% erzwingen, wenn der Helligkeitswert über 100% liegt",
-          "title": "Lüftergeschwindigkeit überschreiben",
-          "warning": "Diese Funktion täuscht den Bigscreen Beyond Treiber die sicheren Lüfterparametereinstellungen vor. Nur auf eigenes Risiko deaktivieren."
-        },
-        "maxBrightness": {
-          "description": "Limitiert die maximale Helligkeitswerte, die OyasumiVR festlegen kann",
-          "title": "Maximale Helligkeit"
-        },
-        "permitRiskRange": {
-          "description": "Verhindert die Änderung der Helligkeit auf über 150%",
-          "title": "Limit zur sicheren Helligkeit",
-          "warning": "Diese Funktion wird nicht vom Hersteller unterstützt.\n\nDiese Einstellung kann dein Headset beschädigen; Diese Funktion nur auf dein eigenes Risiko deaktivieren."
-        },
-        "title": "Bigscreen Beyond"
-      },
-      "description": "Hier findest du alle Einstellungen mit Bezug zu Helligkeit und Farbtemperatur.",
-      "title": "Helligkeit und CCT",
-      "valveIndex": {
-        "maxBrightness": {
-          "description": "Maximale Helligkeitswerte, die OyasumiVR festlegen kann",
-          "title": "Maximale Helligkeit"
-        },
-        "title": "Valve Index"
-      }
-    },
     "general": {
       "adminPrivileges": {
         "description": "Manche Funktionen, etwa die Steuerung der Energiegrenzen deiner GPU, brauchen Adminrechte. Wenn du das einschaltest, wird einmal danach gefragt. Danach richtet OyasumiVR diese Funktionen ein, ohne erneut zu fragen.",

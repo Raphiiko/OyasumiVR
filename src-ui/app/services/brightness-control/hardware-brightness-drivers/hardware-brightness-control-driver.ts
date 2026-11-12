@@ -1,4 +1,4 @@
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { clamp, lerp } from '../../../utils/number-utils';
 import { APP_SETTINGS_DEFAULT, AppSettings } from '../../../models/settings';
 import { DeviceFade } from '../../../utils/device-fade';
@@ -35,6 +35,8 @@ export abstract class HardwareBrightnessControlDriver {
   readonly pushesBrightnessChanges: boolean = false;
   /** Brightness values the device reported or applied. OyasumiVR shows them and never writes them back. */
   readonly brightnessUpdates?: Observable<number>;
+  /** Emits when an input of `getBrightnessBounds` other than the settings changes, such as the headset. */
+  readonly boundsInputs: Observable<unknown> = of(null);
 
   constructor(protected appSettings$: Observable<AppSettings>) {
     this.appSettings$.subscribe((settings) => (this.appSettings = settings));

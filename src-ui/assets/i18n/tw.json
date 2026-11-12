@@ -230,7 +230,6 @@
       "resolutionAutomations": "解析度自動化",
       "runAutomations": "執行自動化",
       "settings": {
-        "brightnessCct": "亮度與色溫",
         "general": "一般",
         "hotkeys": "快捷鍵",
         "integrations": "整合功能",
@@ -1065,10 +1064,34 @@
       "powerOn": "開啟電源"
     },
     "config": {
+      "beyondFanSafety": {
+        "description": "當亮度值超過 100% 時，強制將風扇轉速設為 100%",
+        "title": "超高亮度風扇安全保護",
+        "warning": "此功能會模擬官方 Bigscreen Beyond 驅動程式的安全風扇參數。請僅在自行承擔風險的情況下停用此功能。"
+      },
+      "beyondSafeBrightness": {
+        "description": "防止將亮度設定為超過 150%",
+        "title": "限制在安全的亮度範圍內",
+        "warning": "此功能不受製造商支援。\n\n請注意，這可能會損壞你的頭戴顯示器：請僅在自行承擔風險的情況下停用此功能。"
+      },
+      "brightnessOnUnsupportedHmds": {
+        "description": "開啟後，OyasumiVR 會嘗試透過 SteamVR 控制頭戴顯示器的亮度，即使尚未確認它能在你的頭戴顯示器上運作。",
+        "title": "在不受支援的頭戴顯示器上控制硬體亮度",
+        "unlistedHmd": "啟用後，硬體亮度控制仍可能在你的頭戴顯示器上正常運作。如果實際可用，請透過 <a href='https://discord.gg/7MqdPJhYxC' target='_blank' rel='noopener noreferrer'>Discord</a> 告訴我們！"
+      },
+      "cctOnUnsupportedHmds": {
+        "description": "開啟後，OyasumiVR 會嘗試透過 SteamVR 控制頭戴顯示器的色溫，即使尚未確認它能在你的頭戴顯示器上運作。",
+        "title": "在不受支援的頭戴顯示器上控制色溫",
+        "unlistedHmd": "啟用後，色溫控制仍可能在部分頭戴顯示器上正常運作。如果你的頭戴顯示器不受支援但實際可用，請透過 <a href='https://discord.gg/7MqdPJhYxC' target='_blank' rel='noopener noreferrer'>Discord</a> 告訴我們！"
+      },
       "disabled": {
         "description": "已停用的裝置不會受到自動化或批次操作影響，也不會顯示在裝置清單中",
         "title": "停用裝置",
         "tooltip": "此裝置已停用"
+      },
+      "maxBrightness": {
+        "description": "限制 OyasumiVR 所設定的最大亮度值。",
+        "title": "最大亮度"
       },
       "tags": {
         "description": "使用標籤來整理與篩選你的裝置",
@@ -1962,57 +1985,6 @@
     "title": "執行自動化"
   },
   "settings": {
-    "brightnessCct": {
-      "automationsHint": "亮度與色溫的自動化設定位於{link}。",
-      "automationsLink": "自動化頁面",
-      "bigscreenBeyond": {
-        "forceFanSafety": {
-          "description": "當亮度值超過 100% 時，強制將風扇轉速設為 100%",
-          "title": "超高亮度風扇安全保護",
-          "warning": "此功能會模擬官方 Bigscreen Beyond 驅動程式的安全風扇參數。請僅在自行承擔風險的情況下停用此功能。"
-        },
-        "maxBrightness": {
-          "description": "限制 OyasumiVR 所設定的最大亮度值。",
-          "title": "最大亮度"
-        },
-        "permitRiskRange": {
-          "description": "防止將亮度設定為超過 150%",
-          "title": "限制在安全的亮度範圍內",
-          "warning": "此功能不受製造商支援。\n\n請注意，這可能會損壞你的頭戴顯示器：請僅在自行承擔風險的情況下停用此功能。"
-        },
-        "title": "Bigscreen Beyond"
-      },
-      "cctControl": {
-        "unsupportedHmds": {
-          "description": "開啟後，OyasumiVR 會嘗試透過 SteamVR 控制頭戴顯示器的色溫，即使尚未確認它能在你的頭戴顯示器上運作。",
-          "listedHmd": "你的頭戴顯示器支援色溫控制。",
-          "manufacturer": "製造商",
-          "model": "型號",
-          "noHmd": "連接頭戴顯示器後才能變更此設定。",
-          "notReported": "未回報",
-          "title": "在不受支援的頭戴顯示器上控制色溫",
-          "unlistedHmd": "啟用後，色溫控制仍可能在部分頭戴顯示器上正常運作。如果你的頭戴顯示器不受支援但實際可用，請透過 <a href='https://discord.gg/7MqdPJhYxC' target='_blank' rel='noopener noreferrer'>Discord</a> 告訴我們！"
-        }
-      },
-      "description": "亮度與色溫的硬體設定，包括特定頭戴顯示器的專屬設定。",
-      "hardwareBrightness": {
-        "unsupportedHmds": {
-          "description": "開啟後，OyasumiVR 會嘗試透過 SteamVR 控制頭戴顯示器的亮度，即使尚未確認它能在你的頭戴顯示器上運作。",
-          "listedHmd": "你的頭戴顯示器支援硬體亮度控制。",
-          "noHmd": "連接頭戴顯示器後才能變更此設定。",
-          "title": "在不受支援的頭戴顯示器上控制硬體亮度",
-          "unlistedHmd": "啟用後，硬體亮度控制仍可能在你的頭戴顯示器上正常運作。如果實際可用，請透過 <a href='https://discord.gg/7MqdPJhYxC' target='_blank' rel='noopener noreferrer'>Discord</a> 告訴我們！"
-        }
-      },
-      "title": "亮度與色溫",
-      "valveIndex": {
-        "maxBrightness": {
-          "description": "限制 OyasumiVR 所設定的最大亮度值。",
-          "title": "最大亮度"
-        },
-        "title": "Valve Index"
-      }
-    },
     "general": {
       "adminPrivileges": {
         "description": "部分功能（例如控制 GPU 的功率限制）需要系統管理員權限。啟用後只會要求一次，之後 OyasumiVR 便可在不再詢問的情況下使用這些功能。",

@@ -22,7 +22,11 @@ const INDEX: Partial<OVRDevice> = {
   serialNumber: 'LHR-1',
 };
 const BEYOND: Partial<OVRDevice> = { manufacturerName: 'Bigscreen', modelNumber: 'Beyond' };
-const QUEST: Partial<OVRDevice> = { manufacturerName: 'Oculus', modelNumber: 'Quest 3' };
+const QUEST: Partial<OVRDevice> = {
+  manufacturerName: 'Oculus',
+  modelNumber: 'Quest 3',
+  serialNumber: 'QST-TEST0001',
+};
 const FRAME: Partial<OVRDevice> = {
   manufacturerName: 'Valve',
   modelNumber: 'Steam Frame',
@@ -62,9 +66,10 @@ async function setup(
   );
   const connections = new BehaviorSubject<Record<string, SteamFrameConnectionState>>({});
   const fadeEnded = new Subject<SteamFrameFadeEnded>();
+  const hmdId = `OVR_HMD_${hmd?.serialNumber}`;
   const settings = new BehaviorSubject({
     ...structuredClone(APP_SETTINGS_DEFAULT),
-    cctControlOnUnsupportedHmds: tryUnsupported,
+    hmdSettings: tryUnsupported ? { [hmdId]: { cctControlOnUnsupportedHmd: true } } : {},
   });
   const pairing = { id: 'p', complete: true, identity: { serial: 'FP1' } } as SteamFramePairing;
   const pairingB = { id: 'q', complete: true, identity: { serial: 'FP2' } } as SteamFramePairing;
@@ -100,8 +105,12 @@ async function setup(
   const end = (operation: string, outcome: SteamFrameFadeEnded['outcome']) =>
     fadeEnded.next({ pairingId: 'p', control: 'cct', operation, outcome });
   const reply = (cct: SteamFrameCct) => replies.shift()!(cct);
-  const setTryUnsupported = (value: boolean) =>
-    settings.next({ ...settings.value, cctControlOnUnsupportedHmds: value });
+  /** Sets the opt-in of the setup HMD, or of the headset with `id`. */
+  const setTryUnsupported = (value: boolean, id = hmdId) =>
+    settings.next({
+      ...settings.value,
+      hmdSettings: { [id]: { cctControlOnUnsupportedHmd: value } },
+    });
   const activate = (device: Partial<OVRDevice>) =>
     devices.next([{ index: 0, class: 'HMD', isConnected: true, ...device } as OVRDevice]);
   return {
@@ -183,6 +192,13 @@ describe('CCTControlService driver selection', () => {
     expect(writes()).toEqual([6600, 3000, 6600]);
     await service.setCCT(4000);
     expect(writes()).toEqual([6600, 3000, 6600]);
+  });
+
+  it('does not try an unlisted headset when only another headset opts in', async () => {
+    const { service, setTryUnsupported } = await setup(QUEST);
+    setTryUnsupported(true, 'OVR_HMD_QST-OTHER');
+    await settle();
+    expect(await firstValueFrom(service.driverIsAvailable)).toBe(false);
   });
 
   it('writes the stored value once a listed headset becomes active', async () => {

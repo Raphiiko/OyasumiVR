@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, inject, OnInit } from '@angular/core';
 import { fadeUp, hshrink, vshrink } from '../../utils/animations';
 import { BaseModalComponent } from '../base-modal/base-modal.component';
 import { ModalOptions } from '../../services/modal.service';
@@ -7,7 +7,8 @@ import { SoftwareBrightnessControlService } from '../../services/brightness-cont
 import { SimpleBrightnessControlService } from '../../services/brightness-control/simple-brightness-control.service';
 import { AutomationConfigService } from '../../services/automation-config.service';
 import { asyncScheduler, filter, map, Subject, switchMap, tap, throttleTime } from 'rxjs';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
+import { DeviceManagerService } from '../../services/device-manager.service';
 import { Router } from '@angular/router';
 
 @Component({
@@ -27,6 +28,7 @@ export class BrightnessControlModalComponent
   driverChecked = false;
 
   protected readonly setHardwareBrightness = new Subject<number>();
+  protected readonly activeHmdId = toSignal(inject(DeviceManagerService).activeHmdId);
   protected readonly setSoftwareBrightness = new Subject<number>();
   protected readonly setSimpleBrightness = new Subject<number>();
 

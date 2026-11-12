@@ -1,9 +1,10 @@
 import { invoke } from '@tauri-apps/api/core';
 import { BehaviorSubject, firstValueFrom, Subject } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { APP_SETTINGS_DEFAULT } from '../../../models/settings';
+import { APP_SETTINGS_DEFAULT, AppSettings } from '../../../models/settings';
 import type { OVRDevice } from '../../../models/ovr-device';
-import type { Brightness } from 'src-ui/app/bindings';
+import type { Brightness, FadeRequest as SteamFrameFadeCommand } from 'src-ui/app/bindings';
+import type { HardwareBrightnessFadeOptions } from './hardware-brightness-control-driver';
 import type {
   SteamFrameConnectionState,
   SteamFrameFadeEnded,
@@ -21,7 +22,7 @@ function brightness(percentage: number, overrides: Partial<Brightness> = {}) {
   return { runtime: true, supported: true, min: 9, max: 125, percentage, ...overrides };
 }
 
-function setup() {
+function setup(initial: Partial<AppSettings> = {}) {
   const status = new BehaviorSubject<OpenVRStatus>('INITIALIZED');
   const devices = new BehaviorSubject<OVRDevice[]>([
     { class: 'HMD', isConnected: true, serialNumber: SERIAL } as OVRDevice,
@@ -30,8 +31,9 @@ function setup() {
     { id: 'pairing-1', complete: true, identity: { serial: SERIAL } } as SteamFramePairing,
   ]);
   const connections = new BehaviorSubject<Record<string, SteamFrameConnectionState>>({});
+  const settings = new BehaviorSubject({ ...structuredClone(APP_SETTINGS_DEFAULT), ...initial });
   const driver = new SteamFrameHardwareBrightnessControlDriver(
-    new BehaviorSubject(structuredClone(APP_SETTINGS_DEFAULT)),
+    settings,
     { status, devices },
     pairings,
     connections,
@@ -48,7 +50,24 @@ function setup() {
       } as SteamFrameConnectionState,
     });
   const available = () => firstValueFrom(driver.isAvailable());
-  return { status, devices, pairings, connections, driver, updates, report, available };
+  /** Sets this Frame's own maximum. */
+  const setMax = (maxBrightness: number) =>
+    settings.next({
+      ...settings.value,
+      hmdSettings: { [`OVR_HMD_${SERIAL}`]: { maxBrightness } },
+    });
+  return {
+    status,
+    devices,
+    pairings,
+    connections,
+    settings,
+    driver,
+    updates,
+    report,
+    available,
+    setMax,
+  };
 }
 
 describe('SteamFrameHardwareBrightnessControlDriver', () => {
@@ -209,6 +228,152 @@ describe('SteamFrameHardwareBrightnessControlDriver', () => {
       },
     });
     expect(fade.targetBrightness).toBe(200);
+    fade.cancel();
+  });
+
+  it("uses the Frame's full range while it has no maximum of its own", () => {
+    const h = setup();
+    h.report(brightness(40));
+    h.settings.next({
+      ...h.settings.value,
+      hmdSettings: { OVR_HMD_FPOTHER00001: { maxBrightness: 100 } },
+    });
+    expect(h.driver.getBrightnessBounds()).toEqual([9, 125]);
+  });
+
+  it("limits a set to the user's maximum, and shows a report above it as it is", async () => {
+    const h = setup();
+    h.setMax(100);
+    h.report(brightness(40));
+    expect(h.driver.getBrightnessBounds()).toEqual([9, 100]);
+    vi.mocked(invoke).mockResolvedValue(100);
+    await h.driver.setBrightnessPercentage(120);
+    expect(invoke).toHaveBeenCalledWith('steam_frame_set_brightness', {
+      pairingId: 'pairing-1',
+      percentage: 100,
+    });
+    h.report(brightness(115));
+    expect(h.updates.at(-1)).toBe(115);
+  });
+
+  /** Starts a fade and resolves with the request the helper receives. */
+  function sendFade(h: ReturnType<typeof setup>, options: HardwareBrightnessFadeOptions) {
+    const fade = h.driver.fade(options)!;
+    const sent = new Promise<SteamFrameFadeCommand>((resolve) =>
+      vi.mocked(invoke).mockImplementation(async (command, args) => {
+        if (command === 'steam_frame_fade')
+          resolve((args as { request: SteamFrameFadeCommand }).request);
+      })
+    );
+    void fade.start();
+    return { fade, sent };
+  }
+
+  it.each([
+    ['below the maximum', 100, { from: 5, to: 50 }, [9, 27.5, 50]],
+    ['up to the maximum', 100, { from: 50, to: 100 }, [50, 75, 100]],
+    ['across the hardware minimum', 100, { from: 0, to: 100 }, [9, 50, 100]],
+    ['at the Frame maximum', 125, { from: 9, to: 100 }, [9, 67, 125]],
+  ])(
+    "sends a simple fade the helper maps within the user's maximum: %s",
+    async (_, max, simple, [hardwareFrom, hardwareMid, hardwareTo]) => {
+      const h = setup();
+      h.setMax(max);
+      h.report(brightness(40));
+      const { fade, sent } = sendFade(h, { target: 0, durationMs: 1000, shownTarget: 0, simple });
+      const curve = (await sent).simple!;
+      // the helper's split over the Frame's reported range of 9% to 125%
+      const helperSplit = (value: number) => (value < 9 ? 9 : 9 + (116 * (value - 9)) / 91);
+      expect(helperSplit(curve.from)).toBeCloseTo(hardwareFrom);
+      expect(helperSplit((curve.from + curve.to) / 2)).toBeCloseTo(hardwareMid);
+      expect(helperSplit(curve.to)).toBeCloseTo(hardwareTo);
+      fade.cancel();
+    }
+  );
+
+  it.each([
+    ['cancels a fade toward a target above it', 120, true],
+    ['keeps a fade toward a target below it', 30, false],
+  ])('on a lower maximum during a fade, %s', async (_, target, cancelled) => {
+    const h = setup();
+    h.report(brightness(40));
+    const { fade, sent } = sendFade(h, { target, durationMs: 60_000, shownTarget: target });
+    await sent;
+    h.setMax(100);
+    expect(fade.isCancelled()).toBe(cancelled);
+    fade.cancel();
+  });
+
+  it("cancels a second Frame's fade when its maximum drops to the first Frame's", async () => {
+    const h = setup({
+      hmdSettings: {
+        [`OVR_HMD_${SERIAL}`]: { maxBrightness: 100 },
+        OVR_HMD_FPTEST000002: { maxBrightness: 125 },
+      },
+    });
+    h.report(brightness(40));
+    const first = sendFade(h, { target: 90, durationMs: 60_000, shownTarget: 90 });
+    await first.sent;
+    // a second paired Frame becomes the active HMD and starts its own fade
+    h.pairings.next([
+      ...h.pairings.value,
+      {
+        id: 'pairing-2',
+        complete: true,
+        identity: { serial: 'FPTEST000002' },
+      } as SteamFramePairing,
+    ]);
+    h.devices.next([
+      { class: 'HMD', isConnected: true, serialNumber: 'FPTEST000002' } as OVRDevice,
+    ]);
+    h.connections.next({
+      'pairing-2': {
+        pairingId: 'pairing-2',
+        status: 'connected',
+        brightness: brightness(40),
+      } as SteamFrameConnectionState,
+    });
+    const second = sendFade(h, { target: 120, durationMs: 60_000, shownTarget: 120 });
+    await second.sent;
+    h.settings.next({
+      ...h.settings.value,
+      hmdSettings: {
+        ...h.settings.value.hmdSettings,
+        OVR_HMD_FPTEST000002: { maxBrightness: 100 },
+      },
+    });
+    expect(second.fade.isCancelled()).toBe(true);
+    first.fade.cancel();
+    second.fade.cancel();
+  });
+
+  it('keeps a fade down from above the maximum through an unrelated settings change', async () => {
+    const h = setup({ hmdSettings: { [`OVR_HMD_${SERIAL}`]: { maxBrightness: 100 } } });
+    h.report(brightness(120));
+    const { fade, sent } = sendFade(h, { target: 30, durationMs: 60_000, shownTarget: 30 });
+    await sent;
+    h.settings.next({ ...h.settings.value, cctSoftwareMode: !h.settings.value.cctSoftwareMode });
+    expect(fade.isCancelled()).toBe(false);
+    fade.cancel();
+  });
+
+  const noop = () => {};
+  it.each([
+    [
+      'after the Frame stops streaming here',
+      noop,
+      (h: ReturnType<typeof setup>) =>
+        h.devices.next([{ class: 'HMD', isConnected: false, serialNumber: SERIAL } as OVRDevice]),
+    ],
+  ])("cancels a fade when the Frame's own maximum drops %s", async (_, before, during) => {
+    const h = setup({ hmdSettings: { [`OVR_HMD_${SERIAL}`]: { maxBrightness: 125 } } });
+    before(h);
+    h.report(brightness(40));
+    const { fade, sent } = sendFade(h, { target: 120, durationMs: 60_000, shownTarget: 120 });
+    await sent;
+    during(h);
+    h.setMax(100);
+    expect(fade.isCancelled()).toBe(true);
     fade.cancel();
   });
 });

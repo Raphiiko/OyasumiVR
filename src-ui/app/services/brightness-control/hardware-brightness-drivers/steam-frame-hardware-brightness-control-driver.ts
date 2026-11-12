@@ -11,7 +11,7 @@ import {
 import { AppSettings } from '../../../models/settings';
 import { OVRDevice } from '../../../models/ovr-device';
 import type { OpenVRService, OpenVRStatus } from '../../openvr.service';
-import { Brightness, commands } from 'src-ui/app/bindings';
+import { Brightness, commands, SimpleCurve } from 'src-ui/app/bindings';
 import {
   SteamFrameConnectionState,
   SteamFrameFadeEnded,
@@ -23,6 +23,7 @@ import {
   SteamFrameFadeRequest,
 } from '../../steam-frame/steam-frame-fade-task';
 import { clamp } from '../../../utils/number-utils';
+import { knownDeviceIdForOpenVR } from '../../../models/device-manager';
 import {
   HardwareBrightnessControlDriver,
   HardwareBrightnessControlDriverBounds,
@@ -39,7 +40,8 @@ export const STEAM_FRAME_HARDWARE_BRIGHTNESS_CONTROL_DRIVER_BOUNDS: HardwareBrig
 
 /** The active HMD: a paired Frame, or none for no HMD and for a headset without a pairing. */
 type ActiveHmd =
-  { kind: 'none' } | { kind: 'frame'; pairingId: string; brightness: Brightness | null };
+  | { kind: 'none' }
+  | { kind: 'frame'; pairingId: string; deviceId: string; brightness: Brightness | null };
 
 /** Sets a paired Steam Frame's brightness through its helper, which also reports it. */
 export class SteamFrameHardwareBrightnessControlDriver extends HardwareBrightnessControlDriver {
@@ -48,10 +50,22 @@ export class SteamFrameHardwareBrightnessControlDriver extends HardwareBrightnes
   private readonly updates = new ReplaySubject<number>(1);
   override readonly brightnessUpdates = this.updates.asObservable();
   private readonly hmd: Observable<ActiveHmd>;
+  override readonly boundsInputs: Observable<unknown>;
   private readonly matching: Observable<boolean>;
   private readonly available: Observable<boolean>;
   private currentHmd: ActiveHmd = { kind: 'none' };
   private frame: { pairingId: string; brightness: Brightness } | null = null;
+  /**
+   * The last fade sent, with its hardware target, its Frame, and that Frame's maximum when last
+   * checked; lowering that maximum cancels it while it runs.
+   */
+  private activeFade: {
+    fade: SteamFrameBrightnessFade;
+    target: number;
+    pairingId: string;
+    deviceId: string;
+    max: number;
+  } | null = null;
   /** Set while a command runs; a newer value waits in `pending` and replaces an older one. */
   private sending = false;
   /** Also holds a value set while the paired Frame cannot take it, which goes out once it can. */
@@ -82,15 +96,31 @@ export class SteamFrameHardwareBrightnessControlDriver extends HardwareBrightnes
       distinctUntilChanged(),
       shareReplay(1)
     );
+    this.boundsInputs = this.hmd.pipe(
+      map((hmd) => (hmd.kind === 'frame' ? hmd.deviceId : null)),
+      distinctUntilChanged()
+    );
     this.hmd.subscribe((hmd) => this.onHmd(hmd));
+    appSettings.subscribe((settings) => this.limitRunningFade(settings));
   }
 
   getBrightnessConfiguration(): HardwareBrightnessControlDriverBounds {
     return STEAM_FRAME_HARDWARE_BRIGHTNESS_CONTROL_DRIVER_BOUNDS;
   }
 
-  getBrightnessBounds(): [number, number] {
-    return STEAM_FRAME_HARDWARE_BRIGHTNESS_CONTROL_DRIVER_BOUNDS.hardwareStops as [number, number];
+  getBrightnessBounds(appSettings?: AppSettings): [number, number] {
+    const config = this.getBrightnessConfiguration();
+    return [config.hardwareStops[0], this.maxBrightness(appSettings ?? this.appSettings)];
+  }
+
+  /** A Frame's own maximum, the active Frame's by default, or the Frame's full range. */
+  private maxBrightness(settings: AppSettings, deviceId = this.activeDeviceId()): number {
+    const own = deviceId ? settings.hmdSettings[deviceId]?.maxBrightness : undefined;
+    return own ?? this.getBrightnessConfiguration().riskThreshold;
+  }
+
+  private activeDeviceId(): string | null {
+    return this.currentHmd.kind === 'frame' ? this.currentHmd.deviceId : null;
   }
 
   async getBrightnessPercentage(): Promise<number> {
@@ -142,7 +172,8 @@ export class SteamFrameHardwareBrightnessControlDriver extends HardwareBrightnes
    * Drops a waiting set.
    */
   override fade(options: HardwareBrightnessFadeOptions): SteamFrameBrightnessFade | null {
-    if (!this.frame) return null;
+    const deviceId = this.activeDeviceId();
+    if (!this.frame || !deviceId) return null;
     // a waiting set would go out after the fade and supersede it
     this.pending = null;
     const request: SteamFrameFadeRequest = {
@@ -150,10 +181,58 @@ export class SteamFrameHardwareBrightnessControlDriver extends HardwareBrightnes
       control: 'brightness',
       target: this.softwarePercentageToHardwarePercentage(options.target),
       durationMs: options.durationMs,
-      simple: options.simple,
+      simple: options.simple && this.helperSimpleCurve(options.simple, this.frame.brightness),
     };
     const frames = { fadeEnded$: this.fadeEnded };
-    return new SteamFrameBrightnessFade(options.shownTarget, request, frames, options.onAccept);
+    const fade = new SteamFrameBrightnessFade(
+      options.shownTarget,
+      request,
+      frames,
+      options.onAccept
+    );
+    this.activeFade = {
+      fade,
+      target: request.target,
+      pairingId: request.pairingId,
+      deviceId,
+      max: this.maxBrightness(this.appSettings, deviceId),
+    };
+    return fade;
+  }
+
+  /** The last fade sent while it runs, or null. */
+  private runningFade() {
+    const active = this.activeFade;
+    if (!active) return null;
+    const { fade } = active;
+    return fade.isComplete() || fade.isCancelled() || fade.isError() ? null : active;
+  }
+
+  /** Cancels a running fade that would pass its Frame's new, lower maximum; it stops where it is. */
+  private limitRunningFade(settings: AppSettings) {
+    const active = this.runningFade();
+    if (!active) return;
+    const max = this.maxBrightness(settings, active.deviceId);
+    const lowered = max < active.max;
+    active.max = max;
+    if (!lowered) return;
+    const ownReport =
+      this.frame?.pairingId === active.pairingId ? this.frame.brightness.percentage : null;
+    if (Math.max(active.target, ownReport ?? active.target) > max) active.fade.cancel();
+  }
+
+  /**
+   * The simple curve rescaled for the helper, which splits it with the Frame's reported range,
+   * so its fade steps stop at the user's maximum as `splitSimpleBrightness` does here.
+   */
+  private helperSimpleCurve(simple: SimpleCurve, brightness: Brightness): SimpleCurve {
+    const { min, max } = brightness;
+    const limit = this.getBrightnessBounds()[1];
+    if (min == null || max == null || max <= min || limit >= max) return simple;
+    // one linear map about min keeps each value on its side of min, and keeps the easing linear
+    const scale = (limit - min) / (max - min);
+    const rescale = (value: number) => min + (value - min) * scale;
+    return { from: rescale(simple.from), to: rescale(simple.to) };
   }
 
   override matches(): Observable<boolean> {
@@ -166,13 +245,19 @@ export class SteamFrameHardwareBrightnessControlDriver extends HardwareBrightnes
     pairings: SteamFramePairing[],
     connections: Record<string, SteamFrameConnectionState>
   ): ActiveHmd {
-    const serial = devices.find((d) => d.class === 'HMD' && d.isConnected)?.serialNumber;
-    if (status !== 'INITIALIZED' || !serial) return { kind: 'none' };
+    const hmd = devices.find((d) => d.class === 'HMD' && d.isConnected);
+    if (status !== 'INITIALIZED' || !hmd?.serialNumber) return { kind: 'none' };
+    const serial = hmd.serialNumber;
     const pairing = pairings.find((p) => p.complete && p.identity.serial === serial);
     if (!pairing) return { kind: 'none' };
     const state = connections[pairing.id];
     const brightness = state?.status === 'connected' ? (state.brightness ?? null) : null;
-    return { kind: 'frame', pairingId: pairing.id, brightness };
+    return {
+      kind: 'frame',
+      pairingId: pairing.id,
+      deviceId: knownDeviceIdForOpenVR(hmd),
+      brightness,
+    };
   }
 
   private usable(brightness: Brightness | null): brightness is Brightness {
@@ -205,11 +290,14 @@ export class SteamFrameHardwareBrightnessControlDriver extends HardwareBrightnes
     if (current !== null) this.updates.next(current);
   }
 
-  /** The reported value within the bounds, so a value outside them shows clamped. */
+  /**
+   * The reported value within the Frame's range, so a value outside it shows clamped. A value
+   * above the user's maximum shows as it is.
+   */
   private reportedPercentage(): number | null {
     const percentage = this.frame?.brightness.percentage ?? null;
     if (percentage === null) return null;
-    const [min, max] = this.getBrightnessBounds();
+    const [min, max] = this.getBrightnessConfiguration().hardwareStops;
     return clamp(percentage, min, max);
   }
 }

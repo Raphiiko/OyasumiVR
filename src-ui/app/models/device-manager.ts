@@ -1,3 +1,4 @@
+import type { OVRDevice } from './ovr-device';
 export interface DeviceSelection {
   devices: string[];
   types: DMDeviceType[];
@@ -24,6 +25,11 @@ export interface DMKnownDevice {
   lastSeen: number;
   tagIds: string[];
   disabled: boolean;
+}
+
+/** The known device id of an OpenVR device. */
+export function knownDeviceIdForOpenVR(device: Pick<OVRDevice, 'class' | 'serialNumber'>): string {
+  return `OVR_${device.class}_${device.serialNumber}`;
 }
 
 export interface DMDeviceTag {

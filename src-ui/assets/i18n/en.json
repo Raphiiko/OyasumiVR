@@ -230,7 +230,6 @@
       "resolutionAutomations": "Resolution Automations",
       "runAutomations": "Run Automations",
       "settings": {
-        "brightnessCct": "Brightness & CCT",
         "general": "General",
         "hotkeys": "Hotkeys",
         "integrations": "Integrations",
@@ -1065,10 +1064,34 @@
       "powerOn": "Power On"
     },
     "config": {
+      "beyondFanSafety": {
+        "description": "Force the fan to 100% at brightness values above 100%",
+        "title": "Overdrive fan safety",
+        "warning": "This feature mimics the safe fan parameters of the official Bigscreen Beyond driver. Only disable this functionality at your own risk."
+      },
+      "beyondSafeBrightness": {
+        "description": "Prevents you from setting the brightness above 150%",
+        "title": "Limit to safe brightness levels",
+        "warning": "This feature is not supported by the manufacturer.\n\nPlease be aware this might damage your headset: Only disable this functionality at your own risk."
+      },
+      "brightnessOnUnsupportedHmds": {
+        "description": "Turn this on to let OyasumiVR try to control this headset's brightness through SteamVR, even though it's not known to work for it.",
+        "title": "Try hardware brightness control",
+        "unlistedHmd": "Hardware brightness control might still work on your headset, if enabled. If your headset does turn out to work, please let us know on <a href='https://discord.gg/7MqdPJhYxC' target='_blank' rel='noopener noreferrer'>Discord</a>!"
+      },
+      "cctOnUnsupportedHmds": {
+        "description": "Turn this on to let OyasumiVR try to control this headset's colour temperature through SteamVR, even though it's not known to work for it.",
+        "title": "Try colour temperature control",
+        "unlistedHmd": "Colour temperature control might still work on some headsets, if enabled. If your headset does turn out to work despite being unsupported, please let us know on <a href='https://discord.gg/7MqdPJhYxC' target='_blank' rel='noopener noreferrer'>Discord</a>!"
+      },
       "disabled": {
         "description": "Disabled devices are not affected by automations or bulk actions, and are not shown in the device list. OyasumiVR does not connect to a disabled base station, so another PC can control it.",
         "title": "Disable device",
         "tooltip": "This device is disabled"
+      },
+      "maxBrightness": {
+        "description": "Limit the maximum brightness value that OyasumiVR will set.",
+        "title": "Maximum Brightness"
       },
       "tags": {
         "description": "Assign tags to organise and filter your devices",
@@ -1109,6 +1132,7 @@
       "sections": {
         "baseStation": "Base station",
         "details": "Details",
+        "display": "Brightness & colour temperature",
         "settings": "Settings"
       },
       "tabs": {
@@ -1962,57 +1986,6 @@
     "title": "Run Automations"
   },
   "settings": {
-    "brightnessCct": {
-      "automationsHint": "Brightness & CCT automations can be found on their {link}.",
-      "automationsLink": "automations page",
-      "bigscreenBeyond": {
-        "forceFanSafety": {
-          "description": "Force the fan to 100% at brightness values above 100%",
-          "title": "Overdrive fan safety",
-          "warning": "This feature mimics the safe fan parameters of the official Bigscreen Beyond driver. Only disable this functionality at your own risk."
-        },
-        "maxBrightness": {
-          "description": "Limit the maximum brightness value that OyasumiVR will set.",
-          "title": "Maximum Brightness"
-        },
-        "permitRiskRange": {
-          "description": "Prevents you from setting the brightness above 150%",
-          "title": "Limit to safe brightness levels",
-          "warning": "This feature is not supported by the manufacturer.\n\nPlease be aware this might damage your headset: Only disable this functionality at your own risk."
-        },
-        "title": "Bigscreen Beyond"
-      },
-      "cctControl": {
-        "unsupportedHmds": {
-          "description": "Turn this on to let OyasumiVR try to control your headset's colour temperature through SteamVR, even though it's not known to work for your headset.",
-          "listedHmd": "Colour temperature control is supported on your headset.",
-          "manufacturer": "Manufacturer",
-          "model": "Model",
-          "noHmd": "Connect your headset to change this setting.",
-          "notReported": "not reported",
-          "title": "Colour temperature on unsupported headsets",
-          "unlistedHmd": "Colour temperature control might still work on some headsets, if enabled. If your headset does turn out to work despite being unsupported, please let us know on <a href='https://discord.gg/7MqdPJhYxC' target='_blank' rel='noopener noreferrer'>Discord</a>!"
-        }
-      },
-      "description": "Hardware settings for brightness and colour temperature, including settings for specific headsets.",
-      "hardwareBrightness": {
-        "unsupportedHmds": {
-          "description": "Turn this on to let OyasumiVR try to control your headset's brightness through SteamVR, even though it's not known to work for your headset.",
-          "listedHmd": "Hardware brightness control is supported on your headset.",
-          "noHmd": "Connect your headset to change this setting.",
-          "title": "Hardware brightness on unsupported headsets",
-          "unlistedHmd": "Hardware brightness control might still work on your headset, if enabled. If your headset does turn out to work, please let us know on <a href='https://discord.gg/7MqdPJhYxC' target='_blank' rel='noopener noreferrer'>Discord</a>!"
-        }
-      },
-      "title": "Brightness & CCT",
-      "valveIndex": {
-        "maxBrightness": {
-          "description": "Limit the maximum brightness value that OyasumiVR will set.",
-          "title": "Maximum Brightness"
-        },
-        "title": "Valve Index"
-      }
-    },
     "general": {
       "adminPrivileges": {
         "description": "Some features, such as controlling your GPU's power limits, need administrative permissions. Turning this on asks for them once. After that, OyasumiVR can use these features without asking again.",

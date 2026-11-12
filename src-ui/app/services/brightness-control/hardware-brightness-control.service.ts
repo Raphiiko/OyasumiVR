@@ -108,7 +108,8 @@ export class HardwareBrightnessControlService {
       openvr
     );
     this.driverBigscreenBeyond = new BigscreenBeyondHardwareBrightnessControlDriver(
-      this.appSettingsService.settings
+      this.appSettingsService.settings,
+      openvr.devices
     );
     this.driverSteamFrame = new SteamFrameHardwareBrightnessControlDriver(
       this.appSettingsService.settings,
@@ -161,11 +162,15 @@ export class HardwareBrightnessControlService {
         this._brightness.next(adopted.percentage);
         this._adoptedBrightness.next(adopted);
       });
+    const boundsInputs = this._activeDriver.pipe(
+      switchMap((driver) => driver?.boundsInputs ?? of(null))
+    );
     this.brightnessBounds = combineLatest([
       this._activeDriver,
       this.appSettingsService.settings,
+      boundsInputs,
     ]).pipe(
-      map(([driver, settings]: [HardwareBrightnessControlDriver | null, AppSettings]) => {
+      map(([driver, settings]: [HardwareBrightnessControlDriver | null, AppSettings, unknown]) => {
         if (!driver) return [0, 100] as [number, number];
         return driver.getBrightnessBounds(settings);
       }),
@@ -309,15 +314,15 @@ export class HardwareBrightnessControlService {
     return brightness;
   }
 
-  /** Clamps the brightness when a setting narrows the active driver's bounds. */
+  /** Clamps the brightness when a setting or another headset narrows the active driver's bounds. */
   private async initializeSafetyChecks() {
     this._activeDriver
       .pipe(
         // skip the bounds at a driver switch: the cached value belongs to the previous device
         switchMap((driver) =>
           driver
-            ? this.appSettingsService.settings.pipe(
-                map((settings) => driver.getBrightnessBounds(settings)),
+            ? combineLatest([this.appSettingsService.settings, driver.boundsInputs]).pipe(
+                map(([settings]) => driver.getBrightnessBounds(settings)),
                 distinctUntilChanged(isEqual),
                 skip(1)
               )

@@ -247,7 +247,6 @@ import { DurationInputSettingComponent } from './components/duration-input-setti
 import { TimeInputComponent } from './components/time-input/time-input.component';
 import { CCTControlService } from './services/cct-control/cct-control.service';
 import { CCTControlModalComponent } from './components/cct-control-modal/cct-control-modal.component';
-import { SettingsBrightnessCctViewComponent } from './views/dashboard-view/views/settings-brightness-cct-view/settings-brightness-cct-view.component';
 import { CCTInputSettingComponent } from './components/cct-input-setting/cct-input-setting.component';
 import { BrightnessAdvancedModeToggleComponent } from './components/brightness-advanced-mode-toggle/brightness-advanced-mode-toggle.component';
 import { FBTAvatarReloadWorkaroundService } from './services/workarounds/f-b-t-avatar-reload-workaround.service';
@@ -281,6 +280,7 @@ import { DeviceManagerViewComponent } from './views/dashboard-view/views/device-
 import { DeviceDetailViewComponent } from './views/dashboard-view/views/device-manager-view/device-detail-view/device-detail-view.component';
 import { SegmentedControlComponent } from './components/segmented-control/segmented-control.component';
 import { SteamFrameDeviceTabComponent } from 'src-ui/app/views/dashboard-view/views/device-manager-view/device-detail-view/steam-frame-device-tab/steam-frame-device-tab.component';
+import { HmdDisplaySettingsComponent } from 'src-ui/app/views/dashboard-view/views/device-manager-view/device-detail-view/hmd-display-settings/hmd-display-settings.component';
 import { DeviceManagerService } from './services/device-manager.service';
 import { DevicePowerButtonComponent } from './components/device-power-button/device-power-button.component';
 import { DeviceManagerDevicesTabComponent } from './views/dashboard-view/views/device-manager-view/tabs/device-manager-devices-tab/device-manager-devices-tab.component';
@@ -451,7 +451,6 @@ import { MigrationCoordinatorService } from './services/migration-coordinator.se
     TimeInputComponent,
     CCTInputSettingComponent,
     CCTControlModalComponent,
-    SettingsBrightnessCctViewComponent,
     BrightnessAdvancedModeToggleComponent,
     LighthouseV1IdWizardModalComponent,
     MessageCenterModalComponent,
@@ -469,6 +468,7 @@ import { MigrationCoordinatorService } from './services/migration-coordinator.se
     DeviceDetailViewComponent,
     SegmentedControlComponent,
     SteamFrameDeviceTabComponent,
+    HmdDisplaySettingsComponent,
     DevicePowerButtonComponent,
     DeviceManagerDevicesTabComponent,
     DeviceManagerTagsTabComponent,

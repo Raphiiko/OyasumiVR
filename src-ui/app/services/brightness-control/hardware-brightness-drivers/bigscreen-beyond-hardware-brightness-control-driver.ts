@@ -15,6 +15,8 @@ import {
 } from 'rxjs';
 import { commands, events } from 'src-ui/app/bindings';
 import { AppSettings } from '../../../models/settings';
+import { OVRDevice } from '../../../models/ovr-device';
+import { knownDeviceIdForOpenVR } from '../../../models/device-manager';
 import { warn } from '@tauri-apps/plugin-log';
 
 export const BIGSCREEN_BEYOND_HARDWARE_BRIGHTNESS_CONTROL_DRIVER_BOUNDS: HardwareBrightnessControlDriverBounds =
@@ -28,9 +30,16 @@ export const BIGSCREEN_BEYOND_HARDWARE_BRIGHTNESS_CONTROL_DRIVER_BOUNDS: Hardwar
 export class BigscreenBeyondHardwareBrightnessControlDriver extends HardwareBrightnessControlDriver {
   private lastSetBrightnessPercentage = 100;
   private connected = new BehaviorSubject(false);
+  /** The last Beyond SteamVR reported, kept while SteamVR stops; null until one is seen. */
+  private readonly hmdIds = new BehaviorSubject<string | null>(null);
+  override readonly boundsInputs: Observable<unknown> = this.hmdIds.pipe(distinctUntilChanged());
 
-  constructor(appSettings: Observable<AppSettings>) {
+  constructor(appSettings: Observable<AppSettings>, devices: Observable<OVRDevice[]>) {
     super(appSettings);
+    devices.subscribe((list) => {
+      const hmd = list.find((d) => d.class === 'HMD' && d.manufacturerName === 'Bigscreen');
+      if (hmd) this.hmdIds.next(knownDeviceIdForOpenVR(hmd));
+    });
     events.bigscreenBeyondConnectedEvent.listen((event) => {
       this.connected.next(event.payload);
     });
@@ -59,10 +68,10 @@ export class BigscreenBeyondHardwareBrightnessControlDriver extends HardwareBrig
 
   getBrightnessBounds(appSettings?: AppSettings): [number, number] {
     const config = this.getBrightnessConfiguration();
-    return [
-      config.softwareStops[0],
-      (appSettings ?? this.appSettings).bigscreenBeyondMaxBrightness,
-    ];
+    const settings = appSettings ?? this.appSettings;
+    const hmdId = this.hmdIds.value;
+    const own = hmdId ? settings.hmdSettings[hmdId]?.maxBrightness : undefined;
+    return [config.softwareStops[0], own ?? config.riskThreshold];
   }
 
   async getBrightnessPercentage(): Promise<number> {

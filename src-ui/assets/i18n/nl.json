@@ -230,7 +230,6 @@
       "resolutionAutomations": "Resolutie Automatiseringen",
       "runAutomations": "Commando Automatiseringen",
       "settings": {
-        "brightnessCct": "Helderheid & CCT",
         "general": "Algemeen",
         "hotkeys": "Hotkeys",
         "integrations": "Integraties",
@@ -1065,10 +1064,34 @@
       "powerOn": "Inschakelen"
     },
     "config": {
+      "beyondFanSafety": {
+        "description": "Zet de ventilator op 100% bij helderheidswaarden boven 100%",
+        "title": "Ventilatorbeveiliging bij overdrive",
+        "warning": "Deze functie bootst de veilige ventilatorinstellingen van de officiële Bigscreen Beyond driver na. Schakel deze functie alleen uit op eigen risico."
+      },
+      "beyondSafeBrightness": {
+        "description": "Voorkomt dat je de helderheid boven 150% zet",
+        "title": "Beperk tot veilige helderheidsniveaus",
+        "warning": "Deze functie wordt niet ondersteund door de fabrikant.\n\nLet op: dit kan je headset beschadigen. Schakel deze functie alleen uit op eigen risico."
+      },
+      "brightnessOnUnsupportedHmds": {
+        "description": "Schakel dit in om OyasumiVR te laten proberen de helderheid van je headset via SteamVR te regelen, ook al is niet bekend of het met je headset werkt.",
+        "title": "Hardwarehelderheid op niet-ondersteunde headsets",
+        "unlistedHmd": "Hardwarematige helderheidsregeling kan op je headset toch werken als je het inschakelt. Werkt het op jouw headset? Laat het ons dan weten op <a href='https://discord.gg/7MqdPJhYxC' target='_blank' rel='noopener noreferrer'>Discord</a>!"
+      },
+      "cctOnUnsupportedHmds": {
+        "description": "Schakel dit in om OyasumiVR te laten proberen de kleurtemperatuur van je headset via SteamVR te regelen, ook al is niet bekend of het met je headset werkt.",
+        "title": "Kleurtemperatuur op niet-ondersteunde headsets",
+        "unlistedHmd": "Kleurtemperatuurregeling kan op sommige headsets toch werken als je het inschakelt. Werkt het op jouw headset, ook al wordt die niet ondersteund? Laat het ons dan weten op <a href='https://discord.gg/7MqdPJhYxC' target='_blank' rel='noopener noreferrer'>Discord</a>!"
+      },
       "disabled": {
         "description": "Uitgeschakelde apparaten worden niet beïnvloed door automatiseringen of acties op meerdere apparaten, en worden niet getoond in de apparatenlijst",
         "title": "Apparaat uitschakelen",
         "tooltip": "Dit apparaat is uitgeschakeld"
+      },
+      "maxBrightness": {
+        "description": "Beperk de maximale helderheid die OyasumiVR instelt.",
+        "title": "Maximale Helderheid"
       },
       "tags": {
         "description": "Wijs tags toe om je apparaten te ordenen en te filteren",
@@ -1962,57 +1985,6 @@
     "title": "Commando Automatiseringen"
   },
   "settings": {
-    "brightnessCct": {
-      "automationsHint": "Automatiseringen voor helderheid & CCT vind je op de {link}.",
-      "automationsLink": "pagina met automatiseringen",
-      "bigscreenBeyond": {
-        "forceFanSafety": {
-          "description": "Zet de ventilator op 100% bij helderheidswaarden boven 100%",
-          "title": "Ventilatorbeveiliging bij overdrive",
-          "warning": "Deze functie bootst de veilige ventilatorinstellingen van de officiële Bigscreen Beyond driver na. Schakel deze functie alleen uit op eigen risico."
-        },
-        "maxBrightness": {
-          "description": "Beperk de maximale helderheid die OyasumiVR instelt.",
-          "title": "Maximale Helderheid"
-        },
-        "permitRiskRange": {
-          "description": "Voorkomt dat je de helderheid boven 150% zet",
-          "title": "Beperk tot veilige helderheidsniveaus",
-          "warning": "Deze functie wordt niet ondersteund door de fabrikant.\n\nLet op: dit kan je headset beschadigen. Schakel deze functie alleen uit op eigen risico."
-        },
-        "title": "Bigscreen Beyond"
-      },
-      "cctControl": {
-        "unsupportedHmds": {
-          "description": "Schakel dit in om OyasumiVR te laten proberen de kleurtemperatuur van je headset via SteamVR te regelen, ook al is niet bekend of het met je headset werkt.",
-          "listedHmd": "Kleurtemperatuurregeling wordt ondersteund op je headset.",
-          "manufacturer": "Fabrikant",
-          "model": "Model",
-          "noHmd": "Verbind je headset om deze instelling te wijzigen.",
-          "notReported": "niet doorgegeven",
-          "title": "Kleurtemperatuur op niet-ondersteunde headsets",
-          "unlistedHmd": "Kleurtemperatuurregeling kan op sommige headsets toch werken als je het inschakelt. Werkt het op jouw headset, ook al wordt die niet ondersteund? Laat het ons dan weten op <a href='https://discord.gg/7MqdPJhYxC' target='_blank' rel='noopener noreferrer'>Discord</a>!"
-        }
-      },
-      "description": "Hardware-instellingen voor helderheid en kleurtemperatuur, inclusief instellingen voor specifieke headsets.",
-      "hardwareBrightness": {
-        "unsupportedHmds": {
-          "description": "Schakel dit in om OyasumiVR te laten proberen de helderheid van je headset via SteamVR te regelen, ook al is niet bekend of het met je headset werkt.",
-          "listedHmd": "Hardwarematige helderheidsregeling wordt ondersteund op je headset.",
-          "noHmd": "Verbind je headset om deze instelling te wijzigen.",
-          "title": "Hardwarehelderheid op niet-ondersteunde headsets",
-          "unlistedHmd": "Hardwarematige helderheidsregeling kan op je headset toch werken als je het inschakelt. Werkt het op jouw headset? Laat het ons dan weten op <a href='https://discord.gg/7MqdPJhYxC' target='_blank' rel='noopener noreferrer'>Discord</a>!"
-        }
-      },
-      "title": "Helderheid & CCT",
-      "valveIndex": {
-        "maxBrightness": {
-          "description": "Beperk de maximale helderheid die OyasumiVR instelt.",
-          "title": "Maximale Helderheid"
-        },
-        "title": "Valve Index"
-      }
-    },
     "general": {
       "adminPrivileges": {
         "description": "Sommige functies, zoals het regelen van de stroomlimieten van je GPU, hebben beheerdersrechten nodig. Als je dit inschakelt, wordt er één keer om gevraagd. Daarna kan OyasumiVR deze functies gebruiken zonder opnieuw te vragen.",

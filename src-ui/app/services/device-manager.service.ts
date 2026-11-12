@@ -5,6 +5,7 @@ import {
   combineLatest,
   concatMap,
   distinctUntilChanged,
+  filter,
   firstValueFrom,
   map,
   Observable,
@@ -21,12 +22,15 @@ import {
   DMDeviceTag,
   DMDeviceType,
   DMKnownDevice,
+  knownDeviceIdForOpenVR,
 } from '../models/device-manager';
 import { SETTINGS_KEY_DEVICE_MANAGER, SETTINGS_STORE } from '../globals';
 import { OpenVRService } from './openvr.service';
 import { LighthouseService } from './lighthouse.service';
 import { OVRDevice } from '../models/ovr-device';
 import { LighthouseDevice } from '../models/lighthouse-device';
+import { AppSettingsService } from './app-settings.service';
+import { copyLegacyHmdSettings } from '../migrations/legacy-hmd-settings';
 import { isEqual, uniq } from 'lodash';
 import { error } from '@tauri-apps/plugin-log';
 import type { DisabledLighthouse } from 'src-ui/app/bindings';
@@ -41,10 +45,17 @@ export class DeviceManagerService {
   public readonly observedDevices = this._observedDevices.asObservable();
   public readonly knownDevices = this._data.pipe(map((data) => data.knownDevices));
   public readonly tags = this._data.pipe(map((data) => data.tags));
+  /** The known device id of the HMD SteamVR uses, or null while it reports none. */
+  public readonly activeHmdId = this.openvr.devices.pipe(
+    map((devices) => devices.find((d) => d.index === 0 && d.class === 'HMD')),
+    map((hmd) => (hmd ? this.getIdForOpenVRDevice(hmd) : null)),
+    distinctUntilChanged()
+  );
 
   constructor(
     private openvr: OpenVRService,
-    private lighthouse: LighthouseService
+    private lighthouse: LighthouseService,
+    private appSettings: AppSettingsService
   ) {}
 
   async init() {
@@ -59,6 +70,17 @@ export class DeviceManagerService {
     this.listenForOpenVRDevices();
     this.listenForLighthouseDevices();
     this.syncDisabledLighthouses();
+    this.copyLegacyHmdSettings();
+  }
+
+  /** Gives the known headsets the migrated global values once a headset is known. */
+  private copyLegacyHmdSettings() {
+    combineLatest([this.appSettings.settings, this.knownDevices])
+      .pipe(
+        map(([settings, devices]) => copyLegacyHmdSettings(settings, devices)),
+        filter((update) => update !== null)
+      )
+      .subscribe((update) => this.appSettings.updateSettings(update));
   }
 
   public getKnownDeviceById(id: string): DMKnownDevice | undefined {
@@ -524,7 +546,7 @@ export class DeviceManagerService {
   }
 
   public getIdForOpenVRDevice(device: OVRDevice): string {
-    return `OVR_${device.class}_${device.serialNumber}`;
+    return knownDeviceIdForOpenVR(device);
   }
 
   public getIdForLighthouseDevice(device: LighthouseDevice): string {
