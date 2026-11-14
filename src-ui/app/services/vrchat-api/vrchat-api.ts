@@ -878,16 +878,23 @@ export class VRChatAPI {
     const profileId = await this.requireActiveProfileId();
     const abortController = new AbortController();
     const timeout = setTimeout(() => abortController.abort(), PIPELINE_TOKEN_TIMEOUT);
+    // the deadline also covers the wait behind other queued API calls
+    const deadline = new Promise<never>((_, reject) =>
+      abortController.signal.addEventListener('abort', () => reject('TIMEOUT'))
+    );
     let body: unknown;
     try {
-      const result = await this.apiCallQueue.queueTask<Response>({
-        typeId: 'PIPELINE_TOKEN',
-        runnable: async () =>
-          requestVRChat(`${BASE_URL}/auth`, {
-            headers: await this.getDefaultHeaders({}, cacheGeneration, profileId),
-            signal: abortController.signal,
-          }),
-      });
+      const result = await Promise.race([
+        this.apiCallQueue.queueTask<Response>({
+          typeId: 'PIPELINE_TOKEN',
+          runnable: async () =>
+            requestVRChat(`${BASE_URL}/auth`, {
+              headers: await this.getDefaultHeaders({}, cacheGeneration, profileId),
+              signal: abortController.signal,
+            }),
+        }),
+        deadline,
+      ]);
       this.ensureCacheGeneration(cacheGeneration);
       const response = this.requireSuccessfulResponse(result);
       await this.parseResponseCookies(response, cacheGeneration, profileId);

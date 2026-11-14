@@ -189,11 +189,22 @@ describe('VRChatAPI.getPipelineToken', () => {
     );
     const stalled = api.getPipelineToken().catch((cause) => cause);
     await vi.advanceTimersByTimeAsync(10_000);
-    expect(await stalled).toBe('aborted');
+    expect(await stalled).toBe('TIMEOUT');
 
     vi.mocked(fetch).mockResolvedValueOnce(
       new Response(JSON.stringify({ ok: true, token: 'pipeline-token' }), { status: 200 })
     );
     await expect(api.getPipelineToken()).resolves.toBe('pipeline-token');
+  });
+
+  it('gives up after 10 seconds while another API call holds the queue', async () => {
+    const { api } = await createApi();
+    vi.useFakeTimers();
+    vi.mocked(fetch).mockImplementationOnce(() => new Promise(() => {}));
+    void api.pollCurrentUser();
+    const queued = api.getPipelineToken().catch((cause) => cause);
+    await vi.advanceTimersByTimeAsync(10_000);
+
+    expect(await queued).toBe('TIMEOUT');
   });
 });
