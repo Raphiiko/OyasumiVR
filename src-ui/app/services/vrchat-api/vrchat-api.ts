@@ -51,6 +51,7 @@ const DEFAULT_PAGE_LIMIT = 500;
 const DEFAULT_RATE_LIMIT_RETRIES = 5;
 const DEFAULT_RATE_LIMIT_DELAY = 5_000;
 const PROFILE_LOGOUT_TIMEOUT = 10_000;
+const PIPELINE_TOKEN_TIMEOUT = 10_000;
 
 export const VRCHAT_API_STALE_REQUEST = 'STALE_REQUEST';
 
@@ -869,6 +870,50 @@ export class VRChatAPI {
       },
       true
     );
+  }
+
+  /** The token VRChat's pipeline accepts for the active session; throws when VRChat gives none. */
+  public async getPipelineToken(): Promise<string> {
+    const cacheGeneration = this.cacheGeneration;
+    const profileId = await this.requireActiveProfileId();
+    const abortController = new AbortController();
+    const timeout = setTimeout(() => abortController.abort(), PIPELINE_TOKEN_TIMEOUT);
+    // the deadline also covers the wait behind other queued API calls
+    const deadline = new Promise<never>((_, reject) =>
+      abortController.signal.addEventListener('abort', () => reject('TIMEOUT'))
+    );
+    let body: unknown;
+    try {
+      const result = await Promise.race([
+        this.apiCallQueue.queueTask<Response>({
+          typeId: 'PIPELINE_TOKEN',
+          runnable: async () =>
+            requestVRChat(`${BASE_URL}/auth`, {
+              headers: await this.getDefaultHeaders({}, cacheGeneration, profileId),
+              signal: abortController.signal,
+            }),
+        }),
+        deadline,
+      ]);
+      this.ensureCacheGeneration(cacheGeneration);
+      const response = this.requireSuccessfulResponse(result);
+      await this.parseResponseCookies(response, cacheGeneration, profileId);
+      body = await response.json().catch(() => undefined);
+    } finally {
+      clearTimeout(timeout);
+    }
+    if (
+      typeof body !== 'object' ||
+      body === null ||
+      !('ok' in body) ||
+      body.ok !== true ||
+      !('token' in body) ||
+      typeof body.token !== 'string' ||
+      !body.token
+    ) {
+      throw 'UNEXPECTED_RESPONSE';
+    }
+    return body.token;
   }
 
   public updateCachedGroup(groupId: string, group: Partial<LimitedUserGroups>): void {
