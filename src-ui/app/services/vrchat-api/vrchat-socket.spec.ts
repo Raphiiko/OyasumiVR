@@ -124,8 +124,11 @@ describe('VRChatSocket', () => {
   });
 
   it('connects with the saved auth cookie when GET /auth fails', async () => {
-    await createSocket(vi.fn(async () => Promise.reject('UNEXPECTED_RESPONSE')));
+    const { getPipelineToken } = await createSocket(
+      vi.fn(async () => Promise.reject('UNEXPECTED_RESPONSE'))
+    );
 
+    expect(getPipelineToken).toHaveBeenCalledOnce();
     expect(FakeWebSocket.instances[0].url).toContain('authToken=token');
   });
 

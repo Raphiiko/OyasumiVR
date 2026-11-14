@@ -53,6 +53,7 @@ describe('VRChatWebsocketConnectionMonitor', () => {
   it('removes the warning once a connection stays open', async () => {
     for (let attempt = 0; attempt < 7; attempt++) await rejectedConnection();
     await vi.advanceTimersByTimeAsync(1_000);
+    expect(messages.has('vrcWebsocketDisconnected')).toBe(true);
 
     websocketStatus.next('OPEN');
     await vi.advanceTimersByTimeAsync(10_000);
