@@ -21,6 +21,7 @@ import { VRChatAuth } from './vrchat-auth';
 const RECONNECT_INTERVAL = 10_000;
 const HEALTHY_CONNECTION_DURATION = 30_000;
 const FAILURE_REPORT_THRESHOLD = 3;
+const PIPELINE_TOKEN_FETCH_INTERVAL = 60_000;
 
 export type VRChatSocketStatus = 'CLOSED' | 'OPEN' | 'OPENING';
 
@@ -43,6 +44,9 @@ export class VRChatSocket {
   private repeatedCloseReported = false;
   /** Changes whenever pending socket work must be discarded. */
   private connectionGeneration = 0;
+  /** Token from GET /auth, cleared on every auth status change and when VRChat rejects it. */
+  private pipelineToken?: string;
+  private pipelineTokenFetchedAt?: number;
 
   public readonly status = this.statusSubject.asObservable();
   public readonly notifications = this.notificationSubject.asObservable();
@@ -62,6 +66,8 @@ export class VRChatSocket {
 
   public init(): void {
     this.auth.status.pipe(distinctUntilChanged()).subscribe((status) => {
+      this.pipelineToken = undefined;
+      this.pipelineTokenFetchedAt = undefined;
       if (status === 'LOGGED_IN') {
         void this.openSocket();
       } else if (status === 'LOGGED_OUT') {
@@ -91,7 +97,7 @@ export class VRChatSocket {
     this.closeSocket();
     const connectionGeneration = this.connectionGeneration;
     this.statusSubject.next('OPENING');
-    const authToken = getActiveVRChatProfile(await firstValueFrom(this.settings))?.authCookie;
+    const authToken = await this.resolveAuthToken();
     if (connectionGeneration !== this.connectionGeneration) return;
     if (!authToken) {
       this.statusSubject.next('CLOSED');
@@ -117,6 +123,29 @@ export class VRChatSocket {
     socket.onerror = () => this.handleError(socket);
     socket.onclose = (event) => this.handleClose(socket, event);
     socket.onmessage = (message) => this.handleMessage(socket, message);
+  }
+
+  /** Prefers the token from GET /auth, fetched at most once a minute, over the saved auth cookie. */
+  private async resolveAuthToken(): Promise<string | undefined> {
+    if (this.pipelineToken) return this.pipelineToken;
+
+    const now = Date.now();
+    const fetchDue =
+      this.pipelineTokenFetchedAt === undefined ||
+      now - this.pipelineTokenFetchedAt >= PIPELINE_TOKEN_FETCH_INTERVAL;
+    if (fetchDue) {
+      this.pipelineTokenFetchedAt = now;
+      const connectionGeneration = this.connectionGeneration;
+      try {
+        const token = await this.api.getPipelineToken();
+        if (connectionGeneration === this.connectionGeneration) this.pipelineToken = token;
+        return token;
+      } catch (cause) {
+        error(`[VRChat] Failed to get websocket token: ${JSON.stringify(cause)}`);
+      }
+    }
+
+    return getActiveVRChatProfile(await firstValueFrom(this.settings))?.authCookie ?? undefined;
   }
 
   private closeSocket(): void {
@@ -196,6 +225,7 @@ export class VRChatSocket {
     // VRChat sends an error frame without a type, then closes the connection
     if ('err' in parsed && typeof parsed.err === 'string') {
       this.socketRejected = true;
+      this.pipelineToken = undefined;
       info(`[VRChat] Pipeline rejected the connection: ${parsed.err.slice(0, 120)}`);
       return;
     }

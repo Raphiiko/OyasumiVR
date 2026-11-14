@@ -871,6 +871,35 @@ export class VRChatAPI {
     );
   }
 
+  /** The token VRChat's pipeline accepts for the active session; throws when VRChat gives none. */
+  public async getPipelineToken(): Promise<string> {
+    const cacheGeneration = this.cacheGeneration;
+    const profileId = await this.requireActiveProfileId();
+    const result = await this.apiCallQueue.queueTask<Response>({
+      typeId: 'PIPELINE_TOKEN',
+      runnable: async () =>
+        requestVRChat(`${BASE_URL}/auth`, {
+          headers: await this.getDefaultHeaders({}, cacheGeneration, profileId),
+        }),
+    });
+    this.ensureCacheGeneration(cacheGeneration);
+    const response = this.requireSuccessfulResponse(result);
+    await this.parseResponseCookies(response, cacheGeneration, profileId);
+    const body: unknown = await response.json().catch(() => undefined);
+    if (
+      typeof body !== 'object' ||
+      body === null ||
+      !('ok' in body) ||
+      body.ok !== true ||
+      !('token' in body) ||
+      typeof body.token !== 'string' ||
+      !body.token
+    ) {
+      throw 'UNEXPECTED_RESPONSE';
+    }
+    return body.token;
+  }
+
   public updateCachedGroup(groupId: string, group: Partial<LimitedUserGroups>): void {
     if (this.activeCacheClears) return;
     if (group.groupId && group.groupId !== groupId) {

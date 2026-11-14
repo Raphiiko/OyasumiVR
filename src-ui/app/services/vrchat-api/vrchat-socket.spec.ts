@@ -20,7 +20,7 @@ class FakeWebSocket {
   onclose?: (event: Partial<CloseEvent>) => void;
   onmessage?: (event: Partial<MessageEvent>) => void;
 
-  constructor() {
+  constructor(readonly url: string) {
     FakeWebSocket.instances.push(this);
   }
 
@@ -46,7 +46,7 @@ const settings = {
   activeProfileId: 'p',
 } as unknown as VRChatApiSettings;
 
-async function createSocket() {
+async function createSocket(getPipelineToken = vi.fn(async () => 'pipeline-token')) {
   const reportError = vi.fn();
   const receivedUserUpdate = vi.fn();
   const revalidateSession = vi.fn(async () => {});
@@ -55,12 +55,13 @@ async function createSocket() {
     receivedUserUpdate,
     revalidateSession,
   } as unknown as VRChatAuth;
-  const socket = new VRChatSocket(auth, {} as VRChatAPI, of(settings), reportError);
+  const api = { getPipelineToken } as unknown as VRChatAPI;
+  const socket = new VRChatSocket(auth, api, of(settings), reportError);
   const notifications: unknown[] = [];
   socket.notifications.subscribe((n) => notifications.push(n));
   socket.init();
   await vi.waitFor(() => expect(FakeWebSocket.instances.length).toBe(1));
-  return { reportError, receivedUserUpdate, revalidateSession, notifications };
+  return { reportError, receivedUserUpdate, revalidateSession, notifications, getPipelineToken };
 }
 
 async function reconnect(count: number) {
@@ -79,6 +80,53 @@ describe('VRChatSocket', () => {
   afterEach(() => {
     vi.useRealTimers();
     vi.unstubAllGlobals();
+  });
+
+  it('connects with the token from GET /auth and fetches a new one at most once a minute after a rejection', async () => {
+    const getPipelineToken = vi
+      .fn()
+      .mockResolvedValueOnce('first-token')
+      .mockResolvedValueOnce('second-token');
+    await createSocket(getPipelineToken);
+    let ws = FakeWebSocket.instances[0];
+    expect(ws.url).toContain('authToken=first-token');
+
+    for (let attempt = 2; attempt <= 7; attempt++) {
+      ws.open();
+      ws.receive({ err: "authToken doesn't correspond with an active session" });
+      ws.drop();
+      ws = await reconnect(attempt);
+    }
+
+    const tokens = FakeWebSocket.instances.map((socket) =>
+      new URL(socket.url).searchParams.get('authToken')
+    );
+    expect(tokens).toEqual([
+      'first-token',
+      'token',
+      'token',
+      'token',
+      'token',
+      'token',
+      'second-token',
+    ]);
+  });
+
+  it('keeps the GET /auth token across a reconnect that VRChat did not reject', async () => {
+    const { getPipelineToken } = await createSocket();
+    FakeWebSocket.instances[0].open();
+    FakeWebSocket.instances[0].drop();
+
+    const ws = await reconnect(2);
+
+    expect(ws.url).toContain('authToken=pipeline-token');
+    expect(getPipelineToken).toHaveBeenCalledTimes(1);
+  });
+
+  it('connects with the saved auth cookie when GET /auth fails', async () => {
+    await createSocket(vi.fn(async () => Promise.reject('UNEXPECTED_RESPONSE')));
+
+    expect(FakeWebSocket.instances[0].url).toContain('authToken=token');
   });
 
   it('treats an error frame and the close after it as a rejection, not a failure', async () => {
