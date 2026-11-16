@@ -591,7 +591,10 @@ export class VRChatAPI {
       this.requireSuccessfulResponse(result);
       return { reply: messageEx?.message };
     } catch (e) {
-      error(`[VRChat] Failed to decline invite or invite request: ${JSON.stringify(e)}`);
+      const body = e instanceof Response ? await e.text().catch(() => '') : '';
+      error(
+        `[VRChat] ${requestFailure('Failed to decline invite or invite request', e).message} ${body}`
+      );
       throw e;
     }
   }
