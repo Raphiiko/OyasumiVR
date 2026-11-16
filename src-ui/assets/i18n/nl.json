@@ -1616,7 +1616,7 @@
         "title": "VRChat OSC(Query) services niet beschikbaar"
       },
       "vrcWebsocketDisconnected": {
-        "message": "Je bent ingelogd met je VRChat account, maar OyasumiVR kon geen verbinding maken met de websocket van VRChat. Daardoor werken sommige functies, zoals het automatisch accepteren van invite requests, op dit moment niet.",
+        "message": "Je bent ingelogd met je VRChat account, maar OyasumiVR kon geen verbinding maken met de websocket van VRChat. Daardoor werken sommige functies, zoals het automatisch accepteren van invite requests, op dit moment niet. Blijft dit gebeuren, log dan in OyasumiVR uit bij VRChat en log opnieuw in.",
         "title": "VRChat Websocket Niet Beschikbaar"
       }
     },

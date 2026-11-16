@@ -1,34 +1,46 @@
 import { inject } from '@angular/core';
 import { VRChatService } from '../../vrchat-api/vrchat.service';
 import { MessageMonitor } from './message-monitor';
-import { combineLatest, debounceTime, distinctUntilChanged, map, switchMap, timer, of } from 'rxjs';
+import {
+  combineLatest,
+  debounceTime,
+  distinctUntilChanged,
+  map,
+  shareReplay,
+  switchMap,
+  timer,
+  of,
+} from 'rxjs';
+
+const STABLE_CONNECTION_DURATION = 5_000;
+const WARNING_DELAY = 60_000;
 
 export class VRChatWebsocketConnectionMonitor extends MessageMonitor {
   private vrchat = inject(VRChatService);
 
   public override async init(): Promise<void> {
-    combineLatest([
-      this.vrchat.status.pipe(distinctUntilChanged()),
-      this.vrchat.websocketStatus.pipe(distinctUntilChanged()),
-    ])
+    // VRChat opens a socket before it rejects the token, so a brief OPEN does not count as connected
+    const stablyConnected = this.vrchat.websocketStatus.pipe(
+      distinctUntilChanged(),
+      switchMap((status) =>
+        status === 'OPEN' ? timer(STABLE_CONNECTION_DURATION).pipe(map(() => true)) : of(false)
+      ),
+      distinctUntilChanged(),
+      shareReplay({ bufferSize: 1, refCount: true })
+    );
+
+    combineLatest([this.vrchat.status.pipe(distinctUntilChanged()), stablyConnected])
       .pipe(
-        switchMap(([authStatus, wsStatus]) => {
-          // Check if both conditions are met: logged in and websocket closed
-          const shouldMonitor = authStatus === 'LOGGED_IN' && wsStatus !== 'OPEN';
+        switchMap(([authStatus, connected]) => {
+          if (authStatus !== 'LOGGED_IN' || connected) return of(false);
 
-          if (!shouldMonitor) {
-            // If not both conditions are met, don't show warning
-            return of(false);
-          }
-
-          // If both conditions are met, wait 60 seconds and check if they're still true
-          return timer(60000).pipe(
+          return timer(WARNING_DELAY).pipe(
             switchMap(() =>
-              combineLatest([this.vrchat.status, this.vrchat.websocketStatus]).pipe(
-                map(([currentAuthStatus, currentWsStatus]) => {
-                  // Show warning only if both conditions are still true after 60 seconds
-                  return currentAuthStatus === 'LOGGED_IN' && currentWsStatus !== 'OPEN';
-                })
+              combineLatest([this.vrchat.status, stablyConnected]).pipe(
+                map(
+                  ([currentAuthStatus, currentlyConnected]) =>
+                    currentAuthStatus === 'LOGGED_IN' && !currentlyConnected
+                )
               )
             )
           );

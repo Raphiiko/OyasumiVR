@@ -1,5 +1,5 @@
 import { BehaviorSubject, of } from 'rxjs';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { fetch } from '@tauri-apps/plugin-http';
 import { warn } from '@tauri-apps/plugin-log';
 import type { CurrentUser } from 'vrchat';
@@ -173,5 +173,38 @@ describe('VRChatAPI.setStatus', () => {
     await Promise.all([first, second]);
     expect(user.value.status).toBe(UserStatus.JoinMe);
     expect(user.value.statusDescription).toBe('second');
+  });
+});
+
+describe('VRChatAPI.getPipelineToken', () => {
+  beforeEach(() => vi.clearAllMocks());
+  afterEach(() => vi.useRealTimers());
+
+  it('gives up after 10 seconds without a response and frees the queue for the next call', async () => {
+    const { api } = await createApi();
+    vi.useFakeTimers();
+    vi.mocked(fetch).mockImplementationOnce(
+      (_, init) =>
+        new Promise((_, reject) => init?.signal?.addEventListener('abort', () => reject('aborted')))
+    );
+    const stalled = api.getPipelineToken().catch((cause) => cause);
+    await vi.advanceTimersByTimeAsync(10_000);
+    expect(await stalled).toBe('TIMEOUT');
+
+    vi.mocked(fetch).mockResolvedValueOnce(
+      new Response(JSON.stringify({ ok: true, token: 'pipeline-token' }), { status: 200 })
+    );
+    await expect(api.getPipelineToken()).resolves.toBe('pipeline-token');
+  });
+
+  it('gives up after 10 seconds while another API call holds the queue', async () => {
+    const { api } = await createApi();
+    vi.useFakeTimers();
+    vi.mocked(fetch).mockImplementationOnce(() => new Promise(() => {}));
+    void api.pollCurrentUser();
+    const queued = api.getPipelineToken().catch((cause) => cause);
+    await vi.advanceTimersByTimeAsync(10_000);
+
+    expect(await queued).toBe('TIMEOUT');
   });
 });

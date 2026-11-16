@@ -1616,7 +1616,7 @@
         "title": "VRChat OSC(Query) services unavailable"
       },
       "vrcWebsocketDisconnected": {
-        "message": "You are currently logged in with your VRChat account, but OyasumiVR was not able to connect to VRChat's websocket. This means certain features, like automatically accepting invite requests, currently won't work.",
+        "message": "You are currently logged in with your VRChat account, but OyasumiVR was not able to connect to VRChat's websocket. This means certain features, like automatically accepting invite requests, currently won't work. If this keeps happening, log out of VRChat in OyasumiVR and log in again.",
         "title": "VRChat Websocket Unavailable"
       }
     },

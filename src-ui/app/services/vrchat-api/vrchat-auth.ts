@@ -1,6 +1,7 @@
 import { error, info, warn } from '@tauri-apps/plugin-log';
 import { twoFactorMethodFromError, VRChatAPI, VRChatTwoFactorMethod } from './vrchat-api';
 import { ModalService } from '../modal.service';
+import { TASK_QUEUE_TASK_REPLACED } from 'src-ui/app/utils/task-queue';
 import { VRChatLoginModalComponent } from 'src-ui/app/components/vrchat-login-modal/vrchat-login-modal.component';
 import {
   BehaviorSubject,
@@ -770,6 +771,7 @@ export class VRChatAuth {
       if (result.error) throw result.error;
       if (result.result) this.setCurrentUser(result.result);
     } catch (cause) {
+      if (cause === TASK_QUEUE_TASK_REPLACED) return;
       error(`[VRChat] Error polling user: ${JSON.stringify(cause)}`);
       if (!requiresSessionReauthentication(cause)) return;
       await this.queueTransition(async () => {
