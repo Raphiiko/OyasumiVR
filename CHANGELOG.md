@@ -15,6 +15,14 @@ with [SemVer](https://semver.org/) prerelease suffixes:
 - Pre-release numbering never predicts the version of the eventual stable release, and
   versions are assigned when a build is published, never before.
 
+## [Unreleased]
+
+### Fixed
+
+- Fixed automatic invite request handling stopping when VRChat rejects OyasumiVR's notification
+  connection. OyasumiVR now gets a new token for it, and warns in the message centre when the
+  connection keeps failing
+
 ## [26.11.3]
 
 ### Changed
