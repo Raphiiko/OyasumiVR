@@ -1616,7 +1616,7 @@
         "title": "VRChat OSC(Query)が無効"
       },
       "vrcWebsocketDisconnected": {
-        "message": "VRChatにはログインしていますが、WebSocketに接続できませんでした。一部機能（招待の自動承認など）が現在使用できません。",
+        "message": "VRChatにはログインしていますが、WebSocketに接続できませんでした。一部機能（招待の自動承認など）が現在使用できません。この状態が続く場合は、OyasumiVRでVRChatからログアウトし、もう一度ログインしてください。",
         "title": "VRChat WebSocketが未接続"
       }
     },

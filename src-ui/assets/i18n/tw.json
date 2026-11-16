@@ -1616,7 +1616,7 @@
         "title": "VRChat OSC(Query) 服務不可用"
       },
       "vrcWebsocketDisconnected": {
-        "message": "你目前使用 VRChat 帳號登入，但 OyasumiVR 無法連接到 VRChat 的 WebSocket。這表示像是自動接受加入請求等部分功能目前將無法運作。",
+        "message": "你目前使用 VRChat 帳號登入，但 OyasumiVR 無法連接到 VRChat 的 WebSocket。這表示像是自動接受加入請求等部分功能目前將無法運作。如果這個問題持續發生，請在 OyasumiVR 中登出 VRChat，然後重新登入。",
         "title": "VRChat Websocket 無法使用"
       }
     },
