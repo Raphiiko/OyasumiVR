@@ -68,9 +68,22 @@ export class BigscreenBeyondHardwareBrightnessControlDriver extends HardwareBrig
 
   getBrightnessBounds(knownDevices = this.knownDevices): [number, number] {
     const config = this.getBrightnessConfiguration();
-    const hmd = knownDevices.find((d) => d.id === this.hmdId);
-    const own = ownDeviceSettings(hmd, 'BIGSCREEN_BEYOND')?.maxBrightness;
-    return [config.softwareStops[0], own ?? config.riskThreshold];
+    return [config.softwareStops[0], this.maxBrightness(knownDevices)];
+  }
+
+  /**
+   * The connected Beyond's own maximum. Over USB alone the driver cannot tell which Beyond is
+   * connected, so until SteamVR reports it, the lowest maximum of the known Beyonds applies.
+   */
+  private maxBrightness(knownDevices: DMKnownDevice[]): number {
+    const maxOf = (device: DMKnownDevice | undefined) =>
+      ownDeviceSettings(device, 'BIGSCREEN_BEYOND')?.maxBrightness ??
+      this.getBrightnessConfiguration().riskThreshold;
+    if (this.hmdId) return maxOf(knownDevices.find((d) => d.id === this.hmdId));
+    const beyonds = knownDevices.filter(
+      (d) => d.deviceType === 'HMD' && d.manufacturer === 'Bigscreen'
+    );
+    return beyonds.length ? Math.min(...beyonds.map(maxOf)) : maxOf(undefined);
   }
 
   async getBrightnessPercentage(): Promise<number> {

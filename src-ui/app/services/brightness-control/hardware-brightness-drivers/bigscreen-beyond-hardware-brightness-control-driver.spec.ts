@@ -23,20 +23,25 @@ describe('BigscreenBeyondHardwareBrightnessControlDriver', () => {
   beforeEach(() => vi.useFakeTimers());
   afterEach(() => vi.useRealTimers());
 
-  it('keeps its own maximum after SteamVR stops reporting the Beyond', () => {
+  const knownBeyond = (serial: string, maxBrightness: number) =>
+    ({
+      id: `OVR_HMD_${serial}`,
+      deviceType: 'HMD',
+      manufacturer: 'Bigscreen',
+      settings: { model: 'BIGSCREEN_BEYOND', maxBrightness },
+    }) as DMKnownDevice;
+
+  it('uses the lowest known maximum until SteamVR reports the Beyond, and its own after', () => {
     const knownDevices = new BehaviorSubject([
-      {
-        id: 'OVR_HMD_BSB-TEST0001',
-        deviceType: 'HMD',
-        settings: { model: 'BIGSCREEN_BEYOND', maxBrightness: 100 },
-      } as DMKnownDevice,
+      knownBeyond('BSB-TEST0001', 130),
+      knownBeyond('BSB-TEST0002', 110),
     ]);
     const devices = new BehaviorSubject<OVRDevice[]>([]);
     const driver = new BigscreenBeyondHardwareBrightnessControlDriver(knownDevices, devices);
-    expect(driver.getBrightnessBounds()[1]).toBe(150);
+    expect(driver.getBrightnessBounds()[1]).toBe(110);
     devices.next([BEYOND]);
-    expect(driver.getBrightnessBounds()[1]).toBe(100);
+    expect(driver.getBrightnessBounds()[1]).toBe(130);
     devices.next([]);
-    expect(driver.getBrightnessBounds()[1]).toBe(100);
+    expect(driver.getBrightnessBounds()[1]).toBe(130);
   });
 });
