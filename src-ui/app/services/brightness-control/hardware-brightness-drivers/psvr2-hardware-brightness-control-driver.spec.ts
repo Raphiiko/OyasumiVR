@@ -1,6 +1,5 @@
 import { BehaviorSubject, firstValueFrom, of } from 'rxjs';
 import { describe, expect, it } from 'vitest';
-import { APP_SETTINGS_DEFAULT } from '../../../models/settings';
 import { OVRDevice } from '../../../models/ovr-device';
 import { OpenVRService } from '../../openvr.service';
 import { PSVR2HardwareBrightnessControlDriver } from './psvr2-hardware-brightness-control-driver';
@@ -18,7 +17,7 @@ function createDriver(hmd: Partial<OVRDevice>) {
       analogGain = value;
     },
   } as unknown as OpenVRService;
-  const driver = new PSVR2HardwareBrightnessControlDriver(of(APP_SETTINGS_DEFAULT), openvr);
+  const driver = new PSVR2HardwareBrightnessControlDriver(of([]), openvr);
   return { driver, analogGain: () => analogGain };
 }
 

@@ -14,8 +14,8 @@ import {
   switchMap,
 } from 'rxjs';
 import { commands, events } from 'src-ui/app/bindings';
-import { AppSettings } from '../../../models/settings';
-import { ownHmdSettings } from '../../../utils/hmd-settings-utils';
+import { DMKnownDevice } from '../../../models/device-manager';
+import { ownDeviceSettings } from '../../../utils/device-settings-utils';
 import { OVRDevice } from '../../../models/ovr-device';
 import { knownDeviceIdForOpenVR } from '../../../utils/device-manager-utils';
 import { warn } from '@tauri-apps/plugin-log';
@@ -34,8 +34,8 @@ export class BigscreenBeyondHardwareBrightnessControlDriver extends HardwareBrig
   /** The last Beyond SteamVR reported, kept while SteamVR stops; null until one is seen. */
   private hmdId: string | null = null;
 
-  constructor(appSettings: Observable<AppSettings>, devices: Observable<OVRDevice[]>) {
-    super(appSettings);
+  constructor(knownDevices: Observable<DMKnownDevice[]>, devices: Observable<OVRDevice[]>) {
+    super(knownDevices);
     devices.subscribe((list) => {
       const hmd = list.find((d) => d.class === 'HMD' && d.manufacturerName === 'Bigscreen');
       if (hmd) this.hmdId = knownDeviceIdForOpenVR(hmd);
@@ -66,10 +66,10 @@ export class BigscreenBeyondHardwareBrightnessControlDriver extends HardwareBrig
     return BIGSCREEN_BEYOND_HARDWARE_BRIGHTNESS_CONTROL_DRIVER_BOUNDS;
   }
 
-  getBrightnessBounds(appSettings?: AppSettings): [number, number] {
+  getBrightnessBounds(knownDevices = this.knownDevices): [number, number] {
     const config = this.getBrightnessConfiguration();
-    const settings = appSettings ?? this.appSettings;
-    const own = ownHmdSettings(settings, this.hmdId, 'BIGSCREEN_BEYOND')?.maxBrightness;
+    const hmd = knownDevices.find((d) => d.id === this.hmdId);
+    const own = ownDeviceSettings(hmd, 'BIGSCREEN_BEYOND')?.maxBrightness;
     return [config.softwareStops[0], own ?? config.riskThreshold];
   }
 

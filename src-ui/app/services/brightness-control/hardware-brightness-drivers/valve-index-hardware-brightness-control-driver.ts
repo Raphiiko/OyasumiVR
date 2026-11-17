@@ -1,8 +1,8 @@
 import { HardwareBrightnessControlDriverBounds } from './hardware-brightness-control-driver';
 import { SteamVRAnalogGainHardwareBrightnessControlDriver } from './steamvr-analog-gain-hardware-brightness-control-driver';
 import { clamp } from '../../../utils/number-utils';
-import { AppSettings } from '../../../models/settings';
-import { ownHmdSettings } from '../../../utils/hmd-settings-utils';
+import { DMKnownDevice } from '../../../models/device-manager';
+import { ownDeviceSettings } from '../../../utils/device-settings-utils';
 import { OVRDevice } from '../../../models/ovr-device';
 import type { OpenVRService } from '../../openvr.service';
 import {
@@ -57,8 +57,8 @@ export class ValveIndexHardwareBrightnessControlDriver extends SteamVRAnalogGain
   /** Emits when a write is requested, which makes the initial read's value stale. */
   private readonly writeRequests = new Subject<void>();
 
-  constructor(appSettings: Observable<AppSettings>, openvr: OpenVRService) {
-    super(appSettings, openvr);
+  constructor(knownDevices: Observable<DMKnownDevice[]>, openvr: OpenVRService) {
+    super(knownDevices, openvr);
     this.isAvailable()
       .pipe(
         distinctUntilChanged(),
@@ -98,10 +98,10 @@ export class ValveIndexHardwareBrightnessControlDriver extends SteamVRAnalogGain
     return VALVE_INDEX_HARDWARE_BRIGHTNESS_CONTROL_DRIVER_BOUNDS;
   }
 
-  getBrightnessBounds(appSettings?: AppSettings): [number, number] {
+  getBrightnessBounds(knownDevices = this.knownDevices): [number, number] {
     const config = this.getBrightnessConfiguration();
-    const settings = appSettings ?? this.appSettings;
-    const own = ownHmdSettings(settings, this.hmdId, 'VALVE_INDEX')?.maxBrightness;
+    const hmd = knownDevices.find((d) => d.id === this.hmdId);
+    const own = ownDeviceSettings(hmd, 'VALVE_INDEX')?.maxBrightness;
     return [config.softwareStops[0], own ?? config.riskThreshold];
   }
 

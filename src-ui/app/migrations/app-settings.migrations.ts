@@ -1,10 +1,8 @@
-import { isEmpty, pickBy } from 'lodash';
 import { APP_SETTINGS_DEFAULT } from '../models/settings';
 import type { MigrationDefinition, Versioned } from 'src-shared-ts/src/migration-runner';
 import { migrateLighthouseDeviceId } from './lighthouse-device-id';
 import { protectSecret } from '../utils/secrets';
 import { normalizeWithDefaults } from './migration-defaults';
-import { LEGACY_HMD_MANUFACTURERS } from './device-manager.migrations';
 
 function from12to13(data: any): any {
   data.version = 13;
@@ -53,51 +51,19 @@ function from17to18(data: any): any {
   return data;
 }
 
-function from18to19(data: any, store: Readonly<Record<string, any>>): any {
+function from18to19(data: any): any {
   data.version = 19;
-
-  // take each global headset value the user changed out of the settings
-  const changed = (key: string, defaultValue: unknown) => {
-    const value = data[key];
+  // the device manager step copies the changed values to each headset's own settings
+  for (const key of [
+    'valveIndexMaxBrightness',
+    'bigscreenBeyondMaxBrightness',
+    'bigscreenBeyondUnsafeBrightness',
+    'hardwareBrightnessOnUnsupportedHmds',
+    'cctControlOnUnsupportedHmds',
+  ]) {
     delete data[key];
-    return value === defaultValue ? undefined : value;
-  };
-  const valuesByModel = {
-    VALVE_INDEX: { maxBrightness: changed('valveIndexMaxBrightness', 160) },
-    BIGSCREEN_BEYOND: {
-      maxBrightness: changed('bigscreenBeyondMaxBrightness', 150),
-      unsafeBrightness: changed('bigscreenBeyondUnsafeBrightness', false),
-    },
-    OTHER: {
-      hardwareBrightnessOnUnsupportedHmd: changed('hardwareBrightnessOnUnsupportedHmds', false),
-      cctControlOnUnsupportedHmd: changed('cctControlOnUnsupportedHmds', false),
-    },
-  };
-
-  // give each known headset the values of its model
-  data.hmdSettings = {};
-  for (const hmd of store['DEVICE_MANAGER']?.knownDevices ?? []) {
-    if (hmd.deviceType !== 'HMD') continue;
-    const model = hmdSettingsModel(hmd);
-    if (!model) continue;
-    const values = pickBy(valuesByModel[model], (value) => value !== undefined);
-    if (!isEmpty(values)) data.hmdSettings[hmd.id] = { model, ...values };
   }
   return data;
-}
-
-/** The model a version 18 headset has settings for; null for a model without any. */
-function hmdSettingsModel(hmd: any): 'VALVE_INDEX' | 'BIGSCREEN_BEYOND' | 'OTHER' | null {
-  // the store is as read, before the device manager step fills in missing manufacturers
-  const manufacturer: string | undefined =
-    hmd.manufacturer ?? LEGACY_HMD_MANUFACTURERS[hmd.typeName];
-  if (manufacturer === 'Valve' && hmd.typeName === 'Index') return 'VALVE_INDEX';
-  if (manufacturer === 'Bigscreen') return 'BIGSCREEN_BEYOND';
-  // a Frame or a PS VR2 has its own brightness driver and no colour fallback
-  const isFrame =
-    manufacturer === 'Valve' && ['Steam Frame', 'Deckard DV2', 'Deckard MP'].includes(hmd.typeName);
-  if (isFrame || (manufacturer === 'SIE' && hmd.typeName === 'PS VR2')) return null;
-  return 'OTHER';
 }
 
 async function from11to12(data: any): Promise<any> {

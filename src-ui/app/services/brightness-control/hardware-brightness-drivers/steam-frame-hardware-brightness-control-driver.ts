@@ -8,7 +8,7 @@ import {
   ReplaySubject,
   shareReplay,
 } from 'rxjs';
-import { AppSettings } from '../../../models/settings';
+import { DMKnownDevice } from '../../../models/device-manager';
 import { OVRDevice } from '../../../models/ovr-device';
 import type { OpenVRService, OpenVRStatus } from '../../openvr.service';
 import { Brightness, commands } from 'src-ui/app/bindings';
@@ -58,13 +58,13 @@ export class SteamFrameHardwareBrightnessControlDriver extends HardwareBrightnes
   private pending: { percentage: number; pairingId: string; setAt: number } | null = null;
 
   constructor(
-    appSettings: Observable<AppSettings>,
+    knownDevices: Observable<DMKnownDevice[]>,
     openvr: Pick<OpenVRService, 'status' | 'devices'>,
     pairings: Observable<SteamFramePairing[]>,
     private readonly connections: Observable<Record<string, SteamFrameConnectionState>>,
     private readonly fadeEnded: Observable<SteamFrameFadeEnded>
   ) {
-    super(appSettings);
+    super(knownDevices);
     this.hmd = combineLatest([openvr.status, openvr.devices, pairings, connections]).pipe(
       map(([status, devices, pairings, connections]) =>
         this.activeHmd(status, devices, pairings, connections)

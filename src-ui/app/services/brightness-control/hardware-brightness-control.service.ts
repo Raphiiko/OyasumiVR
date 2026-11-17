@@ -31,11 +31,10 @@ import { listen } from '@tauri-apps/api/event';
 import { BigscreenBeyondHardwareBrightnessControlDriver } from './hardware-brightness-drivers/bigscreen-beyond-hardware-brightness-control-driver';
 import { PSVR2HardwareBrightnessControlDriver } from './hardware-brightness-drivers/psvr2-hardware-brightness-control-driver';
 import { SteamVRAnalogGainHardwareBrightnessControlDriver } from './hardware-brightness-drivers/steamvr-analog-gain-hardware-brightness-control-driver';
-import { AppSettingsService } from '../app-settings.service';
-import { AppSettings } from '../../models/settings';
 import { clamp } from '../../utils/number-utils';
 import { SteamFrameHardwareBrightnessControlDriver } from './hardware-brightness-drivers/steam-frame-hardware-brightness-control-driver';
 import { SteamFrameService } from '../steam-frame/steam-frame.service';
+import { DeviceManagerService } from '../device-manager.service';
 import { DeviceFade } from '../../utils/device-fade';
 
 /** A transition on the PC, or a fade the device runs. */
@@ -86,7 +85,8 @@ export class HardwareBrightnessControlService {
   public readonly brightnessBounds: Observable<[number, number]>;
   /**
    * Emits when SteamVR reports another headset, whose own maximum the bounds can use. The drivers
-   * subscribe to the devices in their constructors, so they hold the new headset when this emits.
+   * subscribe to the OpenVR devices in their constructors, so they hold the new headset when this
+   * emits.
    */
   private readonly hmdChanges: Observable<string | undefined>;
   /** Replays the latest value to services that subscribe after the driver reported it. */
@@ -105,30 +105,27 @@ export class HardwareBrightnessControlService {
 
   constructor(
     openvr: OpenVRService,
-    private appSettingsService: AppSettingsService, // private bsbFanAutomationService: BigscreenBeyondFanAutomationService
+    private deviceManager: DeviceManagerService,
     steamFrames: SteamFrameService
   ) {
     this.driverValveIndex = new ValveIndexHardwareBrightnessControlDriver(
-      this.appSettingsService.settings,
+      deviceManager.knownDevices,
       openvr
     );
     this.driverBigscreenBeyond = new BigscreenBeyondHardwareBrightnessControlDriver(
-      this.appSettingsService.settings,
+      deviceManager.knownDevices,
       openvr.devices
     );
     this.driverSteamFrame = new SteamFrameHardwareBrightnessControlDriver(
-      this.appSettingsService.settings,
+      deviceManager.knownDevices,
       openvr,
       steamFrames.pairings$,
       steamFrames.connections$,
       steamFrames.fadeEnded$
     );
-    this.driverPSVR2 = new PSVR2HardwareBrightnessControlDriver(
-      this.appSettingsService.settings,
-      openvr
-    );
+    this.driverPSVR2 = new PSVR2HardwareBrightnessControlDriver(deviceManager.knownDevices, openvr);
     this.driverSteamVRAnalogGain = new SteamVRAnalogGainHardwareBrightnessControlDriver(
-      this.appSettingsService.settings,
+      deviceManager.knownDevices,
       openvr
     );
     const headsetDrivers = [
@@ -173,12 +170,12 @@ export class HardwareBrightnessControlService {
     );
     this.brightnessBounds = combineLatest([
       this._activeDriver,
-      this.appSettingsService.settings,
+      deviceManager.knownDevices,
       this.hmdChanges,
     ]).pipe(
-      map(([driver, settings]: [HardwareBrightnessControlDriver | null, AppSettings, unknown]) => {
+      map(([driver, knownDevices]) => {
         if (!driver) return [0, 100] as [number, number];
-        return driver.getBrightnessBounds(settings);
+        return driver.getBrightnessBounds(knownDevices);
       }),
       distinctUntilChanged((a, b) => a[0] === b[0] && a[1] === b[1]),
       shareReplay(1)
@@ -320,15 +317,15 @@ export class HardwareBrightnessControlService {
     return brightness;
   }
 
-  /** Clamps the brightness when a setting or another headset narrows the active driver's bounds. */
+  /** Clamps the brightness when a headset's settings or another headset narrow the active driver's bounds. */
   private async initializeSafetyChecks() {
     this._activeDriver
       .pipe(
         // skip the bounds at a driver switch: the cached value belongs to the previous device
         switchMap((driver) =>
           driver
-            ? combineLatest([this.appSettingsService.settings, this.hmdChanges]).pipe(
-                map(([settings]) => driver.getBrightnessBounds(settings)),
+            ? combineLatest([this.deviceManager.knownDevices, this.hmdChanges]).pipe(
+                map(([knownDevices]) => driver.getBrightnessBounds(knownDevices)),
                 distinctUntilChanged(isEqual),
                 skip(1)
               )

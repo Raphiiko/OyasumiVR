@@ -3,27 +3,6 @@ import { PlayerListPreset } from './player-list-preset';
 import { OneTimeFlag } from './one-time-flags';
 import { EventLogType } from './event-log-entry';
 
-/**
- * A headset's own brightness and colour temperature values, for the model the app detects it as.
- * A missing value uses the model's default.
- */
-export type HmdSettings =
-  | { model: 'VALVE_INDEX'; maxBrightness?: number }
-  | {
-      model: 'BIGSCREEN_BEYOND';
-      maxBrightness?: number;
-      /** Allows a maxBrightness above 150%. */
-      unsafeBrightness?: boolean;
-    }
-  | {
-      /** A headset without a dedicated brightness driver, and not on the SteamVR colour gain list. */
-      model: 'OTHER';
-      hardwareBrightnessOnUnsupportedHmd?: boolean;
-      cctControlOnUnsupportedHmd?: boolean;
-    };
-
-export type HmdSettingsModel = HmdSettings['model'];
-
 export interface AppSettings {
   version: 19;
   // General Settings
@@ -80,8 +59,6 @@ export interface AppSettings {
   cctSoftwareMode: boolean;
   // HW Specific
   bigscreenBeyondBrightnessFanSafety: boolean; // Force fan to 100% if brightness is above 100%
-  /** Each headset's own values, by known device id. */
-  hmdSettings: Record<string, HmdSettings>;
   // VRCX
   vrcxLogsEnabled: VRCXEventLogType[];
 }
@@ -168,7 +145,6 @@ export const APP_SETTINGS_DEFAULT: AppSettings = {
   cctSoftwareMode: false,
   // HW Specific
   bigscreenBeyondBrightnessFanSafety: true,
-  hmdSettings: {},
   // VRCX
   vrcxLogsEnabled: ['SleepMode', 'Invites', 'StatusChanges', 'GroupChanges'],
 };

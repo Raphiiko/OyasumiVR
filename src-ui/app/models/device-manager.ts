@@ -13,6 +13,27 @@ export interface DeviceManagerData {
 export const DMDeviceTypes = ['HMD', 'TRACKER', 'CONTROLLER', 'LIGHTHOUSE'] as const;
 export type DMDeviceType = (typeof DMDeviceTypes)[number];
 
+/**
+ * A known device's own settings, for the model the app detects it as. A missing value uses the
+ * model's default.
+ */
+export type DMDeviceSettings =
+  | { model: 'VALVE_INDEX'; maxBrightness?: number }
+  | {
+      model: 'BIGSCREEN_BEYOND';
+      maxBrightness?: number;
+      /** Allows a maxBrightness above 150%. */
+      unsafeBrightness?: boolean;
+    }
+  | {
+      /** A headset without a dedicated brightness driver, and not on the SteamVR colour gain list. */
+      model: 'OTHER_HMD';
+      hardwareBrightnessOnUnsupportedHmd?: boolean;
+      cctControlOnUnsupportedHmd?: boolean;
+    };
+
+export type DMDeviceSettingsModel = DMDeviceSettings['model'];
+
 export interface DMKnownDevice {
   id: string;
   typeName: string;
@@ -24,6 +45,7 @@ export interface DMKnownDevice {
   lastSeen: number;
   tagIds: string[];
   disabled: boolean;
+  settings?: DMDeviceSettings;
 }
 
 export interface DMDeviceTag {

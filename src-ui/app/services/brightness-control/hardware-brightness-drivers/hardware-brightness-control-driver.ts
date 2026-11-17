@@ -1,6 +1,6 @@
 import { Observable } from 'rxjs';
 import { clamp, lerp } from '../../../utils/number-utils';
-import { APP_SETTINGS_DEFAULT, AppSettings } from '../../../models/settings';
+import { DMKnownDevice } from '../../../models/device-manager';
 import { DeviceFade } from '../../../utils/device-fade';
 
 export interface HardwareBrightnessControlDriverBounds {
@@ -27,7 +27,7 @@ export interface HardwareBrightnessFadeOptions {
 export type HardwareBrightnessFade = DeviceFade & { readonly targetBrightness: number };
 
 export abstract class HardwareBrightnessControlDriver {
-  protected appSettings: AppSettings = structuredClone(APP_SETTINGS_DEFAULT);
+  protected knownDevices: DMKnownDevice[] = [];
   /**
    * True when the driver sends every brightness change the device makes. OyasumiVR shows that
    * value, and does not write its stored one when the driver's availability changes.
@@ -36,8 +36,8 @@ export abstract class HardwareBrightnessControlDriver {
   /** Brightness values the device reported or applied. OyasumiVR shows them and never writes them back. */
   readonly brightnessUpdates?: Observable<number>;
 
-  constructor(protected appSettings$: Observable<AppSettings>) {
-    this.appSettings$.subscribe((settings) => (this.appSettings = settings));
+  constructor(protected knownDevices$: Observable<DMKnownDevice[]>) {
+    this.knownDevices$.subscribe((devices) => (this.knownDevices = devices));
   }
 
   abstract getBrightnessPercentage(): Promise<number>;
@@ -46,7 +46,7 @@ export abstract class HardwareBrightnessControlDriver {
 
   abstract getBrightnessConfiguration(): HardwareBrightnessControlDriverBounds;
 
-  abstract getBrightnessBounds(appSettings?: AppSettings): [number, number];
+  abstract getBrightnessBounds(knownDevices?: DMKnownDevice[]): [number, number];
 
   /** Whether the device is connected and reports its brightness, for the UI and for reading it. */
   abstract isAvailable(): Observable<boolean>;

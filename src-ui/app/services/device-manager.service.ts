@@ -18,6 +18,7 @@ import {
   DEVICE_MANAGER_DATA_DEFAULT,
   DeviceManagerData,
   DeviceSelection,
+  DMDeviceSettings,
   DMDeviceTag,
   DMDeviceType,
   DMKnownDevice,
@@ -146,6 +147,24 @@ export class DeviceManagerService {
     );
     if (!patchedDevice) return device;
     patchedDevice.disabled = disabled;
+    this._data.next({
+      ...this._data.value,
+      knownDevices: this._data.value.knownDevices.map((d) =>
+        d.id === device.id ? patchedDevice : d
+      ),
+    });
+    return patchedDevice;
+  }
+
+  public setSettingsForKnownDevice(
+    device: DMKnownDevice,
+    settings: DMDeviceSettings
+  ): DMKnownDevice {
+    const patchedDevice = structuredClone(
+      this._data.value.knownDevices.find((d) => d.id === device.id)
+    );
+    if (!patchedDevice) return device;
+    patchedDevice.settings = settings;
     this._data.next({
       ...this._data.value,
       knownDevices: this._data.value.knownDevices.map((d) =>

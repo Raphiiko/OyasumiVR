@@ -14,8 +14,8 @@ import {
   pairwise,
   shareReplay,
 } from 'rxjs';
-import { AppSettings } from '../../../models/settings';
-import { ownHmdSettings } from '../../../utils/hmd-settings-utils';
+import { DMKnownDevice } from '../../../models/device-manager';
+import { ownDeviceSettings } from '../../../utils/device-settings-utils';
 import { OVRDevice } from '../../../models/ovr-device';
 import { knownDeviceIdForOpenVR } from '../../../utils/device-manager-utils';
 
@@ -57,24 +57,24 @@ export class SteamVRAnalogGainHardwareBrightnessControlDriver extends HardwareBr
   public readonly rangeChanges: Observable<[number, number]>;
 
   constructor(
-    appSettings: Observable<AppSettings>,
+    knownDevices: Observable<DMKnownDevice[]>,
     protected openvr: OpenVRService
   ) {
-    super(appSettings);
+    super(knownDevices);
     this.openvr.devices.subscribe((devices) => {
       const hmd = devices.find((d) => d.index === 0 && d.class === 'HMD');
       this.hmdId = hmd ? knownDeviceIdForOpenVR(hmd) : null;
     });
-    const state = combineLatest([this.openvr.status, this.openvr.devices, appSettings]).pipe(
+    const state = combineLatest([this.openvr.status, this.openvr.devices, knownDevices]).pipe(
       debounceTime(0),
-      map(([status, devices, settings]) => {
+      map(([status, devices, known]) => {
         const hmd = devices.find((d) => d.index === 0 && d.class === 'HMD' && d.isConnected);
         if (status !== 'INITIALIZED' || !hmd) {
           this.range = null;
           return { range: null, served: false };
         }
         this.range = this.gainRange(hmd);
-        return { range: this.range, served: this.servesHmd(hmd, settings) };
+        return { range: this.range, served: this.servesHmd(hmd, known) };
       }),
       shareReplay(1)
     );
@@ -91,8 +91,12 @@ export class SteamVRAnalogGainHardwareBrightnessControlDriver extends HardwareBr
     );
   }
 
-  protected servesHmd(hmd: OVRDevice, settings: AppSettings): boolean {
-    const own = ownHmdSettings(settings, knownDeviceIdForOpenVR(hmd), 'OTHER');
+  protected servesHmd(hmd: OVRDevice, knownDevices: DMKnownDevice[]): boolean {
+    const id = knownDeviceIdForOpenVR(hmd);
+    const own = ownDeviceSettings(
+      knownDevices.find((d) => d.id === id),
+      'OTHER_HMD'
+    );
     return !!own?.hardwareBrightnessOnUnsupportedHmd;
   }
 
@@ -114,7 +118,7 @@ export class SteamVRAnalogGainHardwareBrightnessControlDriver extends HardwareBr
     return STEAMVR_ANALOG_GAIN_HARDWARE_BRIGHTNESS_CONTROL_DRIVER_BOUNDS;
   }
 
-  getBrightnessBounds(_appSettings?: AppSettings): [number, number] {
+  getBrightnessBounds(): [number, number] {
     const stops = this.getBrightnessConfiguration().softwareStops;
     return [stops[0], stops[stops.length - 1]];
   }
