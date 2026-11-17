@@ -1,5 +1,4 @@
 <h2>{{ 'device-manager.detail.sections.fan' | transloco }}</h2>
-<p>{{ 'device-manager.detail.fanSettingsGlobal' | transloco }}</p>
 <div class="settings">
   <app-setting-row
     label="device-manager.config.beyondSafeFanSpeed.title"
@@ -15,6 +14,14 @@
       [tooltipMode]="'right'"
     >
       <app-icon name="warning" />
+    </span>
+    <span
+      rowLabel
+      class="global-flag"
+      [tooltip]="'shared.common.globalSetting'"
+      [tooltipMode]="'right'"
+    >
+      <app-icon name="globe" />
     </span>
     <label class="switch-toggle">
       <input
@@ -39,6 +46,14 @@
       [tooltipMode]="'right'"
     >
       <app-icon name="warning" />
+    </span>
+    <span
+      rowLabel
+      class="global-flag"
+      [tooltip]="'shared.common.globalSetting'"
+      [tooltipMode]="'right'"
+    >
+      <app-icon name="globe" />
     </span>
     <label class="switch-toggle">
       <input

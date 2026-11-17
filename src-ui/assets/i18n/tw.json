@@ -1131,9 +1131,6 @@
       "noTags": "尚無標籤。",
       "notConnected": "未連線",
       "pairNeedsSteamVR": "請將頭戴顯示器連線到 SteamVR 以進行配對。",
-      "powerOffState": {
-        "description": "套用於你所有的定位器。"
-      },
       "sections": {
         "baseStation": "定位器",
         "details": "詳細資訊",

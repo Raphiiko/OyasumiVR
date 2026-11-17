@@ -137,16 +137,23 @@
         color: var(--color-text-3);
       }
 
-      .experimental-flag {
+      .experimental-flag,
+      .global-flag {
         app-icon {
           line-height: 0;
           vertical-align: middle;
           margin-left: 0.25em;
           font-size: 1em;
         }
+      }
 
+      .experimental-flag {
         color: var(--color-alert-warning);
         --icon-color: var(--color-alert-warning);
+      }
+
+      .global-flag {
+        --icon-color: var(--color-text-3);
       }
 
       &.conflict {

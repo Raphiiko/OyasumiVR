@@ -1127,14 +1127,10 @@
         "now": "Now",
         "serialNumber": "Serial number"
       },
-      "fanSettingsGlobal": "These settings apply to all your Bigscreen Beyonds.",
       "helperUpdateAvailable": "A new version of the OyasumiVR helper is available.",
       "noTags": "No tags yet.",
       "notConnected": "Not connected",
       "pairNeedsSteamVR": "Connect the headset to SteamVR to pair it.",
-      "powerOffState": {
-        "description": "Applies to all your base stations."
-      },
       "sections": {
         "baseStation": "Base station",
         "details": "Details",
@@ -2563,6 +2559,7 @@
   },
   "shared": {
     "common": {
+      "globalSetting": "Global setting",
       "none": "None",
       "resetToDefault": "Reset to default",
       "vrcLoginRequired": "This feature requires you to be logged in with a VRChat account."

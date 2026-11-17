@@ -140,8 +140,16 @@
           }
           <app-setting-row
             label="settings.general.lighthousePowerControl.powerOffMode.title"
-            description="device-manager.detail.powerOffState.description"
+            description="settings.general.lighthousePowerControl.powerOffMode.description"
           >
+            <span
+              rowLabel
+              class="global-flag"
+              [tooltip]="'shared.common.globalSetting'"
+              [tooltipMode]="'right'"
+            >
+              <app-icon name="globe" />
+            </span>
             <app-segmented-control
               [items]="powerOffStates"
               [selected]="lighthousePowerOffState"

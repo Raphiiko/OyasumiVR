@@ -1131,9 +1131,6 @@
       "noTags": "タグはまだありません。",
       "notConnected": "未接続",
       "pairNeedsSteamVR": "ペアリングするには、HMDをSteamVRに接続してください。",
-      "powerOffState": {
-        "description": "すべてのベースステーションに適用されます。"
-      },
       "sections": {
         "baseStation": "ベースステーション",
         "details": "詳細",

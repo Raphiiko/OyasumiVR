@@ -1131,9 +1131,6 @@
       "noTags": "Nog geen tags.",
       "notConnected": "Niet verbonden",
       "pairNeedsSteamVR": "Verbind de headset met SteamVR om hem te koppelen.",
-      "powerOffState": {
-        "description": "Geldt voor al je base stations."
-      },
       "sections": {
         "baseStation": "Base station",
         "details": "Details",

@@ -1131,9 +1131,6 @@
       "noTags": "Aucune étiquette pour le moment.",
       "notConnected": "Non connecté",
       "pairNeedsSteamVR": "Connectez le casque à SteamVR pour l'associer.",
-      "powerOffState": {
-        "description": "S'applique à toutes vos stations de base."
-      },
       "sections": {
         "baseStation": "Station de base",
         "details": "Détails",
