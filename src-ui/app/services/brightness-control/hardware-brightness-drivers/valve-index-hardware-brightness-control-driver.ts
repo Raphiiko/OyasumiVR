@@ -1,7 +1,8 @@
 import { HardwareBrightnessControlDriverBounds } from './hardware-brightness-control-driver';
 import { SteamVRAnalogGainHardwareBrightnessControlDriver } from './steamvr-analog-gain-hardware-brightness-control-driver';
 import { clamp } from '../../../utils/number-utils';
-import { AppSettings, ownHmdSettings } from '../../../models/settings';
+import { AppSettings } from '../../../models/settings';
+import { ownHmdSettings } from '../../../utils/hmd-settings-utils';
 import { OVRDevice } from '../../../models/ovr-device';
 import type { OpenVRService } from '../../openvr.service';
 import {

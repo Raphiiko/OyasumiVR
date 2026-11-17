@@ -21,12 +21,12 @@ import {
   DMDeviceTag,
   DMDeviceType,
   DMKnownDevice,
-  knownDeviceIdForOpenVR,
 } from '../models/device-manager';
 import { SETTINGS_KEY_DEVICE_MANAGER, SETTINGS_STORE } from '../globals';
 import { OpenVRService } from './openvr.service';
 import { LighthouseService } from './lighthouse.service';
 import { OVRDevice } from '../models/ovr-device';
+import { knownDeviceIdForOpenVR } from '../utils/device-manager-utils';
 import { LighthouseDevice } from '../models/lighthouse-device';
 import { isEqual, uniq } from 'lodash';
 import { error } from '@tauri-apps/plugin-log';

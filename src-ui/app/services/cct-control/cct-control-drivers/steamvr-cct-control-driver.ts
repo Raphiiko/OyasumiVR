@@ -8,9 +8,10 @@ import {
   Observable,
   shareReplay,
 } from 'rxjs';
-import { AppSettings, ownHmdSettings } from '../../../models/settings';
+import { AppSettings } from '../../../models/settings';
+import { ownHmdSettings } from '../../../utils/hmd-settings-utils';
 import { OVRDevice } from '../../../models/ovr-device';
-import { knownDeviceIdForOpenVR } from '../../../models/device-manager';
+import { knownDeviceIdForOpenVR } from '../../../utils/device-manager-utils';
 import type { OpenVRService } from '../../openvr.service';
 import { CctControlDriver } from './cct-control-driver';
 

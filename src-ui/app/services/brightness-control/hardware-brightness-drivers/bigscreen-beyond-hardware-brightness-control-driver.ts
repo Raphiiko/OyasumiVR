@@ -14,9 +14,10 @@ import {
   switchMap,
 } from 'rxjs';
 import { commands, events } from 'src-ui/app/bindings';
-import { AppSettings, ownHmdSettings } from '../../../models/settings';
+import { AppSettings } from '../../../models/settings';
+import { ownHmdSettings } from '../../../utils/hmd-settings-utils';
 import { OVRDevice } from '../../../models/ovr-device';
-import { knownDeviceIdForOpenVR } from '../../../models/device-manager';
+import { knownDeviceIdForOpenVR } from '../../../utils/device-manager-utils';
 import { warn } from '@tauri-apps/plugin-log';
 
 export const BIGSCREEN_BEYOND_HARDWARE_BRIGHTNESS_CONTROL_DRIVER_BOUNDS: HardwareBrightnessControlDriverBounds =

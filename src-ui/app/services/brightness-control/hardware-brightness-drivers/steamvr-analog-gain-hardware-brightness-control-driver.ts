@@ -14,9 +14,10 @@ import {
   pairwise,
   shareReplay,
 } from 'rxjs';
-import { AppSettings, ownHmdSettings } from '../../../models/settings';
+import { AppSettings } from '../../../models/settings';
+import { ownHmdSettings } from '../../../utils/hmd-settings-utils';
 import { OVRDevice } from '../../../models/ovr-device';
-import { knownDeviceIdForOpenVR } from '../../../models/device-manager';
+import { knownDeviceIdForOpenVR } from '../../../utils/device-manager-utils';
 
 // Without a known panel curve, the reported gain range maps linearly onto 20% to 100%.
 export const STEAMVR_ANALOG_GAIN_HARDWARE_BRIGHTNESS_CONTROL_DRIVER_BOUNDS: HardwareBrightnessControlDriverBounds =
