@@ -11,13 +11,6 @@ export interface HmdSettings {
   cctControlOnUnsupportedHmd?: boolean;
 }
 
-/** Global headset values from before each headset had its own, by the headsets they apply to. */
-export interface LegacyHmdSettings {
-  valveIndex: HmdSettings;
-  bigscreenBeyond: HmdSettings;
-  allHmds: HmdSettings;
-}
-
 export interface AppSettings {
   version: 19;
   // General Settings
@@ -76,8 +69,6 @@ export interface AppSettings {
   bigscreenBeyondBrightnessFanSafety: boolean; // Force fan to 100% if brightness is above 100%
   /** Each headset's own values, by known device id. */
   hmdSettings: Record<string, HmdSettings>;
-  /** Set by the settings migration; copied to the known headsets, then null, once one is known. */
-  legacyHmdSettings: LegacyHmdSettings | null;
   // VRCX
   vrcxLogsEnabled: VRCXEventLogType[];
 }
@@ -165,7 +156,6 @@ export const APP_SETTINGS_DEFAULT: AppSettings = {
   // HW Specific
   bigscreenBeyondBrightnessFanSafety: true,
   hmdSettings: {},
-  legacyHmdSettings: null,
   // VRCX
   vrcxLogsEnabled: ['SleepMode', 'Invites', 'StatusChanges', 'GroupChanges'],
 };

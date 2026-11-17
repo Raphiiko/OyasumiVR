@@ -2,7 +2,11 @@ export interface Versioned {
   version: number;
 }
 
-export type MigrationStep<T extends Versioned> = (data: T) => T | Promise<T>;
+/** `store` is the whole store as read, before any key migrated, for a step that needs another key. */
+export type MigrationStep<T extends Versioned> = (
+  data: T,
+  store: Readonly<Record<string, unknown>>
+) => T | Promise<T>;
 
 export interface MigrationDefinition<T extends Versioned> {
   targetVersion: number;
@@ -29,7 +33,8 @@ export type MigrationResult<T extends Versioned> =
  */
 export async function runMigrations<T extends Versioned>(
   data: T,
-  definition: MigrationDefinition<T>
+  definition: MigrationDefinition<T>,
+  store: Readonly<Record<string, unknown>> = {}
 ): Promise<MigrationResult<T>> {
   let current: T;
   try {
@@ -66,7 +71,7 @@ export async function runMigrations<T extends Versioned>(
       );
     let next: T;
     try {
-      next = await step(current);
+      next = await step(current, store);
     } catch (cause) {
       return failed(sourceVersion, sourceVersion + 1, cause);
     }

@@ -1,6 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import { runMigrations, Versioned } from 'src-shared-ts/src/migration-runner';
+import { decideStoreMigration } from 'src-shared-ts/src/store-migration';
 import { APP_SETTINGS_MIGRATION } from './app-settings.migrations';
+import { SETTINGS_STORE_MIGRATION } from './store-migrations';
 
 describe('app settings migration 14 to 15', () => {
   it.each([
@@ -84,28 +86,48 @@ describe('app settings migration 17 to 18', () => {
 });
 
 describe('app settings migration 18 to 19', () => {
-  it('moves the changed global headset values out of the settings', async () => {
-    const result = await runMigrations(
-      {
+  const hmd = (id: string, typeName: string, manufacturer?: string) => ({
+    id: `OVR_HMD_${id}`,
+    typeName,
+    manufacturer,
+    deviceType: 'HMD',
+  });
+
+  it('gives each known headset the changed global values of its model', async () => {
+    const store = {
+      APP_SETTINGS: {
         version: 18,
         valveIndexMaxBrightness: 130,
         bigscreenBeyondMaxBrightness: 150,
         bigscreenBeyondUnsafeBrightness: true,
         hardwareBrightnessOnUnsupportedHmds: false,
         cctControlOnUnsupportedHmds: true,
-      } as Versioned,
-      APP_SETTINGS_MIGRATION
+      },
+      DEVICE_MANAGER: {
+        version: 2,
+        tags: [],
+        knownDevices: [
+          hmd('LHR-TEST0001', 'Index', 'Valve'),
+          hmd('BSB-TEST0002', 'Beyond'),
+          hmd('OTH-TEST0004', 'Visor X', 'Other'),
+          { id: 'OVR_CONTROLLER_LHR-TEST0005', typeName: 'Knuckles', deviceType: 'CONTROLLER' },
+        ],
+      },
+    };
+
+    const decision = await decideStoreMigration(
+      [{ id: 'live', kind: 'live', contents: JSON.stringify(store) }],
+      SETTINGS_STORE_MIGRATION
     );
 
-    expect(result.status).toBe('migrated');
-    if (result.status !== 'migrated') return;
-    expect(result.value).toMatchObject({
-      version: 19,
-      legacyHmdSettings: {
-        valveIndex: { maxBrightness: 130 },
-        bigscreenBeyond: { unsafeBrightness: true },
-        allHmds: { cctControlOnUnsupportedHmd: true },
-      },
+    expect(decision.action).toBe('install');
+    if (decision.action !== 'install') return;
+    const settings = JSON.parse(decision.contents).APP_SETTINGS;
+    expect(settings.version).toBe(19);
+    expect(settings.hmdSettings).toEqual({
+      'OVR_HMD_LHR-TEST0001': { maxBrightness: 130, cctControlOnUnsupportedHmd: true },
+      'OVR_HMD_BSB-TEST0002': { unsafeBrightness: true, cctControlOnUnsupportedHmd: true },
+      'OVR_HMD_OTH-TEST0004': { cctControlOnUnsupportedHmd: true },
     });
     for (const key of [
       'valveIndexMaxBrightness',
@@ -114,11 +136,11 @@ describe('app settings migration 18 to 19', () => {
       'hardwareBrightnessOnUnsupportedHmds',
       'cctControlOnUnsupportedHmds',
     ]) {
-      expect(result.value).not.toHaveProperty(key);
+      expect(settings).not.toHaveProperty(key);
     }
   });
 
-  it('leaves nothing to copy when every headset value is its default', async () => {
+  it('gives no headset a value when every global value is its default', async () => {
     const result = await runMigrations(
       {
         version: 18,
@@ -128,12 +150,10 @@ describe('app settings migration 18 to 19', () => {
         hardwareBrightnessOnUnsupportedHmds: false,
         cctControlOnUnsupportedHmds: false,
       } as Versioned,
-      APP_SETTINGS_MIGRATION
+      APP_SETTINGS_MIGRATION,
+      { DEVICE_MANAGER: { knownDevices: [hmd('LHR-TEST0001', 'Index', 'Valve')] } }
     );
 
-    expect(result.status === 'migrated' && result.value).toMatchObject({
-      legacyHmdSettings: null,
-      hmdSettings: {},
-    });
+    expect(result.status === 'migrated' && result.value).toMatchObject({ hmdSettings: {} });
   });
 });

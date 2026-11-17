@@ -214,7 +214,7 @@ async function evaluateCandidate(
       resolved[key] = structuredClone(migrated[key]);
       continue;
     }
-    const result = await runMigrations(migrated[key] as Versioned, definition);
+    const result = await runMigrations(migrated[key] as Versioned, definition, parsed);
     if (result.status !== 'migrated' && result.status !== 'unchanged') {
       failures.push(describeFailure(key, result, definition.targetVersion));
       continue;

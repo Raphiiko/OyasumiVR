@@ -1,4 +1,4 @@
-import { isEmpty, mapValues, pickBy } from 'lodash';
+import { isEmpty, pickBy } from 'lodash';
 import { APP_SETTINGS_DEFAULT } from '../models/settings';
 import type { MigrationDefinition, Versioned } from 'src-shared-ts/src/migration-runner';
 import { migrateLighthouseDeviceId } from './lighthouse-device-id';
@@ -52,32 +52,37 @@ function from17to18(data: any): any {
   return data;
 }
 
-function from18to19(data: any): any {
+function from18to19(data: any, store: Readonly<Record<string, any>>): any {
   data.version = 19;
 
-  // move each global headset value the user changed out of the settings
-  const take = (key: string, defaultValue: unknown) => {
+  // take each global headset value the user changed out of the settings
+  const changed = (key: string, defaultValue: unknown) => {
     const value = data[key];
     delete data[key];
     return value === defaultValue ? undefined : value;
   };
-  const legacy = mapValues(
-    {
-      valveIndex: { maxBrightness: take('valveIndexMaxBrightness', 160) },
-      bigscreenBeyond: {
-        maxBrightness: take('bigscreenBeyondMaxBrightness', 150),
-        unsafeBrightness: take('bigscreenBeyondUnsafeBrightness', false),
-      },
-      allHmds: {
-        hardwareBrightnessOnUnsupportedHmd: take('hardwareBrightnessOnUnsupportedHmds', false),
-        cctControlOnUnsupportedHmd: take('cctControlOnUnsupportedHmds', false),
-      },
-    },
-    (values) => pickBy(values, (value) => value !== undefined)
-  );
+  const allHmds = {
+    hardwareBrightnessOnUnsupportedHmd: changed('hardwareBrightnessOnUnsupportedHmds', false),
+    cctControlOnUnsupportedHmd: changed('cctControlOnUnsupportedHmds', false),
+  };
+  const valveIndex = { maxBrightness: changed('valveIndexMaxBrightness', 160) };
+  const bigscreenBeyond = {
+    maxBrightness: changed('bigscreenBeyondMaxBrightness', 150),
+    unsafeBrightness: changed('bigscreenBeyondUnsafeBrightness', false),
+  };
 
-  // the device manager copies these to the known headsets
-  data.legacyHmdSettings = Object.values(legacy).some((values) => !isEmpty(values)) ? legacy : null;
+  // give each known headset those values, by model
+  data.hmdSettings = {};
+  for (const hmd of store['DEVICE_MANAGER']?.knownDevices ?? []) {
+    if (hmd.deviceType !== 'HMD') continue;
+    // a headset not seen since the device manager started storing manufacturers has none
+    const manufacturer = hmd.manufacturer;
+    const isIndex = hmd.typeName === 'Index' && (manufacturer ?? 'Valve') === 'Valve';
+    const isBeyond = manufacturer === 'Bigscreen' || (!manufacturer && hmd.typeName === 'Beyond');
+    const model = isIndex ? valveIndex : isBeyond ? bigscreenBeyond : {};
+    const values = pickBy({ ...allHmds, ...model }, (value) => value !== undefined);
+    if (!isEmpty(values)) data.hmdSettings[hmd.id] = values;
+  }
   return data;
 }
 
