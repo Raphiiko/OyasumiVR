@@ -8,7 +8,7 @@ import {
   ReplaySubject,
   shareReplay,
 } from 'rxjs';
-import { AppSettings } from '../../../models/settings';
+import { AppSettings, ownHmdSettings } from '../../../models/settings';
 import { OVRDevice } from '../../../models/ovr-device';
 import type { OpenVRService, OpenVRStatus } from '../../openvr.service';
 import { Brightness, commands, SimpleCurve } from 'src-ui/app/bindings';
@@ -115,7 +115,7 @@ export class SteamFrameHardwareBrightnessControlDriver extends HardwareBrightnes
 
   /** A Frame's own maximum, the active Frame's by default, or the Frame's full range. */
   private maxBrightness(settings: AppSettings, deviceId = this.activeDeviceId()): number {
-    const own = deviceId ? settings.hmdSettings[deviceId]?.maxBrightness : undefined;
+    const own = ownHmdSettings(settings, deviceId, 'STEAM_FRAME')?.maxBrightness;
     return own ?? this.getBrightnessConfiguration().riskThreshold;
   }
 

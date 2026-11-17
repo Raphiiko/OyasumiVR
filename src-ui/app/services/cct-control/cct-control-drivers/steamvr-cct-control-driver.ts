@@ -44,8 +44,11 @@ export class SteamVrCctControlDriver extends CctControlDriver {
       map(([status, devices, settings]) => {
         const hmd = devices.find((d) => d.index === 0);
         if (status !== 'INITIALIZED' || hmd?.class !== 'HMD' || !hmd.isConnected) return false;
-        const own = settings.hmdSettings[knownDeviceIdForOpenVR(hmd)]?.cctControlOnUnsupportedHmd;
-        return !!own || isSteamVrCctSupportedHmd(hmd);
+        const own = settings.hmdSettings[knownDeviceIdForOpenVR(hmd)];
+        const tryUnsupported =
+          (own?.model === 'OTHER' || own?.model === 'BIGSCREEN_BEYOND') &&
+          !!own.cctControlOnUnsupportedHmd;
+        return tryUnsupported || isSteamVrCctSupportedHmd(hmd);
       }),
       distinctUntilChanged(),
       shareReplay(1)

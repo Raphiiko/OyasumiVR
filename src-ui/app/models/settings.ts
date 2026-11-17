@@ -3,12 +3,38 @@ import { PlayerListPreset } from './player-list-preset';
 import { OneTimeFlag } from './one-time-flags';
 import { EventLogType } from './event-log-entry';
 
-/** A headset's own brightness and colour temperature values; a missing one uses the model's default. */
-export interface HmdSettings {
-  maxBrightness?: number;
-  unsafeBrightness?: boolean;
-  hardwareBrightnessOnUnsupportedHmd?: boolean;
-  cctControlOnUnsupportedHmd?: boolean;
+/**
+ * A headset's own brightness and colour temperature values, for the model the app detects it as.
+ * A missing value uses the model's default.
+ */
+export type HmdSettings =
+  | { model: 'VALVE_INDEX'; maxBrightness?: number }
+  | {
+      model: 'BIGSCREEN_BEYOND';
+      maxBrightness?: number;
+      /** Allows a maxBrightness above 150%. */
+      unsafeBrightness?: boolean;
+      /** For a Beyond model that SteamVR applies no colour gains on. */
+      cctControlOnUnsupportedHmd?: boolean;
+    }
+  | { model: 'STEAM_FRAME'; maxBrightness?: number }
+  | {
+      /** A headset without a dedicated brightness driver. */
+      model: 'OTHER';
+      hardwareBrightnessOnUnsupportedHmd?: boolean;
+      cctControlOnUnsupportedHmd?: boolean;
+    };
+
+export type HmdSettingsModel = HmdSettings['model'];
+
+/** A headset's own values, or undefined while it has none stored for this model. */
+export function ownHmdSettings<M extends HmdSettingsModel>(
+  settings: AppSettings,
+  id: string | null | undefined,
+  model: M
+): Extract<HmdSettings, { model: M }> | undefined {
+  const own = id ? settings.hmdSettings[id] : undefined;
+  return own?.model === model ? (own as Extract<HmdSettings, { model: M }>) : undefined;
 }
 
 export interface AppSettings {

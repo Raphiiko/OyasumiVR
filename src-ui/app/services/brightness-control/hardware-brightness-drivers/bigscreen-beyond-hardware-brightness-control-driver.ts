@@ -14,7 +14,7 @@ import {
   switchMap,
 } from 'rxjs';
 import { commands, events } from 'src-ui/app/bindings';
-import { AppSettings } from '../../../models/settings';
+import { AppSettings, ownHmdSettings } from '../../../models/settings';
 import { OVRDevice } from '../../../models/ovr-device';
 import { knownDeviceIdForOpenVR } from '../../../models/device-manager';
 import { warn } from '@tauri-apps/plugin-log';
@@ -69,8 +69,7 @@ export class BigscreenBeyondHardwareBrightnessControlDriver extends HardwareBrig
   getBrightnessBounds(appSettings?: AppSettings): [number, number] {
     const config = this.getBrightnessConfiguration();
     const settings = appSettings ?? this.appSettings;
-    const hmdId = this.hmdIds.value;
-    const own = hmdId ? settings.hmdSettings[hmdId]?.maxBrightness : undefined;
+    const own = ownHmdSettings(settings, this.hmdIds.value, 'BIGSCREEN_BEYOND')?.maxBrightness;
     return [config.softwareStops[0], own ?? config.riskThreshold];
   }
 

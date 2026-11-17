@@ -69,7 +69,9 @@ async function setup(
   const hmdId = `OVR_HMD_${hmd?.serialNumber}`;
   const settings = new BehaviorSubject({
     ...structuredClone(APP_SETTINGS_DEFAULT),
-    hmdSettings: tryUnsupported ? { [hmdId]: { cctControlOnUnsupportedHmd: true } } : {},
+    hmdSettings: tryUnsupported
+      ? { [hmdId]: { model: 'OTHER', cctControlOnUnsupportedHmd: true } }
+      : {},
   });
   const pairing = { id: 'p', complete: true, identity: { serial: 'FP1' } } as SteamFramePairing;
   const pairingB = { id: 'q', complete: true, identity: { serial: 'FP2' } } as SteamFramePairing;
@@ -109,7 +111,7 @@ async function setup(
   const setTryUnsupported = (value: boolean, id = hmdId) =>
     settings.next({
       ...settings.value,
-      hmdSettings: { [id]: { cctControlOnUnsupportedHmd: value } },
+      hmdSettings: { [id]: { model: 'OTHER', cctControlOnUnsupportedHmd: value } },
     });
   const activate = (device: Partial<OVRDevice>) =>
     devices.next([{ index: 0, class: 'HMD', isConnected: true, ...device } as OVRDevice]);

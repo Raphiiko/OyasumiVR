@@ -93,7 +93,7 @@ describe('app settings migration 18 to 19', () => {
     deviceType: 'HMD',
   });
 
-  it('gives each known headset the changed global values of its model', async () => {
+  it('gives each known headset the changed global values of its model, and a Frame none', async () => {
     const store = {
       APP_SETTINGS: {
         version: 18,
@@ -109,6 +109,7 @@ describe('app settings migration 18 to 19', () => {
         knownDevices: [
           hmd('LHR-TEST0001', 'Index', 'Valve'),
           hmd('BSB-TEST0002', 'Beyond'),
+          hmd('FRM-TEST0003', 'Steam Frame', 'Valve'),
           hmd('OTH-TEST0004', 'Visor X', 'Other'),
           { id: 'OVR_CONTROLLER_LHR-TEST0005', typeName: 'Knuckles', deviceType: 'CONTROLLER' },
         ],
@@ -125,9 +126,13 @@ describe('app settings migration 18 to 19', () => {
     const settings = JSON.parse(decision.contents).APP_SETTINGS;
     expect(settings.version).toBe(19);
     expect(settings.hmdSettings).toEqual({
-      'OVR_HMD_LHR-TEST0001': { maxBrightness: 130, cctControlOnUnsupportedHmd: true },
-      'OVR_HMD_BSB-TEST0002': { unsafeBrightness: true, cctControlOnUnsupportedHmd: true },
-      'OVR_HMD_OTH-TEST0004': { cctControlOnUnsupportedHmd: true },
+      'OVR_HMD_LHR-TEST0001': { model: 'VALVE_INDEX', maxBrightness: 130 },
+      'OVR_HMD_BSB-TEST0002': {
+        model: 'BIGSCREEN_BEYOND',
+        unsafeBrightness: true,
+        cctControlOnUnsupportedHmd: true,
+      },
+      'OVR_HMD_OTH-TEST0004': { model: 'OTHER', cctControlOnUnsupportedHmd: true },
     });
     for (const key of [
       'valveIndexMaxBrightness',

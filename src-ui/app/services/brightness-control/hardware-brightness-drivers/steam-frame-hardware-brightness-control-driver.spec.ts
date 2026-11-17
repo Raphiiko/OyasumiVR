@@ -54,7 +54,7 @@ function setup(initial: Partial<AppSettings> = {}) {
   const setMax = (maxBrightness: number) =>
     settings.next({
       ...settings.value,
-      hmdSettings: { [`OVR_HMD_${SERIAL}`]: { maxBrightness } },
+      hmdSettings: { [`OVR_HMD_${SERIAL}`]: { model: 'STEAM_FRAME', maxBrightness } },
     });
   return {
     status,
@@ -236,7 +236,7 @@ describe('SteamFrameHardwareBrightnessControlDriver', () => {
     h.report(brightness(40));
     h.settings.next({
       ...h.settings.value,
-      hmdSettings: { OVR_HMD_FPOTHER00001: { maxBrightness: 100 } },
+      hmdSettings: { OVR_HMD_FPOTHER00001: { model: 'STEAM_FRAME', maxBrightness: 100 } },
     });
     expect(h.driver.getBrightnessBounds()).toEqual([9, 125]);
   });
@@ -307,8 +307,8 @@ describe('SteamFrameHardwareBrightnessControlDriver', () => {
   it("cancels a second Frame's fade when its maximum drops to the first Frame's", async () => {
     const h = setup({
       hmdSettings: {
-        [`OVR_HMD_${SERIAL}`]: { maxBrightness: 100 },
-        OVR_HMD_FPTEST000002: { maxBrightness: 125 },
+        [`OVR_HMD_${SERIAL}`]: { model: 'STEAM_FRAME', maxBrightness: 100 },
+        OVR_HMD_FPTEST000002: { model: 'STEAM_FRAME', maxBrightness: 125 },
       },
     });
     h.report(brightness(40));
@@ -339,7 +339,7 @@ describe('SteamFrameHardwareBrightnessControlDriver', () => {
       ...h.settings.value,
       hmdSettings: {
         ...h.settings.value.hmdSettings,
-        OVR_HMD_FPTEST000002: { maxBrightness: 100 },
+        OVR_HMD_FPTEST000002: { model: 'STEAM_FRAME', maxBrightness: 100 },
       },
     });
     expect(second.fade.isCancelled()).toBe(true);
@@ -348,7 +348,9 @@ describe('SteamFrameHardwareBrightnessControlDriver', () => {
   });
 
   it('keeps a fade down from above the maximum through an unrelated settings change', async () => {
-    const h = setup({ hmdSettings: { [`OVR_HMD_${SERIAL}`]: { maxBrightness: 100 } } });
+    const h = setup({
+      hmdSettings: { [`OVR_HMD_${SERIAL}`]: { model: 'STEAM_FRAME', maxBrightness: 100 } },
+    });
     h.report(brightness(120));
     const { fade, sent } = sendFade(h, { target: 30, durationMs: 60_000, shownTarget: 30 });
     await sent;
@@ -366,7 +368,9 @@ describe('SteamFrameHardwareBrightnessControlDriver', () => {
         h.devices.next([{ class: 'HMD', isConnected: false, serialNumber: SERIAL } as OVRDevice]),
     ],
   ])("cancels a fade when the Frame's own maximum drops %s", async (_, before, during) => {
-    const h = setup({ hmdSettings: { [`OVR_HMD_${SERIAL}`]: { maxBrightness: 125 } } });
+    const h = setup({
+      hmdSettings: { [`OVR_HMD_${SERIAL}`]: { model: 'STEAM_FRAME', maxBrightness: 125 } },
+    });
     before(h);
     h.report(brightness(40));
     const { fade, sent } = sendFade(h, { target: 120, durationMs: 60_000, shownTarget: 120 });

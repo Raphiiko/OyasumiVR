@@ -1,7 +1,7 @@
 import { Component, computed, inject, input } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { DMKnownDevice } from 'src-ui/app/models/device-manager';
-import { AppSettings, HmdSettings } from 'src-ui/app/models/settings';
+import { AppSettings, HmdSettings, HmdSettingsModel } from 'src-ui/app/models/settings';
 import { AppSettingsService } from 'src-ui/app/services/app-settings.service';
 import { SteamFrameService } from 'src-ui/app/services/steam-frame/steam-frame.service';
 import { isSteamVrCctSupportedHmd } from 'src-ui/app/services/cct-control/cct-control-drivers/steamvr-cct-control-driver';
@@ -9,7 +9,7 @@ import { VALVE_INDEX_HARDWARE_BRIGHTNESS_CONTROL_DRIVER_BOUNDS as INDEX_BOUNDS }
 import { BIGSCREEN_BEYOND_HARDWARE_BRIGHTNESS_CONTROL_DRIVER_BOUNDS as BEYOND_BOUNDS } from 'src-ui/app/services/brightness-control/hardware-brightness-drivers/bigscreen-beyond-hardware-brightness-control-driver';
 import { STEAM_FRAME_HARDWARE_BRIGHTNESS_CONTROL_DRIVER_BOUNDS as FRAME_BOUNDS } from 'src-ui/app/services/brightness-control/hardware-brightness-drivers/steam-frame-hardware-brightness-control-driver';
 
-type HmdModel = 'VALVE_INDEX' | 'BIGSCREEN_BEYOND' | 'STEAM_FRAME' | 'PSVR2' | 'OTHER';
+type HmdModel = HmdSettingsModel | 'PSVR2';
 /** The maximum brightness of a headset without its own, as its driver uses it. */
 const DEFAULT_MAX_BRIGHTNESS: Partial<Record<HmdModel, number>> = {
   VALVE_INDEX: INDEX_BOUNDS.riskThreshold,
@@ -87,8 +87,14 @@ export class HmdDisplaySettingsComponent {
     return 'OTHER';
   }
 
+  /** The values stored for this headset, unless they were stored for another model. */
+  private ownValues(settings: AppSettings): Partial<Resolved> {
+    const own = settings.hmdSettings[this.device().id];
+    return own?.model === this.model() ? own : {};
+  }
+
   private resolve(settings: AppSettings): Resolved {
-    const own = settings.hmdSettings[this.device().id] ?? {};
+    const own = this.ownValues(settings);
     const defaultMax = DEFAULT_MAX_BRIGHTNESS[this.model()];
     return {
       maxBrightness: defaultMax === undefined ? null : (own.maxBrightness ?? defaultMax),
@@ -98,11 +104,12 @@ export class HmdDisplaySettingsComponent {
     };
   }
 
-  private update(values: HmdSettings) {
-    const all = this.settings().hmdSettings;
-    const id = this.device().id;
+  private update(values: Partial<Resolved>) {
+    const model = this.model();
+    if (model === 'PSVR2') return;
+    const own = { ...this.ownValues(this.settings()), ...values, model } as HmdSettings;
     this.appSettingsService.updateSettings({
-      hmdSettings: { ...all, [id]: { ...all[id], ...values } },
+      hmdSettings: { ...this.settings().hmdSettings, [this.device().id]: own },
     });
   }
 

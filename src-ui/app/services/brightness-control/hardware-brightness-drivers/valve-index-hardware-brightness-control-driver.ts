@@ -1,7 +1,7 @@
 import { HardwareBrightnessControlDriverBounds } from './hardware-brightness-control-driver';
 import { SteamVRAnalogGainHardwareBrightnessControlDriver } from './steamvr-analog-gain-hardware-brightness-control-driver';
 import { clamp } from '../../../utils/number-utils';
-import { AppSettings } from '../../../models/settings';
+import { AppSettings, ownHmdSettings } from '../../../models/settings';
 import { OVRDevice } from '../../../models/ovr-device';
 import type { OpenVRService } from '../../openvr.service';
 import {
@@ -100,7 +100,7 @@ export class ValveIndexHardwareBrightnessControlDriver extends SteamVRAnalogGain
   getBrightnessBounds(appSettings?: AppSettings): [number, number] {
     const config = this.getBrightnessConfiguration();
     const settings = appSettings ?? this.appSettings;
-    const own = this.hmdId ? settings.hmdSettings[this.hmdId]?.maxBrightness : undefined;
+    const own = ownHmdSettings(settings, this.hmdId, 'VALVE_INDEX')?.maxBrightness;
     return [config.softwareStops[0], own ?? config.riskThreshold];
   }
 

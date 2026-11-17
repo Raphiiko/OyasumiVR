@@ -417,7 +417,7 @@ describe('HardwareBrightnessControlService with a Valve Index', () => {
     expect(h.service.brightness).toBe(150);
     h.settings.next({
       ...h.settings.value,
-      hmdSettings: { [INDEX_ID]: { maxBrightness: 120 } },
+      hmdSettings: { [INDEX_ID]: { model: 'VALVE_INDEX', maxBrightness: 120 } },
     });
     await settle();
     expect(h.service.brightness).toBe(120);
@@ -428,7 +428,7 @@ describe('HardwareBrightnessControlService with a Valve Index', () => {
     const h = await setupIndex(1.5);
     h.settings.next({
       ...h.settings.value,
-      hmdSettings: { 'OVR_HMD_LHR-SECOND': { maxBrightness: 120 } },
+      hmdSettings: { 'OVR_HMD_LHR-SECOND': { model: 'VALVE_INDEX', maxBrightness: 120 } },
     });
     await settle();
     expect(h.service.brightness).toBe(150);
@@ -470,7 +470,9 @@ const settleDrivers = () => vi.advanceTimersByTimeAsync(DRIVER_DEBOUNCE_MS);
 function setupGeneric() {
   const settings = new BehaviorSubject({
     ...APP_SETTINGS_DEFAULT,
-    hmdSettings: { [UNSUPPORTED_HMD_ID]: { hardwareBrightnessOnUnsupportedHmd: true } },
+    hmdSettings: {
+      [UNSUPPORTED_HMD_ID]: { model: 'OTHER', hardwareBrightnessOnUnsupportedHmd: true },
+    },
   });
   const devices = new BehaviorSubject<Partial<OVRDevice>[]>([UNSUPPORTED_HMD]);
   const status = new BehaviorSubject('INITIALIZED');
@@ -497,7 +499,9 @@ function setupGeneric() {
   const enable = (value: boolean) =>
     settings.next({
       ...settings.value,
-      hmdSettings: { [UNSUPPORTED_HMD_ID]: { hardwareBrightnessOnUnsupportedHmd: value } },
+      hmdSettings: {
+        [UNSUPPORTED_HMD_ID]: { model: 'OTHER', hardwareBrightnessOnUnsupportedHmd: value },
+      },
     });
   return { service, devices, status, enable, setAnalogGain, analogGain: () => analogGain };
 }

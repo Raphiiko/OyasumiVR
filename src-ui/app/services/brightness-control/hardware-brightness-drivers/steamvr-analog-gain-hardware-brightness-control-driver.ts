@@ -15,7 +15,7 @@ import {
   pairwise,
   shareReplay,
 } from 'rxjs';
-import { AppSettings } from '../../../models/settings';
+import { AppSettings, ownHmdSettings } from '../../../models/settings';
 import { OVRDevice } from '../../../models/ovr-device';
 import { knownDeviceIdForOpenVR } from '../../../models/device-manager';
 
@@ -95,7 +95,8 @@ export class SteamVRAnalogGainHardwareBrightnessControlDriver extends HardwareBr
   }
 
   protected servesHmd(hmd: OVRDevice, settings: AppSettings): boolean {
-    return !!settings.hmdSettings[knownDeviceIdForOpenVR(hmd)]?.hardwareBrightnessOnUnsupportedHmd;
+    const own = ownHmdSettings(settings, knownDeviceIdForOpenVR(hmd), 'OTHER');
+    return !!own?.hardwareBrightnessOnUnsupportedHmd;
   }
 
   protected gainRange(hmd: OVRDevice): [number, number] {
