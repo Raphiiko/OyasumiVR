@@ -21,6 +21,13 @@ const RUN_AUTOMATION_COMMAND_FIELDS = [
 
 const GOGO_LOCO_EMOTE_ADDRESSES = ['/avatar/parameters/VRCEmote', '/avatar/parameters/Go/VRCEmote'];
 
+function from22to23(data: any): any {
+  data.version = 23;
+  // the app settings step moves this to bigscreenBeyondAllowUnsafeFanSpeed
+  delete data.BIGSCREEN_BEYOND_FAN_CONTROL?.allowUnsafeFanSpeed;
+  return data;
+}
+
 function from21to22(data: any): any {
   data.version = 22;
   if (!data.SLEEP_MODE_DISABLE_ON_UPRIGHT_POSE) return data;
@@ -117,6 +124,7 @@ export const AUTOMATION_CONFIGS_MIGRATION: MigrationDefinition<Versioned> = {
     19: from19to20,
     20: from20to21,
     21: from21to22,
+    22: from22to23,
   },
   normalizeCurrentVersion: (data) => normalizeWithDefaults(AUTOMATION_CONFIGS_DEFAULT, data),
 };

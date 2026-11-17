@@ -1074,6 +1074,11 @@
         "title": "安全な輝度レベルに制限",
         "warning": "この機能はメーカーによってサポートされていません。\n\nこの制限を無効にするとHMDを損傷する可能性があります。自己責任にてご利用ください。"
       },
+      "beyondSafeFanSpeed": {
+        "description": "ファン速度が40%未満に設定されることを防ぎます",
+        "title": "安全なファン速度に制限",
+        "warning": "40%未満の設定はメーカーでサポートされていません。HMDが過熱によって損傷する可能性があります。自己責任にて使用してください。"
+      },
       "brightnessOnUnsupportedHmds": {
         "description": "オンにすると、お使いのHMDで動作が確認されていなくても、OyasumiVRがSteamVR経由で輝度の制御を試みます。",
         "title": "非対応のHMDでハードウェアの輝度を制御",
@@ -1312,11 +1317,6 @@
     "bigscreenBeyond": {
       "description": "Bigscreen Beyondの特定の機能を自動化できます。",
       "fanControl": {
-        "allowUnsafeFanSpeed": {
-          "description": "ファン速度が40%未満に設定されることを防ぎます",
-          "title": "安全なファン速度に制限",
-          "warning": "40%未満の設定はメーカーでサポートされていません。HMDが過熱によって損傷する可能性があります。自己責任にて使用してください。"
-        },
         "onSleepDisable": {
           "description": "睡眠モードが無効化された際にファン速度を変更します",
           "title": "起床時"

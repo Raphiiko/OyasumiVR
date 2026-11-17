@@ -30,7 +30,6 @@ export class HmdAutomationsBigscreenBeyondTabComponent implements OnInit {
   >;
   protected readonly fanControlDefaults = AUTOMATION_CONFIGS_DEFAULT.BIGSCREEN_BEYOND_FAN_CONTROL;
   protected readonly rgbControlDefaults = AUTOMATION_CONFIGS_DEFAULT.BIGSCREEN_BEYOND_RGB_CONTROL;
-  protected readonly appSettingsDefaults = APP_SETTINGS_DEFAULT;
   protected rgbControlConfig: BigscreenBeyondRgbControlAutomationsConfig = structuredClone(
     AUTOMATION_CONFIGS_DEFAULT.BIGSCREEN_BEYOND_RGB_CONTROL
   );
@@ -102,25 +101,6 @@ export class HmdAutomationsBigscreenBeyondTabComponent implements OnInit {
     );
   }
 
-  async toggleUnsafeFanSpeed() {
-    const allow = !this.fanControlConfig.allowUnsafeFanSpeed;
-    const config: Partial<BigscreenBeyondFanControlAutomationsConfig> = {
-      allowUnsafeFanSpeed: allow,
-    };
-    if (!allow) {
-      if (this.fanControlConfig.onSleepEnableFanSpeed < MIN_SAFE_FAN_SPEED)
-        config['onSleepEnableFanSpeed'] = MIN_SAFE_FAN_SPEED;
-      if (this.fanControlConfig.onSleepDisableFanSpeed < MIN_SAFE_FAN_SPEED)
-        config['onSleepDisableFanSpeed'] = MIN_SAFE_FAN_SPEED;
-      if (this.fanControlConfig.onSleepPreparationFanSpeed < MIN_SAFE_FAN_SPEED)
-        config['onSleepPreparationFanSpeed'] = MIN_SAFE_FAN_SPEED;
-    }
-    await this.automationConfigService.updateAutomationConfig<BigscreenBeyondFanControlAutomationsConfig>(
-      'BIGSCREEN_BEYOND_FAN_CONTROL',
-      config
-    );
-  }
-
   async updateFanAutomationSpeed(
     automation: keyof BigscreenBeyondFanControlAutomationsConfig,
     speed: number
@@ -143,12 +123,6 @@ export class HmdAutomationsBigscreenBeyondTabComponent implements OnInit {
         [automation + 'Rgb']: value,
       }
     );
-  }
-
-  toggleBigscreenBeyondForceFanBrightnessSafety() {
-    this.appSettingsService.updateSettings({
-      bigscreenBeyondBrightnessFanSafety: !this.appSettings.bigscreenBeyondBrightnessFanSafety,
-    });
   }
 
   protected readonly MIN_SAFE_FAN_SPEED = MIN_SAFE_FAN_SPEED;

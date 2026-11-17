@@ -50,7 +50,7 @@ export type AutomationType =
   | 'RUN_AUTOMATIONS';
 
 export interface AutomationConfigs {
-  version: 22;
+  version: 23;
   // CORE SLEEP FUNCTIONALITY
   SLEEP_MODE_ENABLE_FOR_SLEEP_DETECTOR: SleepModeEnableForSleepDetectorAutomationConfig;
   SLEEP_MODE_ENABLE_AT_TIME: SleepModeEnableAtTimeAutomationConfig;
@@ -479,7 +479,6 @@ export interface BigscreenBeyondFanControlAutomationsConfig extends AutomationCo
   onSleepDisableFanSpeed: number;
   onSleepPreparation: boolean;
   onSleepPreparationFanSpeed: number;
-  allowUnsafeFanSpeed: boolean;
 }
 
 export interface BigscreenBeyondRgbControlAutomationsConfig extends AutomationConfig {
@@ -517,7 +516,7 @@ export interface RunAutomationsConfig extends AutomationConfig {
 //
 
 export const AUTOMATION_CONFIGS_DEFAULT: AutomationConfigs = {
-  version: 22,
+  version: 23,
   // CORE SLEEP FUNCTIONALITY
   SLEEP_MODE_ENABLE_FOR_SLEEP_DETECTOR: {
     enabled: false,
@@ -953,7 +952,6 @@ export const AUTOMATION_CONFIGS_DEFAULT: AutomationConfigs = {
     onSleepDisableFanSpeed: 50,
     onSleepPreparation: false,
     onSleepPreparationFanSpeed: 50,
-    allowUnsafeFanSpeed: false,
   },
   BIGSCREEN_BEYOND_RGB_CONTROL: {
     enabled: true,

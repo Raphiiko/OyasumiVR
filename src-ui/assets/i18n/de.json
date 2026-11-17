@@ -838,6 +838,11 @@
         "title": "Limit zur sicheren Helligkeit",
         "warning": "Diese Funktion wird nicht vom Hersteller unterstützt.\n\nDiese Einstellung kann dein Headset beschädigen; Diese Funktion nur auf dein eigenes Risiko deaktivieren."
       },
+      "beyondSafeFanSpeed": {
+        "description": "Verhinder, dass deine Lüftergeschwindigkeit unter 40% fällt",
+        "title": "Limit deiner Lüftergeschwindigkeit",
+        "warning": "Die Lüftergeschwindigkeit unter 40% zu setzen ist nicht von den Hersteller unterstützt und könnte durch Überhitzung deines VR-Headsets zu Schäden führen. Deaktiviere diese Funktion auf eigenes Risiko."
+      },
       "maxBrightness": {
         "description": "Maximale Helligkeitswerte, die OyasumiVR festlegen kann",
         "title": "Maximale Helligkeit"
@@ -933,11 +938,6 @@
     "bigscreenBeyond": {
       "description": "Hier kannst du für die Bigscreen Beyond spezifische Funktionen automatisieren.",
       "fanControl": {
-        "allowUnsafeFanSpeed": {
-          "description": "Verhinder, dass deine Lüftergeschwindigkeit unter 40% fällt",
-          "title": "Limit deiner Lüftergeschwindigkeit",
-          "warning": "Die Lüftergeschwindigkeit unter 40% zu setzen ist nicht von den Hersteller unterstützt und könnte durch Überhitzung deines VR-Headsets zu Schäden führen. Deaktiviere diese Funktion auf eigenes Risiko."
-        },
         "onSleepDisable": {
           "description": "Ändere die Lüftergeschwindigkeit, wenn der Schlafmodus deaktiviert ist",
           "title": "Wenn ich aufwache"

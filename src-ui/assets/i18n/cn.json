@@ -1074,6 +1074,11 @@
         "title": "将亮度限制在安全范围内",
         "warning": "此功能不受制造商支持。\n\n请注意，这可能会损坏你的头显：请仅在自行承担风险的情况下禁用此功能。"
       },
+      "beyondSafeFanSpeed": {
+        "description": "避免将风扇速度设置为低于 40%",
+        "title": "限制为安全风扇速度",
+        "warning": "制造商不支持将风扇速度设置为低于 40%。这样做可能让头显过热并造成损坏。只有在自行承担风险时才应禁用此功能。"
+      },
       "brightnessOnUnsupportedHmds": {
         "description": "开启此选项后，OyasumiVR 会尝试通过 SteamVR 控制你头显的亮度，尽管目前尚不确定该功能是否适用于你的头显型号",
         "title": "在不受支持的头显设备上的硬件亮度",
@@ -1312,11 +1317,6 @@
     "bigscreenBeyond": {
       "description": "在这里，你可以设置一些特定于 Bigscreen Beyond 的自动化功能。",
       "fanControl": {
-        "allowUnsafeFanSpeed": {
-          "description": "避免将风扇速度设置为低于 40%",
-          "title": "限制为安全风扇速度",
-          "warning": "制造商不支持将风扇速度设置为低于 40%。这样做可能让头显过热并造成损坏。只有在自行承担风险时才应禁用此功能。"
-        },
         "onSleepDisable": {
           "description": "在睡眠模式关闭时更改风扇速度",
           "title": "当我醒来时"

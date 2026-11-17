@@ -1074,6 +1074,11 @@
         "title": "Limiter aux niveaux de luminosité sûrs",
         "warning": "Cette fonctionnalité n'est pas prise en charge par le fabricant.\n\nAttention, cela pourrait endommager votre casque : ne la désactivez qu'à vos propres risques."
       },
+      "beyondSafeFanSpeed": {
+        "description": "Vous empêche de régler la vitesse du ventilateur en dessous de 40 %",
+        "title": "Limiter aux vitesses de ventilateur sûres",
+        "warning": "Une vitesse de ventilateur inférieure à 40 % n'est pas prise en charge par le fabricant et peut endommager votre casque en le laissant surchauffer. Ne désactivez cette option qu'à vos propres risques."
+      },
       "brightnessOnUnsupportedHmds": {
         "description": "Activez cette option pour laisser OyasumiVR essayer de contrôler la luminosité de votre casque via SteamVR, même si son fonctionnement n'est pas confirmé pour votre casque.",
         "title": "Luminosité matérielle sur les casques non pris en charge",
@@ -1312,11 +1317,6 @@
     "bigscreenBeyond": {
       "description": "Automatisez ici certaines fonctionnalités propres au Bigscreen Beyond.",
       "fanControl": {
-        "allowUnsafeFanSpeed": {
-          "description": "Vous empêche de régler la vitesse du ventilateur en dessous de 40 %",
-          "title": "Limiter aux vitesses de ventilateur sûres",
-          "warning": "Une vitesse de ventilateur inférieure à 40 % n'est pas prise en charge par le fabricant et peut endommager votre casque en le laissant surchauffer. Ne désactivez cette option qu'à vos propres risques."
-        },
         "onSleepDisable": {
           "description": "Changer la vitesse du ventilateur quand le mode sommeil est désactivé",
           "title": "Quand je me réveille"

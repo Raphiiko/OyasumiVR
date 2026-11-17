@@ -281,6 +281,7 @@ import { DeviceDetailViewComponent } from './views/dashboard-view/views/device-m
 import { SegmentedControlComponent } from './components/segmented-control/segmented-control.component';
 import { SteamFrameDeviceTabComponent } from 'src-ui/app/views/dashboard-view/views/device-manager-view/device-detail-view/steam-frame-device-tab/steam-frame-device-tab.component';
 import { HmdDisplaySettingsComponent } from 'src-ui/app/views/dashboard-view/views/device-manager-view/device-detail-view/hmd-display-settings/hmd-display-settings.component';
+import { BeyondFanSettingsComponent } from 'src-ui/app/views/dashboard-view/views/device-manager-view/device-detail-view/beyond-fan-settings/beyond-fan-settings.component';
 import { DeviceManagerService } from './services/device-manager.service';
 import { DevicePowerButtonComponent } from './components/device-power-button/device-power-button.component';
 import { DeviceManagerDevicesTabComponent } from './views/dashboard-view/views/device-manager-view/tabs/device-manager-devices-tab/device-manager-devices-tab.component';
@@ -469,6 +470,7 @@ import { MigrationCoordinatorService } from './services/migration-coordinator.se
     SegmentedControlComponent,
     SteamFrameDeviceTabComponent,
     HmdDisplaySettingsComponent,
+    BeyondFanSettingsComponent,
     DevicePowerButtonComponent,
     DeviceManagerDevicesTabComponent,
     DeviceManagerTagsTabComponent,

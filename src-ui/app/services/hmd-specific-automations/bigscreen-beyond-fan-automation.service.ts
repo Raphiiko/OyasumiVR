@@ -66,6 +66,11 @@ export class BigscreenBeyondFanAutomationService {
     this.automationConfigService.configs
       .pipe(map((c) => c.BIGSCREEN_BEYOND_FAN_CONTROL))
       .subscribe((config) => (this.config = config));
+    combineLatest([this.appSettingsService.settings, this.automationConfigService.configs])
+      .pipe(debounceTime(0))
+      .subscribe(([settings, configs]) =>
+        this.raiseUnsafeAutomationSpeeds(settings, configs.BIGSCREEN_BEYOND_FAN_CONTROL)
+      );
     // Listen for the connection state of the Bigscreen Beyond
     events.bigscreenBeyondConnectedEvent.listen((event) => {
       this._connected.next(event.payload);
@@ -126,6 +131,29 @@ export class BigscreenBeyondFanAutomationService {
     this.eventLog.logEvent({ type: 'bsbFanSpeedChanged', reason, speed, effectiveSpeed: speedSet });
   }
 
+  /** Raises each fan automation speed below the safe minimum to it, unless unsafe speeds are allowed. */
+  private async raiseUnsafeAutomationSpeeds(
+    settings: AppSettings,
+    config: BigscreenBeyondFanControlAutomationsConfig
+  ) {
+    if (settings.bigscreenBeyondAllowUnsafeFanSpeed) return;
+    const speeds = [
+      'onSleepEnableFanSpeed',
+      'onSleepDisableFanSpeed',
+      'onSleepPreparationFanSpeed',
+    ] as const;
+    const raised = Object.fromEntries(
+      speeds
+        .filter((key) => config[key] < MIN_SAFE_FAN_SPEED)
+        .map((key) => [key, MIN_SAFE_FAN_SPEED])
+    );
+    if (!Object.keys(raised).length) return;
+    await this.automationConfigService.updateAutomationConfig<BigscreenBeyondFanControlAutomationsConfig>(
+      'BIGSCREEN_BEYOND_FAN_CONTROL',
+      raised
+    );
+  }
+
   private async handleFanSafety() {
     combineLatest([
       this.appSettingsService.settings.pipe(
@@ -146,7 +174,7 @@ export class BigscreenBeyondFanAutomationService {
         this.setFanSpeed(
           clamp(
             this.fanSpeedRestoreValue,
-            this.config.allowUnsafeFanSpeed ? 0 : MIN_SAFE_FAN_SPEED,
+            this.appSettings.bigscreenBeyondAllowUnsafeFanSpeed ? 0 : MIN_SAFE_FAN_SPEED,
             100
           )
         );
@@ -158,7 +186,11 @@ export class BigscreenBeyondFanAutomationService {
   public async setFanSpeed(speed: number, saveAsRestore = true): Promise<number | null> {
     if (!this._connected.value) return null;
     // Keep fan speed in safe range
-    speed = clamp(speed, this.config.allowUnsafeFanSpeed ? 0 : MIN_SAFE_FAN_SPEED, 100);
+    speed = clamp(
+      speed,
+      this.appSettings.bigscreenBeyondAllowUnsafeFanSpeed ? 0 : MIN_SAFE_FAN_SPEED,
+      100
+    );
     if (saveAsRestore) {
       this.fanSpeedRestoreValue = speed;
     }

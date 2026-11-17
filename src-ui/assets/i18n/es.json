@@ -908,6 +908,11 @@
         "title": "Limitar a niveles de brillo seguros",
         "warning": "El fabricante no admite esta función.\n\nTenga en cuenta que podría dañar su visor: Desactive esta función bajo su propia responsabilidad."
       },
+      "beyondSafeFanSpeed": {
+        "description": "Impide ajustar la velocidad del ventilador por debajo del 40%",
+        "title": "Límite a las velocidades seguras del ventilador",
+        "warning": "Ajustar la velocidad del ventilador por debajo del 40% no está soportado por el fabricante, y podría potencialmente causar daños al dejar que su auricular se sobrecaliente. Desactiva esta función bajo tu propia responsabilidad."
+      },
       "disabled": {
         "tooltip": "Este dispositivo está desactivado"
       },
@@ -1041,11 +1046,6 @@
     "bigscreenBeyond": {
       "description": "Aquí puedes automatizar ciertas funciones específicas de la Bigscreen Beyond.",
       "fanControl": {
-        "allowUnsafeFanSpeed": {
-          "description": "Impide ajustar la velocidad del ventilador por debajo del 40%",
-          "title": "Límite a las velocidades seguras del ventilador",
-          "warning": "Ajustar la velocidad del ventilador por debajo del 40% no está soportado por el fabricante, y podría potencialmente causar daños al dejar que su auricular se sobrecaliente. Desactiva esta función bajo tu propia responsabilidad."
-        },
         "onSleepDisable": {
           "description": "Cambiar la velocidad del ventilador cuando el modo sueño está desactivado",
           "title": "Cuando me despierto"

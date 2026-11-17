@@ -1074,6 +1074,11 @@
         "title": "Limit to safe brightness levels",
         "warning": "This feature is not supported by the manufacturer.\n\nPlease be aware this might damage your headset: Only disable this functionality at your own risk."
       },
+      "beyondSafeFanSpeed": {
+        "description": "Prevents you from setting the fan speed below 40%",
+        "title": "Limit to safe fan speeds",
+        "warning": "Setting the fan speed lower than 40% is not supported by the manufacturer, and could potentially cause damage by letting your headset overheat. Only disable this functionality at your own risk."
+      },
       "brightnessOnUnsupportedHmds": {
         "description": "Turn this on to let OyasumiVR try to control this headset's brightness through SteamVR, even though it's not known to work for it.",
         "title": "Try hardware brightness control",
@@ -1122,6 +1127,7 @@
         "now": "Now",
         "serialNumber": "Serial number"
       },
+      "fanSettingsGlobal": "These settings apply to all your Bigscreen Beyonds.",
       "helperUpdateAvailable": "A new version of the OyasumiVR helper is available.",
       "noTags": "No tags yet.",
       "notConnected": "Not connected",
@@ -1133,6 +1139,7 @@
         "baseStation": "Base station",
         "details": "Details",
         "display": "Brightness & colour temperature",
+        "fan": "Fan",
         "settings": "Settings"
       },
       "tabs": {
@@ -1313,11 +1320,6 @@
     "bigscreenBeyond": {
       "description": "Here you can automate certain features specific to the Bigscreen Beyond.",
       "fanControl": {
-        "allowUnsafeFanSpeed": {
-          "description": "Prevents you from setting the fan speed below 40%",
-          "title": "Limit to safe fan speeds",
-          "warning": "Setting the fan speed lower than 40% is not supported by the manufacturer, and could potentially cause damage by letting your headset overheat. Only disable this functionality at your own risk."
-        },
         "onSleepDisable": {
           "description": "Change the fan speed when the sleep mode is disabled",
           "title": "When I wake up"

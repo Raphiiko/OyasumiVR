@@ -59,6 +59,8 @@ export interface AppSettings {
   cctSoftwareMode: boolean;
   // HW Specific
   bigscreenBeyondBrightnessFanSafety: boolean; // Force fan to 100% if brightness is above 100%
+  /** Allows a Bigscreen Beyond fan speed below the safe minimum of 40%. */
+  bigscreenBeyondAllowUnsafeFanSpeed: boolean;
   // VRCX
   vrcxLogsEnabled: VRCXEventLogType[];
 }
@@ -145,6 +147,7 @@ export const APP_SETTINGS_DEFAULT: AppSettings = {
   cctSoftwareMode: false,
   // HW Specific
   bigscreenBeyondBrightnessFanSafety: true,
+  bigscreenBeyondAllowUnsafeFanSpeed: false,
   // VRCX
   vrcxLogsEnabled: ['SleepMode', 'Invites', 'StatusChanges', 'GroupChanges'],
 };

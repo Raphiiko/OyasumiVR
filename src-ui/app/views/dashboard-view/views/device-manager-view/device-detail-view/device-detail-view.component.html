@@ -196,6 +196,9 @@
     </div>
 
     <app-hmd-display-settings [device]="device" />
+    @if (device.deviceType === 'HMD' && device.manufacturer === 'Bigscreen') {
+      <app-beyond-fan-settings />
+    }
 
     <div class="setting-category">
       <h2>{{ 'device-manager.detail.sections.details' | transloco }}</h2>

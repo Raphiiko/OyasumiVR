@@ -51,8 +51,13 @@ function from17to18(data: any): any {
   return data;
 }
 
-function from18to19(data: any): any {
+function from18to19(data: any, store: Readonly<Record<string, any>>): any {
   data.version = 19;
+
+  // take the unsafe fan speed setting out of the fan automation config as read
+  const fanControl = store['AUTOMATION_CONFIGS']?.BIGSCREEN_BEYOND_FAN_CONTROL;
+  data.bigscreenBeyondAllowUnsafeFanSpeed = !!fanControl?.allowUnsafeFanSpeed;
+
   // the device manager step copies the changed values to each headset's own settings
   for (const key of [
     'valveIndexMaxBrightness',

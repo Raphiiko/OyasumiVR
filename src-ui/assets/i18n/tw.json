@@ -1074,6 +1074,11 @@
         "title": "限制在安全的亮度範圍內",
         "warning": "此功能不受製造商支援。\n\n請注意，這可能會損壞你的頭戴顯示器：請僅在自行承擔風險的情況下停用此功能。"
       },
+      "beyondSafeFanSpeed": {
+        "description": "防止將風扇轉速設定低於 40%",
+        "title": "限制為安全風扇轉速",
+        "warning": "製造商不支援將風扇轉速設定低於 40%。這樣做可能會讓頭戴顯示器過熱並造成損壞。只有在自行承擔風險時才應停用此功能。"
+      },
       "brightnessOnUnsupportedHmds": {
         "description": "開啟後，OyasumiVR 會嘗試透過 SteamVR 控制頭戴顯示器的亮度，即使尚未確認它能在你的頭戴顯示器上運作。",
         "title": "在不受支援的頭戴顯示器上控制硬體亮度",
@@ -1312,11 +1317,6 @@
     "bigscreenBeyond": {
       "description": "你可以在這裡設定 Bigscreen Beyond 的專用自動化功能。",
       "fanControl": {
-        "allowUnsafeFanSpeed": {
-          "description": "防止將風扇轉速設定低於 40%",
-          "title": "限制為安全風扇轉速",
-          "warning": "製造商不支援將風扇轉速設定低於 40%。這樣做可能會讓頭戴顯示器過熱並造成損壞。只有在自行承擔風險時才應停用此功能。"
-        },
         "onSleepDisable": {
           "description": "睡眠模式關閉時變更風扇轉速",
           "title": "當我醒來時"

@@ -831,6 +831,11 @@
         "title": "안전한 밝기 수준으로 제한",
         "warning": "이 기능은 제조사에서 지원하지 않습니다.\n\n헤드셋이 손상될 수 있다는 점에 유의하세요: 이 기능은 사용자의 책임 하에 비활성화하세요."
       },
+      "beyondSafeFanSpeed": {
+        "description": "팬 속도를 40% 미만으로 설정하는 것을 방지해요.",
+        "title": "안전한 팬 속도로 제한",
+        "warning": "팬 속도를 40% 미만으로 설정하는 것은 제조사에서 지원하지 않으며, 헤드셋 과열로 인한 손상의 원인이 될 수 있어요. 이 기능은 사용자의 책임 하에 비활성화하세요."
+      },
       "maxBrightness": {
         "description": "OyasumiVR이 설정할 최대 밝기 값을 제한해요.",
         "title": "최대 밝기"
@@ -926,11 +931,6 @@
     "bigscreenBeyond": {
       "description": "여기에서 Bigscreen Beyond의 특정 기능을 자동화할 수 있어요.",
       "fanControl": {
-        "allowUnsafeFanSpeed": {
-          "description": "팬 속도를 40% 미만으로 설정하는 것을 방지해요.",
-          "title": "안전한 팬 속도로 제한",
-          "warning": "팬 속도를 40% 미만으로 설정하는 것은 제조사에서 지원하지 않으며, 헤드셋 과열로 인한 손상의 원인이 될 수 있어요. 이 기능은 사용자의 책임 하에 비활성화하세요."
-        },
         "onSleepDisable": {
           "description": "수면 모드 비활성화 시 팬 속도를 변경해요.",
           "title": "수면 모드 비활성화 시"

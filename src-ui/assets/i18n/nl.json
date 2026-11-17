@@ -1074,6 +1074,11 @@
         "title": "Beperk tot veilige helderheidsniveaus",
         "warning": "Deze functie wordt niet ondersteund door de fabrikant.\n\nLet op: dit kan je headset beschadigen. Schakel deze functie alleen uit op eigen risico."
       },
+      "beyondSafeFanSpeed": {
+        "description": "Voorkomt dat je de ventilatorsnelheid onder 40% instelt",
+        "title": "Beperk tot veilige ventilatorsnelheden",
+        "warning": "Een ventilatorsnelheid onder 40% wordt niet ondersteund door de fabrikant en kan schade veroorzaken doordat je headset oververhit raakt. Schakel deze functie alleen uit op eigen risico."
+      },
       "brightnessOnUnsupportedHmds": {
         "description": "Schakel dit in om OyasumiVR te laten proberen de helderheid van je headset via SteamVR te regelen, ook al is niet bekend of het met je headset werkt.",
         "title": "Hardwarehelderheid op niet-ondersteunde headsets",
@@ -1312,11 +1317,6 @@
     "bigscreenBeyond": {
       "description": "Hier kun je bepaalde functies automatiseren die specifiek zijn voor de Bigscreen Beyond.",
       "fanControl": {
-        "allowUnsafeFanSpeed": {
-          "description": "Voorkomt dat je de ventilatorsnelheid onder 40% instelt",
-          "title": "Beperk tot veilige ventilatorsnelheden",
-          "warning": "Een ventilatorsnelheid onder 40% wordt niet ondersteund door de fabrikant en kan schade veroorzaken doordat je headset oververhit raakt. Schakel deze functie alleen uit op eigen risico."
-        },
         "onSleepDisable": {
           "description": "Verander de ventilatorsnelheid wanneer de slaapmodus wordt uitgeschakeld",
           "title": "Wanneer ik wakker word"

@@ -36,11 +36,16 @@ vi.mock('@tauri-apps/api/core', () => ({
   }),
 }));
 
-function createService() {
+function createService(
+  fanControl: Partial<typeof AUTOMATION_CONFIGS_DEFAULT.BIGSCREEN_BEYOND_FAN_CONTROL> = {}
+) {
   const settings = new BehaviorSubject<AppSettings>({
     ...structuredClone(APP_SETTINGS_DEFAULT),
     bigscreenBeyondBrightnessFanSafety: false,
   });
+  const configs = structuredClone(AUTOMATION_CONFIGS_DEFAULT);
+  Object.assign(configs.BIGSCREEN_BEYOND_FAN_CONTROL, fanControl);
+  const updateAutomationConfig = vi.fn(async () => {});
   const brightness = new BehaviorSubject(50);
   const hardwareBrightness = {
     brightnessStream: brightness.asObservable(),
@@ -50,8 +55,9 @@ function createService() {
   };
   const service = new BigscreenBeyondFanAutomationService(
     {
-      configs: new BehaviorSubject(structuredClone(AUTOMATION_CONFIGS_DEFAULT)).asObservable(),
-    } as AutomationConfigService,
+      configs: new BehaviorSubject(configs).asObservable(),
+      updateAutomationConfig,
+    } as unknown as AutomationConfigService,
     { mode: new BehaviorSubject(false).asObservable() } as SleepService,
     { onSleepPreparation: new Subject<void>() } as unknown as SleepPreparationService,
     { settings: settings.asObservable() } as AppSettingsService,
@@ -64,7 +70,17 @@ function createService() {
   const setFanSafety = (enabled: boolean) =>
     settings.next({ ...settings.value, bigscreenBeyondBrightnessFanSafety: enabled });
 
-  return { brightness, safetyActive, service, setFanSafety };
+  const setAllowUnsafeFanSpeed = (allowed: boolean) =>
+    settings.next({ ...settings.value, bigscreenBeyondAllowUnsafeFanSpeed: allowed });
+
+  return {
+    brightness,
+    safetyActive,
+    service,
+    setFanSafety,
+    setAllowUnsafeFanSpeed,
+    updateAutomationConfig,
+  };
 }
 
 // past the 100 ms throttle on the fan safety setting
@@ -132,5 +148,30 @@ describe('BigscreenBeyondFanAutomationService fan safety', () => {
 
     expect(fanCommands).toEqual([100]);
     expect(context.safetyActive.at(-1)).toBe(true);
+  });
+});
+
+describe('BigscreenBeyondFanAutomationService safe fan speeds', () => {
+  beforeEach(() => vi.useFakeTimers());
+  afterEach(() => vi.useRealTimers());
+
+  it('raises each fan automation below 40% to 40% once unsafe speeds are no longer allowed', async () => {
+    const context = createService({
+      onSleepEnableFanSpeed: 20,
+      onSleepDisableFanSpeed: 60,
+      onSleepPreparationFanSpeed: 0,
+    });
+    context.setAllowUnsafeFanSpeed(true);
+    await context.service.init();
+    await vi.advanceTimersByTimeAsync(0);
+    expect(context.updateAutomationConfig).not.toHaveBeenCalled();
+
+    context.setAllowUnsafeFanSpeed(false);
+    await vi.advanceTimersByTimeAsync(0);
+
+    expect(context.updateAutomationConfig).toHaveBeenCalledWith('BIGSCREEN_BEYOND_FAN_CONTROL', {
+      onSleepEnableFanSpeed: 40,
+      onSleepPreparationFanSpeed: 40,
+    });
   });
 });

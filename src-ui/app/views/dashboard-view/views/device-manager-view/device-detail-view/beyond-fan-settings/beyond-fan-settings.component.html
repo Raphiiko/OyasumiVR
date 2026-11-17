@@ -1,0 +1,52 @@
+<h2>{{ 'device-manager.detail.sections.fan' | transloco }}</h2>
+<p>{{ 'device-manager.detail.fanSettingsGlobal' | transloco }}</p>
+<div class="settings">
+  <app-setting-row
+    label="device-manager.config.beyondSafeFanSpeed.title"
+    description="device-manager.config.beyondSafeFanSpeed.description"
+    [value]="settings().bigscreenBeyondAllowUnsafeFanSpeed"
+    [defaultValue]="defaults.bigscreenBeyondAllowUnsafeFanSpeed"
+    (resetToDefault)="toggleSafeFanSpeed()"
+  >
+    <span
+      rowLabel
+      class="experimental-flag"
+      [tooltip]="'device-manager.config.beyondSafeFanSpeed.warning'"
+      [tooltipMode]="'right'"
+    >
+      <app-icon name="warning" />
+    </span>
+    <label class="switch-toggle">
+      <input
+        type="checkbox"
+        [checked]="!settings().bigscreenBeyondAllowUnsafeFanSpeed"
+        (change)="toggleSafeFanSpeed()"
+      />
+      <span class="switch-toggle-slider"></span>
+    </label>
+  </app-setting-row>
+  <app-setting-row
+    label="device-manager.config.beyondFanSafety.title"
+    description="device-manager.config.beyondFanSafety.description"
+    [value]="settings().bigscreenBeyondBrightnessFanSafety"
+    [defaultValue]="defaults.bigscreenBeyondBrightnessFanSafety"
+    (resetToDefault)="toggleFanSafety()"
+  >
+    <span
+      rowLabel
+      class="experimental-flag"
+      [tooltip]="'device-manager.config.beyondFanSafety.warning'"
+      [tooltipMode]="'right'"
+    >
+      <app-icon name="warning" />
+    </span>
+    <label class="switch-toggle">
+      <input
+        type="checkbox"
+        [checked]="settings().bigscreenBeyondBrightnessFanSafety"
+        (change)="toggleFanSafety()"
+      />
+      <span class="switch-toggle-slider"></span>
+    </label>
+  </app-setting-row>
+</div>
