@@ -4,32 +4,31 @@ import { DMKnownDevice } from 'src-ui/app/models/device-manager';
 import { AppSettings, HmdSettings, HmdSettingsModel } from 'src-ui/app/models/settings';
 import { AppSettingsService } from 'src-ui/app/services/app-settings.service';
 import { SteamFrameService } from 'src-ui/app/services/steam-frame/steam-frame.service';
+import { ownHmdSettings } from 'src-ui/app/utils/hmd-settings-utils';
 import { VALVE_INDEX_HARDWARE_BRIGHTNESS_CONTROL_DRIVER_BOUNDS as INDEX_BOUNDS } from 'src-ui/app/services/brightness-control/hardware-brightness-drivers/valve-index-hardware-brightness-control-driver';
 import { BIGSCREEN_BEYOND_HARDWARE_BRIGHTNESS_CONTROL_DRIVER_BOUNDS as BEYOND_BOUNDS } from 'src-ui/app/services/brightness-control/hardware-brightness-drivers/bigscreen-beyond-hardware-brightness-control-driver';
 
 /** A Frame or a PS VR2 has its own driver and no settings here. */
 type HmdModel = HmdSettingsModel | 'STEAM_FRAME' | 'PSVR2';
+/** The values a model stores for a headset. */
+type ModelValues<M extends HmdSettingsModel> = Omit<Extract<HmdSettings, { model: M }>, 'model'>;
+
 /** The maximum brightness of a headset without its own, as its driver uses it. */
 const DEFAULT_MAX_BRIGHTNESS: Partial<Record<HmdModel, number>> = {
   VALVE_INDEX: INDEX_BOUNDS.riskThreshold,
   BIGSCREEN_BEYOND: BEYOND_BOUNDS.riskThreshold,
 };
 
-const LEGACY_HMD_MANUFACTURERS: Partial<Record<string, string>> = {
-  Index: 'Valve',
-  Beyond: 'Bigscreen',
-  'Steam Frame': 'Valve',
-  'Deckard DV2': 'Valve',
-  'Deckard MP': 'Valve',
-  'PS VR2': 'SIE',
-};
-
-/** This headset's values, each one falling back to its default. */
-interface Resolved {
+/** The values this page shows, each one falling back to its default. */
+interface ShownValues {
+  /** Valve Index and Bigscreen Beyond; null for a model without a maximum. */
   maxBrightness: number | null;
-  unsafeBrightness: boolean;
-  hardwareBrightnessOnUnsupportedHmd: boolean;
-  cctControlOnUnsupportedHmd: boolean;
+  /** Bigscreen Beyond only: allows a maximum above 150%. */
+  beyondUnsafeBrightness: boolean;
+  /** Headsets without a dedicated driver only: tries SteamVR's analog gain. */
+  otherHmdTryHardwareBrightness: boolean;
+  /** Headsets without a dedicated driver only: tries SteamVR's colour gain. */
+  otherHmdTryCctControl: boolean;
 }
 
 /** The brightness and colour temperature settings of a headset's device page, stored per headset. */
@@ -56,7 +55,7 @@ export class HmdDisplaySettingsComponent {
       case 'BIGSCREEN_BEYOND':
         return [
           BEYOND_BOUNDS.overdriveThreshold,
-          this.values().unsafeBrightness
+          this.values().beyondUnsafeBrightness
             ? BEYOND_BOUNDS.hardwareStops[BEYOND_BOUNDS.hardwareStops.length - 1]
             : BEYOND_BOUNDS.riskThreshold,
         ];
@@ -77,12 +76,7 @@ export class HmdDisplaySettingsComponent {
   );
 
   /** Matches the headset drivers' own model checks, from the identity stored for the device. */
-  private modelOf(stored: DMKnownDevice): HmdModel {
-    // a headset not seen since the device manager started storing manufacturers has none
-    const device = {
-      ...stored,
-      manufacturer: stored.manufacturer ?? LEGACY_HMD_MANUFACTURERS[stored.typeName],
-    };
+  private modelOf(device: DMKnownDevice): HmdModel {
     if (this.steamFrame.identityOf(device)) return 'STEAM_FRAME';
     if (device.manufacturer === 'Valve' && device.typeName === 'Index') return 'VALVE_INDEX';
     if (device.manufacturer === 'Bigscreen') return 'BIGSCREEN_BEYOND';
@@ -90,54 +84,55 @@ export class HmdDisplaySettingsComponent {
     return 'OTHER';
   }
 
-  /** The values stored for this headset, unless they were stored for another model. */
-  private ownValues(settings: AppSettings): Partial<Resolved> {
-    const own = settings.hmdSettings[this.device().id];
-    return own?.model === this.model() ? own : {};
-  }
-
-  private resolve(settings: AppSettings): Resolved {
-    const own = this.ownValues(settings);
-    const defaultMax = DEFAULT_MAX_BRIGHTNESS[this.model()];
+  private resolve(settings: AppSettings): ShownValues {
+    const model = this.model();
+    // an entry counts only for the model this headset is detected as
+    const own = <M extends HmdSettingsModel>(m: M) =>
+      model === m ? ownHmdSettings(settings, this.device().id, m) : undefined;
+    const defaultMax = DEFAULT_MAX_BRIGHTNESS[model];
+    const ownMax = (own('VALVE_INDEX') ?? own('BIGSCREEN_BEYOND'))?.maxBrightness;
     return {
-      maxBrightness: defaultMax === undefined ? null : (own.maxBrightness ?? defaultMax),
-      unsafeBrightness: own.unsafeBrightness ?? false,
-      hardwareBrightnessOnUnsupportedHmd: own.hardwareBrightnessOnUnsupportedHmd ?? false,
-      cctControlOnUnsupportedHmd: own.cctControlOnUnsupportedHmd ?? false,
+      maxBrightness: defaultMax === undefined ? null : (ownMax ?? defaultMax),
+      beyondUnsafeBrightness: !!own('BIGSCREEN_BEYOND')?.unsafeBrightness,
+      otherHmdTryHardwareBrightness: !!own('OTHER')?.hardwareBrightnessOnUnsupportedHmd,
+      otherHmdTryCctControl: !!own('OTHER')?.cctControlOnUnsupportedHmd,
     };
   }
 
-  private update(values: Partial<Resolved>) {
-    const model = this.model();
-    if (model === 'STEAM_FRAME' || model === 'PSVR2') return;
-    const own = { ...this.ownValues(this.settings()), ...values, model } as HmdSettings;
+  /** Stores values of this headset's model; an entry of another model is replaced. */
+  private update<M extends HmdSettingsModel>(model: M, values: ModelValues<M>) {
+    if (this.model() !== model) return;
+    const id = this.device().id;
+    const stored = this.settings().hmdSettings[id];
+    const entry = { ...(stored?.model === model ? stored : {}), ...values, model } as HmdSettings;
     this.appSettingsService.updateSettings({
-      hmdSettings: { ...this.settings().hmdSettings, [this.device().id]: own },
+      hmdSettings: { ...this.settings().hmdSettings, [id]: entry },
     });
   }
 
   setMaxBrightness(value: number) {
+    const model = this.model();
     const range = this.maxBrightnessRange();
-    if (!range) return;
-    this.update({ maxBrightness: Math.min(Math.max(value, range[0]), range[1]) });
+    if (!range || (model !== 'VALVE_INDEX' && model !== 'BIGSCREEN_BEYOND')) return;
+    this.update(model, { maxBrightness: Math.min(Math.max(value, range[0]), range[1]) });
   }
 
   toggleBeyondSafeBrightness() {
-    const unsafe = !this.values().unsafeBrightness;
+    const unsafe = !this.values().beyondUnsafeBrightness;
     const max = this.values().maxBrightness ?? BEYOND_BOUNDS.riskThreshold;
-    this.update({
+    this.update('BIGSCREEN_BEYOND', {
       unsafeBrightness: unsafe,
       maxBrightness: unsafe ? max : Math.min(max, BEYOND_BOUNDS.riskThreshold),
     });
   }
 
   toggleBrightnessFallback() {
-    this.update({
-      hardwareBrightnessOnUnsupportedHmd: !this.values().hardwareBrightnessOnUnsupportedHmd,
+    this.update('OTHER', {
+      hardwareBrightnessOnUnsupportedHmd: !this.values().otherHmdTryHardwareBrightness,
     });
   }
 
   toggleCctFallback() {
-    this.update({ cctControlOnUnsupportedHmd: !this.values().cctControlOnUnsupportedHmd });
+    this.update('OTHER', { cctControlOnUnsupportedHmd: !this.values().otherHmdTryCctControl });
   }
 }
