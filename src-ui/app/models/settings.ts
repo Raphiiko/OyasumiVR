@@ -8,22 +8,31 @@ import { EventLogType } from './event-log-entry';
  * A missing value uses the model's default.
  */
 export type HmdSettings =
-  | { model: 'VALVE_INDEX'; maxBrightness?: number }
-  | {
-      model: 'BIGSCREEN_BEYOND';
-      maxBrightness?: number;
-      /** Allows a maxBrightness above 150%. */
-      unsafeBrightness?: boolean;
-      /** For a Beyond model that SteamVR applies no colour gains on. */
-      cctControlOnUnsupportedHmd?: boolean;
-    }
-  | { model: 'STEAM_FRAME'; maxBrightness?: number }
-  | {
-      /** A headset without a dedicated brightness driver. */
-      model: 'OTHER';
-      hardwareBrightnessOnUnsupportedHmd?: boolean;
-      cctControlOnUnsupportedHmd?: boolean;
-    };
+  ValveIndexHmdSettings | BigscreenBeyondHmdSettings | SteamFrameHmdSettings | OtherHmdSettings;
+
+interface HmdSettingsBase<M extends string> {
+  model: M;
+}
+
+/** A model whose hardware brightness has a dedicated driver. */
+interface HardwareBrightnessHmdSettings<M extends string> extends HmdSettingsBase<M> {
+  maxBrightness?: number;
+}
+
+export type ValveIndexHmdSettings = HardwareBrightnessHmdSettings<'VALVE_INDEX'>;
+
+export interface BigscreenBeyondHmdSettings extends HardwareBrightnessHmdSettings<'BIGSCREEN_BEYOND'> {
+  /** Allows a maxBrightness above 150%. */
+  unsafeBrightness?: boolean;
+}
+
+export type SteamFrameHmdSettings = HardwareBrightnessHmdSettings<'STEAM_FRAME'>;
+
+/** A headset without a dedicated brightness driver, and not on the SteamVR colour gain list. */
+export interface OtherHmdSettings extends HmdSettingsBase<'OTHER'> {
+  hardwareBrightnessOnUnsupportedHmd?: boolean;
+  cctControlOnUnsupportedHmd?: boolean;
+}
 
 export type HmdSettingsModel = HmdSettings['model'];
 

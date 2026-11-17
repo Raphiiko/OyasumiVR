@@ -4,7 +4,6 @@ import { DMKnownDevice } from 'src-ui/app/models/device-manager';
 import { AppSettings, HmdSettings, HmdSettingsModel } from 'src-ui/app/models/settings';
 import { AppSettingsService } from 'src-ui/app/services/app-settings.service';
 import { SteamFrameService } from 'src-ui/app/services/steam-frame/steam-frame.service';
-import { isSteamVrCctSupportedHmd } from 'src-ui/app/services/cct-control/cct-control-drivers/steamvr-cct-control-driver';
 import { VALVE_INDEX_HARDWARE_BRIGHTNESS_CONTROL_DRIVER_BOUNDS as INDEX_BOUNDS } from 'src-ui/app/services/brightness-control/hardware-brightness-drivers/valve-index-hardware-brightness-control-driver';
 import { BIGSCREEN_BEYOND_HARDWARE_BRIGHTNESS_CONTROL_DRIVER_BOUNDS as BEYOND_BOUNDS } from 'src-ui/app/services/brightness-control/hardware-brightness-drivers/bigscreen-beyond-hardware-brightness-control-driver';
 import { STEAM_FRAME_HARDWARE_BRIGHTNESS_CONTROL_DRIVER_BOUNDS as FRAME_BOUNDS } from 'src-ui/app/services/brightness-control/hardware-brightness-drivers/steam-frame-hardware-brightness-control-driver';
@@ -62,20 +61,13 @@ export class HmdDisplaySettingsComponent {
   protected readonly maxBrightnessDefault = computed(
     () => DEFAULT_MAX_BRIGHTNESS[this.model()] ?? null
   );
-  /** True for a model whose brightness only the opt-in SteamVR analog gain driver controls. */
-  protected readonly brightnessFallback = computed(() => this.model() === 'OTHER');
-  protected readonly cctFallback = computed(() => {
-    const device = this.device();
-    if (this.model() === 'STEAM_FRAME') return false;
-    return !isSteamVrCctSupportedHmd({
-      manufacturerName: device.manufacturer,
-      modelNumber: device.typeName,
-    });
-  });
+  /**
+   * True for a headset with no brightness driver and no SteamVR colour gains. Every model on
+   * STEAMVR_CCT_SUPPORTED_HMDS has a model of its own, so 'OTHER' is never on that list.
+   */
+  protected readonly fallbacks = computed(() => this.model() === 'OTHER');
   protected readonly visible = computed(
-    () =>
-      this.device().deviceType === 'HMD' &&
-      (!!this.maxBrightnessRange() || this.brightnessFallback() || this.cctFallback())
+    () => this.device().deviceType === 'HMD' && (!!this.maxBrightnessRange() || this.fallbacks())
   );
 
   /** Matches the headset drivers' own model checks, from the identity stored for the device. */

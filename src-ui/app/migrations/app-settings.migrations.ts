@@ -61,17 +61,15 @@ function from18to19(data: any, store: Readonly<Record<string, any>>): any {
     delete data[key];
     return value === defaultValue ? undefined : value;
   };
-  const cctControlOnUnsupportedHmd = changed('cctControlOnUnsupportedHmds', false);
   const valuesByModel = {
     VALVE_INDEX: { maxBrightness: changed('valveIndexMaxBrightness', 160) },
     BIGSCREEN_BEYOND: {
       maxBrightness: changed('bigscreenBeyondMaxBrightness', 150),
       unsafeBrightness: changed('bigscreenBeyondUnsafeBrightness', false),
-      cctControlOnUnsupportedHmd,
     },
     OTHER: {
       hardwareBrightnessOnUnsupportedHmd: changed('hardwareBrightnessOnUnsupportedHmds', false),
-      cctControlOnUnsupportedHmd,
+      cctControlOnUnsupportedHmd: changed('cctControlOnUnsupportedHmds', false),
     },
   };
 

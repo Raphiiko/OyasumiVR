@@ -45,7 +45,7 @@
         </label>
       </app-setting-row>
     }
-    @if (brightnessFallback()) {
+    @if (fallbacks()) {
       <app-setting-row
         label="device-manager.config.brightnessOnUnsupportedHmds.title"
         description="device-manager.config.brightnessOnUnsupportedHmds.description"
@@ -67,8 +67,6 @@
           [innerHTML]="'device-manager.config.brightnessOnUnsupportedHmds.unlistedHmd' | transloco"
         ></span>
       </app-alert>
-    }
-    @if (cctFallback()) {
       <app-setting-row
         label="device-manager.config.cctOnUnsupportedHmds.title"
         description="device-manager.config.cctOnUnsupportedHmds.description"

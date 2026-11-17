@@ -8,7 +8,7 @@ import {
   Observable,
   shareReplay,
 } from 'rxjs';
-import { AppSettings } from '../../../models/settings';
+import { AppSettings, ownHmdSettings } from '../../../models/settings';
 import { OVRDevice } from '../../../models/ovr-device';
 import { knownDeviceIdForOpenVR } from '../../../models/device-manager';
 import type { OpenVRService } from '../../openvr.service';
@@ -44,11 +44,8 @@ export class SteamVrCctControlDriver extends CctControlDriver {
       map(([status, devices, settings]) => {
         const hmd = devices.find((d) => d.index === 0);
         if (status !== 'INITIALIZED' || hmd?.class !== 'HMD' || !hmd.isConnected) return false;
-        const own = settings.hmdSettings[knownDeviceIdForOpenVR(hmd)];
-        const tryUnsupported =
-          (own?.model === 'OTHER' || own?.model === 'BIGSCREEN_BEYOND') &&
-          !!own.cctControlOnUnsupportedHmd;
-        return tryUnsupported || isSteamVrCctSupportedHmd(hmd);
+        const own = ownHmdSettings(settings, knownDeviceIdForOpenVR(hmd), 'OTHER');
+        return !!own?.cctControlOnUnsupportedHmd || isSteamVrCctSupportedHmd(hmd);
       }),
       distinctUntilChanged(),
       shareReplay(1)
