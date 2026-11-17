@@ -16,6 +16,8 @@ export interface MigrationDefinition<T extends Versioned> {
   minimumSupportedVersion?: number;
   /** Runs only once the data has reached 'targetVersion', including when no step was needed. */
   normalizeCurrentVersion?: (data: T) => T | Promise<T>;
+  /** Builds the data for a store that lacks this key, from the store as read; the defaults when omitted. */
+  createFromStore?: (store: Readonly<Record<string, unknown>>) => T;
 }
 
 /** 'future' means the input version is above the target; 'unsupported' below the minimum. */
