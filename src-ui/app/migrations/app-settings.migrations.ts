@@ -85,14 +85,22 @@ function from18to19(data: any, store: Readonly<Record<string, any>>): any {
   return data;
 }
 
+const LEGACY_HMD_MANUFACTURERS: Record<string, string> = {
+  Index: 'Valve',
+  Beyond: 'Bigscreen',
+  'Steam Frame': 'Valve',
+  'Deckard DV2': 'Valve',
+  'Deckard MP': 'Valve',
+  'PS VR2': 'SIE',
+};
+
 /** The model a version 18 headset has settings for; null for a model without any. */
 function hmdSettingsModel(hmd: any): 'VALVE_INDEX' | 'BIGSCREEN_BEYOND' | 'OTHER' | null {
   // a headset not seen since the device manager started storing manufacturers has none
-  const manufacturer = hmd.manufacturer;
-  if (hmd.typeName === 'Index' && (manufacturer ?? 'Valve') === 'Valve') return 'VALVE_INDEX';
-  if (manufacturer === 'Bigscreen' || (!manufacturer && hmd.typeName === 'Beyond')) {
-    return 'BIGSCREEN_BEYOND';
-  }
+  const manufacturer: string | undefined =
+    hmd.manufacturer ?? LEGACY_HMD_MANUFACTURERS[hmd.typeName];
+  if (manufacturer === 'Valve' && hmd.typeName === 'Index') return 'VALVE_INDEX';
+  if (manufacturer === 'Bigscreen') return 'BIGSCREEN_BEYOND';
   // a Frame or a PS VR2 has its own brightness driver and no colour fallback
   const isFrame =
     manufacturer === 'Valve' && ['Steam Frame', 'Deckard DV2', 'Deckard MP'].includes(hmd.typeName);

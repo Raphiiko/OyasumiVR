@@ -16,6 +16,15 @@ const DEFAULT_MAX_BRIGHTNESS: Partial<Record<HmdModel, number>> = {
   STEAM_FRAME: FRAME_BOUNDS.riskThreshold,
 };
 
+const LEGACY_HMD_MANUFACTURERS: Partial<Record<string, string>> = {
+  Index: 'Valve',
+  Beyond: 'Bigscreen',
+  'Steam Frame': 'Valve',
+  'Deckard DV2': 'Valve',
+  'Deckard MP': 'Valve',
+  'PS VR2': 'SIE',
+};
+
 /** This headset's values, each one falling back to its default. */
 interface Resolved {
   maxBrightness: number | null;
@@ -71,7 +80,12 @@ export class HmdDisplaySettingsComponent {
   );
 
   /** Matches the headset drivers' own model checks, from the identity stored for the device. */
-  private modelOf(device: DMKnownDevice): HmdModel {
+  private modelOf(stored: DMKnownDevice): HmdModel {
+    // a headset not seen since the device manager started storing manufacturers has none
+    const device = {
+      ...stored,
+      manufacturer: stored.manufacturer ?? LEGACY_HMD_MANUFACTURERS[stored.typeName],
+    };
     if (this.steamFrame.identityOf(device)) return 'STEAM_FRAME';
     if (device.manufacturer === 'Valve' && device.typeName === 'Index') return 'VALVE_INDEX';
     if (device.manufacturer === 'Bigscreen') return 'BIGSCREEN_BEYOND';

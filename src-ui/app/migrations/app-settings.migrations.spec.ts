@@ -93,7 +93,7 @@ describe('app settings migration 18 to 19', () => {
     deviceType: 'HMD',
   });
 
-  it('gives each known headset the changed global values of its model, and a Frame none', async () => {
+  it('gives each known headset the changed global values of its model, and a Frame or PS VR2 none', async () => {
     const store = {
       APP_SETTINGS: {
         version: 18,
@@ -111,6 +111,10 @@ describe('app settings migration 18 to 19', () => {
           hmd('BSB-TEST0002', 'Beyond'),
           hmd('FRM-TEST0003', 'Steam Frame', 'Valve'),
           hmd('OTH-TEST0004', 'Visor X', 'Other'),
+          // headsets stored before the device manager recorded manufacturers
+          hmd('LHR-TEST0006', 'Index'),
+          hmd('FRM-TEST0007', 'Deckard MP'),
+          hmd('PSV-TEST0008', 'PS VR2'),
           { id: 'OVR_CONTROLLER_LHR-TEST0005', typeName: 'Knuckles', deviceType: 'CONTROLLER' },
         ],
       },
@@ -129,6 +133,7 @@ describe('app settings migration 18 to 19', () => {
       'OVR_HMD_LHR-TEST0001': { model: 'VALVE_INDEX', maxBrightness: 130 },
       'OVR_HMD_BSB-TEST0002': { model: 'BIGSCREEN_BEYOND', unsafeBrightness: true },
       'OVR_HMD_OTH-TEST0004': { model: 'OTHER', cctControlOnUnsupportedHmd: true },
+      'OVR_HMD_LHR-TEST0006': { model: 'VALVE_INDEX', maxBrightness: 130 },
     });
     for (const key of [
       'valveIndexMaxBrightness',
@@ -155,6 +160,8 @@ describe('app settings migration 18 to 19', () => {
       { DEVICE_MANAGER: { knownDevices: [hmd('LHR-TEST0001', 'Index', 'Valve')] } }
     );
 
-    expect(result.status === 'migrated' && result.value).toMatchObject({ hmdSettings: {} });
+    expect(result.status).toBe('migrated');
+    if (result.status !== 'migrated') return;
+    expect((result.value as any).hmdSettings).toEqual({});
   });
 });
