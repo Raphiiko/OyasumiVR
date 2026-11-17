@@ -55,17 +55,6 @@ export class SteamFrameHardwareBrightnessControlDriver extends HardwareBrightnes
   private readonly available: Observable<boolean>;
   private currentHmd: ActiveHmd = { kind: 'none' };
   private frame: { pairingId: string; brightness: Brightness } | null = null;
-  /**
-   * The last fade sent, with its hardware target, its Frame, and that Frame's maximum when last
-   * checked; lowering that maximum cancels it while it runs.
-   */
-  private activeFade: {
-    fade: SteamFrameBrightnessFade;
-    target: number;
-    pairingId: string;
-    deviceId: string;
-    max: number;
-  } | null = null;
   /** Set while a command runs; a newer value waits in `pending` and replaces an older one. */
   private sending = false;
   /** Also holds a value set while the paired Frame cannot take it, which goes out once it can. */
@@ -101,7 +90,6 @@ export class SteamFrameHardwareBrightnessControlDriver extends HardwareBrightnes
       distinctUntilChanged()
     );
     this.hmd.subscribe((hmd) => this.onHmd(hmd));
-    appSettings.subscribe((settings) => this.limitRunningFade(settings));
   }
 
   getBrightnessConfiguration(): HardwareBrightnessControlDriverBounds {
@@ -113,14 +101,11 @@ export class SteamFrameHardwareBrightnessControlDriver extends HardwareBrightnes
     return [config.hardwareStops[0], this.maxBrightness(appSettings ?? this.appSettings)];
   }
 
-  /** A Frame's own maximum, the active Frame's by default, or the Frame's full range. */
-  private maxBrightness(settings: AppSettings, deviceId = this.activeDeviceId()): number {
+  /** The active Frame's own maximum, or the Frame's full range. */
+  private maxBrightness(settings: AppSettings): number {
+    const deviceId = this.currentHmd.kind === 'frame' ? this.currentHmd.deviceId : null;
     const own = ownHmdSettings(settings, deviceId, 'STEAM_FRAME')?.maxBrightness;
     return own ?? this.getBrightnessConfiguration().riskThreshold;
-  }
-
-  private activeDeviceId(): string | null {
-    return this.currentHmd.kind === 'frame' ? this.currentHmd.deviceId : null;
   }
 
   async getBrightnessPercentage(): Promise<number> {
@@ -172,8 +157,7 @@ export class SteamFrameHardwareBrightnessControlDriver extends HardwareBrightnes
    * Drops a waiting set.
    */
   override fade(options: HardwareBrightnessFadeOptions): SteamFrameBrightnessFade | null {
-    const deviceId = this.activeDeviceId();
-    if (!this.frame || !deviceId) return null;
+    if (!this.frame) return null;
     // a waiting set would go out after the fade and supersede it
     this.pending = null;
     const request: SteamFrameFadeRequest = {
@@ -184,41 +168,7 @@ export class SteamFrameHardwareBrightnessControlDriver extends HardwareBrightnes
       simple: options.simple && this.helperSimpleCurve(options.simple, this.frame.brightness),
     };
     const frames = { fadeEnded$: this.fadeEnded };
-    const fade = new SteamFrameBrightnessFade(
-      options.shownTarget,
-      request,
-      frames,
-      options.onAccept
-    );
-    this.activeFade = {
-      fade,
-      target: request.target,
-      pairingId: request.pairingId,
-      deviceId,
-      max: this.maxBrightness(this.appSettings, deviceId),
-    };
-    return fade;
-  }
-
-  /** The last fade sent while it runs, or null. */
-  private runningFade() {
-    const active = this.activeFade;
-    if (!active) return null;
-    const { fade } = active;
-    return fade.isComplete() || fade.isCancelled() || fade.isError() ? null : active;
-  }
-
-  /** Cancels a running fade that would pass its Frame's new, lower maximum; it stops where it is. */
-  private limitRunningFade(settings: AppSettings) {
-    const active = this.runningFade();
-    if (!active) return;
-    const max = this.maxBrightness(settings, active.deviceId);
-    const lowered = max < active.max;
-    active.max = max;
-    if (!lowered) return;
-    const ownReport =
-      this.frame?.pairingId === active.pairingId ? this.frame.brightness.percentage : null;
-    if (Math.max(active.target, ownReport ?? active.target) > max) active.fade.cancel();
+    return new SteamFrameBrightnessFade(options.shownTarget, request, frames, options.onAccept);
   }
 
   /**
