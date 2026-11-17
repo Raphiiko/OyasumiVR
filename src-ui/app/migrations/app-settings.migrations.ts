@@ -4,6 +4,7 @@ import type { MigrationDefinition, Versioned } from 'src-shared-ts/src/migration
 import { migrateLighthouseDeviceId } from './lighthouse-device-id';
 import { protectSecret } from '../utils/secrets';
 import { normalizeWithDefaults } from './migration-defaults';
+import { LEGACY_HMD_MANUFACTURERS } from './device-manager.migrations';
 
 function from12to13(data: any): any {
   data.version = 13;
@@ -85,18 +86,9 @@ function from18to19(data: any, store: Readonly<Record<string, any>>): any {
   return data;
 }
 
-const LEGACY_HMD_MANUFACTURERS: Record<string, string> = {
-  Index: 'Valve',
-  Beyond: 'Bigscreen',
-  'Steam Frame': 'Valve',
-  'Deckard DV2': 'Valve',
-  'Deckard MP': 'Valve',
-  'PS VR2': 'SIE',
-};
-
 /** The model a version 18 headset has settings for; null for a model without any. */
 function hmdSettingsModel(hmd: any): 'VALVE_INDEX' | 'BIGSCREEN_BEYOND' | 'OTHER' | null {
-  // a headset not seen since the device manager started storing manufacturers has none
+  // the store is as read, before the device manager step fills in missing manufacturers
   const manufacturer: string | undefined =
     hmd.manufacturer ?? LEGACY_HMD_MANUFACTURERS[hmd.typeName];
   if (manufacturer === 'Valve' && hmd.typeName === 'Index') return 'VALVE_INDEX';

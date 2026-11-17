@@ -58,7 +58,7 @@ async function setup(kind: 'OVR' | 'LH' = 'OVR') {
       }) as DMKnownDevice
   );
   get.mockResolvedValue({
-    version: 2,
+    version: 3,
     knownDevices: known,
     tags: [tag],
   } satisfies DeviceManagerData);
@@ -229,7 +229,7 @@ it('tells the core which base stations are disabled, by address and type', async
   });
   const enabledStation = knownDevice('LH_lighthouseV2_AA:BB:CC:DD:EE:03', false);
   get.mockResolvedValue({
-    version: 2,
+    version: 3,
     knownDevices: [
       knownDevice('LH_lighthouseV2_AA:BB:CC:DD:EE:01', true),
       knownDevice('LH_lighthouseV1_AA:BB:CC:DD:EE:02', true),
