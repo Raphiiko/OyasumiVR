@@ -5,7 +5,6 @@ import {
 import { clamp } from '../../../utils/number-utils';
 import { OpenVRService } from '../../openvr.service';
 import {
-  BehaviorSubject,
   combineLatest,
   debounceTime,
   distinctUntilChanged,
@@ -50,8 +49,8 @@ export function analogGainRange(hmd: OVRDevice): [number, number] {
 export class SteamVRAnalogGainHardwareBrightnessControlDriver extends HardwareBrightnessControlDriver {
   /** The connected HMD's gain range, also while this driver does not serve it; null without an HMD. */
   private range: [number, number] | null = null;
-  private readonly hmdIds = new BehaviorSubject<string | null>(null);
-  override readonly boundsInputs: Observable<unknown> = this.hmdIds.pipe(distinctUntilChanged());
+  /** The known device id of SteamVR's HMD; null without one. */
+  protected hmdId: string | null = null;
   private readonly available: Observable<boolean>;
   /** Emits the new range when a connected HMD's range changes from one usable range to another. */
   public readonly rangeChanges: Observable<[number, number]>;
@@ -61,17 +60,19 @@ export class SteamVRAnalogGainHardwareBrightnessControlDriver extends HardwareBr
     protected openvr: OpenVRService
   ) {
     super(appSettings);
+    this.openvr.devices.subscribe((devices) => {
+      const hmd = devices.find((d) => d.index === 0 && d.class === 'HMD');
+      this.hmdId = hmd ? knownDeviceIdForOpenVR(hmd) : null;
+    });
     const state = combineLatest([this.openvr.status, this.openvr.devices, appSettings]).pipe(
       debounceTime(0),
       map(([status, devices, settings]) => {
         const hmd = devices.find((d) => d.index === 0 && d.class === 'HMD' && d.isConnected);
         if (status !== 'INITIALIZED' || !hmd) {
           this.range = null;
-          this.hmdIds.next(null);
           return { range: null, served: false };
         }
         this.range = this.gainRange(hmd);
-        this.hmdIds.next(knownDeviceIdForOpenVR(hmd));
         return { range: this.range, served: this.servesHmd(hmd, settings) };
       }),
       shareReplay(1)
@@ -87,11 +88,6 @@ export class SteamVRAnalogGainHardwareBrightnessControlDriver extends HardwareBr
       filter((pair): pair is [[number, number], [number, number]] => !!pair[0] && !!pair[1]),
       map(([, range]) => range)
     );
-  }
-
-  /** The connected HMD's known device id; null without an HMD. */
-  protected get hmdId(): string | null {
-    return this.hmdIds.value;
   }
 
   protected servesHmd(hmd: OVRDevice, settings: AppSettings): boolean {

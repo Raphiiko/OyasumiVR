@@ -50,7 +50,6 @@ export class SteamFrameHardwareBrightnessControlDriver extends HardwareBrightnes
   private readonly updates = new ReplaySubject<number>(1);
   override readonly brightnessUpdates = this.updates.asObservable();
   private readonly hmd: Observable<ActiveHmd>;
-  override readonly boundsInputs: Observable<unknown>;
   private readonly matching: Observable<boolean>;
   private readonly available: Observable<boolean>;
   private currentHmd: ActiveHmd = { kind: 'none' };
@@ -84,10 +83,6 @@ export class SteamFrameHardwareBrightnessControlDriver extends HardwareBrightnes
       map((hmd) => hmd.kind === 'frame' && this.usable(hmd.brightness)),
       distinctUntilChanged(),
       shareReplay(1)
-    );
-    this.boundsInputs = this.hmd.pipe(
-      map((hmd) => (hmd.kind === 'frame' ? hmd.deviceId : null)),
-      distinctUntilChanged()
     );
     this.hmd.subscribe((hmd) => this.onHmd(hmd));
   }

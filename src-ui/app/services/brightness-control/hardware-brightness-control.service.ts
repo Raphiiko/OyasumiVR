@@ -84,6 +84,11 @@ export class HardwareBrightnessControlService {
     shareReplay(1)
   );
   public readonly brightnessBounds: Observable<[number, number]>;
+  /**
+   * Emits when SteamVR reports another headset, whose own maximum the bounds can use. The drivers
+   * subscribe to the devices in their constructors, so they hold the new headset when this emits.
+   */
+  private readonly hmdChanges: Observable<string | undefined>;
   /** Replays the latest value to services that subscribe after the driver reported it. */
   private _adoptedBrightness = new ReplaySubject<AdoptedBrightness>(1);
   /**
@@ -162,13 +167,14 @@ export class HardwareBrightnessControlService {
         this._brightness.next(adopted.percentage);
         this._adoptedBrightness.next(adopted);
       });
-    const boundsInputs = this._activeDriver.pipe(
-      switchMap((driver) => driver?.boundsInputs ?? of(null))
+    this.hmdChanges = openvr.devices.pipe(
+      map((devices) => devices.find((d) => d.class === 'HMD')?.serialNumber),
+      distinctUntilChanged()
     );
     this.brightnessBounds = combineLatest([
       this._activeDriver,
       this.appSettingsService.settings,
-      boundsInputs,
+      this.hmdChanges,
     ]).pipe(
       map(([driver, settings]: [HardwareBrightnessControlDriver | null, AppSettings, unknown]) => {
         if (!driver) return [0, 100] as [number, number];
@@ -321,7 +327,7 @@ export class HardwareBrightnessControlService {
         // skip the bounds at a driver switch: the cached value belongs to the previous device
         switchMap((driver) =>
           driver
-            ? combineLatest([this.appSettingsService.settings, driver.boundsInputs]).pipe(
+            ? combineLatest([this.appSettingsService.settings, this.hmdChanges]).pipe(
                 map(([settings]) => driver.getBrightnessBounds(settings)),
                 distinctUntilChanged(isEqual),
                 skip(1)

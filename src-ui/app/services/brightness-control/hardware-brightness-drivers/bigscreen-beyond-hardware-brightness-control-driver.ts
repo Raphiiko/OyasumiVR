@@ -31,14 +31,13 @@ export class BigscreenBeyondHardwareBrightnessControlDriver extends HardwareBrig
   private lastSetBrightnessPercentage = 100;
   private connected = new BehaviorSubject(false);
   /** The last Beyond SteamVR reported, kept while SteamVR stops; null until one is seen. */
-  private readonly hmdIds = new BehaviorSubject<string | null>(null);
-  override readonly boundsInputs: Observable<unknown> = this.hmdIds.pipe(distinctUntilChanged());
+  private hmdId: string | null = null;
 
   constructor(appSettings: Observable<AppSettings>, devices: Observable<OVRDevice[]>) {
     super(appSettings);
     devices.subscribe((list) => {
       const hmd = list.find((d) => d.class === 'HMD' && d.manufacturerName === 'Bigscreen');
-      if (hmd) this.hmdIds.next(knownDeviceIdForOpenVR(hmd));
+      if (hmd) this.hmdId = knownDeviceIdForOpenVR(hmd);
     });
     events.bigscreenBeyondConnectedEvent.listen((event) => {
       this.connected.next(event.payload);
@@ -69,7 +68,7 @@ export class BigscreenBeyondHardwareBrightnessControlDriver extends HardwareBrig
   getBrightnessBounds(appSettings?: AppSettings): [number, number] {
     const config = this.getBrightnessConfiguration();
     const settings = appSettings ?? this.appSettings;
-    const own = ownHmdSettings(settings, this.hmdIds.value, 'BIGSCREEN_BEYOND')?.maxBrightness;
+    const own = ownHmdSettings(settings, this.hmdId, 'BIGSCREEN_BEYOND')?.maxBrightness;
     return [config.softwareStops[0], own ?? config.riskThreshold];
   }
 
