@@ -1,8 +1,10 @@
 import { invoke } from '@tauri-apps/api/core';
 import { BehaviorSubject, firstValueFrom, Subject } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
+import type { DMKnownDevice } from '../../../models/device-manager';
 import type { OVRDevice } from '../../../models/ovr-device';
-import type { Brightness } from 'src-ui/app/bindings';
+import type { Brightness, FadeRequest as SteamFrameFadeCommand } from 'src-ui/app/bindings';
+import type { HardwareBrightnessFadeOptions } from './hardware-brightness-control-driver';
 import type {
   SteamFrameConnectionState,
   SteamFrameFadeEnded,
@@ -29,8 +31,9 @@ function setup() {
     { id: 'pairing-1', complete: true, identity: { serial: SERIAL } } as SteamFramePairing,
   ]);
   const connections = new BehaviorSubject<Record<string, SteamFrameConnectionState>>({});
+  const knownDevices = new BehaviorSubject<DMKnownDevice[]>([]);
   const driver = new SteamFrameHardwareBrightnessControlDriver(
-    new BehaviorSubject([]),
+    knownDevices,
     { status, devices },
     pairings,
     connections,
@@ -47,7 +50,26 @@ function setup() {
       } as SteamFrameConnectionState,
     });
   const available = () => firstValueFrom(driver.isAvailable());
-  return { status, devices, pairings, connections, driver, updates, report, available };
+  /** Sets the own maximum of the Frame with `serial`, this Frame by default. */
+  const setMax = (maxBrightness: number, serial = SERIAL) =>
+    knownDevices.next([
+      {
+        id: `OVR_HMD_${serial}`,
+        deviceType: 'HMD',
+        settings: { model: 'STEAM_FRAME', maxBrightness },
+      } as DMKnownDevice,
+    ]);
+  return {
+    status,
+    devices,
+    pairings,
+    connections,
+    driver,
+    updates,
+    report,
+    available,
+    setMax,
+  };
 }
 
 describe('SteamFrameHardwareBrightnessControlDriver', () => {
@@ -210,4 +232,61 @@ describe('SteamFrameHardwareBrightnessControlDriver', () => {
     expect(fade.targetBrightness).toBe(200);
     fade.cancel();
   });
+
+  it("uses the Frame's full range while it has no maximum of its own", () => {
+    const h = setup();
+    h.report(brightness(40));
+    h.setMax(100, 'FPOTHER00001');
+    expect(h.driver.getBrightnessBounds()).toEqual([9, 125]);
+  });
+
+  it("limits a set to the user's maximum, and shows a report above it as it is", async () => {
+    const h = setup();
+    h.setMax(100);
+    h.report(brightness(40));
+    expect(h.driver.getBrightnessBounds()).toEqual([9, 100]);
+    vi.mocked(invoke).mockResolvedValue(100);
+    await h.driver.setBrightnessPercentage(120);
+    expect(invoke).toHaveBeenCalledWith('steam_frame_set_brightness', {
+      pairingId: 'pairing-1',
+      percentage: 100,
+    });
+    h.report(brightness(115));
+    expect(h.updates.at(-1)).toBe(115);
+  });
+
+  /** Starts a fade and resolves with the request the helper receives. */
+  function sendFade(h: ReturnType<typeof setup>, options: HardwareBrightnessFadeOptions) {
+    const fade = h.driver.fade(options)!;
+    const sent = new Promise<SteamFrameFadeCommand>((resolve) =>
+      vi.mocked(invoke).mockImplementation(async (command, args) => {
+        if (command === 'steam_frame_fade')
+          resolve((args as { request: SteamFrameFadeCommand }).request);
+      })
+    );
+    void fade.start();
+    return { fade, sent };
+  }
+
+  it.each([
+    ['below the maximum', 100, { from: 5, to: 50 }, [9, 27.5, 50]],
+    ['up to the maximum', 100, { from: 50, to: 100 }, [50, 75, 100]],
+    ['across the hardware minimum', 100, { from: 0, to: 100 }, [9, 50, 100]],
+    ['at the Frame maximum', 125, { from: 9, to: 100 }, [9, 67, 125]],
+  ])(
+    "sends a simple fade the helper maps within the user's maximum: %s",
+    async (_, max, simple, [hardwareFrom, hardwareMid, hardwareTo]) => {
+      const h = setup();
+      h.setMax(max);
+      h.report(brightness(40));
+      const { fade, sent } = sendFade(h, { target: 0, durationMs: 1000, shownTarget: 0, simple });
+      const curve = (await sent).simple!;
+      // the helper's split over the Frame's reported range of 9% to 125%
+      const helperSplit = (value: number) => (value < 9 ? 9 : 9 + (116 * (value - 9)) / 91);
+      expect(helperSplit(curve.from)).toBeCloseTo(hardwareFrom);
+      expect(helperSplit((curve.from + curve.to) / 2)).toBeCloseTo(hardwareMid);
+      expect(helperSplit(curve.to)).toBeCloseTo(hardwareTo);
+      fade.cancel();
+    }
+  );
 });

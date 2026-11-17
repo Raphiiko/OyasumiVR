@@ -20,6 +20,7 @@ export type DMDeviceType = (typeof DMDeviceTypes)[number];
 export type DMDeviceSettings =
   | { model: 'VALVE_INDEX'; maxBrightness?: number }
   | { model: 'BIGSCREEN_BEYOND'; maxBrightness?: number }
+  | { model: 'STEAM_FRAME'; maxBrightness?: number }
   | {
       /** A headset without a dedicated brightness driver, and not on the SteamVR colour gain list. */
       model: 'OTHER_HMD';
