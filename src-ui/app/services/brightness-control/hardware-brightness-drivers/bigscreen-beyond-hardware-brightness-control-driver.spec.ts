@@ -74,9 +74,9 @@ describe('BigscreenBeyondHardwareBrightnessControlDriver', () => {
     await vi.advanceTimersByTimeAsync(0);
     expect(driver.getBrightnessBounds()[1]).toBe(150);
 
-    // SteamVR stops, then another Beyond is plugged in over USB
-    devices.next([]);
+    // the Beyond is unplugged while SteamVR runs, then another one is plugged in over USB
     usb.onConnected(false);
+    devices.next([{ ...BEYOND, isConnected: false }]);
     usb.onConnected(true);
     await vi.advanceTimersByTimeAsync(0);
 

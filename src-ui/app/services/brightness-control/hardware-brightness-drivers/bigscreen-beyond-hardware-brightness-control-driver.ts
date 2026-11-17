@@ -41,7 +41,10 @@ export class BigscreenBeyondHardwareBrightnessControlDriver extends HardwareBrig
   constructor(knownDevices: Observable<DMKnownDevice[]>, devices: Observable<OVRDevice[]>) {
     super(knownDevices);
     devices.subscribe((list) => {
-      const hmd = list.find((d) => d.class === 'HMD' && d.manufacturerName === 'Bigscreen');
+      // SteamVR keeps an unplugged headset in its list until it quits
+      const hmd = list.find(
+        (d) => d.class === 'HMD' && d.isConnected && d.manufacturerName === 'Bigscreen'
+      );
       if (hmd) this.hmdId = knownDeviceIdForOpenVR(hmd);
     });
     events.bigscreenBeyondConnectedEvent.listen((event) => {
