@@ -139,9 +139,10 @@
 
       .experimental-flag,
       .global-flag {
+        display: inline-flex;
+        line-height: 0;
+
         app-icon {
-          line-height: 0;
-          vertical-align: middle;
           margin-left: 0.25em;
           font-size: 1em;
         }
