@@ -4,9 +4,27 @@ import type { DMKnownDevice } from '../../../models/device-manager';
 import type { OVRDevice } from '../../../models/ovr-device';
 import { BigscreenBeyondHardwareBrightnessControlDriver } from './bigscreen-beyond-hardware-brightness-control-driver';
 
+const { usb } = vi.hoisted(() => ({
+  usb: { connected: false, onConnected: (_connected: boolean) => {} },
+}));
+
 vi.mock('src-ui/app/bindings', () => ({
-  commands: { bigscreenBeyondIsConnected: vi.fn(async () => false) },
-  events: { bigscreenBeyondConnectedEvent: { listen: vi.fn(async () => () => {}) } },
+  commands: {
+    bigscreenBeyondIsConnected: vi.fn(async () => usb.connected),
+    bigscreenBeyondGetSavedPreferences: vi.fn(async () => ({ status: 'ok', data: null })),
+    bigscreenBeyondSetBrightness: vi.fn(async () => ({ status: 'ok', data: null })),
+  },
+  events: {
+    bigscreenBeyondConnectedEvent: {
+      listen: vi.fn(async (handler: (event: { payload: boolean }) => void) => {
+        usb.onConnected = (connected) => {
+          usb.connected = connected;
+          handler({ payload: connected });
+        };
+        return () => {};
+      }),
+    },
+  },
 }));
 vi.mock('@tauri-apps/plugin-log', () => ({ warn: vi.fn() }));
 
@@ -43,5 +61,25 @@ describe('BigscreenBeyondHardwareBrightnessControlDriver', () => {
     expect(driver.getBrightnessBounds()[1]).toBe(130);
     devices.next([]);
     expect(driver.getBrightnessBounds()[1]).toBe(130);
+  });
+
+  it('uses the lowest known maximum again after the USB connection ends', async () => {
+    const knownDevices = new BehaviorSubject([
+      knownBeyond('BSB-TEST0001', 150),
+      knownBeyond('BSB-TEST0002', 110),
+    ]);
+    const devices = new BehaviorSubject<OVRDevice[]>([BEYOND]);
+    usb.connected = true;
+    const driver = new BigscreenBeyondHardwareBrightnessControlDriver(knownDevices, devices);
+    await vi.advanceTimersByTimeAsync(0);
+    expect(driver.getBrightnessBounds()[1]).toBe(150);
+
+    // SteamVR stops, then another Beyond is plugged in over USB
+    devices.next([]);
+    usb.onConnected(false);
+    usb.onConnected(true);
+    await vi.advanceTimersByTimeAsync(0);
+
+    expect(driver.getBrightnessBounds()[1]).toBe(110);
   });
 });

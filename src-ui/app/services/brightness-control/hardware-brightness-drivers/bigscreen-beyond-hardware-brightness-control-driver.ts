@@ -11,6 +11,7 @@ import {
   Observable,
   shareReplay,
   startWith,
+  pairwise,
   switchMap,
 } from 'rxjs';
 import { commands, events } from 'src-ui/app/bindings';
@@ -31,7 +32,10 @@ export const BIGSCREEN_BEYOND_HARDWARE_BRIGHTNESS_CONTROL_DRIVER_BOUNDS: Hardwar
 export class BigscreenBeyondHardwareBrightnessControlDriver extends HardwareBrightnessControlDriver {
   private lastSetBrightnessPercentage = 100;
   private connected = new BehaviorSubject(false);
-  /** The last Beyond SteamVR reported, kept while SteamVR stops; null until one is seen. */
+  /**
+   * The last Beyond SteamVR reported, kept while SteamVR stops and cleared when the USB
+   * connection ends; null until one is seen.
+   */
   private hmdId: string | null = null;
 
   constructor(knownDevices: Observable<DMKnownDevice[]>, devices: Observable<OVRDevice[]>) {
@@ -53,6 +57,14 @@ export class BigscreenBeyondHardwareBrightnessControlDriver extends HardwareBrig
         )
       )
       .subscribe();
+    // another Beyond can be connected before SteamVR reports it
+    this.connected
+      .pipe(
+        distinctUntilChanged(),
+        pairwise(),
+        filter(([wasConnected, connected]) => wasConnected && !connected)
+      )
+      .subscribe(() => (this.hmdId = null));
     // When connecting the beyond, attempt loading the last saved brightness percentage from the driver utility's preference file
     this.connected.pipe(distinctUntilChanged(), filter(Boolean)).subscribe(async () => {
       const brightness = (await this.getBeyondDriverSavedBrightness()) ?? 100;
