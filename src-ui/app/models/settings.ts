@@ -15,7 +15,6 @@ export type HmdSettings =
       /** Allows a maxBrightness above 150%. */
       unsafeBrightness?: boolean;
     }
-  | { model: 'STEAM_FRAME'; maxBrightness?: number }
   | {
       /** A headset without a dedicated brightness driver, and not on the SteamVR colour gain list. */
       model: 'OTHER';

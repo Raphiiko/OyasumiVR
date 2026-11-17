@@ -6,14 +6,13 @@ import { AppSettingsService } from 'src-ui/app/services/app-settings.service';
 import { SteamFrameService } from 'src-ui/app/services/steam-frame/steam-frame.service';
 import { VALVE_INDEX_HARDWARE_BRIGHTNESS_CONTROL_DRIVER_BOUNDS as INDEX_BOUNDS } from 'src-ui/app/services/brightness-control/hardware-brightness-drivers/valve-index-hardware-brightness-control-driver';
 import { BIGSCREEN_BEYOND_HARDWARE_BRIGHTNESS_CONTROL_DRIVER_BOUNDS as BEYOND_BOUNDS } from 'src-ui/app/services/brightness-control/hardware-brightness-drivers/bigscreen-beyond-hardware-brightness-control-driver';
-import { STEAM_FRAME_HARDWARE_BRIGHTNESS_CONTROL_DRIVER_BOUNDS as FRAME_BOUNDS } from 'src-ui/app/services/brightness-control/hardware-brightness-drivers/steam-frame-hardware-brightness-control-driver';
 
-type HmdModel = HmdSettingsModel | 'PSVR2';
+/** A Frame or a PS VR2 has its own driver and no settings here. */
+type HmdModel = HmdSettingsModel | 'STEAM_FRAME' | 'PSVR2';
 /** The maximum brightness of a headset without its own, as its driver uses it. */
 const DEFAULT_MAX_BRIGHTNESS: Partial<Record<HmdModel, number>> = {
   VALVE_INDEX: INDEX_BOUNDS.riskThreshold,
   BIGSCREEN_BEYOND: BEYOND_BOUNDS.riskThreshold,
-  STEAM_FRAME: FRAME_BOUNDS.riskThreshold,
 };
 
 const LEGACY_HMD_MANUFACTURERS: Partial<Record<string, string>> = {
@@ -61,8 +60,6 @@ export class HmdDisplaySettingsComponent {
             ? BEYOND_BOUNDS.hardwareStops[BEYOND_BOUNDS.hardwareStops.length - 1]
             : BEYOND_BOUNDS.riskThreshold,
         ];
-      case 'STEAM_FRAME':
-        return [FRAME_BOUNDS.overdriveThreshold, FRAME_BOUNDS.riskThreshold];
       default:
         return null;
     }
@@ -112,7 +109,7 @@ export class HmdDisplaySettingsComponent {
 
   private update(values: Partial<Resolved>) {
     const model = this.model();
-    if (model === 'PSVR2') return;
+    if (model === 'STEAM_FRAME' || model === 'PSVR2') return;
     const own = { ...this.ownValues(this.settings()), ...values, model } as HmdSettings;
     this.appSettingsService.updateSettings({
       hmdSettings: { ...this.settings().hmdSettings, [this.device().id]: own },
