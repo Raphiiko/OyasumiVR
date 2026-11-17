@@ -444,6 +444,64 @@ describe('HardwareBrightnessControlService with a Valve Index', () => {
   });
 });
 
+describe('HardwareBrightnessControlService with a Bigscreen Beyond', () => {
+  afterEach(() => vi.mocked(invoke).mockImplementation(async () => false));
+
+  it('lowers a Beyond above 150% once unsafe brightness is turned off', async () => {
+    const hardwareWrites: number[] = [];
+    vi.mocked(invoke).mockImplementation(async (command, args) => {
+      if (command === 'bigscreen_beyond_is_connected') return true;
+      if (command === 'bigscreen_beyond_set_brightness')
+        hardwareWrites.push((args as { brightness: number }).brightness);
+      return null;
+    });
+    const settings = new BehaviorSubject({
+      ...structuredClone(APP_SETTINGS_DEFAULT),
+      bigscreenBeyondUnsafeBrightness: true,
+    });
+    const service = new HardwareBrightnessControlService(
+      {
+        status: new BehaviorSubject('INITIALIZED'),
+        devices: new BehaviorSubject([
+          {
+            index: 0,
+            class: 'HMD',
+            isConnected: true,
+            manufacturerName: 'Bigscreen',
+            modelNumber: 'Beyond',
+            serialNumber: 'BSB-TEST0001',
+          } as OVRDevice,
+        ]),
+        analogGainUpdates: new Subject<number>(),
+      } as unknown as Dependencies[0],
+      {
+        knownDevices: new BehaviorSubject([
+          known('OVR_HMD_BSB-TEST0001', { model: 'BIGSCREEN_BEYOND', maxBrightness: 200 }),
+        ]),
+      } as unknown as Dependencies[1],
+      {
+        pairings$: new BehaviorSubject([]),
+        connections$: new BehaviorSubject({}),
+        fadeEnded$: new Subject(),
+      } as unknown as Dependencies[2],
+      { settings } as unknown as Dependencies[3]
+    );
+    await service.init();
+    await firstFetch();
+    await service.setBrightness(200);
+    await settle();
+    expect(service.brightness).toBe(200);
+    hardwareWrites.length = 0;
+
+    settings.next({ ...settings.value, bigscreenBeyondUnsafeBrightness: false });
+    await settle();
+
+    expect(service.brightness).toBe(150);
+    // the Beyond's hardware value for 150%
+    expect(hardwareWrites).toEqual([542]);
+  });
+});
+
 describe('simple brightness following a Valve Index', () => {
   it('derives a change made in SteamVR without writing it back', async () => {
     const h = await setupIndex();
