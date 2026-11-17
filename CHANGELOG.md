@@ -23,6 +23,10 @@ with [SemVer](https://semver.org/) prerelease suffixes:
   connection. OyasumiVR now gets a new token for it, and warns in the message centre when the
   connection keeps failing
 
+### Security
+
+- Updated the browser engine of the SteamVR overlays to fix several security issues
+
 ## [26.11.3]
 
 ### Changed
