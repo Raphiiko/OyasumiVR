@@ -17,7 +17,7 @@ describe('device manager migration 2 to 3', () => {
       APP_SETTINGS: {
         version: 18,
         valveIndexMaxBrightness: 130,
-        bigscreenBeyondMaxBrightness: 150,
+        bigscreenBeyondMaxBrightness: 200,
         bigscreenBeyondUnsafeBrightness: true,
         hardwareBrightnessOnUnsupportedHmds: false,
         cctControlOnUnsupportedHmds: true,
@@ -54,7 +54,7 @@ describe('device manager migration 2 to 3', () => {
     );
     expect(devices).toEqual({
       'OVR_HMD_LHR-TEST0001': ['Valve', { model: 'VALVE_INDEX', maxBrightness: 130 }],
-      'OVR_HMD_BSB-TEST0002': ['Bigscreen', { model: 'BIGSCREEN_BEYOND', unsafeBrightness: true }],
+      'OVR_HMD_BSB-TEST0002': ['Bigscreen', { model: 'BIGSCREEN_BEYOND', maxBrightness: 200 }],
       'OVR_HMD_FRM-TEST0003': ['Valve', undefined],
       'OVR_HMD_OTH-TEST0004': ['Example', { model: 'OTHER_HMD', cctControlOnUnsupportedHmd: true }],
       'OVR_HMD_LHR-TEST0005': ['Valve', { model: 'VALVE_INDEX', maxBrightness: 130 }],
@@ -64,10 +64,10 @@ describe('device manager migration 2 to 3', () => {
       'OVR_CONTROLLER_LHR-TEST0009': [undefined, undefined],
     });
     expect(APP_SETTINGS.version).toBe(19);
+    expect(APP_SETTINGS.bigscreenBeyondUnsafeBrightness).toBe(true);
     for (const key of [
       'valveIndexMaxBrightness',
       'bigscreenBeyondMaxBrightness',
-      'bigscreenBeyondUnsafeBrightness',
       'hardwareBrightnessOnUnsupportedHmds',
       'cctControlOnUnsupportedHmds',
     ]) {

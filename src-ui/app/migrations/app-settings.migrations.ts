@@ -65,7 +65,6 @@ function from18to19(data: any, store: Readonly<Record<string, any>>): any {
   for (const key of [
     'valveIndexMaxBrightness',
     'bigscreenBeyondMaxBrightness',
-    'bigscreenBeyondUnsafeBrightness',
     'hardwareBrightnessOnUnsupportedHmds',
     'cctControlOnUnsupportedHmds',
   ]) {

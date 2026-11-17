@@ -1,10 +1,12 @@
 import { Component, computed, inject, input } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import {
   DMDeviceSettings,
   DMDeviceSettingsModel,
   DMKnownDevice,
 } from 'src-ui/app/models/device-manager';
 import { DeviceManagerService } from 'src-ui/app/services/device-manager.service';
+import { AppSettingsService } from 'src-ui/app/services/app-settings.service';
 import { SteamFrameService } from 'src-ui/app/services/steam-frame/steam-frame.service';
 import { ownDeviceSettings } from 'src-ui/app/utils/device-settings-utils';
 import { VALVE_INDEX_HARDWARE_BRIGHTNESS_CONTROL_DRIVER_BOUNDS as INDEX_BOUNDS } from 'src-ui/app/services/brightness-control/hardware-brightness-drivers/valve-index-hardware-brightness-control-driver';
@@ -28,7 +30,7 @@ const DEFAULT_MAX_BRIGHTNESS: Partial<Record<HmdModel, number>> = {
 interface ShownValues {
   /** Valve Index and Bigscreen Beyond; null for a model without a maximum. */
   maxBrightness: number | null;
-  /** Bigscreen Beyond only: allows a maximum above 150%. */
+  /** Bigscreen Beyond only, a global setting: allows a maximum above 150%. */
   beyondUnsafeBrightness: boolean;
   /** Headsets without a dedicated driver only: tries SteamVR's analog gain. */
   otherHmdTryHardwareBrightness: boolean;
@@ -47,7 +49,11 @@ interface ShownValues {
 export class HmdDisplaySettingsComponent {
   readonly device = input.required<DMKnownDevice>();
   private readonly deviceManager = inject(DeviceManagerService);
+  private readonly appSettingsService = inject(AppSettingsService);
   private readonly steamFrame = inject(SteamFrameService);
+  private readonly settings = toSignal(this.appSettingsService.settings, {
+    initialValue: this.appSettingsService.settingsSync,
+  });
   protected readonly model = computed(() => this.modelOf(this.device()));
   protected readonly values = computed(() => this.resolve(this.device()));
   protected readonly maxBrightnessRange = computed((): [number, number] | null => {
@@ -57,7 +63,7 @@ export class HmdDisplaySettingsComponent {
       case 'BIGSCREEN_BEYOND':
         return [
           BEYOND_BOUNDS.overdriveThreshold,
-          this.values().beyondUnsafeBrightness
+          this.settings().bigscreenBeyondUnsafeBrightness
             ? BEYOND_BOUNDS.hardwareStops[BEYOND_BOUNDS.hardwareStops.length - 1]
             : BEYOND_BOUNDS.riskThreshold,
         ];
@@ -91,11 +97,12 @@ export class HmdDisplaySettingsComponent {
     // settings count only for the model this headset is detected as
     const own = <M extends DMDeviceSettingsModel>(m: M) =>
       model === m ? ownDeviceSettings(device, m) : undefined;
-    const defaultMax = DEFAULT_MAX_BRIGHTNESS[model];
+    const range = this.maxBrightnessRange();
     const ownMax = (own('VALVE_INDEX') ?? own('BIGSCREEN_BEYOND'))?.maxBrightness;
     return {
-      maxBrightness: defaultMax === undefined ? null : (ownMax ?? defaultMax),
-      beyondUnsafeBrightness: !!own('BIGSCREEN_BEYOND')?.unsafeBrightness,
+      // a Beyond maximum above 150% applies only while unsafe brightness is on
+      maxBrightness: range && Math.min(ownMax ?? DEFAULT_MAX_BRIGHTNESS[model]!, range[1]),
+      beyondUnsafeBrightness: this.settings().bigscreenBeyondUnsafeBrightness,
       otherHmdTryHardwareBrightness: !!own('OTHER_HMD')?.hardwareBrightnessOnUnsupportedHmd,
       otherHmdTryCctControl: !!own('OTHER_HMD')?.cctControlOnUnsupportedHmd,
     };
@@ -118,11 +125,8 @@ export class HmdDisplaySettingsComponent {
   }
 
   toggleBeyondSafeBrightness() {
-    const unsafe = !this.values().beyondUnsafeBrightness;
-    const max = this.values().maxBrightness ?? BEYOND_BOUNDS.riskThreshold;
-    this.update('BIGSCREEN_BEYOND', {
-      unsafeBrightness: unsafe,
-      maxBrightness: unsafe ? max : Math.min(max, BEYOND_BOUNDS.riskThreshold),
+    this.appSettingsService.updateSettings({
+      bigscreenBeyondUnsafeBrightness: !this.settings().bigscreenBeyondUnsafeBrightness,
     });
   }
 

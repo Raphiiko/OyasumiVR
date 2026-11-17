@@ -35,6 +35,7 @@ import { clamp } from '../../utils/number-utils';
 import { SteamFrameHardwareBrightnessControlDriver } from './hardware-brightness-drivers/steam-frame-hardware-brightness-control-driver';
 import { SteamFrameService } from '../steam-frame/steam-frame.service';
 import { DeviceManagerService } from '../device-manager.service';
+import { AppSettingsService } from '../app-settings.service';
 import { DeviceFade } from '../../utils/device-fade';
 
 /** A transition on the PC, or a fade the device runs. */
@@ -85,8 +86,8 @@ export class HardwareBrightnessControlService {
   public readonly brightnessBounds: Observable<[number, number]>;
   /**
    * Emits when SteamVR reports another headset, whose own maximum the bounds can use. The drivers
-   * subscribe to the OpenVR devices in their constructors, so they hold the new headset when this
-   * emits.
+   * subscribe to the OpenVR devices, known devices, and settings in their constructors, so they
+   * hold the new values when this or the bounds inputs emit.
    */
   private readonly hmdChanges: Observable<string | undefined>;
   /** Replays the latest value to services that subscribe after the driver reported it. */
@@ -106,7 +107,8 @@ export class HardwareBrightnessControlService {
   constructor(
     openvr: OpenVRService,
     private deviceManager: DeviceManagerService,
-    steamFrames: SteamFrameService
+    steamFrames: SteamFrameService,
+    private appSettingsService: AppSettingsService
   ) {
     this.driverValveIndex = new ValveIndexHardwareBrightnessControlDriver(
       deviceManager.knownDevices,
@@ -114,7 +116,8 @@ export class HardwareBrightnessControlService {
     );
     this.driverBigscreenBeyond = new BigscreenBeyondHardwareBrightnessControlDriver(
       deviceManager.knownDevices,
-      openvr.devices
+      openvr.devices,
+      appSettingsService.settings
     );
     this.driverSteamFrame = new SteamFrameHardwareBrightnessControlDriver(
       deviceManager.knownDevices,
@@ -172,6 +175,7 @@ export class HardwareBrightnessControlService {
       this._activeDriver,
       deviceManager.knownDevices,
       this.hmdChanges,
+      appSettingsService.settings,
     ]).pipe(
       map(([driver, knownDevices]) => {
         if (!driver) return [0, 100] as [number, number];
@@ -317,14 +321,18 @@ export class HardwareBrightnessControlService {
     return brightness;
   }
 
-  /** Clamps the brightness when a headset's settings or another headset narrow the active driver's bounds. */
+  /** Clamps the brightness when a setting or another headset narrows the active driver's bounds. */
   private async initializeSafetyChecks() {
     this._activeDriver
       .pipe(
         // skip the bounds at a driver switch: the cached value belongs to the previous device
         switchMap((driver) =>
           driver
-            ? combineLatest([this.deviceManager.knownDevices, this.hmdChanges]).pipe(
+            ? combineLatest([
+                this.deviceManager.knownDevices,
+                this.hmdChanges,
+                this.appSettingsService.settings,
+              ]).pipe(
                 map(([knownDevices]) => driver.getBrightnessBounds(knownDevices)),
                 distinctUntilChanged(isEqual),
                 skip(1)

@@ -4,6 +4,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { listen } from '@tauri-apps/api/event';
 import { AUTOMATION_CONFIGS_DEFAULT } from '../../models/automations';
 import type { DMDeviceSettings, DMKnownDevice } from '../../models/device-manager';
+import { APP_SETTINGS_DEFAULT } from '../../models/settings';
 import type { OVRDevice } from '../../models/ovr-device';
 import type {
   SteamFrameConnectionState,
@@ -68,7 +69,10 @@ async function setup(
       ]),
       connections$: connections,
       fadeEnded$: fadeEnded,
-    } as unknown as Dependencies[2]
+    } as unknown as Dependencies[2],
+    {
+      settings: new BehaviorSubject(structuredClone(APP_SETTINGS_DEFAULT)),
+    } as unknown as Dependencies[3]
   );
   await service.init();
   const report = (percentage: number, { status = 'connected' }: { status?: string } = {}) =>
@@ -374,7 +378,10 @@ async function setupIndex(initialGain = 1) {
       pairings$: new BehaviorSubject([]),
       connections$: new BehaviorSubject({}),
       fadeEnded$: new Subject(),
-    } as unknown as Dependencies[2]
+    } as unknown as Dependencies[2],
+    {
+      settings: new BehaviorSubject(structuredClone(APP_SETTINGS_DEFAULT)),
+    } as unknown as Dependencies[3]
   );
   await service.init();
   await firstFetch();
@@ -490,7 +497,10 @@ function setupGeneric() {
       pairings$: new BehaviorSubject([]),
       connections$: new BehaviorSubject({}),
       fadeEnded$: new Subject<SteamFrameFadeEnded>(),
-    } as unknown as Dependencies[2]
+    } as unknown as Dependencies[2],
+    {
+      settings: new BehaviorSubject(structuredClone(APP_SETTINGS_DEFAULT)),
+    } as unknown as Dependencies[3]
   );
   const enable = (value: boolean) => knownDevices.next(optIn(value));
   return { service, devices, status, enable, setAnalogGain, analogGain: () => analogGain };

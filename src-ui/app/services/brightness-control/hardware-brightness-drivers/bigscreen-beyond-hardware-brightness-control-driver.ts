@@ -16,6 +16,7 @@ import {
 } from 'rxjs';
 import { commands, events } from 'src-ui/app/bindings';
 import { DMKnownDevice } from '../../../models/device-manager';
+import { AppSettings } from '../../../models/settings';
 import { ownDeviceSettings } from '../../../utils/device-settings-utils';
 import { OVRDevice } from '../../../models/ovr-device';
 import { knownDeviceIdForOpenVR } from '../../../utils/device-manager-utils';
@@ -37,9 +38,17 @@ export class BigscreenBeyondHardwareBrightnessControlDriver extends HardwareBrig
    * connection ends; null until one is seen.
    */
   private hmdId: string | null = null;
+  private unsafeBrightness = false;
 
-  constructor(knownDevices: Observable<DMKnownDevice[]>, devices: Observable<OVRDevice[]>) {
+  constructor(
+    knownDevices: Observable<DMKnownDevice[]>,
+    devices: Observable<OVRDevice[]>,
+    appSettings: Observable<AppSettings>
+  ) {
     super(knownDevices);
+    appSettings.subscribe(
+      (settings) => (this.unsafeBrightness = settings.bigscreenBeyondUnsafeBrightness)
+    );
     devices.subscribe((list) => {
       // SteamVR keeps an unplugged headset in its list until it quits
       const hmd = list.find(
@@ -87,13 +96,16 @@ export class BigscreenBeyondHardwareBrightnessControlDriver extends HardwareBrig
   }
 
   /**
-   * The connected Beyond's own maximum. Over USB alone the driver cannot tell which Beyond is
-   * connected, so until SteamVR reports it, the lowest maximum of the known Beyonds applies.
+   * The connected Beyond's own maximum, at most 150% while unsafe brightness is off. Over USB alone
+   * the driver cannot tell which Beyond is connected, so until SteamVR reports it, the lowest
+   * maximum of the known Beyonds applies.
    */
   private maxBrightness(knownDevices: DMKnownDevice[]): number {
-    const maxOf = (device: DMKnownDevice | undefined) =>
-      ownDeviceSettings(device, 'BIGSCREEN_BEYOND')?.maxBrightness ??
-      this.getBrightnessConfiguration().riskThreshold;
+    const { riskThreshold } = this.getBrightnessConfiguration();
+    const maxOf = (device: DMKnownDevice | undefined) => {
+      const max = ownDeviceSettings(device, 'BIGSCREEN_BEYOND')?.maxBrightness ?? riskThreshold;
+      return this.unsafeBrightness ? max : Math.min(max, riskThreshold);
+    };
     if (this.hmdId) return maxOf(knownDevices.find((d) => d.id === this.hmdId));
     const beyonds = knownDevices.filter(
       (d) => d.deviceType === 'HMD' && d.manufacturer === 'Bigscreen'

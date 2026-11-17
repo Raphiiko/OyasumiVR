@@ -1,6 +1,7 @@
 import { BehaviorSubject } from 'rxjs';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import type { DMKnownDevice } from '../../../models/device-manager';
+import { APP_SETTINGS_DEFAULT } from '../../../models/settings';
 import type { OVRDevice } from '../../../models/ovr-device';
 import { BigscreenBeyondHardwareBrightnessControlDriver } from './bigscreen-beyond-hardware-brightness-control-driver';
 
@@ -41,6 +42,12 @@ describe('BigscreenBeyondHardwareBrightnessControlDriver', () => {
   beforeEach(() => vi.useFakeTimers());
   afterEach(() => vi.useRealTimers());
 
+  const settings = (bigscreenBeyondUnsafeBrightness = false) =>
+    new BehaviorSubject({
+      ...structuredClone(APP_SETTINGS_DEFAULT),
+      bigscreenBeyondUnsafeBrightness,
+    });
+
   const knownBeyond = (serial: string, maxBrightness: number) =>
     ({
       id: `OVR_HMD_${serial}`,
@@ -55,7 +62,11 @@ describe('BigscreenBeyondHardwareBrightnessControlDriver', () => {
       knownBeyond('BSB-TEST0002', 110),
     ]);
     const devices = new BehaviorSubject<OVRDevice[]>([]);
-    const driver = new BigscreenBeyondHardwareBrightnessControlDriver(knownDevices, devices);
+    const driver = new BigscreenBeyondHardwareBrightnessControlDriver(
+      knownDevices,
+      devices,
+      settings()
+    );
     expect(driver.getBrightnessBounds()[1]).toBe(110);
     devices.next([BEYOND]);
     expect(driver.getBrightnessBounds()[1]).toBe(130);
@@ -70,7 +81,11 @@ describe('BigscreenBeyondHardwareBrightnessControlDriver', () => {
     ]);
     const devices = new BehaviorSubject<OVRDevice[]>([BEYOND]);
     usb.connected = true;
-    const driver = new BigscreenBeyondHardwareBrightnessControlDriver(knownDevices, devices);
+    const driver = new BigscreenBeyondHardwareBrightnessControlDriver(
+      knownDevices,
+      devices,
+      settings()
+    );
     await vi.advanceTimersByTimeAsync(0);
     expect(driver.getBrightnessBounds()[1]).toBe(150);
 
@@ -81,5 +96,17 @@ describe('BigscreenBeyondHardwareBrightnessControlDriver', () => {
     await vi.advanceTimersByTimeAsync(0);
 
     expect(driver.getBrightnessBounds()[1]).toBe(110);
+  });
+
+  it('limits a Beyond maximum above 150% to 150% while unsafe brightness is off', () => {
+    const appSettings = settings();
+    const driver = new BigscreenBeyondHardwareBrightnessControlDriver(
+      new BehaviorSubject([knownBeyond('BSB-TEST0001', 200)]),
+      new BehaviorSubject<OVRDevice[]>([BEYOND]),
+      appSettings
+    );
+    expect(driver.getBrightnessBounds()[1]).toBe(150);
+    appSettings.next({ ...appSettings.value, bigscreenBeyondUnsafeBrightness: true });
+    expect(driver.getBrightnessBounds()[1]).toBe(200);
   });
 });

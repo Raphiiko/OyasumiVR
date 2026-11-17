@@ -58,6 +58,7 @@ export interface AppSettings {
   // Brightness & CCT
   cctSoftwareMode: boolean;
   // HW Specific
+  bigscreenBeyondUnsafeBrightness: boolean; // Allow brightness above 150%
   bigscreenBeyondBrightnessFanSafety: boolean; // Force fan to 100% if brightness is above 100%
   /** Allows a Bigscreen Beyond fan speed below the safe minimum of 40%. */
   bigscreenBeyondAllowUnsafeFanSpeed: boolean;
@@ -146,6 +147,7 @@ export const APP_SETTINGS_DEFAULT: AppSettings = {
   // Brightness & CCT
   cctSoftwareMode: false,
   // HW Specific
+  bigscreenBeyondUnsafeBrightness: false,
   bigscreenBeyondBrightnessFanSafety: true,
   bigscreenBeyondAllowUnsafeFanSpeed: false,
   // VRCX

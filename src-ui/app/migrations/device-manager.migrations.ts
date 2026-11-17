@@ -43,10 +43,7 @@ function from2to3(data: any, store: Readonly<Record<string, any>>): any {
     appSettings[key] === defaultValue ? undefined : appSettings[key];
   const valuesByModel = {
     VALVE_INDEX: { maxBrightness: changed('valveIndexMaxBrightness', 160) },
-    BIGSCREEN_BEYOND: {
-      maxBrightness: changed('bigscreenBeyondMaxBrightness', 150),
-      unsafeBrightness: changed('bigscreenBeyondUnsafeBrightness', false),
-    },
+    BIGSCREEN_BEYOND: { maxBrightness: changed('bigscreenBeyondMaxBrightness', 150) },
     OTHER_HMD: {
       hardwareBrightnessOnUnsupportedHmd: changed('hardwareBrightnessOnUnsupportedHmds', false),
       cctControlOnUnsupportedHmd: changed('cctControlOnUnsupportedHmds', false),
