@@ -6,7 +6,7 @@ import {
   MSI_AFTERBURNER_ERROR_STATUSES,
 } from '../../gpu-automations.service';
 import { ElevatedSidecarService } from '../../elevated-sidecar.service';
-import { asyncScheduler, combineLatest, distinctUntilChanged, map, throttleTime } from 'rxjs';
+import { combineLatest, distinctUntilChanged, map, of, switchMap, timer } from 'rxjs';
 import { AutomationConfigService } from '../../automation-config.service';
 import {
   GPUPowerLimitsAutomationConfig,
@@ -22,6 +22,7 @@ export class GpuAutomationMessageMonitor extends MessageMonitor {
   private elevatedSidecar = inject(ElevatedSidecarService);
   private automationConfig = inject(AutomationConfigService);
   private router = inject(Router);
+  private sidecarMessageShown = false;
 
   public override async init(): Promise<void> {
     await Promise.all([
@@ -32,13 +33,28 @@ export class GpuAutomationMessageMonitor extends MessageMonitor {
   }
 
   private async initSidecarStatusMonitor() {
-    combineLatest([this.gpuAutomations.isEnabled(), this.elevatedSidecar.sidecarStarted])
+    combineLatest([
+      this.gpuAutomations.isEnabled(),
+      this.elevatedSidecar.sidecarStarted,
+      this.elevatedSidecar.operation,
+      this.elevatedSidecar.failure,
+    ])
       .pipe(
-        map(([gpuAutomationsEnabled, sidecarRunning]) => gpuAutomationsEnabled && !sidecarRunning),
+        map(([gpuAutomationsEnabled, sidecarRunning, operation, failure]) => {
+          // the elevated features failure message already covers this
+          if (!gpuAutomationsEnabled || sidecarRunning || failure) return false;
+          // keep a shown message through an enable so its action shows progress, but add none
+          if (operation !== 'idle') return this.sidecarMessageShown;
+          return true;
+        }),
         distinctUntilChanged(),
-        throttleTime(5000, asyncScheduler, { trailing: true, leading: false })
+        // wait before showing so a sidecar that is still starting gets no message, but hide at once
+        switchMap((showError) =>
+          showError && !this.sidecarMessageShown ? timer(5000).pipe(map(() => true)) : of(showError)
+        )
       )
       .subscribe((showError) => {
+        this.sidecarMessageShown = showError;
         if (showError) {
           this.messageCenter.addMessage({
             id: 'gpuAutomationsSidecarNotRunning',

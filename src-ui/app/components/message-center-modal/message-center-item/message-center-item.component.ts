@@ -1,6 +1,7 @@
-import { Component, computed, input, Signal } from '@angular/core';
+import { Component, computed, input, Signal, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import {
+  MessageAction,
   MessageCenterService,
   MessageItem,
 } from 'src-ui/app/services/message-center/message-center.service';
@@ -46,6 +47,26 @@ export class MessageCenterItemComponent {
     }
     return actions;
   });
+
+  /** Label of the action whose returned promise has not settled yet. A label, not the action, so it
+   * survives a monitor replacing the message with new action objects. */
+  private readonly busyLabel = signal<string | null>(null);
+  public readonly anyBusy = computed(() => this.busyLabel() !== null);
+
+  public isBusy(action: MessageAction): boolean {
+    return this.busyLabel() === action.label;
+  }
+
+  public async runAction(action: MessageAction) {
+    const result = action.action();
+    if (!(result instanceof Promise)) return;
+    this.busyLabel.set(action.label);
+    try {
+      await result;
+    } finally {
+      this.busyLabel.set(null);
+    }
+  }
 
   protected getIcon(): string {
     switch (this.message().type) {

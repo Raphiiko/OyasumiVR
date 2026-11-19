@@ -78,12 +78,35 @@
     overflow: hidden;
     text-overflow: ellipsis;
 
-    &:hover {
+    display: flex;
+    align-items: center;
+    gap: 0.5em;
+
+    &:hover:not(:disabled) {
       background: rgba(255, 255, 255, 0.1);
     }
 
-    &:active {
+    &:active:not(:disabled) {
       opacity: 0.6;
+    }
+
+    &:disabled {
+      cursor: default;
+      opacity: 0.5;
+    }
+
+    &.busy {
+      opacity: 1;
+    }
+
+    .small-spinner {
+      width: 1.2em;
+      height: 1.2em;
+      --spinner-color: white;
+
+      &:after {
+        margin: 0;
+      }
     }
   }
 }
