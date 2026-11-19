@@ -48,17 +48,23 @@ export class MessageCenterItemComponent {
     return actions;
   });
 
-  /** The action whose returned promise has not settled yet. */
-  protected readonly busyAction = signal<MessageAction | null>(null);
+  /** Label of the action whose returned promise has not settled yet. A label, not the action, so it
+   * survives a monitor replacing the message with new action objects. */
+  private readonly busyLabel = signal<string | null>(null);
+  public readonly anyBusy = computed(() => this.busyLabel() !== null);
 
-  protected async runAction(action: MessageAction) {
+  public isBusy(action: MessageAction): boolean {
+    return this.busyLabel() === action.label;
+  }
+
+  public async runAction(action: MessageAction) {
     const result = action.action();
     if (!(result instanceof Promise)) return;
-    this.busyAction.set(action);
+    this.busyLabel.set(action.label);
     try {
       await result;
     } finally {
-      this.busyAction.set(null);
+      this.busyLabel.set(null);
     }
   }
 
