@@ -11,7 +11,14 @@
   @if (actions().length > 0) {
     <div class="actions">
       @for (action of actions(); track action) {
-        <button (click)="action.action()">
+        <button
+          [disabled]="busyAction() !== null"
+          [class.busy]="busyAction() === action"
+          (click)="runAction(action)"
+        >
+          @if (busyAction() === action) {
+            <span class="small-spinner"></span>
+          }
           {{ action.label | transloco }}
         </button>
       }

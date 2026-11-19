@@ -1,6 +1,7 @@
-import { Component, computed, input, Signal } from '@angular/core';
+import { Component, computed, input, Signal, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import {
+  MessageAction,
   MessageCenterService,
   MessageItem,
 } from 'src-ui/app/services/message-center/message-center.service';
@@ -46,6 +47,20 @@ export class MessageCenterItemComponent {
     }
     return actions;
   });
+
+  /** The action whose returned promise has not settled yet. */
+  protected readonly busyAction = signal<MessageAction | null>(null);
+
+  protected async runAction(action: MessageAction) {
+    const result = action.action();
+    if (!(result instanceof Promise)) return;
+    this.busyAction.set(action);
+    try {
+      await result;
+    } finally {
+      this.busyAction.set(null);
+    }
+  }
 
   protected getIcon(): string {
     switch (this.message().type) {
