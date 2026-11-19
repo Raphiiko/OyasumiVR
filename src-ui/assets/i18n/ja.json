@@ -2483,7 +2483,7 @@
           "hardware": "ハードウェアアクセラレーション",
           "label": "SteamVRダッシュボード",
           "notRendering": "描画なし",
-          "pending": "ダッシュボードが開くのを待機中",
+          "pending": "ダッシュボードの展開を待機中",
           "software": "ソフトウェアレンダリング",
           "softwareFallback": "ソフトウェアレンダリング（フォールバック）"
         },
@@ -2704,7 +2704,7 @@
         "title": "時間経過"
       },
       "atTime": "時刻指定",
-      "description": "その他の様々な条件に基づいて、睡眠モードを自動的に無効にします。",
+      "description": "任意の設定に基づいて、睡眠モードを自動的に無効にします。",
       "onDevicePowerOn": "デバイスの電源がオンになったとき",
       "onPlayerJoinOrLeave": "他のプレイヤーが参加、退出したとき",
       "onSteamVRStop": "SteamVRが終了したとき",
@@ -2713,7 +2713,7 @@
     "enableAutomations": {
       "atBatteryPercentage": "デバイスのバッテリー残量が<strong>{value}%</strong>を下回ったとき",
       "atTime": "時刻指定",
-      "description": "その他の様々な条件に基づいて、睡眠モードを自動的に有効にします。",
+      "description": "任意の設定に基づいて、睡眠モードを自動的に有効にします。",
       "onControllersPoweredOff": {
         "batteryLevelAutomationConflict": {
           "action": "デバイスの電源：\nコントローラーとトラッカー",
@@ -3035,7 +3035,7 @@
     "pages": {
       "awaiting": {
         "body": "HMDを装着してください。このPCからの接続を許可するか確認されるので、<kbd>Allow</kbd>を選択してください。",
-        "return": "その後、HMDを外してここに戻ってください。",
+        "return": "その後、HMDを外して戻ってきてください。",
         "title": "HMDでリクエストを承認してください"
       },
       "cancelling": {
