@@ -30,12 +30,16 @@ with [SemVer](https://semver.org/) prerelease suffixes:
 - Device page settings that apply to every device of that kind now show a globe icon
 - Turning "Limit to safe fan speeds" back on now raises Bigscreen Beyond fan automations set below
   40% to 40%
+- Buttons in the message centre now show a spinner while their action runs
+- The message centre no longer shows a separate GPU automations warning when administrative
+  permissions could not be enabled
 
 ### Fixed
 
 - Fixed automatic invite request handling stopping when VRChat rejects OyasumiVR's notification
   connection. OyasumiVR now gets a new token for it, and warns in the message centre when the
   connection keeps failing
+- Fixed enabling administrative permissions failing when they took longer than 20 seconds to start
 
 ### Security
 
