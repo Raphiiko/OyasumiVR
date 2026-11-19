@@ -13,15 +13,39 @@
   flex-direction: row;
   align-items: center;
 
+  &-link {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    min-width: 0;
+    padding: 0.5em;
+    margin: -0.5em 0.5em -0.5em -0.5em;
+    border-radius: var(--surface-border-radius);
+    color: inherit;
+    text-decoration: none;
+    cursor: default;
+    transition: background 0.15s;
+
+    &[href] {
+      cursor: pointer;
+
+      &:hover {
+        background: var(--color-surface-1);
+        --helper-badge-ring: var(--color-surface-1);
+      }
+
+      &:active {
+        background: var(--color-surface-0);
+        --helper-badge-ring: var(--color-surface-0);
+      }
+    }
+  }
+
   &-info {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
     justify-content: center;
-    background: transparent;
-    padding: 0.5em;
-    margin: -0.5em 0.5em -0.5em -0.5em;
-    border-radius: var(--surface-border-radius);
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
@@ -117,7 +141,8 @@
   width: 11px;
   height: 11px;
   border-radius: 50%;
-  border: 3px solid var(--color-surface-2);
+  border: 3px solid var(--helper-badge-ring, var(--color-surface-2));
+  transition: border-color 0.15s;
   background: var(--color-text-4);
 }
 
