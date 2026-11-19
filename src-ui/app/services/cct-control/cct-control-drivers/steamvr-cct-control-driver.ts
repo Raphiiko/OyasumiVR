@@ -8,8 +8,10 @@ import {
   Observable,
   shareReplay,
 } from 'rxjs';
-import { AppSettings } from '../../../models/settings';
+import { DMKnownDevice } from '../../../models/device-manager';
+import { ownDeviceSettings } from '../../../utils/device-settings-utils';
 import { OVRDevice } from '../../../models/ovr-device';
+import { knownDeviceIdForOpenVR } from '../../../utils/device-manager-utils';
 import type { OpenVRService } from '../../openvr.service';
 import { CctControlDriver } from './cct-control-driver';
 
@@ -35,19 +37,20 @@ export class SteamVrCctControlDriver extends CctControlDriver {
 
   constructor(
     openvr: Pick<OpenVRService, 'status' | 'devices'>,
-    appSettings: Observable<AppSettings>
+    knownDevices: Observable<DMKnownDevice[]>
   ) {
     super();
-    const tryUnsupported = appSettings.pipe(
-      map((settings) => settings.cctControlOnUnsupportedHmds),
-      distinctUntilChanged()
-    );
-    this.matching = combineLatest([openvr.status, openvr.devices, tryUnsupported]).pipe(
+    this.matching = combineLatest([openvr.status, openvr.devices, knownDevices]).pipe(
       debounceTime(100),
-      map(([status, devices, tryUnsupported]) => {
+      map(([status, devices, known]) => {
         const hmd = devices.find((d) => d.index === 0);
         if (status !== 'INITIALIZED' || hmd?.class !== 'HMD' || !hmd.isConnected) return false;
-        return tryUnsupported || isSteamVrCctSupportedHmd(hmd);
+        const id = knownDeviceIdForOpenVR(hmd);
+        const own = ownDeviceSettings(
+          known.find((d) => d.id === id),
+          'OTHER_HMD'
+        );
+        return !!own?.cctControlOnUnsupportedHmd || isSteamVrCctSupportedHmd(hmd);
       }),
       distinctUntilChanged(),
       shareReplay(1)

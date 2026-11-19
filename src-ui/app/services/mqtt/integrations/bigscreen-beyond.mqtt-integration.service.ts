@@ -4,6 +4,7 @@ import { BigscreenBeyondFanAutomationService } from '../../hmd-specific-automati
 import { BigscreenBeyondLedAutomationService } from '../../hmd-specific-automations/bigscreen-beyond-led-automation.service';
 import { combineLatest, distinctUntilChanged, filter, map, take } from 'rxjs';
 import { AutomationConfigService } from '../../automation-config.service';
+import { AppSettingsService } from '../../app-settings.service';
 import { MqttLightProperty, MqttNumberProperty } from '../../../models/mqtt';
 import { isEqual } from 'lodash';
 
@@ -15,7 +16,8 @@ export class BigscreenBeyondMqttIntegrationService {
     private mqtt: MqttDiscoveryService,
     private fanSpeedService: BigscreenBeyondFanAutomationService,
     private ledControlService: BigscreenBeyondLedAutomationService,
-    private automationConfigService: AutomationConfigService
+    private automationConfigService: AutomationConfigService,
+    private appSettings: AppSettingsService
   ) {}
 
   async init() {
@@ -40,9 +42,9 @@ export class BigscreenBeyondMqttIntegrationService {
       },
       available: false,
     });
-    this.automationConfigService.configs
+    this.appSettings.settings
       .pipe(
-        map((settings) => settings.BIGSCREEN_BEYOND_FAN_CONTROL.allowUnsafeFanSpeed),
+        map((settings) => settings.bigscreenBeyondAllowUnsafeFanSpeed),
         distinctUntilChanged()
       )
       .subscribe((allowUnsafeFanSpeed) => {

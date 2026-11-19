@@ -11,10 +11,15 @@ import {
   Observable,
   shareReplay,
   startWith,
+  pairwise,
   switchMap,
 } from 'rxjs';
 import { commands, events } from 'src-ui/app/bindings';
+import { DMKnownDevice } from '../../../models/device-manager';
 import { AppSettings } from '../../../models/settings';
+import { ownDeviceSettings } from '../../../utils/device-settings-utils';
+import { OVRDevice } from '../../../models/ovr-device';
+import { knownDeviceIdForOpenVR } from '../../../utils/device-manager-utils';
 import { warn } from '@tauri-apps/plugin-log';
 
 export const BIGSCREEN_BEYOND_HARDWARE_BRIGHTNESS_CONTROL_DRIVER_BOUNDS: HardwareBrightnessControlDriverBounds =
@@ -28,9 +33,29 @@ export const BIGSCREEN_BEYOND_HARDWARE_BRIGHTNESS_CONTROL_DRIVER_BOUNDS: Hardwar
 export class BigscreenBeyondHardwareBrightnessControlDriver extends HardwareBrightnessControlDriver {
   private lastSetBrightnessPercentage = 100;
   private connected = new BehaviorSubject(false);
+  /**
+   * The last Beyond SteamVR reported, kept while SteamVR stops and cleared when the USB
+   * connection ends; null until one is seen.
+   */
+  private hmdId: string | null = null;
+  private unsafeBrightness = false;
 
-  constructor(appSettings: Observable<AppSettings>) {
-    super(appSettings);
+  constructor(
+    knownDevices: Observable<DMKnownDevice[]>,
+    devices: Observable<OVRDevice[]>,
+    appSettings: Observable<AppSettings>
+  ) {
+    super(knownDevices);
+    appSettings.subscribe(
+      (settings) => (this.unsafeBrightness = settings.bigscreenBeyondUnsafeBrightness)
+    );
+    devices.subscribe((list) => {
+      // SteamVR keeps an unplugged headset in its list until it quits
+      const hmd = list.find(
+        (d) => d.class === 'HMD' && d.isConnected && d.manufacturerName === 'Bigscreen'
+      );
+      if (hmd) this.hmdId = knownDeviceIdForOpenVR(hmd);
+    });
     events.bigscreenBeyondConnectedEvent.listen((event) => {
       this.connected.next(event.payload);
     });
@@ -44,6 +69,14 @@ export class BigscreenBeyondHardwareBrightnessControlDriver extends HardwareBrig
         )
       )
       .subscribe();
+    // another Beyond can be connected before SteamVR reports it
+    this.connected
+      .pipe(
+        distinctUntilChanged(),
+        pairwise(),
+        filter(([wasConnected, connected]) => wasConnected && !connected)
+      )
+      .subscribe(() => (this.hmdId = null));
     // When connecting the beyond, attempt loading the last saved brightness percentage from the driver utility's preference file
     this.connected.pipe(distinctUntilChanged(), filter(Boolean)).subscribe(async () => {
       const brightness = (await this.getBeyondDriverSavedBrightness()) ?? 100;
@@ -57,12 +90,27 @@ export class BigscreenBeyondHardwareBrightnessControlDriver extends HardwareBrig
     return BIGSCREEN_BEYOND_HARDWARE_BRIGHTNESS_CONTROL_DRIVER_BOUNDS;
   }
 
-  getBrightnessBounds(appSettings?: AppSettings): [number, number] {
+  getBrightnessBounds(knownDevices = this.knownDevices): [number, number] {
     const config = this.getBrightnessConfiguration();
-    return [
-      config.softwareStops[0],
-      (appSettings ?? this.appSettings).bigscreenBeyondMaxBrightness,
-    ];
+    return [config.softwareStops[0], this.maxBrightness(knownDevices)];
+  }
+
+  /**
+   * The connected Beyond's own maximum, at most 150% while unsafe brightness is off. Over USB alone
+   * the driver cannot tell which Beyond is connected, so until SteamVR reports it, the lowest
+   * maximum of the known Beyonds applies.
+   */
+  private maxBrightness(knownDevices: DMKnownDevice[]): number {
+    const { riskThreshold } = this.getBrightnessConfiguration();
+    const maxOf = (device: DMKnownDevice | undefined) => {
+      const max = ownDeviceSettings(device, 'BIGSCREEN_BEYOND')?.maxBrightness ?? riskThreshold;
+      return this.unsafeBrightness ? max : Math.min(max, riskThreshold);
+    };
+    if (this.hmdId) return maxOf(knownDevices.find((d) => d.id === this.hmdId));
+    const beyonds = knownDevices.filter(
+      (d) => d.deviceType === 'HMD' && d.manufacturer === 'Bigscreen'
+    );
+    return beyonds.length ? Math.min(...beyonds.map(maxOf)) : maxOf(undefined);
   }
 
   async getBrightnessPercentage(): Promise<number> {

@@ -1,6 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import { runMigrations, Versioned } from 'src-shared-ts/src/migration-runner';
+import { decideStoreMigration } from 'src-shared-ts/src/store-migration';
 import { APP_SETTINGS_MIGRATION } from './app-settings.migrations';
+import { SETTINGS_STORE_MIGRATION } from './store-migrations';
 
 describe('app settings migration 14 to 15', () => {
   it.each([
@@ -37,7 +39,7 @@ describe('app settings migration 15 to 16', () => {
 });
 
 describe('app settings migration 16 to 17', () => {
-  it('drops the CCT enable setting and warning flag, and defaults unsupported HMD control off', async () => {
+  it('drops the CCT enable setting and warning flag', async () => {
     const result = await runMigrations(
       {
         version: 16,
@@ -53,9 +55,7 @@ describe('app settings migration 16 to 17', () => {
     expect(result.status).toBe('migrated');
     if (result.status === 'migrated') {
       expect(result.value).toMatchObject({
-        version: 18,
         oneTimeFlags: ['OSC_SCRIPT_SIMPLE_EDITOR_VRCHAT_AUTOCOMPLETE_INFO'],
-        cctControlOnUnsupportedHmds: false,
       });
       expect(result.value).not.toHaveProperty('cctControlEnabled');
     }
@@ -83,4 +83,50 @@ describe('app settings migration 17 to 18', () => {
       }
     }
   );
+});
+
+describe('app settings migration 18 to 19', () => {
+  it('moves the unsafe fan speed setting out of the fan automation config', async () => {
+    const store = {
+      APP_SETTINGS: { version: 18 },
+      AUTOMATION_CONFIGS: {
+        version: 22,
+        BIGSCREEN_BEYOND_FAN_CONTROL: { enabled: true, allowUnsafeFanSpeed: true },
+      },
+    };
+
+    const decision = await decideStoreMigration(
+      [{ id: 'live', kind: 'live', contents: JSON.stringify(store) }],
+      SETTINGS_STORE_MIGRATION
+    );
+
+    expect(decision.action).toBe('install');
+    if (decision.action !== 'install') return;
+    const { APP_SETTINGS, AUTOMATION_CONFIGS } = JSON.parse(decision.contents);
+    expect(APP_SETTINGS.bigscreenBeyondAllowUnsafeFanSpeed).toBe(true);
+    expect(AUTOMATION_CONFIGS.version).toBe(23);
+    expect(AUTOMATION_CONFIGS.BIGSCREEN_BEYOND_FAN_CONTROL).not.toHaveProperty(
+      'allowUnsafeFanSpeed'
+    );
+  });
+
+  it('keeps the unsafe fan speed setting for a store that has no app settings yet', async () => {
+    const store = {
+      AUTOMATION_CONFIGS: {
+        version: 22,
+        BIGSCREEN_BEYOND_FAN_CONTROL: { enabled: true, allowUnsafeFanSpeed: true },
+      },
+    };
+
+    const decision = await decideStoreMigration(
+      [{ id: 'live', kind: 'live', contents: JSON.stringify(store) }],
+      SETTINGS_STORE_MIGRATION
+    );
+
+    expect(decision.action).toBe('install');
+    if (decision.action !== 'install') return;
+    expect(JSON.parse(decision.contents).APP_SETTINGS.bigscreenBeyondAllowUnsafeFanSpeed).toBe(
+      true
+    );
+  });
 });

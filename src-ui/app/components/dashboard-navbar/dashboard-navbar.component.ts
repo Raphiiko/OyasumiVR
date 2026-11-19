@@ -142,7 +142,6 @@ const SUBMENU_ROUTES: Record<Exclude<SubMenu, 'GENERAL'>, string[]> = {
   ],
   SETTINGS: [
     'settings/general',
-    'settings/brightnessCct',
     'settings/notifications',
     'settings/hotkeys',
     'settings/osc',

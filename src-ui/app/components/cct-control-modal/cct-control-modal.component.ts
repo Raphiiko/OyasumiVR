@@ -1,10 +1,11 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { fadeUp, hshrink, vshrink } from '../../utils/animations';
 import { BaseModalComponent } from '../base-modal/base-modal.component';
 import { ModalOptions } from '../../services/modal.service';
 import { AutomationConfigService } from '../../services/automation-config.service';
 import { asyncScheduler, Subject, switchMap, throttleTime } from 'rxjs';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
+import { DeviceManagerService } from '../../services/device-manager.service';
 import { Router } from '@angular/router';
 import { CCTControlService } from '../../services/cct-control/cct-control.service';
 
@@ -17,6 +18,7 @@ import { CCTControlService } from '../../services/cct-control/cct-control.servic
 })
 export class CCTControlModalComponent extends BaseModalComponent<void, void> {
   protected readonly setCCT = new Subject<number>();
+  protected readonly activeHmdId = toSignal(inject(DeviceManagerService).activeHmdId);
 
   constructor(
     protected cctControl: CCTControlService,

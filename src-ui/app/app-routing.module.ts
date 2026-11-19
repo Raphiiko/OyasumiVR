@@ -34,7 +34,6 @@ import { HmdAutomationsViewComponent } from './views/dashboard-view/views/hmd-au
 import { JoinNotificationsViewComponent } from './views/dashboard-view/views/join-notifications-view/join-notifications-view.component';
 import { VRChatAvatarAutomationsViewComponent } from './views/dashboard-view/views/vrchat-avatar-automations-view/vrchat-avatar-automations-view.component';
 import { VRChatGroupAutomationsViewComponent } from './views/dashboard-view/views/vrchat-group-automations-view/vrchat-group-automations-view.component';
-import { SettingsBrightnessCctViewComponent } from './views/dashboard-view/views/settings-brightness-cct-view/settings-brightness-cct-view.component';
 import { RunAutomationsViewComponent } from './views/dashboard-view/views/run-automations-view/run-automations-view.component';
 import { DeviceManagerViewComponent } from './views/dashboard-view/views/device-manager-view/device-manager-view.component';
 import { DeviceDetailViewComponent } from './views/dashboard-view/views/device-manager-view/device-detail-view/device-detail-view.component';
@@ -151,10 +150,6 @@ const routes: Routes = [
           {
             path: 'notifications',
             component: SettingsNotificationsViewComponent,
-          },
-          {
-            path: 'brightnessCct',
-            component: SettingsBrightnessCctViewComponent,
           },
           {
             path: 'hotkeys',

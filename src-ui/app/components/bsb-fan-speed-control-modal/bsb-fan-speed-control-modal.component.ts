@@ -2,8 +2,8 @@ import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { fadeUp, hshrink, vshrink } from '../../utils/animations';
 import { BaseModalComponent } from '../base-modal/base-modal.component';
 import { ModalOptions } from '../../services/modal.service';
-import { AutomationConfigService } from '../../services/automation-config.service';
-import { asyncScheduler, map, Subject, switchMap, tap, throttleTime } from 'rxjs';
+import { AppSettingsService } from '../../services/app-settings.service';
+import { asyncScheduler, Subject, switchMap, tap, throttleTime } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Router } from '@angular/router';
 import { BigscreenBeyondFanAutomationService } from '../../services/hmd-specific-automations/bigscreen-beyond-fan-automation.service';
@@ -26,15 +26,14 @@ export class BSBFanSpeedControlModalComponent
   constructor(
     protected fanControl: BigscreenBeyondFanAutomationService,
     protected router: Router,
-    public automationConfigService: AutomationConfigService,
+    private appSettings: AppSettingsService,
     private cdr: ChangeDetectorRef
   ) {
     super();
-    this.automationConfigService.configs
+    this.appSettings.settings
       .pipe(
-        map((c) => c.BIGSCREEN_BEYOND_FAN_CONTROL),
-        tap((config) => {
-          this.fanSpeedBounds = [config.allowUnsafeFanSpeed ? 0 : 40, 100];
+        tap((settings) => {
+          this.fanSpeedBounds = [settings.bigscreenBeyondAllowUnsafeFanSpeed ? 0 : 40, 100];
           this.cdr.markForCheck();
         }),
         takeUntilDestroyed()

@@ -4,7 +4,7 @@ import { OneTimeFlag } from './one-time-flags';
 import { EventLogType } from './event-log-entry';
 
 export interface AppSettings {
-  version: 18;
+  version: 19;
   // General Settings
   userLanguage: string;
   userLanguagePicked: boolean;
@@ -56,14 +56,12 @@ export interface AppSettings {
   mqttProtectedPassword: string | null;
   mqttSecureSocket: boolean;
   // Brightness & CCT
-  cctControlOnUnsupportedHmds: boolean; // Try SteamVR color gains on headsets not on the list
   cctSoftwareMode: boolean;
-  hardwareBrightnessOnUnsupportedHmds: boolean; // Try SteamVR analog gain on headsets without a driver
   // HW Specific
-  valveIndexMaxBrightness: number; // User limit
-  bigscreenBeyondMaxBrightness: number; // User limit
   bigscreenBeyondUnsafeBrightness: boolean; // Allow brightness above 150%
   bigscreenBeyondBrightnessFanSafety: boolean; // Force fan to 100% if brightness is above 100%
+  /** Allows a Bigscreen Beyond fan speed below the safe minimum of 40%. */
+  bigscreenBeyondAllowUnsafeFanSpeed: boolean;
   // VRCX
   vrcxLogsEnabled: VRCXEventLogType[];
 }
@@ -96,7 +94,7 @@ export const NotificationTypes = [
 export type NotificationType = (typeof NotificationTypes)[number];
 
 export const APP_SETTINGS_DEFAULT: AppSettings = {
-  version: 18,
+  version: 19,
   // General Settings
   userLanguage: 'en',
   userLanguagePicked: false,
@@ -147,14 +145,11 @@ export const APP_SETTINGS_DEFAULT: AppSettings = {
   mqttProtectedPassword: null,
   mqttSecureSocket: false,
   // Brightness & CCT
-  cctControlOnUnsupportedHmds: false,
   cctSoftwareMode: false,
-  hardwareBrightnessOnUnsupportedHmds: false,
   // HW Specific
-  valveIndexMaxBrightness: 160,
-  bigscreenBeyondMaxBrightness: 150,
   bigscreenBeyondUnsafeBrightness: false,
   bigscreenBeyondBrightnessFanSafety: true,
+  bigscreenBeyondAllowUnsafeFanSpeed: false,
   // VRCX
   vrcxLogsEnabled: ['SleepMode', 'Invites', 'StatusChanges', 'GroupChanges'],
 };

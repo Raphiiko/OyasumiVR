@@ -18,6 +18,7 @@ import {
   DEVICE_MANAGER_DATA_DEFAULT,
   DeviceManagerData,
   DeviceSelection,
+  DMDeviceSettings,
   DMDeviceTag,
   DMDeviceType,
   DMKnownDevice,
@@ -26,6 +27,7 @@ import { SETTINGS_KEY_DEVICE_MANAGER, SETTINGS_STORE } from '../globals';
 import { OpenVRService } from './openvr.service';
 import { LighthouseService } from './lighthouse.service';
 import { OVRDevice } from '../models/ovr-device';
+import { knownDeviceIdForOpenVR } from '../utils/device-manager-utils';
 import { LighthouseDevice } from '../models/lighthouse-device';
 import { isEqual, uniq } from 'lodash';
 import { error } from '@tauri-apps/plugin-log';
@@ -41,6 +43,12 @@ export class DeviceManagerService {
   public readonly observedDevices = this._observedDevices.asObservable();
   public readonly knownDevices = this._data.pipe(map((data) => data.knownDevices));
   public readonly tags = this._data.pipe(map((data) => data.tags));
+  /** The known device id of the HMD SteamVR uses, or null while it reports none. */
+  public readonly activeHmdId = this.openvr.devices.pipe(
+    map((devices) => devices.find((d) => d.index === 0 && d.class === 'HMD')),
+    map((hmd) => (hmd ? this.getIdForOpenVRDevice(hmd) : null)),
+    distinctUntilChanged()
+  );
 
   constructor(
     private openvr: OpenVRService,
@@ -139,6 +147,24 @@ export class DeviceManagerService {
     );
     if (!patchedDevice) return device;
     patchedDevice.disabled = disabled;
+    this._data.next({
+      ...this._data.value,
+      knownDevices: this._data.value.knownDevices.map((d) =>
+        d.id === device.id ? patchedDevice : d
+      ),
+    });
+    return patchedDevice;
+  }
+
+  public setSettingsForKnownDevice(
+    device: DMKnownDevice,
+    settings: DMDeviceSettings
+  ): DMKnownDevice {
+    const patchedDevice = structuredClone(
+      this._data.value.knownDevices.find((d) => d.id === device.id)
+    );
+    if (!patchedDevice) return device;
+    patchedDevice.settings = settings;
     this._data.next({
       ...this._data.value,
       knownDevices: this._data.value.knownDevices.map((d) =>
@@ -524,7 +550,7 @@ export class DeviceManagerService {
   }
 
   public getIdForOpenVRDevice(device: OVRDevice): string {
-    return `OVR_${device.class}_${device.serialNumber}`;
+    return knownDeviceIdForOpenVR(device);
   }
 
   public getIdForLighthouseDevice(device: LighthouseDevice): string {

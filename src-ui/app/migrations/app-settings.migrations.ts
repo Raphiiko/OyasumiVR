@@ -51,6 +51,28 @@ function from17to18(data: any): any {
   return data;
 }
 
+/** The unsafe fan speed setting the fan automation config held up to its version 22. */
+function unsafeFanSpeedFromAutomations(store: Readonly<Record<string, any>>): boolean {
+  return !!store['AUTOMATION_CONFIGS']?.BIGSCREEN_BEYOND_FAN_CONTROL?.allowUnsafeFanSpeed;
+}
+
+function from18to19(data: any, store: Readonly<Record<string, any>>): any {
+  data.version = 19;
+
+  data.bigscreenBeyondAllowUnsafeFanSpeed = unsafeFanSpeedFromAutomations(store);
+
+  // the device manager step copies the changed values to each headset's own settings
+  for (const key of [
+    'valveIndexMaxBrightness',
+    'bigscreenBeyondMaxBrightness',
+    'hardwareBrightnessOnUnsupportedHmds',
+    'cctControlOnUnsupportedHmds',
+  ]) {
+    delete data[key];
+  }
+  return data;
+}
+
 async function from11to12(data: any): Promise<any> {
   data.mqttProtectedPassword = await protectSecret(data.mqttPassword);
   data.mqttPassword = null;
@@ -159,6 +181,11 @@ function from1to2(data: any): any {
 
 export const APP_SETTINGS_MIGRATION: MigrationDefinition<Versioned> = {
   targetVersion: APP_SETTINGS_DEFAULT.version,
+  // app settings are stored only once one changes, so a store can lack them
+  createFromStore: (store) => ({
+    ...structuredClone(APP_SETTINGS_DEFAULT),
+    bigscreenBeyondAllowUnsafeFanSpeed: unsafeFanSpeedFromAutomations(store),
+  }),
   minimumSupportedVersion: 1,
   steps: {
     1: from1to2,
@@ -178,6 +205,7 @@ export const APP_SETTINGS_MIGRATION: MigrationDefinition<Versioned> = {
     15: from15to16,
     16: from16to17,
     17: from17to18,
+    18: from18to19,
   },
   normalizeCurrentVersion: (data) => normalizeWithDefaults(APP_SETTINGS_DEFAULT, data),
 };

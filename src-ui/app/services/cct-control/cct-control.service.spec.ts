@@ -1,7 +1,7 @@
 import { invoke } from '@tauri-apps/api/core';
 import { BehaviorSubject, firstValueFrom, Subject } from 'rxjs';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { APP_SETTINGS_DEFAULT } from '../../models/settings';
+import type { DMKnownDevice } from '../../models/device-manager';
 import type { OVRDevice } from '../../models/ovr-device';
 import type {
   SteamFrameCct,
@@ -22,7 +22,11 @@ const INDEX: Partial<OVRDevice> = {
   serialNumber: 'LHR-1',
 };
 const BEYOND: Partial<OVRDevice> = { manufacturerName: 'Bigscreen', modelNumber: 'Beyond' };
-const QUEST: Partial<OVRDevice> = { manufacturerName: 'Oculus', modelNumber: 'Quest 3' };
+const QUEST: Partial<OVRDevice> = {
+  manufacturerName: 'Oculus',
+  modelNumber: 'Quest 3',
+  serialNumber: 'QST-TEST0001',
+};
 const FRAME: Partial<OVRDevice> = {
   manufacturerName: 'Valve',
   modelNumber: 'Steam Frame',
@@ -62,15 +66,20 @@ async function setup(
   );
   const connections = new BehaviorSubject<Record<string, SteamFrameConnectionState>>({});
   const fadeEnded = new Subject<SteamFrameFadeEnded>();
-  const settings = new BehaviorSubject({
-    ...structuredClone(APP_SETTINGS_DEFAULT),
-    cctControlOnUnsupportedHmds: tryUnsupported,
-  });
+  const hmdId = `OVR_HMD_${hmd?.serialNumber}`;
+  /** A known headset that opts in to SteamVR's colour gain, or opts out. */
+  const optIn = (id: string, enabled: boolean) =>
+    ({
+      id,
+      deviceType: 'HMD',
+      settings: { model: 'OTHER_HMD', cctControlOnUnsupportedHmd: enabled },
+    }) as DMKnownDevice;
+  const knownDevices = new BehaviorSubject(tryUnsupported ? [optIn(hmdId, true)] : []);
   const pairing = { id: 'p', complete: true, identity: { serial: 'FP1' } } as SteamFramePairing;
   const pairingB = { id: 'q', complete: true, identity: { serial: 'FP2' } } as SteamFramePairing;
   const service = new CCTControlService(
     { status, devices } as unknown as Dependencies[0],
-    { settings } as unknown as Dependencies[1],
+    { knownDevices } as unknown as Dependencies[1],
     {
       pairings$: new BehaviorSubject(paired ? [pairing, pairingB] : []),
       connections$: connections,
@@ -100,8 +109,8 @@ async function setup(
   const end = (operation: string, outcome: SteamFrameFadeEnded['outcome']) =>
     fadeEnded.next({ pairingId: 'p', control: 'cct', operation, outcome });
   const reply = (cct: SteamFrameCct) => replies.shift()!(cct);
-  const setTryUnsupported = (value: boolean) =>
-    settings.next({ ...settings.value, cctControlOnUnsupportedHmds: value });
+  /** Sets the opt-in of the setup HMD, or of the headset with `id`. */
+  const setTryUnsupported = (value: boolean, id = hmdId) => knownDevices.next([optIn(id, value)]);
   const activate = (device: Partial<OVRDevice>) =>
     devices.next([{ index: 0, class: 'HMD', isConnected: true, ...device } as OVRDevice]);
   return {
@@ -183,6 +192,13 @@ describe('CCTControlService driver selection', () => {
     expect(writes()).toEqual([6600, 3000, 6600]);
     await service.setCCT(4000);
     expect(writes()).toEqual([6600, 3000, 6600]);
+  });
+
+  it('does not try an unlisted headset when only another headset opts in', async () => {
+    const { service, setTryUnsupported } = await setup(QUEST);
+    setTryUnsupported(true, 'OVR_HMD_QST-OTHER');
+    await settle();
+    expect(await firstValueFrom(service.driverIsAvailable)).toBe(false);
   });
 
   it('writes the stored value once a listed headset becomes active', async () => {

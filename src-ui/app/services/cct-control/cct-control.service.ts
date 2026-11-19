@@ -26,10 +26,10 @@ import { info } from '@tauri-apps/plugin-log';
 import { getCSSColorForCCT } from 'src-shared-ts/src/cct-utils';
 import { OpenVRService } from '../openvr.service';
 import { clamp } from '../../utils/number-utils';
-import { AppSettingsService } from '../app-settings.service';
 import { CctControlDriver, CctFade } from './cct-control-drivers/cct-control-driver';
 import { SteamVrCctControlDriver } from './cct-control-drivers/steamvr-cct-control-driver';
 import { SteamFrameCctControlDriver } from './cct-control-drivers/steam-frame-cct-control-driver';
+import { DeviceManagerService } from '../device-manager.service';
 import { SteamFrameService } from '../steam-frame/steam-frame.service';
 
 /** A transition on the PC, or a fade the device runs. */
@@ -62,10 +62,10 @@ export class CCTControlService {
 
   constructor(
     private openvr: OpenVRService,
-    appSettingsService: AppSettingsService,
+    deviceManager: DeviceManagerService,
     steamFrames: SteamFrameService
   ) {
-    this.driverSteamVr = new SteamVrCctControlDriver(openvr, appSettingsService.settings);
+    this.driverSteamVr = new SteamVrCctControlDriver(openvr, deviceManager.knownDevices);
     this.driverSteamFrame = new SteamFrameCctControlDriver(openvr, steamFrames);
     // the SteamVR driver can match any headset, so it stays last
     const drivers: CctControlDriver[] = [this.driverSteamFrame, this.driverSteamVr];

@@ -210,11 +210,11 @@ async function evaluateCandidate(
   let migratedAnyKey = false;
   for (const [key, definition] of Object.entries(spec.migrations)) {
     if (!(key in migrated)) {
-      migrated[key] = structuredClone(spec.defaults[key]);
+      migrated[key] = definition.createFromStore?.(parsed) ?? structuredClone(spec.defaults[key]);
       resolved[key] = structuredClone(migrated[key]);
       continue;
     }
-    const result = await runMigrations(migrated[key] as Versioned, definition);
+    const result = await runMigrations(migrated[key] as Versioned, definition, parsed);
     if (result.status !== 'migrated' && result.status !== 'unchanged') {
       failures.push(describeFailure(key, result, definition.targetVersion));
       continue;

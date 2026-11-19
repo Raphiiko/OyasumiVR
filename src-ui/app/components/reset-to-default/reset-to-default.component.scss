@@ -4,7 +4,8 @@
 
 .reset-to-default {
   display: inline-flex;
-  margin-left: 0.5em;
+  // the same 0.25em gap as the setting row flags, at this button's font size
+  margin-left: 0.3125em;
   padding: 0;
   border: none;
   background: none;

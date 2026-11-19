@@ -3,6 +3,7 @@ import { BehaviorSubject, firstValueFrom, Subject } from 'rxjs';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { listen } from '@tauri-apps/api/event';
 import { AUTOMATION_CONFIGS_DEFAULT } from '../../models/automations';
+import type { DMDeviceSettings, DMKnownDevice } from '../../models/device-manager';
 import { APP_SETTINGS_DEFAULT } from '../../models/settings';
 import type { OVRDevice } from '../../models/ovr-device';
 import type {
@@ -22,6 +23,10 @@ vi.mock('@tauri-apps/api/event', () => ({ listen: vi.fn(async () => () => {}) })
 vi.mock('@tauri-apps/plugin-log', () => ({ info: vi.fn(), warn: vi.fn() }));
 type Dependencies = ConstructorParameters<typeof HardwareBrightnessControlService>;
 type SimpleDependencies = ConstructorParameters<typeof SimpleBrightnessControlService>;
+
+/** A known headset with its own settings. */
+const known = (id: string, settings: DMDeviceSettings) =>
+  ({ id, deviceType: 'HMD', settings }) as DMKnownDevice;
 
 beforeEach(() => {
   vi.useFakeTimers();
@@ -57,16 +62,17 @@ async function setup(
       devices,
       analogGainUpdates: new Subject<number>(),
     } as unknown as Dependencies[0],
-    {
-      settings: new BehaviorSubject(structuredClone(APP_SETTINGS_DEFAULT)),
-    } as unknown as Dependencies[1],
+    { knownDevices: new BehaviorSubject<DMKnownDevice[]>([]) } as unknown as Dependencies[1],
     {
       pairings$: new BehaviorSubject([
         { id: 'p', complete: true, identity: { serial: 'FP1' } } as SteamFramePairing,
       ]),
       connections$: connections,
       fadeEnded$: fadeEnded,
-    } as unknown as Dependencies[2]
+    } as unknown as Dependencies[2],
+    {
+      settings: new BehaviorSubject(structuredClone(APP_SETTINGS_DEFAULT)),
+    } as unknown as Dependencies[3]
   );
   await service.init();
   const report = (percentage: number, { status = 'connected' }: { status?: string } = {}) =>
@@ -332,11 +338,13 @@ describe('simple brightness following a Steam Frame', () => {
 const gainFor = (percentage: number) => Math.pow(percentage / 100, 2.2);
 
 /** A service whose only available driver is a Valve Index, with SteamVR holding `initialGain`. */
+const INDEX_ID = 'OVR_HMD_LHR-TEST0001';
+
 async function setupIndex(initialGain = 1) {
   vi.mocked(invoke).mockImplementation(async () => false);
   const analogGainUpdates = new Subject<number>();
   let gain = initialGain;
-  const settings = new BehaviorSubject(structuredClone(APP_SETTINGS_DEFAULT));
+  const knownDevices = new BehaviorSubject<DMKnownDevice[]>([]);
   const openvr = {
     status: new BehaviorSubject('INITIALIZED'),
     devices: new BehaviorSubject([
@@ -346,6 +354,7 @@ async function setupIndex(initialGain = 1) {
         isConnected: true,
         manufacturerName: 'Valve',
         modelNumber: 'Index',
+        serialNumber: 'LHR-TEST0001',
       } as OVRDevice,
     ]),
     analogGainUpdates,
@@ -364,16 +373,19 @@ async function setupIndex(initialGain = 1) {
   };
   const service = new HardwareBrightnessControlService(
     openvr as unknown as Dependencies[0],
-    { settings } as unknown as Dependencies[1],
+    { knownDevices } as unknown as Dependencies[1],
     {
       pairings$: new BehaviorSubject([]),
       connections$: new BehaviorSubject({}),
       fadeEnded$: new Subject(),
-    } as unknown as Dependencies[2]
+    } as unknown as Dependencies[2],
+    {
+      settings: new BehaviorSubject(structuredClone(APP_SETTINGS_DEFAULT)),
+    } as unknown as Dependencies[3]
   );
   await service.init();
   await firstFetch();
-  return { service, openvr, settings, analogGainUpdates, outsideChange, write };
+  return { service, openvr, knownDevices, analogGainUpdates, outsideChange, write };
 }
 
 describe('HardwareBrightnessControlService with a Valve Index', () => {
@@ -412,10 +424,81 @@ describe('HardwareBrightnessControlService with a Valve Index', () => {
   it('clamps the brightness when the maximum drops below it', async () => {
     const h = await setupIndex(1.5);
     expect(h.service.brightness).toBe(150);
-    h.settings.next({ ...h.settings.value, valveIndexMaxBrightness: 120 });
+    h.knownDevices.next([known(INDEX_ID, { model: 'VALVE_INDEX', maxBrightness: 120 })]);
     await settle();
     expect(h.service.brightness).toBe(120);
     expect(h.openvr.setAnalogGain).toHaveBeenCalledWith(1.2);
+  });
+
+  it('applies and clamps to the own maximum of another Index that becomes active', async () => {
+    const h = await setupIndex(1.5);
+    h.knownDevices.next([
+      known('OVR_HMD_LHR-SECOND', { model: 'VALVE_INDEX', maxBrightness: 120 }),
+    ]);
+    await settle();
+    expect(h.service.brightness).toBe(150);
+    h.openvr.devices.next([{ ...h.openvr.devices.value[0], serialNumber: 'LHR-SECOND' }]);
+    await settle();
+    expect(await firstValueFrom(h.service.brightnessBounds)).toEqual([9, 120]);
+    expect(h.service.brightness).toBe(120);
+  });
+});
+
+describe('HardwareBrightnessControlService with a Bigscreen Beyond', () => {
+  afterEach(() => vi.mocked(invoke).mockImplementation(async () => false));
+
+  it('lowers a Beyond above 150% once unsafe brightness is turned off', async () => {
+    const hardwareWrites: number[] = [];
+    vi.mocked(invoke).mockImplementation(async (command, args) => {
+      if (command === 'bigscreen_beyond_is_connected') return true;
+      if (command === 'bigscreen_beyond_set_brightness')
+        hardwareWrites.push((args as { brightness: number }).brightness);
+      return null;
+    });
+    const settings = new BehaviorSubject({
+      ...structuredClone(APP_SETTINGS_DEFAULT),
+      bigscreenBeyondUnsafeBrightness: true,
+    });
+    const service = new HardwareBrightnessControlService(
+      {
+        status: new BehaviorSubject('INITIALIZED'),
+        devices: new BehaviorSubject([
+          {
+            index: 0,
+            class: 'HMD',
+            isConnected: true,
+            manufacturerName: 'Bigscreen',
+            modelNumber: 'Beyond',
+            serialNumber: 'BSB-TEST0001',
+          } as OVRDevice,
+        ]),
+        analogGainUpdates: new Subject<number>(),
+      } as unknown as Dependencies[0],
+      {
+        knownDevices: new BehaviorSubject([
+          known('OVR_HMD_BSB-TEST0001', { model: 'BIGSCREEN_BEYOND', maxBrightness: 200 }),
+        ]),
+      } as unknown as Dependencies[1],
+      {
+        pairings$: new BehaviorSubject([]),
+        connections$: new BehaviorSubject({}),
+        fadeEnded$: new Subject(),
+      } as unknown as Dependencies[2],
+      { settings } as unknown as Dependencies[3]
+    );
+    await service.init();
+    await firstFetch();
+    await service.setBrightness(200);
+    await settle();
+    expect(service.brightness).toBe(200);
+    hardwareWrites.length = 0;
+
+    settings.next({ ...settings.value, bigscreenBeyondUnsafeBrightness: false });
+    await settle();
+
+    expect(service.brightness).toBe(150);
+    // the Beyond's hardware value for 150%
+    expect(hardwareWrites).toEqual([542]);
   });
 });
 
@@ -437,18 +520,21 @@ const UNSUPPORTED_HMD: Partial<OVRDevice> = {
   isConnected: true,
   manufacturerName: 'Example',
   modelNumber: 'Headset',
+  serialNumber: 'EXM-TEST0001',
   displaySupportsAnalogGain: true,
   displayMinAnalogGain: 0.2,
   displayMaxAnalogGain: 0.8,
 };
 
+const UNSUPPORTED_HMD_ID = 'OVR_HMD_EXM-TEST0001';
+
 const settleDrivers = () => vi.advanceTimersByTimeAsync(DRIVER_DEBOUNCE_MS);
 
 function setupGeneric() {
-  const settings = new BehaviorSubject({
-    ...APP_SETTINGS_DEFAULT,
-    hardwareBrightnessOnUnsupportedHmds: true,
-  });
+  const optIn = (enabled: boolean) => [
+    known(UNSUPPORTED_HMD_ID, { model: 'OTHER_HMD', hardwareBrightnessOnUnsupportedHmd: enabled }),
+  ];
+  const knownDevices = new BehaviorSubject(optIn(true));
   const devices = new BehaviorSubject<Partial<OVRDevice>[]>([UNSUPPORTED_HMD]);
   const status = new BehaviorSubject('INITIALIZED');
   let analogGain = 0.8;
@@ -464,15 +550,17 @@ function setupGeneric() {
   };
   const service = new HardwareBrightnessControlService(
     openvr as unknown as Dependencies[0],
-    { settings } as unknown as Dependencies[1],
+    { knownDevices } as unknown as Dependencies[1],
     {
       pairings$: new BehaviorSubject([]),
       connections$: new BehaviorSubject({}),
       fadeEnded$: new Subject<SteamFrameFadeEnded>(),
-    } as unknown as Dependencies[2]
+    } as unknown as Dependencies[2],
+    {
+      settings: new BehaviorSubject(structuredClone(APP_SETTINGS_DEFAULT)),
+    } as unknown as Dependencies[3]
   );
-  const enable = (value: boolean) =>
-    settings.next({ ...settings.value, hardwareBrightnessOnUnsupportedHmds: value });
+  const enable = (value: boolean) => knownDevices.next(optIn(value));
   return { service, devices, status, enable, setAnalogGain, analogGain: () => analogGain };
 }
 

@@ -1,7 +1,6 @@
 import { invoke } from '@tauri-apps/api/core';
 import { BehaviorSubject, firstValueFrom, Subject } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { APP_SETTINGS_DEFAULT } from '../../../models/settings';
 import type { OVRDevice } from '../../../models/ovr-device';
 import type { Brightness } from 'src-ui/app/bindings';
 import type {
@@ -31,7 +30,7 @@ function setup() {
   ]);
   const connections = new BehaviorSubject<Record<string, SteamFrameConnectionState>>({});
   const driver = new SteamFrameHardwareBrightnessControlDriver(
-    new BehaviorSubject(structuredClone(APP_SETTINGS_DEFAULT)),
+    new BehaviorSubject([]),
     { status, devices },
     pairings,
     connections,
