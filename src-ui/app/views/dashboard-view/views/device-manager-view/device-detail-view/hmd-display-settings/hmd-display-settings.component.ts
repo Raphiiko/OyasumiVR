@@ -13,9 +13,10 @@ import { ownDeviceSettings } from 'src-ui/app/utils/device-settings-utils';
 import { clamp } from 'src-ui/app/utils/number-utils';
 import { VALVE_INDEX_HARDWARE_BRIGHTNESS_CONTROL_DRIVER_BOUNDS as INDEX_BOUNDS } from 'src-ui/app/services/brightness-control/hardware-brightness-drivers/valve-index-hardware-brightness-control-driver';
 import { BIGSCREEN_BEYOND_HARDWARE_BRIGHTNESS_CONTROL_DRIVER_BOUNDS as BEYOND_BOUNDS } from 'src-ui/app/services/brightness-control/hardware-brightness-drivers/bigscreen-beyond-hardware-brightness-control-driver';
+import { STEAM_FRAME_HARDWARE_BRIGHTNESS_CONTROL_DRIVER_BOUNDS as FRAME_BOUNDS } from 'src-ui/app/services/brightness-control/hardware-brightness-drivers/steam-frame-hardware-brightness-control-driver';
 
-/** A Frame or a PS VR2 has its own driver and no settings here. */
-type HmdModel = DMDeviceSettingsModel | 'STEAM_FRAME' | 'PSVR2';
+/** A PS VR2 has its own driver and no settings here. */
+type HmdModel = DMDeviceSettingsModel | 'PSVR2';
 /** The values a model stores for a device. */
 type ModelValues<M extends DMDeviceSettingsModel> = Omit<
   Extract<DMDeviceSettings, { model: M }>,
@@ -51,6 +52,10 @@ const MAX_BRIGHTNESS: Record<
         ? BEYOND_BOUNDS.hardwareStops[BEYOND_BOUNDS.hardwareStops.length - 1]
         : BEYOND_BOUNDS.riskThreshold,
     ],
+  },
+  STEAM_FRAME: {
+    default: FRAME_BOUNDS.riskThreshold,
+    range: () => [FRAME_BOUNDS.overdriveThreshold, FRAME_BOUNDS.riskThreshold],
   },
 };
 
