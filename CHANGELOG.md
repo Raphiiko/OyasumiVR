@@ -17,6 +17,20 @@ with [SemVer](https://semver.org/) prerelease suffixes:
 
 ## [Unreleased]
 
+### Added
+
+- A maximum brightness setting for each Steam Frame, from 100% to 125%
+- Opening a device's page by clicking it in the device list on the overview
+
+### Changed
+
+- Moved the headset brightness settings from the Brightness & CCT settings page to each headset's
+  device page. Each headset now has its own maximum brightness, and your existing values carry over
+- Moved the Bigscreen Beyond fan settings from its automation to the Beyond's device page
+- Device page settings that apply to every device of that kind now show a globe icon
+- Turning "Limit to safe fan speeds" back on now raises Bigscreen Beyond fan automations set below
+  40% to 40%
+
 ### Fixed
 
 - Fixed automatic invite request handling stopping when VRChat rejects OyasumiVR's notification
