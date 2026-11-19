@@ -58,9 +58,9 @@ fn absolute(path: &std::path::Path) -> std::path::PathBuf {
     std::path::PathBuf::from(joined.to_string_lossy().replace('/', "\\"))
 }
 
-/// How long the task path is given to produce a sidecar that reports in. The launcher exits
-/// within a second or two, so anything longer than this is a failure it could not report.
-pub const GIVE_UP_AFTER: Duration = Duration::from_secs(20);
+/// How long the task path is given to produce a sidecar that reports in. Staging and verifying the
+/// sidecar usually takes seconds, but a freshly staged exe can take over 20 seconds to start.
+pub const GIVE_UP_AFTER: Duration = Duration::from_secs(60);
 
 const LAUNCH_RETRY_INTERVALS: [Duration; 9] = [
     Duration::from_millis(100),
