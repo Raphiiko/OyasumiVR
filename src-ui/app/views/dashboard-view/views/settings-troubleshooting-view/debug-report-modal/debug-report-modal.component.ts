@@ -16,10 +16,6 @@ import { ModalOptions } from '../../../../../services/modal.service';
 import { ToastService } from '../../../../../services/toast.service';
 import { fadeUp } from '../../../../../utils/animations';
 
-export interface DebugReportModalInputModel {
-  collectUiState: () => Promise<Record<string, unknown>>;
-}
-
 type Step = 'confirm' | 'uploading' | 'done' | 'failed' | 'tooLarge' | 'saving';
 
 @Component({
@@ -30,11 +26,10 @@ type Step = 'confirm' | 'uploading' | 'done' | 'failed' | 'tooLarge' | 'saving';
   standalone: false,
 })
 export class DebugReportModalComponent
-  extends BaseModalComponent<DebugReportModalInputModel, void>
-  implements DebugReportModalInputModel, AfterViewInit, OnDestroy
+  extends BaseModalComponent<void, void>
+  implements AfterViewInit, OnDestroy
 {
   @ViewChild('cancelButton') cancelButton?: ElementRef<HTMLButtonElement>;
-  collectUiState!: () => Promise<Record<string, unknown>>;
   step: Step = 'confirm';
   reportCode = '';
   codeCopied = false;
@@ -69,7 +64,9 @@ export class DebugReportModalComponent
     this.setStep('uploading');
     try {
       if (!this.reportCreated) {
-        const created = await commands.debugReportCreate((await this.collectUiState()) as Value);
+        const created = await commands.debugReportCreate(
+          (await this.debugReports.collectUiState()) as Value
+        );
         if (created.status === 'error') return this.uploadFailed(created.error);
         this.reportCreated = true;
       }

@@ -2,12 +2,12 @@ import { inject } from '@angular/core';
 import { ElevatedSidecarService } from '../../elevated-sidecar.service';
 import { MessageMonitor } from './message-monitor';
 import { ExternalLinkService } from '../../external-link.service';
-import { ShowInFolderService } from '../../show-in-folder.service';
+import { DebugReportService } from '../../debug-report.service';
 
 export class ElevatedFeaturesMessageMonitor extends MessageMonitor {
   private externalLink = inject(ExternalLinkService);
   private elevatedFeatures = inject(ElevatedSidecarService);
-  private showInFolder = inject(ShowInFolderService);
+  private debugReports = inject(DebugReportService);
 
   public override init(): void {
     this.elevatedFeatures.failure.subscribe((failure) => {
@@ -34,8 +34,8 @@ export class ElevatedFeaturesMessageMonitor extends MessageMonitor {
                 : this.elevatedFeatures.disable(),
           },
           {
-            label: 'message-center.actions.openLogFolder',
-            action: () => this.showInFolder.showLogFile(),
+            label: 'message-center.actions.uploadDebugReport',
+            action: () => this.debugReports.open(),
           },
           {
             label: 'message-center.actions.supportDiscord',
