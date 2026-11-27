@@ -108,8 +108,6 @@ public static class Program
     settings.CefCommandLineArgs.Add("disable-features", "MetricsService,PersistentHistograms");
     settings.CefCommandLineArgs.Add("disable-crash-reporter", "true");
     settings.CefCommandLineArgs.Add("disable-spell-checking", "true");
-    // when elevated, Chromium relaunches itself de-elevated and Cef.Initialize returns false
-    settings.CefCommandLineArgs.Add("do-not-de-elevate");
 
     if (GpuAccelerated)
     {
@@ -124,7 +122,17 @@ public static class Program
     {
       settings.LogSeverity = LogSeverity.Disable;
       var cefDebugLogPath = Path.Combine(Path.GetDirectoryName(Environment.ProcessPath)!, @"debug.log");
-      if (File.Exists(cefDebugLogPath)) File.Delete(cefDebugLogPath);
+      if (File.Exists(cefDebugLogPath))
+      {
+        try
+        {
+          File.Delete(cefDebugLogPath);
+        }
+        catch (Exception e)
+        {
+          Log.Warning(e, "Could not delete CEF debug log: {path}", cefDebugLogPath);
+        }
+      }
     }
 
     if (!Cef.Initialize(settings))

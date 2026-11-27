@@ -24,6 +24,15 @@ pub static SIDECAR_GRPC_CLIENT: LazyLock<Mutex<Option<OyasumiOverlaySidecarClien
     LazyLock::new(Default::default);
 static SIDECAR_MANAGER: LazyLock<Mutex<Option<SidecarManager>>> = LazyLock::new(Default::default);
 static ERROR_REPORTING_ENABLED: AtomicBool = AtomicBool::new(false);
+fn initial_args(flavour: &crate::flavour::BuildFlavour) -> Vec<String> {
+    // Chromium checks auto-de-elevation before CEF callbacks, so this must be on the command line
+    let mut args = vec!["--do-not-de-elevate".to_string()];
+    if *flavour != crate::flavour::BuildFlavour::Steam {
+        args.push(format!("--app-key={}", crate::globals::STEAM_APP_KEY));
+    }
+    args
+}
+
 pub async fn init() {
     let (tx, mut rx) = tokio::sync::mpsc::channel(10);
     *SIDECAR_MANAGER.lock().await = Some(SidecarManager::new(
@@ -32,11 +41,7 @@ pub async fn init() {
         "oyasumivr-overlay-sidecar.exe".to_string(),
         tx,
         true,
-        if crate::BUILD_FLAVOUR == crate::flavour::BuildFlavour::Steam {
-            vec![]
-        } else {
-            vec![format!("--app-key={}", crate::globals::STEAM_APP_KEY)]
-        },
+        initial_args(&crate::BUILD_FLAVOUR),
         SidecarLaunch::Spawn,
     ));
     // Listen for sidecar stop signals
@@ -141,4 +146,26 @@ pub async fn set_microphone_active(active: bool, mode: MicrophoneActivityMode) {
             },
         ))
         .await;
+}
+
+#[cfg(test)]
+mod tests {
+    use super::initial_args;
+    use crate::flavour::BuildFlavour;
+
+    #[test]
+    fn sidecar_command_line_prevents_cef_de_elevation() {
+        assert!(initial_args(&BuildFlavour::Steam).contains(&"--do-not-de-elevate".to_string()));
+        assert!(
+            initial_args(&BuildFlavour::Standalone).contains(&"--do-not-de-elevate".to_string())
+        );
+    }
+
+    #[test]
+    fn non_steam_flavours_pass_the_app_key_and_steam_omits_it() {
+        let expected = format!("--app-key={}", crate::globals::STEAM_APP_KEY);
+        assert!(!initial_args(&BuildFlavour::Steam).contains(&expected));
+        assert!(initial_args(&BuildFlavour::Standalone).contains(&expected));
+        assert!(initial_args(&BuildFlavour::Dev).contains(&expected));
+    }
 }
