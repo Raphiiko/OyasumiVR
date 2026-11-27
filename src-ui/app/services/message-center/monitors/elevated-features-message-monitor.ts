@@ -24,7 +24,11 @@ export class ElevatedFeaturesMessageMonitor extends MessageMonitor {
       this.messageCenter.addMessage({
         id: 'elevatedFeaturesFailure',
         title: `message-center.messages.elevatedFeaturesFailure.${failure.operation}.title`,
-        message: `settings.general.adminPrivileges.errors.${failure.result.result}`,
+        // the shared error text points at Troubleshooting, which this message's own button replaces
+        message:
+          failure.result.result === 'notSupported'
+            ? 'settings.general.adminPrivileges.errors.notSupported'
+            : `message-center.messages.elevatedFeaturesFailure.${failure.operation}.message`,
         type: 'error',
         actions: [
           {

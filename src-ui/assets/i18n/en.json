@@ -1550,9 +1550,11 @@
           "retry": "Try again"
         },
         "disable": {
+          "message": "OyasumiVR could not fully disable administrative permissions. Features that use them have been turned off for your safety.\n\nTry again. If this keeps happening, restart OyasumiVR and try once more. If that does not help, ask for help on Discord, and include a debug report.",
           "title": "Administrative permissions could not be fully disabled"
         },
         "enable": {
+          "message": "OyasumiVR could not enable administrative permissions, so features that need them remain unavailable.\n\nTry again. If this keeps happening, restart OyasumiVR and try once more. If that does not help, ask for help on Discord, and include a debug report.",
           "title": "Administrative permissions are unavailable"
         },
         "startupPromptNotApproved": {
@@ -2357,7 +2359,7 @@
         "confirm": {
           "contents": "This sends your OyasumiVR logs, settings and system details to the developer, to help find the cause of a problem. Your passwords and login details will NOT be included.",
           "title": "Upload a debug report?",
-          "when": "Uploading a debug report does not notify the developer. After uploading, you get a code. Send it to them on Discord, and describe your problem. Debug reports are deleted after 5 days."
+          "when": "Debug reports are deleted after 5 days."
         },
         "done": {
           "copied": "Copied",
@@ -2473,7 +2475,7 @@
       "support": {
         "debugReport": {
           "action": "Upload debug report",
-          "description": "When you ask the developer for help, upload a debug report and send them its code.",
+          "description": "Upload a debug report when the developer asks for one.",
           "title": "Debug report"
         },
         "recentCode": "Your last report code",
