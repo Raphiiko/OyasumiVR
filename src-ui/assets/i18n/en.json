@@ -1611,7 +1611,7 @@
         },
         "message": {
           "gpuAcceleration": "OyasumiVR's SteamVR overlays keep failing to start.\n\nOn some systems this is caused by GPU acceleration. Try turning it off.",
-          "unknown": "OyasumiVR's SteamVR overlays keep failing to start.\n\nGPU acceleration is already off, so something else is causing this. Please upload a debug report and ask for help on Discord."
+          "unknown": "OyasumiVR's SteamVR overlays keep failing to start.\n\nGPU acceleration is already off, so something else is causing this. Please ask for help on Discord, and include a debug report."
         },
         "title": "Overlays Unavailable"
       },
@@ -1646,7 +1646,7 @@
     "tooltip": "Message Centre"
   },
   "migration-recovery": {
-    "message": "OyasumiVR could not recover your {store}, so it reset that data to defaults.\n\nThe previous data remains on disk for manual recovery. Please upload a debug report from the Troubleshooting settings and ask for help on Discord.",
+    "message": "OyasumiVR could not recover your {store}, so it reset that data to defaults.\n\nThe previous data remains on disk for manual recovery. Please ask for help on Discord, and include a debug report from the Troubleshooting settings.",
     "title": "Could not recover {store}"
   },
   "misc": {
@@ -2001,11 +2001,11 @@
           }
         },
         "errors": {
-          "cleanupFailed": "OyasumiVR could not fully disable administrative permissions. Features that use them have been turned off for your safety.\n\nTry again. If this keeps happening, restart OyasumiVR and try once more. If that does not help, upload a debug report from the Troubleshooting settings and ask for help on Discord.",
-          "installFailed": "OyasumiVR could not enable administrative permissions, so features that need them remain unavailable.\n\nTry again. If this keeps happening, restart OyasumiVR and try once more. If that does not help, upload a debug report from the Troubleshooting settings and ask for help on Discord.",
+          "cleanupFailed": "OyasumiVR could not fully disable administrative permissions. Features that use them have been turned off for your safety.\n\nTry again. If this keeps happening, restart OyasumiVR and try once more. If that does not help, ask for help on Discord, and include a debug report from the Troubleshooting settings.",
+          "installFailed": "OyasumiVR could not enable administrative permissions, so features that need them remain unavailable.\n\nTry again. If this keeps happening, restart OyasumiVR and try once more. If that does not help, ask for help on Discord, and include a debug report from the Troubleshooting settings.",
           "notSupported": "OyasumiVR cannot enable administrative permissions for this Windows account. Sign in with a Windows administrator account and try again.",
           "promptDeclined": "Administrative permissions were not granted, so features that need them remain unavailable.",
-          "taskFailed": "OyasumiVR could not enable administrative permissions, so features that need them remain unavailable.\n\nTry again. If this keeps happening, restart OyasumiVR and try once more. If that does not help, upload a debug report from the Troubleshooting settings and ask for help on Discord."
+          "taskFailed": "OyasumiVR could not enable administrative permissions, so features that need them remain unavailable.\n\nTry again. If this keeps happening, restart OyasumiVR and try once more. If that does not help, ask for help on Discord, and include a debug report from the Troubleshooting settings."
         },
         "label": "Allow features that need administrative permissions",
         "title": "Administrative Permissions"
@@ -2357,12 +2357,12 @@
         "confirm": {
           "contents": "This sends your OyasumiVR logs, settings and system details to the developer, to help find the cause of a problem. Your passwords and login details will NOT be included.",
           "title": "Upload a debug report?",
-          "when": "Upload a debug report when you ask for help with a problem. Debug reports are deleted after 5 days."
+          "when": "Uploading a debug report does not notify the developer. Afterwards, send them the code you get on Discord, and describe your problem. Debug reports are deleted after 5 days."
         },
         "done": {
           "copied": "Copied",
           "copy": "Copy code",
-          "message": "Send this code to the developer:",
+          "message": "The developer has not been notified yet. Ask for help on Discord, describe your problem, and include this code:",
           "title": "Debug report uploaded"
         },
         "failed": {
@@ -2473,7 +2473,7 @@
       "support": {
         "debugReport": {
           "action": "Upload debug report",
-          "description": "Upload a debug report when you ask for help with a problem.",
+          "description": "When you ask the developer for help, upload a debug report and send them its code.",
           "title": "Debug report"
         },
         "recentCode": "Your last report code",
@@ -3331,9 +3331,9 @@
         "title": "{name} did not respond"
       },
       "turnOffFailed": {
-        "commandFailed": "The Lighthouse console could not reach the device. If this keeps happening, upload a debug report from the Troubleshooting settings and ask for help on Discord.",
+        "commandFailed": "The Lighthouse console could not reach the device. If this keeps happening, ask for help on Discord, and include a debug report from the Troubleshooting settings.",
         "consoleNotReady": "Set up the SteamVR Lighthouse console in the General settings first.",
-        "frameHelperFailed": "The Steam Frame helper could not disconnect the controller. If this keeps happening, upload a debug report from the Troubleshooting settings and ask for help on Discord.",
+        "frameHelperFailed": "The Steam Frame helper could not disconnect the controller. If this keeps happening, ask for help on Discord, and include a debug report from the Troubleshooting settings.",
         "title": "Could not turn off {name}"
       }
     },
@@ -3353,7 +3353,7 @@
     "persistentData": {
       "cleared": "Data cleared",
       "failed": {
-        "message": "Try again. If this keeps happening, upload a debug report from the Troubleshooting settings and ask for help on Discord.",
+        "message": "Try again. If this keeps happening, ask for help on Discord, and include a debug report from the Troubleshooting settings.",
         "title": "Some data could not be cleared"
       }
     },
@@ -3414,11 +3414,11 @@
         "title": "Application manifest unregistered"
       },
       "MANIFEST_ADD_FAILED": {
-        "message": "The manifest was removed, but it could not be added back. Please restart OyasumiVR. If that does not help, upload a debug report from the Status tab and ask for help on Discord.",
+        "message": "The manifest was removed, but it could not be added back. Please restart OyasumiVR. If that does not help, ask for help on Discord, and include a debug report from the Status tab.",
         "title": "Reregistration of VR Application Manifest Failed"
       },
       "MANIFEST_CHECK_FAILED": {
-        "message": "It could not be checked if OyasumiVR's manifest was already registered with SteamVR. Please restart OyasumiVR and try again. If that does not help, upload a debug report from the Status tab and ask for help on Discord.",
+        "message": "It could not be checked if OyasumiVR's manifest was already registered with SteamVR. Please restart OyasumiVR and try again. If that does not help, ask for help on Discord, and include a debug report from the Status tab.",
         "title": "Reregistration of VR Application Manifest Failed"
       },
       "MANIFEST_NOT_REGISTERED": {
@@ -3426,11 +3426,11 @@
         "title": "Reregistration of VR Application Manifest Failed"
       },
       "MANIFEST_REMOVE_FAILED": {
-        "message": "The manifest could not be removed. Try again. If this keeps happening, upload a debug report from the Status tab and ask for help on Discord.",
+        "message": "The manifest could not be removed. Try again. If this keeps happening, ask for help on Discord, and include a debug report from the Status tab.",
         "title": "Reregistration of VR Application Manifest Failed"
       },
       "UNKNOWN": {
-        "message": "OyasumiVR's manifest could not be reregistered with SteamVR due to an unknown error. Please restart OyasumiVR and try again. If that does not help, upload a debug report from the Status tab and ask for help on Discord.",
+        "message": "OyasumiVR's manifest could not be reregistered with SteamVR due to an unknown error. Please restart OyasumiVR and try again. If that does not help, ask for help on Discord, and include a debug report from the Status tab.",
         "title": "Reregistration of VR Application Manifest Failed"
       },
       "success": {

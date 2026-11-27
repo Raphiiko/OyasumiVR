@@ -1,3 +1,4 @@
+import { SUPPORT_DISCORD_URL } from 'src-ui/app/globals';
 import { inject } from '@angular/core';
 import { ElevatedSidecarService } from '../../elevated-sidecar.service';
 import { MessageMonitor } from './message-monitor';
@@ -39,7 +40,7 @@ export class ElevatedFeaturesMessageMonitor extends MessageMonitor {
           },
           {
             label: 'message-center.actions.supportDiscord',
-            action: () => this.externalLink.open('https://discord.gg/7MqdPJhYxC'),
+            action: () => this.externalLink.open(SUPPORT_DISCORD_URL),
           },
         ],
       });

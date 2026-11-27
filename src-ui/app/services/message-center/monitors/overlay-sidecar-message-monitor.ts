@@ -1,3 +1,4 @@
+import { SUPPORT_DISCORD_URL } from 'src-ui/app/globals';
 import { inject } from '@angular/core';
 import { MessageMonitor } from './message-monitor';
 import { AppSettingsService } from '../../app-settings.service';
@@ -82,7 +83,7 @@ export class OverlaySidecarMessageMonitor extends MessageMonitor {
                 },
                 {
                   label: 'message-center.actions.supportDiscord',
-                  action: () => this.externalLink.open('https://discord.gg/7MqdPJhYxC'),
+                  action: () => this.externalLink.open(SUPPORT_DISCORD_URL),
                 },
               ],
         });
