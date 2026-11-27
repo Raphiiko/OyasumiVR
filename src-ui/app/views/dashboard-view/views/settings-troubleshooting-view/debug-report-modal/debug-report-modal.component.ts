@@ -10,15 +10,13 @@ import { commands, Value } from 'src-ui/app/bindings';
 import { writeText } from '@tauri-apps/plugin-clipboard-manager';
 import { error } from '@tauri-apps/plugin-log';
 import { BaseModalComponent } from '../../../../../components/base-modal/base-modal.component';
+import { SUPPORT_DISCORD_URL } from '../../../../../globals';
 import { DebugReportService } from '../../../../../services/debug-report.service';
+import { ExternalLinkService } from '../../../../../services/external-link.service';
 import { FileDialogService } from '../../../../../services/file-dialog.service';
 import { ModalOptions } from '../../../../../services/modal.service';
 import { ToastService } from '../../../../../services/toast.service';
 import { fadeUp } from '../../../../../utils/animations';
-
-export interface DebugReportModalInputModel {
-  collectUiState: () => Promise<Record<string, unknown>>;
-}
 
 type Step = 'confirm' | 'uploading' | 'done' | 'failed' | 'tooLarge' | 'saving';
 
@@ -30,11 +28,10 @@ type Step = 'confirm' | 'uploading' | 'done' | 'failed' | 'tooLarge' | 'saving';
   standalone: false,
 })
 export class DebugReportModalComponent
-  extends BaseModalComponent<DebugReportModalInputModel, void>
-  implements DebugReportModalInputModel, AfterViewInit, OnDestroy
+  extends BaseModalComponent<void, void>
+  implements AfterViewInit, OnDestroy
 {
   @ViewChild('cancelButton') cancelButton?: ElementRef<HTMLButtonElement>;
-  collectUiState!: () => Promise<Record<string, unknown>>;
   step: Step = 'confirm';
   reportCode = '';
   codeCopied = false;
@@ -47,7 +44,8 @@ export class DebugReportModalComponent
     private toasts: ToastService,
     private debugReports: DebugReportService,
     private cdr: ChangeDetectorRef,
-    private fileDialog: FileDialogService
+    private fileDialog: FileDialogService,
+    private externalLink: ExternalLinkService
   ) {
     super();
   }
@@ -69,7 +67,9 @@ export class DebugReportModalComponent
     this.setStep('uploading');
     try {
       if (!this.reportCreated) {
-        const created = await commands.debugReportCreate((await this.collectUiState()) as Value);
+        const created = await commands.debugReportCreate(
+          (await this.debugReports.collectUiState()) as Value
+        );
         if (created.status === 'error') return this.uploadFailed(created.error);
         this.reportCreated = true;
       }
@@ -130,6 +130,10 @@ export class DebugReportModalComponent
       this.codeCopied = false;
       this.cdr.markForCheck();
     }, 2000);
+  }
+
+  async openSupportDiscord() {
+    await this.externalLink.open(SUPPORT_DISCORD_URL);
   }
 
   /** Drops the zip from the core's memory; only Retry and Save to file need it. */

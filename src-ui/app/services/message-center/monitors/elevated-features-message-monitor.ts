@@ -1,13 +1,14 @@
+import { SUPPORT_DISCORD_URL } from 'src-ui/app/globals';
 import { inject } from '@angular/core';
 import { ElevatedSidecarService } from '../../elevated-sidecar.service';
 import { MessageMonitor } from './message-monitor';
 import { ExternalLinkService } from '../../external-link.service';
-import { ShowInFolderService } from '../../show-in-folder.service';
+import { DebugReportService } from '../../debug-report.service';
 
 export class ElevatedFeaturesMessageMonitor extends MessageMonitor {
   private externalLink = inject(ExternalLinkService);
   private elevatedFeatures = inject(ElevatedSidecarService);
-  private showInFolder = inject(ShowInFolderService);
+  private debugReports = inject(DebugReportService);
 
   public override init(): void {
     this.elevatedFeatures.failure.subscribe((failure) => {
@@ -23,7 +24,11 @@ export class ElevatedFeaturesMessageMonitor extends MessageMonitor {
       this.messageCenter.addMessage({
         id: 'elevatedFeaturesFailure',
         title: `message-center.messages.elevatedFeaturesFailure.${failure.operation}.title`,
-        message: `settings.general.adminPrivileges.errors.${failure.result.result}`,
+        // the shared error text points at Troubleshooting, which this message's own button replaces
+        message:
+          failure.result.result === 'notSupported'
+            ? 'settings.general.adminPrivileges.errors.notSupported'
+            : `message-center.messages.elevatedFeaturesFailure.${failure.operation}.message`,
         type: 'error',
         actions: [
           {
@@ -34,12 +39,12 @@ export class ElevatedFeaturesMessageMonitor extends MessageMonitor {
                 : this.elevatedFeatures.disable(),
           },
           {
-            label: 'message-center.actions.openLogFolder',
-            action: () => this.showInFolder.showLogFile(),
+            label: 'message-center.actions.uploadDebugReport',
+            action: () => this.debugReports.open(),
           },
           {
             label: 'message-center.actions.supportDiscord',
-            action: () => this.externalLink.open('https://discord.gg/7MqdPJhYxC'),
+            action: () => this.externalLink.open(SUPPORT_DISCORD_URL),
           },
         ],
       });

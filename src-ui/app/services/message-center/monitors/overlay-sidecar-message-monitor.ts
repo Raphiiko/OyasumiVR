@@ -1,3 +1,4 @@
+import { SUPPORT_DISCORD_URL } from 'src-ui/app/globals';
 import { inject } from '@angular/core';
 import { MessageMonitor } from './message-monitor';
 import { AppSettingsService } from '../../app-settings.service';
@@ -11,7 +12,7 @@ import {
 } from 'rxjs';
 import { isEqual } from 'lodash';
 import { ExternalLinkService } from '../../external-link.service';
-import { ShowInFolderService } from '../../show-in-folder.service';
+import { DebugReportService } from '../../debug-report.service';
 import { events } from 'src-ui/app/bindings';
 
 // the sidecar reports its start before it builds any overlays, so a crash loop reads as start then stop
@@ -21,7 +22,7 @@ const HEALTHY_AFTER_MS = 60000;
 export class OverlaySidecarMessageMonitor extends MessageMonitor {
   private externalLink = inject(ExternalLinkService);
   private appSettings = inject(AppSettingsService);
-  private showInFolder = inject(ShowInFolderService);
+  private debugReports = inject(DebugReportService);
   private failedStarts = new BehaviorSubject(0);
   private healthyTimeout?: ReturnType<typeof setTimeout>;
 
@@ -77,12 +78,12 @@ export class OverlaySidecarMessageMonitor extends MessageMonitor {
               ]
             : [
                 {
-                  label: 'message-center.actions.openLogFolder',
-                  action: () => this.showInFolder.showLogFile(),
+                  label: 'message-center.actions.uploadDebugReport',
+                  action: () => this.debugReports.open(),
                 },
                 {
                   label: 'message-center.actions.supportDiscord',
-                  action: () => this.externalLink.open('https://discord.gg/7MqdPJhYxC'),
+                  action: () => this.externalLink.open(SUPPORT_DISCORD_URL),
                 },
               ],
         });
