@@ -10,7 +10,7 @@
     "dev:isolated": "node scripts/dev-isolated.mjs",
     "start": "npm run tauri dev",
     "start:ui": "node scripts/pre-build.js && ng serve oyasumivr",
-    "start:overlay": "cd src-overlay-sidecar && dotnet build && dotnet run -- dev",
+    "start:overlay": "cd src-overlay-sidecar && dotnet build && dotnet run -- dev --do-not-de-elevate",
     "start:overlay-ui": "ng serve overlay-ui",
     "//2": "=== Build ===",
     "//2.1": "build runs the full standalone build (Tauri invokes the sidecar/frontend builds via beforeBuildCommand)",

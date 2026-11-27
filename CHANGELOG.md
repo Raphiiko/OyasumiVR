@@ -40,6 +40,7 @@ with [SemVer](https://semver.org/) prerelease suffixes:
   connection. OyasumiVR now gets a new token for it, and warns in the message centre when the
   connection keeps failing
 - Fixed enabling administrative permissions failing when they took longer than 20 seconds to start
+- Fixed the SteamVR overlays not showing when OyasumiVR runs as administrator
 
 ### Security
 
