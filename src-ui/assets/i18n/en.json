@@ -2357,7 +2357,7 @@
         "confirm": {
           "contents": "This sends your OyasumiVR logs, settings and system details to the developer, to help find the cause of a problem. Your passwords and login details will NOT be included.",
           "title": "Upload a debug report?",
-          "when": "Uploading a debug report does not notify the developer. Afterwards, send them the code you get on Discord, and describe your problem. Debug reports are deleted after 5 days."
+          "when": "Uploading a debug report does not notify the developer. After uploading, you get a code. Send it to them on Discord, and describe your problem. Debug reports are deleted after 5 days."
         },
         "done": {
           "copied": "Copied",
