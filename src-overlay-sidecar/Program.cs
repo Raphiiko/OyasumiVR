@@ -123,8 +123,8 @@ public static class Program
     if (InReleaseMode())
     {
       settings.LogSeverity = LogSeverity.Disable;
-      var cefDebugLogPath = Path.Combine(Path.GetDirectoryName(Environment.ProcessPath)!, @"debug.log");
-      if (File.Exists(cefDebugLogPath)) File.Delete(cefDebugLogPath);
+      // CEF keeps its log file open despite Disable, so a shared path would lock out the next instance
+      settings.LogFile = Path.Combine(settings.RootCachePath, "debug.log");
     }
 
     if (!Cef.Initialize(settings))
